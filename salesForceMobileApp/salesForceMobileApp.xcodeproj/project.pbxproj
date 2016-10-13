@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04CB1DE41DAF807400D2621C /* SlideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB1DE31DAF807400D2621C /* SlideMenuController.swift */; };
 		04F96ED01DAF6E01000D715A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04F96ECF1DAF6E01000D715A /* Main.storyboard */; };
 		04F96F0F1DAF7333000D715A /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F0E1DAF7333000D715A /* MainViewController.swift */; };
 		04F96F191DAF740C000D715A /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F111DAF740C000D715A /* String.swift */; };
@@ -22,7 +23,6 @@
 		04F96F2A1DAF7517000D715A /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F271DAF7517000D715A /* BaseTableViewCell.swift */; };
 		04F96F2B1DAF7517000D715A /* DataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F281DAF7517000D715A /* DataTableViewCell.swift */; };
 		04F96F2C1DAF7517000D715A /* DataTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04F96F291DAF7517000D715A /* DataTableViewCell.xib */; };
-		04F96F301DAF75A2000D715A /* SlideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F2F1DAF75A2000D715A /* SlideMenuController.swift */; };
 		04F96F341DAF75E0000D715A /* SubContentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F311DAF75E0000D715A /* SubContentsViewController.swift */; };
 		04F96F351DAF75E0000D715A /* SubContentsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04F96F321DAF75E0000D715A /* SubContentsViewController.storyboard */; };
 		04F96F361DAF75E0000D715A /* ExSlideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F331DAF75E0000D715A /* ExSlideMenuController.swift */; };
@@ -43,6 +43,8 @@
 
 /* Begin PBXFileReference section */
 		045D1C5BC2F1EADFDFB3671E /* Pods-salesForceMobileApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-salesForceMobileApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-salesForceMobileApp/Pods-salesForceMobileApp.release.xcconfig"; sourceTree = "<group>"; };
+		04CB1DE21DAF807400D2621C /* SlideMenuControllerSwift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideMenuControllerSwift.h; sourceTree = "<group>"; };
+		04CB1DE31DAF807400D2621C /* SlideMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideMenuController.swift; sourceTree = "<group>"; };
 		04F96ECF1DAF6E01000D715A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		04F96F0E1DAF7333000D715A /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		04F96F111DAF740C000D715A /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -58,8 +60,6 @@
 		04F96F271DAF7517000D715A /* BaseTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
 		04F96F281DAF7517000D715A /* DataTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataTableViewCell.swift; sourceTree = "<group>"; };
 		04F96F291DAF7517000D715A /* DataTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DataTableViewCell.xib; sourceTree = "<group>"; };
-		04F96F2E1DAF75A2000D715A /* SlideMenuControllerSwift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideMenuControllerSwift.h; sourceTree = "<group>"; };
-		04F96F2F1DAF75A2000D715A /* SlideMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideMenuController.swift; sourceTree = "<group>"; };
 		04F96F311DAF75E0000D715A /* SubContentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubContentsViewController.swift; sourceTree = "<group>"; };
 		04F96F321DAF75E0000D715A /* SubContentsViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SubContentsViewController.storyboard; sourceTree = "<group>"; };
 		04F96F331DAF75E0000D715A /* ExSlideMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExSlideMenuController.swift; sourceTree = "<group>"; };
@@ -112,8 +112,6 @@
 		04F96F211DAF74DC000D715A /* View */ = {
 			isa = PBXGroup;
 			children = (
-				04F96F2E1DAF75A2000D715A /* SlideMenuControllerSwift.h */,
-				04F96F2F1DAF75A2000D715A /* SlideMenuController.swift */,
 				04F96F261DAF74FF000D715A /* TableViewCell */,
 				04F96F221DAF74F8000D715A /* ImageHeaderView.swift */,
 				04F96F231DAF74F8000D715A /* ImageHeaderView.xib */,
@@ -135,6 +133,8 @@
 		04F96F2D1DAF7583000D715A /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				04CB1DE21DAF807400D2621C /* SlideMenuControllerSwift.h */,
+				04CB1DE31DAF807400D2621C /* SlideMenuController.swift */,
 			);
 			name = Source;
 			path = salesForceMobileApp;
@@ -354,7 +354,6 @@
 				04F96F1D1DAF740C000D715A /* UIImage.swift in Sources */,
 				04F96F1E1DAF740C000D715A /* UIView.swift in Sources */,
 				04F96F3A1DAF762E000D715A /* JavaViewController.swift in Sources */,
-				04F96F301DAF75A2000D715A /* SlideMenuController.swift in Sources */,
 				04F96F1C1DAF740C000D715A /* UIImageView.swift in Sources */,
 				4FD6C47A1B754AF1002F9F90 /* AppDelegate.swift in Sources */,
 				04F96F381DAF761F000D715A /* SwiftViewController.swift in Sources */,
@@ -364,6 +363,7 @@
 				04F96F341DAF75E0000D715A /* SubContentsViewController.swift in Sources */,
 				4FD6C4A01B755242002F9F90 /* InitialViewController.swift in Sources */,
 				04F96F0F1DAF7333000D715A /* MainViewController.swift in Sources */,
+				04CB1DE41DAF807400D2621C /* SlideMenuController.swift in Sources */,
 				04F96F1B1DAF740C000D715A /* UIViewController.swift in Sources */,
 				04F96F2A1DAF7517000D715A /* BaseTableViewCell.swift in Sources */,
 				04F96F3C1DAF763B000D715A /* GoViewController.swift in Sources */,

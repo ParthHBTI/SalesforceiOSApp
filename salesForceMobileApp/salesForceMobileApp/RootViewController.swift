@@ -38,10 +38,11 @@ class RootViewController : UITableViewController, SFRestDelegate
         //Here we use a query that should work on either Force.com or Database.com
         let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Name FROM User LIMIT 10");
         SFRestAPI.sharedInstance().send(request, delegate: self);
+       
     }
     
     // MARK: - SFRestAPIDelegate
-    func request(request: SFRestRequest!, didLoadResponse jsonResponse: AnyObject!)
+    func request(request: SFRestRequest, didLoadResponse jsonResponse: AnyObject)
     {
         self.dataRows = jsonResponse["records"] as! [NSDictionary]
         self.log(.Debug, msg: "request:didLoadResponse: #records: \(self.dataRows.count)")
@@ -50,19 +51,19 @@ class RootViewController : UITableViewController, SFRestDelegate
         })
     }
     
-    func request(request: SFRestRequest!, didFailLoadWithError error: NSError!)
+    func request(request: SFRestRequest, didFailLoadWithError error: NSError)
     {
         self.log(.Debug, msg: "didFailLoadWithError: \(error)")
         // Add your failed error handling here
     }
     
-    func requestDidCancelLoad(request: SFRestRequest!)
+    func requestDidCancelLoad(request: SFRestRequest)
     {
         self.log(.Debug, msg: "requestDidCancelLoad: \(request)")
         // Add your failed error handling here
     }
     
-    func requestDidTimeout(request: SFRestRequest!)
+    func requestDidTimeout(request: SFRestRequest)
     {
         self.log(.Debug, msg: "requestDidTimeout: \(request)")
         // Add your failed error handling here

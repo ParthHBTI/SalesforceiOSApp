@@ -146,24 +146,49 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SwiftViewController" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bao-vm-zME">
-                                <rect key="frame" x="180" y="100" width="240" height="93"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="93" id="dAY-to-35w"/>
-                                    <constraint firstAttribute="width" constant="240" id="suh-ng-jJw"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                <color key="textColor" red="0.61960784313725492" green="0.61960784313725492" blue="0.61960784313725492" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gBY-Yg-Uby">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="I9w-x4-mAi" id="DIS-3M-f2E"/>
+                                    <outlet property="delegate" destination="I9w-x4-mAi" id="UYM-xz-6J1"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" red="0.89411764705882357" green="0.9137254901960784" blue="0.9137254901960784" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="Bao-vm-zME" firstAttribute="top" secondItem="jtW-TN-dF4" secondAttribute="bottom" constant="80" id="Byq-zF-AOE"/>
-                            <constraint firstAttribute="centerX" secondItem="Bao-vm-zME" secondAttribute="centerX" id="jGK-wg-NME"/>
+                            <constraint firstItem="gBY-Yg-Uby" firstAttribute="top" secondItem="FDk-dB-c3B" secondAttribute="top" id="8Yl-nk-Bl7"/>
+                            <constraint firstAttribute="trailing" secondItem="gBY-Yg-Uby" secondAttribute="trailing" id="gb8-uD-fz9"/>
+                            <constraint firstItem="gBY-Yg-Uby" firstAttribute="leading" secondItem="FDk-dB-c3B" secondAttribute="leading" id="i5x-90-Pbg"/>
+                            <constraint firstItem="2n0-fL-47k" firstAttribute="top" secondItem="gBY-Yg-Uby" secondAttribute="bottom" id="nLB-GM-K0x"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="gBY-Yg-Uby"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="8Yl-nk-Bl7"/>
+                                <exclude reference="gb8-uD-fz9"/>
+                                <exclude reference="i5x-90-Pbg"/>
+                                <exclude reference="nLB-GM-K0x"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="gBY-Yg-Uby"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="8Yl-nk-Bl7"/>
+                                <include reference="gb8-uD-fz9"/>
+                                <include reference="i5x-90-Pbg"/>
+                                <include reference="nLB-GM-K0x"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="Wgh-E1-vlx"/>
+                    <connections>
+                        <outlet property="tableView" destination="gBY-Yg-Uby" id="JOW-yX-vZm"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0gN-ZX-EvU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

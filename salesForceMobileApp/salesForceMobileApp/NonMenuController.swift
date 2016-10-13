@@ -8,9 +8,9 @@
 
 import UIKit
 
-
-
-class NonMenuController: UIViewController {
+import SalesforceRestAPI
+import SalesforceSDKCore
+class NonMenuController: UIViewController,SFRestDelegate {
     
     weak var delegate: LeftMenuProtocol?
     

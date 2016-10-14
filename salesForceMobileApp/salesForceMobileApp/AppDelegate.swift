@@ -33,13 +33,11 @@ let OAuthRedirectURI        = "testsfdc:///mobilesdk/detect/oauth/done";
 //let RemoteAccessConsumerKey = "3MVG9ZL0ppGP5UrBTy4vDNM7znBOiXbLDoAe7gjDX3fSUpc5E5yCE6ZVjLcUnBG7NhYp_UzWV1qorZ_DK.teA";
 //let OAuthRedirectURI        = "SalesforceiosApp://auth/success";
 
-class AppDelegate : UIResponder, UIApplicationDelegate
-{
+class AppDelegate : UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     override
-    init()
-    {
+    init() {
         super.init()
         SFLogger.setLogLevel(.Debug)
         
@@ -74,8 +72,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate
     
     // MARK: - App delegate lifecycle
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool
-    {
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         self.initializeAppViewState();
         
@@ -104,8 +101,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate
         return true
     }
     
-    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData)
-    {
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         //
         // Uncomment the code below to register your device token with the push notification manager
         //
@@ -118,8 +114,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate
     }
     
     
-    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError )
-    {
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError ) {
         // Respond to any push notification registration errors here.
     }
     

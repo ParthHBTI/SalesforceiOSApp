@@ -31,7 +31,7 @@
 		04F96F3C1DAF763B000D715A /* GoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F3B1DAF763B000D715A /* GoViewController.swift */; };
 		04F96F3E1DAF769F000D715A /* NonMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F3D1DAF769F000D715A /* NonMenuController.swift */; };
 		04F96F411DAF76DD000D715A /* LeftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F3F1DAF76DD000D715A /* LeftViewController.swift */; };
-		04F96F421DAF76DD000D715A /* RightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F401DAF76DD000D715A /* RightViewController.swift */; };
+		04F96F421DAF76DD000D715A /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F401DAF76DD000D715A /* ContactViewController.swift */; };
 		4F393A291C3C8BCD00B3EA13 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F393A281C3C8BCD00B3EA13 /* main.swift */; };
 		4FD6C47A1B754AF1002F9F90 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD6C4791B754AF1002F9F90 /* AppDelegate.swift */; };
 		4FD6C4811B754AF1002F9F90 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FD6C4801B754AF1002F9F90 /* Images.xcassets */; };
@@ -68,7 +68,7 @@
 		04F96F3B1DAF763B000D715A /* GoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoViewController.swift; sourceTree = "<group>"; };
 		04F96F3D1DAF769F000D715A /* NonMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonMenuController.swift; sourceTree = "<group>"; };
 		04F96F3F1DAF76DD000D715A /* LeftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftViewController.swift; sourceTree = "<group>"; };
-		04F96F401DAF76DD000D715A /* RightViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightViewController.swift; sourceTree = "<group>"; };
+		04F96F401DAF76DD000D715A /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
 		390E28E00C7AB6A235AA7680 /* Pods_salesForceMobileApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_salesForceMobileApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F393A281C3C8BCD00B3EA13 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4FD6C4741B754AF1002F9F90 /* salesForceMobileApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = salesForceMobileApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -189,7 +189,7 @@
 				4FD6C49C1B755242002F9F90 /* RootViewController.swift */,
 				04F96ECF1DAF6E01000D715A /* Main.storyboard */,
 				04F96F3F1DAF76DD000D715A /* LeftViewController.swift */,
-				04F96F401DAF76DD000D715A /* RightViewController.swift */,
+				04F96F401DAF76DD000D715A /* ContactViewController.swift */,
 				04F96F311DAF75E0000D715A /* SubContentsViewController.swift */,
 				04F96F371DAF761E000D715A /* SwiftViewController.swift */,
 				04F96F391DAF762E000D715A /* JavaViewController.swift */,
@@ -349,7 +349,7 @@
 			files = (
 				04F96F201DAF740C000D715A /* UIApplication.swift in Sources */,
 				04F96F191DAF740C000D715A /* String.swift in Sources */,
-				04F96F421DAF76DD000D715A /* RightViewController.swift in Sources */,
+				04F96F421DAF76DD000D715A /* ContactViewController.swift in Sources */,
 				04F96F1F1DAF740C000D715A /* UIColor.swift in Sources */,
 				04F96F1D1DAF740C000D715A /* UIImage.swift in Sources */,
 				04F96F1E1DAF740C000D715A /* UIView.swift in Sources */,

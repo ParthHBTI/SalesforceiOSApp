@@ -16,6 +16,9 @@ class NonMenuController: UIViewController,SFRestDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.handleSdkManagerLogout()
+
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -39,4 +42,5 @@ class NonMenuController: UIViewController,SFRestDelegate {
     @IBAction func didTouchToMain(sender: UIButton) {
         delegate?.changeViewController(LeftMenu.Main)
     }
+   
 }

@@ -9,9 +9,11 @@ import UIKit
 import SalesforceNetwork
 import SalesforceRestAPI
 import SalesforceSDKCore
+import SmartStore.SalesforceSDKManagerWithSmartStore
+import SmartSync
+import SmartStore
 
 class ContactViewController : UIViewController, SFRestDelegate {
-    
     
     @IBOutlet weak var firstName: UITextField!
     @IBOutlet weak var lastName: UITextField!
@@ -30,22 +32,24 @@ class ContactViewController : UIViewController, SFRestDelegate {
 
     @IBAction func saveAction(sender: AnyObject) {
         
-                let fields = [
-           "FirstName" : firstName,
-            "LastName" : lastName,
-            "Email" : email,
-           "Phone" : phone,
-           "Fax" : fax
+            let fields = [
+           "FirstName" : firstName.text!,
+            "LastName" : lastName.text!,
+            "Email" : email.text!,
+           "Phone" : phone.text!,
+           "Fax" : fax.text!
         ]
-        SFRestAPI.sharedInstance().performCreateWithObjectType("Contacts", fields: fields, failBlock: { err in
+        SFRestAPI.sharedInstance().performCreateWithObjectType("Contact", fields: fields, failBlock: { err in
+            dispatch_async(dispatch_get_main_queue(), {
+                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+                })
             print( (err))
             self.requestForResources()
         }) { succes in
                         print(succes)
         }
-        
-        
-    }
+           }
     
     func requestForResources() -> SFRestRequest {
         print(SFRestRequest)

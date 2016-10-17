@@ -43,6 +43,7 @@ class OpporchunityViewController: UIViewController, SFRestDelegate {
             dispatch_async(dispatch_get_main_queue(), {
                 let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
                 alert.show()
+                print(err?.localizedDescription)
             })
             print( (err))
         }) { succes in

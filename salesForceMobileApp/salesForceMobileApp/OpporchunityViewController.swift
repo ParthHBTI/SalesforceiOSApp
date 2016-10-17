@@ -7,8 +7,14 @@
 //
 
 import UIKit
+import SalesforceNetwork
+import SalesforceRestAPI
+import SalesforceSDKCore
+import SmartStore.SalesforceSDKManagerWithSmartStore
+import SmartSync
+import SmartStore
 
-class OpporchunityViewController: UIViewController {
+class OpporchunityViewController: UIViewController, SFRestDelegate {
 
     @IBOutlet weak var opportunityName: UITextField!
     @IBOutlet weak var closeDate: UITextField!
@@ -26,6 +32,24 @@ class OpporchunityViewController: UIViewController {
     }
     
     @IBAction func saveAction(sender: AnyObject) {
+        
+        let fields = [
+            "Name" : opportunityName.text!,
+            "CloseDate" : closeDate.text!,
+            "Amount" : amount.text!,
+            "StageName" : stage.text!,
+        ]
+        SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: { err in
+            dispatch_async(dispatch_get_main_queue(), {
+                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+            })
+            print( (err))
+        }) { succes in
+            print(succes)
+        }
+
+        
     }
     
     @IBAction func cancelAction(sender: AnyObject) {

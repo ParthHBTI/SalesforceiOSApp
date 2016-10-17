@@ -45,16 +45,11 @@ class ContactViewController : UIViewController, SFRestDelegate {
                 alert.show()
                 })
             print( (err))
-            self.requestForResources()
         }) { succes in
                         print(succes)
         }
            }
-    
-    func requestForResources() -> SFRestRequest {
-        print(SFRestRequest)
-        return SFRestRequest.init()
-    }
+   
     
     @IBAction func cancelAction(sender: AnyObject) {
         

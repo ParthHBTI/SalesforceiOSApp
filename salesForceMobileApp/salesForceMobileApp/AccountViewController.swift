@@ -7,6 +7,12 @@
 //
 
 import UIKit
+import SalesforceNetwork
+import SalesforceRestAPI
+import SalesforceSDKCore
+import SmartStore.SalesforceSDKManagerWithSmartStore
+import SmartSync
+import SmartStore
 
 class AccountViewController: UIViewController {
 
@@ -24,6 +30,21 @@ class AccountViewController: UIViewController {
     }
     
     @IBAction func saveAction(sender: AnyObject) {
+        
+        let fields = [
+            "Name" : accountName.text!,
+            "AccountNumber" : accountAddress.text!,
+        ]
+        SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: { err in
+            dispatch_async(dispatch_get_main_queue(), {
+                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+            })
+            print( (err))
+        }) { succes in
+            print(succes)
+        }
+
     }
 
     @IBAction func cancelAction(sender: AnyObject) {

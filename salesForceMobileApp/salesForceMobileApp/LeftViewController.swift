@@ -8,10 +8,10 @@
 import UIKit
 
 enum LeftMenu: Int {
-    case Main = 0
-    case Swift
-    case Java
-    case Go
+    case lead = 0
+    case account
+    case contact
+    case opportunity
     case NonMenu
 }
 
@@ -70,13 +70,13 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     
     func changeViewController(menu: LeftMenu) {
         switch menu {
-        case .Main:
+        case .lead:
             self.slideMenuController()?.changeMainViewController(self.mainViewController, close: true)
-        case .Swift:
+        case .account:
             self.slideMenuController()?.changeMainViewController(self.swiftViewController, close: true)
-        case .Java:
+        case .contact:
             self.slideMenuController()?.changeMainViewController(self.javaViewController, close: true)
-        case .Go:
+        case .opportunity:
             self.slideMenuController()?.changeMainViewController(self.goViewController, close: true)
         case .NonMenu:
             self.slideMenuController()?.changeMainViewController(self.nonMenuViewController, close: true)
@@ -88,7 +88,7 @@ extension LeftViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if let menu = LeftMenu(rawValue: indexPath.item) {
             switch menu {
-            case .Main, .Swift, .Java, .Go, .NonMenu:
+            case .lead, .account, .contact, .opportunity, .NonMenu:
                 return BaseTableViewCell.height()
             }
         }
@@ -106,7 +106,7 @@ extension LeftViewController : UITableViewDataSource {
         
         if let menu = LeftMenu(rawValue: indexPath.item) {
             switch menu {
-            case .Main, .Swift, .Java, .Go, .NonMenu:
+            case .lead, .account, .contact, .opportunity, .NonMenu:
                 let cell = BaseTableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: BaseTableViewCell.identifier)
                 cell.setData(menus[indexPath.row])
                 return cell

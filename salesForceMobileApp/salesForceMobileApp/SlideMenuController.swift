@@ -654,6 +654,7 @@ public class SlideMenuController: UIViewController, UIGestureRecognizerDelegate 
         return rightViewController != nil && rightContainerView.frame.origin.x == CGRectGetWidth(view.bounds) - rightContainerView.frame.size.width
     }
     
+    
     public func isRightHidden() -> Bool {
         return rightContainerView.frame.origin.x >= CGRectGetWidth(view.bounds)
     }

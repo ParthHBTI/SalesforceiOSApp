@@ -8,6 +8,7 @@
 import UIKit
 import SalesforceRestAPI
 
+// class for Lead's data
 class MainViewController: UIViewController, SFRestDelegate {
 
     @IBOutlet weak var tableView: UITableView!
@@ -60,6 +61,7 @@ class MainViewController: UIViewController, SFRestDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setNavigationBarItem()
         self.tableView.registerCellNib(DataTableViewCell.self)
     }
     

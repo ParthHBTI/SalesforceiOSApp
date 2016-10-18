@@ -37,11 +37,11 @@
 		04F96F421DAF76DD000D715A /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F401DAF76DD000D715A /* ContactViewController.swift */; };
 		4F393A291C3C8BCD00B3EA13 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F393A281C3C8BCD00B3EA13 /* main.swift */; };
 		4FD6C47A1B754AF1002F9F90 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD6C4791B754AF1002F9F90 /* AppDelegate.swift */; };
-		4FD6C4811B754AF1002F9F90 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4FD6C4801B754AF1002F9F90 /* Images.xcassets */; };
 		4FD6C49E1B755242002F9F90 /* InitialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4FD6C49B1B755242002F9F90 /* InitialViewController.xib */; };
 		4FD6C49F1B755242002F9F90 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD6C49C1B755242002F9F90 /* RootViewController.swift */; };
 		4FD6C4A01B755242002F9F90 /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD6C49D1B755242002F9F90 /* InitialViewController.swift */; };
 		5814ABBD9E1C70793E9ED7CB /* Pods_salesForceMobileApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 390E28E00C7AB6A235AA7680 /* Pods_salesForceMobileApp.framework */; };
+		731BC9E01DB4F86600B3C6C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 731BC9DF1DB4F86600B3C6C7 /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,11 +80,11 @@
 		4FD6C4741B754AF1002F9F90 /* salesForceMobileApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = salesForceMobileApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4FD6C4781B754AF1002F9F90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4FD6C4791B754AF1002F9F90 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4FD6C4801B754AF1002F9F90 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4FD6C49A1B755242002F9F90 /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		4FD6C49B1B755242002F9F90 /* InitialViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InitialViewController.xib; sourceTree = "<group>"; };
 		4FD6C49C1B755242002F9F90 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		4FD6C49D1B755242002F9F90 /* InitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
+		731BC9DF1DB4F86600B3C6C7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		762732C14CFE40A989C3AD70 /* Pods-salesForceMobileApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-salesForceMobileApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-salesForceMobileApp/Pods-salesForceMobileApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -179,8 +179,8 @@
 		4FD6C4771B754AF1002F9F90 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				4FD6C4801B754AF1002F9F90 /* Images.xcassets */,
 				4FD6C4781B754AF1002F9F90 /* Info.plist */,
+				731BC9DF1DB4F86600B3C6C7 /* Images.xcassets */,
 			);
 			name = "Supporting Files";
 			path = salesForceMobileApp;
@@ -191,12 +191,11 @@
 			children = (
 				4FD6C49A1B755242002F9F90 /* Bridging-Header.h */,
 				4FD6C49B1B755242002F9F90 /* InitialViewController.xib */,
+				4FD6C49C1B755242002F9F90 /* RootViewController.swift */,
 				04F96F0E1DAF7333000D715A /* MainViewController.swift */,
 				04DB2FA21DB4ED2100C4519F /* LeadViewController.swift */,
 				04DB2FA61DB4ED5300C4519F /* OpporchunityViewController.swift */,
-				4FD6C49C1B755242002F9F90 /* RootViewController.swift */,
 				04DB2FA41DB4ED3E00C4519F /* AccountViewController.swift */,
-				04F96ECF1DAF6E01000D715A /* Main.storyboard */,
 				04F96F3F1DAF76DD000D715A /* LeftViewController.swift */,
 				04F96F401DAF76DD000D715A /* ContactViewController.swift */,
 				04F96F311DAF75E0000D715A /* SubContentsViewController.swift */,
@@ -204,6 +203,7 @@
 				04F96F391DAF762E000D715A /* JavaViewController.swift */,
 				04F96F3B1DAF763B000D715A /* GoViewController.swift */,
 				04F96F3D1DAF769F000D715A /* NonMenuController.swift */,
+				04F96ECF1DAF6E01000D715A /* Main.storyboard */,
 				04F96F321DAF75E0000D715A /* SubContentsViewController.storyboard */,
 				04F96F331DAF75E0000D715A /* ExSlideMenuController.swift */,
 				4FD6C49D1B755242002F9F90 /* InitialViewController.swift */,
@@ -295,7 +295,7 @@
 				04F96F2C1DAF7517000D715A /* DataTableViewCell.xib in Resources */,
 				04F96ED01DAF6E01000D715A /* Main.storyboard in Resources */,
 				04F96F351DAF75E0000D715A /* SubContentsViewController.storyboard in Resources */,
-				4FD6C4811B754AF1002F9F90 /* Images.xcassets in Resources */,
+				731BC9E01DB4F86600B3C6C7 /* Images.xcassets in Resources */,
 				4FD6C49E1B755242002F9F90 /* InitialViewController.xib in Resources */,
 				04F96F251DAF74F8000D715A /* ImageHeaderView.xib in Resources */,
 			);

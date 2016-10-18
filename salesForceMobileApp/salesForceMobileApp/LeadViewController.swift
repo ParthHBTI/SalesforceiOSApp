@@ -9,7 +9,7 @@ import UIKit
 import SalesforceRestAPI
 
 // class for Lead's data
-class MainViewController: UIViewController, SFRestDelegate {
+class LeadViewController: UIViewController, SFRestDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -81,13 +81,13 @@ class MainViewController: UIViewController, SFRestDelegate {
 }
 
 
-extension MainViewController : UITableViewDelegate {
+extension LeadViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return DataTableViewCell.height()
     }
 }
 
-extension MainViewController : UITableViewDataSource {
+extension LeadViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dataRows.count
     }
@@ -105,7 +105,7 @@ extension MainViewController : UITableViewDataSource {
     }
 }
 
-extension MainViewController : SlideMenuControllerDelegate {
+extension LeadViewController : SlideMenuControllerDelegate {
     
     func leftWillOpen() {
         print("SlideMenuControllerDelegate: leftWillOpen")

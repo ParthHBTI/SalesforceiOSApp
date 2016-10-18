@@ -39,13 +39,13 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
         self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let swiftViewController = storyboard.instantiateViewControllerWithIdentifier("SwiftViewController") as! SwiftViewController
+        let swiftViewController = storyboard.instantiateViewControllerWithIdentifier("AccountViewController") as! AccountViewController
         self.swiftViewController = UINavigationController(rootViewController: swiftViewController)
         
-        let javaViewController = storyboard.instantiateViewControllerWithIdentifier("JavaViewController") as! JavaViewController
+        let javaViewController = storyboard.instantiateViewControllerWithIdentifier("ContactViewController") as! ContactViewController
         self.javaViewController = UINavigationController(rootViewController: javaViewController)
         
-        let goViewController = storyboard.instantiateViewControllerWithIdentifier("GoViewController") as! GoViewController
+        let goViewController = storyboard.instantiateViewControllerWithIdentifier("OpportunityViewController") as! OpportunityViewController
         self.goViewController = UINavigationController(rootViewController: goViewController)
         
         let nonMenuController = storyboard.instantiateViewControllerWithIdentifier("NonMenuController") as! NonMenuController

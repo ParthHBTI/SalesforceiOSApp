@@ -1,5 +1,5 @@
 //
-//  JavaViewController.swift
+//  ContactViewController.swift
 //  SlideMenuControllerSwift
 //
 //  Created by Yuji Hato on 1/19/15.
@@ -8,7 +8,7 @@
 
 import UIKit
 import SalesforceRestAPI
-class JavaViewController: UIViewController , SFRestDelegate{
+class ContactViewController: UIViewController , SFRestDelegate{
     
     @IBOutlet weak var tableView: UITableView!
     var dataRows = [NSDictionary]()
@@ -75,14 +75,14 @@ class JavaViewController: UIViewController , SFRestDelegate{
     
 }
 
-extension JavaViewController : UITableViewDelegate {
+extension ContactViewController : UITableViewDelegate {
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return DataTableViewCell.height()
     }
 }
 
-extension JavaViewController : UITableViewDataSource {
+extension ContactViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dataRows.count
     }

@@ -29,9 +29,9 @@
 		04F96F341DAF75E0000D715A /* SubContentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F311DAF75E0000D715A /* SubContentsViewController.swift */; };
 		04F96F351DAF75E0000D715A /* SubContentsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04F96F321DAF75E0000D715A /* SubContentsViewController.storyboard */; };
 		04F96F361DAF75E0000D715A /* ExSlideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F331DAF75E0000D715A /* ExSlideMenuController.swift */; };
-		04F96F381DAF761F000D715A /* SwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F371DAF761E000D715A /* SwiftViewController.swift */; };
-		04F96F3A1DAF762E000D715A /* JavaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F391DAF762E000D715A /* JavaViewController.swift */; };
-		04F96F3C1DAF763B000D715A /* GoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F3B1DAF763B000D715A /* GoViewController.swift */; };
+		04F96F381DAF761F000D715A /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F371DAF761E000D715A /* AccountViewController.swift */; };
+		04F96F3A1DAF762E000D715A /* ContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F391DAF762E000D715A /* ContactViewController.swift */; };
+		04F96F3C1DAF763B000D715A /* OpportunityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F3B1DAF763B000D715A /* OpportunityViewController.swift */; };
 		04F96F3E1DAF769F000D715A /* NonMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F3D1DAF769F000D715A /* NonMenuController.swift */; };
 		04F96F411DAF76DD000D715A /* LeftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F3F1DAF76DD000D715A /* LeftViewController.swift */; };
 		04F96F421DAF76DD000D715A /* CreateNewContactVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F401DAF76DD000D715A /* CreateNewContactVC.swift */; };
@@ -69,9 +69,9 @@
 		04F96F311DAF75E0000D715A /* SubContentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubContentsViewController.swift; sourceTree = "<group>"; };
 		04F96F321DAF75E0000D715A /* SubContentsViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SubContentsViewController.storyboard; sourceTree = "<group>"; };
 		04F96F331DAF75E0000D715A /* ExSlideMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExSlideMenuController.swift; sourceTree = "<group>"; };
-		04F96F371DAF761E000D715A /* SwiftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftViewController.swift; sourceTree = "<group>"; };
-		04F96F391DAF762E000D715A /* JavaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JavaViewController.swift; sourceTree = "<group>"; };
-		04F96F3B1DAF763B000D715A /* GoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoViewController.swift; sourceTree = "<group>"; };
+		04F96F371DAF761E000D715A /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		04F96F391DAF762E000D715A /* ContactViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactViewController.swift; sourceTree = "<group>"; };
+		04F96F3B1DAF763B000D715A /* OpportunityViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpportunityViewController.swift; sourceTree = "<group>"; };
 		04F96F3D1DAF769F000D715A /* NonMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonMenuController.swift; sourceTree = "<group>"; };
 		04F96F3F1DAF76DD000D715A /* LeftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftViewController.swift; sourceTree = "<group>"; };
 		04F96F401DAF76DD000D715A /* CreateNewContactVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewContactVC.swift; sourceTree = "<group>"; };
@@ -199,9 +199,9 @@
 				04DB2FA41DB4ED3E00C4519F /* CreateNewAccountVC.swift */,
 				04F96F401DAF76DD000D715A /* CreateNewContactVC.swift */,
 				04F96F311DAF75E0000D715A /* SubContentsViewController.swift */,
-				04F96F371DAF761E000D715A /* SwiftViewController.swift */,
-				04F96F391DAF762E000D715A /* JavaViewController.swift */,
-				04F96F3B1DAF763B000D715A /* GoViewController.swift */,
+				04F96F371DAF761E000D715A /* AccountViewController.swift */,
+				04F96F391DAF762E000D715A /* ContactViewController.swift */,
+				04F96F3B1DAF763B000D715A /* OpportunityViewController.swift */,
 				04F96F3D1DAF769F000D715A /* NonMenuController.swift */,
 				04F96ECF1DAF6E01000D715A /* Main.storyboard */,
 				04F96F321DAF75E0000D715A /* SubContentsViewController.storyboard */,
@@ -363,11 +363,11 @@
 				04DB2FA31DB4ED2100C4519F /* CreateNewLeadVC.swift in Sources */,
 				04F96F1D1DAF740C000D715A /* UIImage.swift in Sources */,
 				04F96F1E1DAF740C000D715A /* UIView.swift in Sources */,
-				04F96F3A1DAF762E000D715A /* JavaViewController.swift in Sources */,
+				04F96F3A1DAF762E000D715A /* ContactViewController.swift in Sources */,
 				04DB2FA51DB4ED3E00C4519F /* CreateNewAccountVC.swift in Sources */,
 				04F96F1C1DAF740C000D715A /* UIImageView.swift in Sources */,
 				4FD6C47A1B754AF1002F9F90 /* AppDelegate.swift in Sources */,
-				04F96F381DAF761F000D715A /* SwiftViewController.swift in Sources */,
+				04F96F381DAF761F000D715A /* AccountViewController.swift in Sources */,
 				04DB2FA71DB4ED5300C4519F /* CreateNewOpportunityVC.swift in Sources */,
 				04F96F241DAF74F8000D715A /* ImageHeaderView.swift in Sources */,
 				4FD6C49F1B755242002F9F90 /* RootViewController.swift in Sources */,
@@ -378,7 +378,7 @@
 				04CB1DE41DAF807400D2621C /* SlideMenuController.swift in Sources */,
 				04F96F1B1DAF740C000D715A /* UIViewController.swift in Sources */,
 				04F96F2A1DAF7517000D715A /* BaseTableViewCell.swift in Sources */,
-				04F96F3C1DAF763B000D715A /* GoViewController.swift in Sources */,
+				04F96F3C1DAF763B000D715A /* OpportunityViewController.swift in Sources */,
 				04F96F1A1DAF740C000D715A /* UITableViewExtension.swift in Sources */,
 				04F96F2B1DAF7517000D715A /* DataTableViewCell.swift in Sources */,
 				04F96F411DAF76DD000D715A /* LeftViewController.swift in Sources */,

@@ -82,6 +82,7 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
             self.slideMenuController()?.changeMainViewController(self.nonMenuViewController, close: true)
         }
     }
+    
 }
 
 extension LeftViewController : UITableViewDelegate {

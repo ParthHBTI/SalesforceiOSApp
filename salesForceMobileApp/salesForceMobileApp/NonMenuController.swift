@@ -40,7 +40,7 @@ class NonMenuController: UIViewController,SFRestDelegate {
     }
   
     @IBAction func didTouchToMain(sender: UIButton) {
-        delegate?.changeViewController(LeftMenu.Main)
+        delegate?.changeViewController(LeftMenu.lead)
     }
    
 }

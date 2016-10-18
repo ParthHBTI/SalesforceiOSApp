@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		04CB1DE41DAF807400D2621C /* SlideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB1DE31DAF807400D2621C /* SlideMenuController.swift */; };
+		04CC881A1DB630DF00B176F6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04CC88191DB630DF00B176F6 /* LaunchScreen.storyboard */; };
 		04DB2FA31DB4ED2100C4519F /* LeadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA21DB4ED2100C4519F /* LeadViewController.swift */; };
 		04DB2FA51DB4ED3E00C4519F /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA41DB4ED3E00C4519F /* AccountViewController.swift */; };
 		04DB2FA71DB4ED5300C4519F /* OpporchunityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA61DB4ED5300C4519F /* OpporchunityViewController.swift */; };
@@ -48,6 +49,7 @@
 		045D1C5BC2F1EADFDFB3671E /* Pods-salesForceMobileApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-salesForceMobileApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-salesForceMobileApp/Pods-salesForceMobileApp.release.xcconfig"; sourceTree = "<group>"; };
 		04CB1DE21DAF807400D2621C /* SlideMenuControllerSwift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideMenuControllerSwift.h; sourceTree = "<group>"; };
 		04CB1DE31DAF807400D2621C /* SlideMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideMenuController.swift; sourceTree = "<group>"; };
+		04CC88191DB630DF00B176F6 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		04DB2FA21DB4ED2100C4519F /* LeadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadViewController.swift; sourceTree = "<group>"; };
 		04DB2FA41DB4ED3E00C4519F /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		04DB2FA61DB4ED5300C4519F /* OpporchunityViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpporchunityViewController.swift; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				04F96F331DAF75E0000D715A /* ExSlideMenuController.swift */,
 				4FD6C49D1B755242002F9F90 /* InitialViewController.swift */,
 				4FD6C4791B754AF1002F9F90 /* AppDelegate.swift */,
+				04CC88191DB630DF00B176F6 /* LaunchScreen.storyboard */,
 				4F393A281C3C8BCD00B3EA13 /* main.swift */,
 			);
 			name = Classes;
@@ -296,6 +299,7 @@
 				04F96ED01DAF6E01000D715A /* Main.storyboard in Resources */,
 				04F96F351DAF75E0000D715A /* SubContentsViewController.storyboard in Resources */,
 				4FD6C4811B754AF1002F9F90 /* Images.xcassets in Resources */,
+				04CC881A1DB630DF00B176F6 /* LaunchScreen.storyboard in Resources */,
 				4FD6C49E1B755242002F9F90 /* InitialViewController.xib in Resources */,
 				04F96F251DAF74F8000D715A /* ImageHeaderView.xib in Resources */,
 			);
@@ -479,9 +483,9 @@
 			baseConfigurationReference = 762732C14CFE40A989C3AD70 /* Pods-salesForceMobileApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = 47RFJH396J;
 				INFOPLIST_FILE = salesForceMobileApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "salesForceMobileApp/Bridging-Header.h";
@@ -493,9 +497,9 @@
 			baseConfigurationReference = 045D1C5BC2F1EADFDFB3671E /* Pods-salesForceMobileApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = 47RFJH396J;
 				INFOPLIST_FILE = salesForceMobileApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "salesForceMobileApp/Bridging-Header.h";

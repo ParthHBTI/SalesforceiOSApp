@@ -14,17 +14,23 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="79"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ppM-43-tik">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_menu_black_24dp" translatesAutoresizingMaskIntoConstraints="NO" id="ppM-43-tik">
                         <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="80" id="osB-9J-1ls"/>
-                            <constraint firstAttribute="width" constant="80" id="wNA-oV-Ceo"/>
+                            <constraint firstAttribute="height" constant="80" id="osB-9J-1ls">
+                                <variation key="heightClass=regular-widthClass=compact" constant="30"/>
+                            </constraint>
+                            <constraint firstAttribute="width" constant="80" id="wNA-oV-Ceo">
+                                <variation key="heightClass=regular-widthClass=compact" constant="30"/>
+                            </constraint>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I30-9I-EnW">
                         <rect key="frame" x="88" y="19" width="224" height="42"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="42" id="tMX-bK-3QC"/>
+                            <constraint firstAttribute="height" constant="42" id="tMX-bK-3QC">
+                                <variation key="heightClass=regular-widthClass=compact" constant="30"/>
+                            </constraint>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -32,14 +38,22 @@
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="I30-9I-EnW" firstAttribute="leading" secondItem="ppM-43-tik" secondAttribute="trailing" constant="8" id="0sI-CM-qrq"/>
-                    <constraint firstItem="I30-9I-EnW" firstAttribute="centerY" secondItem="eWK-b2-p7R" secondAttribute="centerY" id="CC8-Ve-GEE"/>
-                    <constraint firstItem="ppM-43-tik" firstAttribute="top" secondItem="eWK-b2-p7R" secondAttribute="top" id="Ejt-ht-YfW"/>
-                    <constraint firstItem="ppM-43-tik" firstAttribute="leading" secondItem="eWK-b2-p7R" secondAttribute="leading" id="c9f-ya-sBc"/>
+                    <constraint firstItem="I30-9I-EnW" firstAttribute="leading" secondItem="ppM-43-tik" secondAttribute="trailing" constant="8" id="0sI-CM-qrq">
+                        <variation key="heightClass=regular-widthClass=compact" constant="48"/>
+                    </constraint>
+                    <constraint firstItem="I30-9I-EnW" firstAttribute="centerY" secondItem="eWK-b2-p7R" secondAttribute="centerY" id="CC8-Ve-GEE">
+                        <variation key="heightClass=regular-widthClass=compact" constant="-5.5"/>
+                    </constraint>
+                    <constraint firstItem="ppM-43-tik" firstAttribute="top" secondItem="eWK-b2-p7R" secondAttribute="top" id="Ejt-ht-YfW">
+                        <variation key="heightClass=regular-widthClass=compact" constant="19"/>
+                    </constraint>
+                    <constraint firstItem="ppM-43-tik" firstAttribute="leading" secondItem="eWK-b2-p7R" secondAttribute="leading" id="c9f-ya-sBc">
+                        <variation key="heightClass=regular-widthClass=compact" constant="10"/>
+                    </constraint>
                     <constraint firstAttribute="trailing" secondItem="I30-9I-EnW" secondAttribute="trailing" constant="8" id="rG9-lK-Ze8"/>
                 </constraints>
             </tableViewCellContentView>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <connections>
                 <outlet property="dataImage" destination="ppM-43-tik" id="xdO-QO-GUo"/>
                 <outlet property="dataText" destination="I30-9I-EnW" id="vsj-dK-z9n"/>
@@ -47,4 +61,7 @@
             <point key="canvasLocation" x="249" y="183"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="ic_menu_black_24dp" width="24" height="24"/>
+    </resources>
 </document>

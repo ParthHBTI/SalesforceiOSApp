@@ -33,7 +33,7 @@ class AccountViewController: UIViewController {
         
         let fields = [
             "Name" : accountName.text!,
-            "AccountNumber" : accountAddress.text!,
+            "ShippingAddress" : accountAddress.text!,
         ]
         SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: { err in
             dispatch_async(dispatch_get_main_queue(), {

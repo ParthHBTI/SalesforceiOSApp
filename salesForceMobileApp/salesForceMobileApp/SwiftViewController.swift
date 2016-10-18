@@ -24,7 +24,7 @@ class SwiftViewController:UIViewController, SFRestDelegate {
     override func loadView()
     {
         super.loadView()
-        self.title = "Mobile SDK Sample App"
+        self.title = "Account View"
         
         //Here we use a query that should work on either Force.com or Database.com
         let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Website FROM Account Limit 10");
@@ -99,7 +99,7 @@ extension SwiftViewController : UITableViewDataSource {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
         //        let data = DataTableViewCellData(imageUrl: "dummy", text: dataRows.objectAtIndexPath(indexPath.row)[""])
         //        cell.setData(data)
-        cell.textLabel?.text = resArr.objectAtIndex(indexPath.row)["Website"] as? String
+        cell.dataText?.text = resArr.objectAtIndex(indexPath.row)["Website"] as? String
         return cell
 }
 }

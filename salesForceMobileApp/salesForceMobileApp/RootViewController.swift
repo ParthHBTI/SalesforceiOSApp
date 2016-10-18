@@ -112,7 +112,7 @@ class RootViewController : UITableViewController, SFRestDelegate
         
         let mainViewController = storyboard.instantiateViewControllerWithIdentifier("MainViewController") as! MainViewController
         let leftViewController = storyboard.instantiateViewControllerWithIdentifier("LeftViewController") as! LeftViewController
-        let rightViewController = storyboard.instantiateViewControllerWithIdentifier("OpporchunityViewController") as! OpporchunityViewController
+        let rightViewController = storyboard.instantiateViewControllerWithIdentifier("AccountViewController") as! AccountViewController
         
         let nvc: UINavigationController = UINavigationController(rootViewController: mainViewController)
         

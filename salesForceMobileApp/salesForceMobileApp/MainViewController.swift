@@ -20,7 +20,7 @@ class MainViewController: UIViewController, SFRestDelegate {
     override func loadView()
     {
         super.loadView()
-        self.title = "Mobile SDK Sample App"
+        self.title = "Leads View"
         
         //Here we use a query that should work on either Force.com or Database.com
         let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Company FROM Lead limit 20");
@@ -92,9 +92,7 @@ extension MainViewController : UITableViewDataSource {
      
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
-//        let data = DataTableViewCellData(imageUrl: "dummy", text: dataRows.objectAtIndexPath(indexPath.row)[""])
-//        cell.setData(data)
-        cell.textLabel?.text = resArr.objectAtIndex(indexPath.row)["Company"] as? String
+        cell.dataText.text = resArr.objectAtIndex(indexPath.row)["Company"] as? String
         return cell
     }
     

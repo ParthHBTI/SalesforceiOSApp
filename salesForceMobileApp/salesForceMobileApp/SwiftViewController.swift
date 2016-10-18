@@ -16,8 +16,6 @@ class SwiftViewController:UIViewController, SFRestDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     
-    var mainContens = ["data1", "data2", "data3", "data4", "data5", "data6", "data7", "data8", "data9", "data10", "data11", "data12", "data13", "data14", "data15"]
-    
     var dataRows = [NSDictionary]()
     var resArr:AnyObject = []
     // MARK: - View lifecycle
@@ -33,8 +31,7 @@ class SwiftViewController:UIViewController, SFRestDelegate {
     }
     
     // MARK: - SFRestAPIDelegate
-    func request(request: SFRestRequest, didLoadResponse jsonResponse: AnyObject)
-    {
+    func request(request: SFRestRequest, didLoadResponse jsonResponse: AnyObject) {
         self.dataRows = jsonResponse["records"] as! [NSDictionary]
         self.log(.Debug, msg: "request:didLoadResponse: #records: \(self.dataRows.count)")
         dispatch_async(dispatch_get_main_queue(), {
@@ -97,8 +94,6 @@ extension SwiftViewController : UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
-        //        let data = DataTableViewCellData(imageUrl: "dummy", text: dataRows.objectAtIndexPath(indexPath.row)[""])
-        //        cell.setData(data)
         cell.dataText?.text = resArr.objectAtIndex(indexPath.row)["Website"] as? String
         return cell
 }

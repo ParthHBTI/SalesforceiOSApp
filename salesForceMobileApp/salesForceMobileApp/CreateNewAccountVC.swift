@@ -1,5 +1,5 @@
 //
-//  LeadViewController.swift
+//  AccountViewController.swift
 //  salesForceMobileApp
 //
 //  Created by mac on 17/10/16.
@@ -14,11 +14,10 @@ import SmartStore.SalesforceSDKManagerWithSmartStore
 import SmartSync
 import SmartStore
 
-class LeadViewController: UIViewController {
+class CreateNewAccountVC: UIViewController {
 
-    @IBOutlet weak var lastName: UITextField!
-    @IBOutlet weak var companyName: UITextField!
-    @IBOutlet weak var leadStatus: UITextField!
+    @IBOutlet weak var accountName: UITextField!
+    @IBOutlet weak var accountAddress: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -33,11 +32,10 @@ class LeadViewController: UIViewController {
     @IBAction func saveAction(sender: AnyObject) {
         
         let fields = [
-            "LastName" : lastName.text!,
-            "Company" : companyName.text!,
-            "Status" : leadStatus.text!,
+            "Name" : accountName.text!,
+            "ShippingAddress" : accountAddress.text!,
         ]
-        SFRestAPI.sharedInstance().performCreateWithObjectType("Lead", fields: fields, failBlock: { err in
+        SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: { err in
             dispatch_async(dispatch_get_main_queue(), {
                 let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
                 alert.show()
@@ -46,12 +44,10 @@ class LeadViewController: UIViewController {
         }) { succes in
             print(succes)
         }
-    }
 
-   
+    }
 
     @IBAction func cancelAction(sender: AnyObject) {
-        
     }
-
+   
 }

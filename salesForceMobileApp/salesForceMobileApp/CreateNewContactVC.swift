@@ -13,7 +13,7 @@ import SmartStore.SalesforceSDKManagerWithSmartStore
 import SmartSync
 import SmartStore
 
-class ContactViewController : UIViewController, SFRestDelegate {
+class CreateNewContactVC : UIViewController, SFRestDelegate {
     
     @IBOutlet weak var firstName: UITextField!
     @IBOutlet weak var lastName: UITextField!

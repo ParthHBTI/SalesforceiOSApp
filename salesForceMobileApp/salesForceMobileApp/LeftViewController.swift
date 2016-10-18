@@ -110,6 +110,7 @@ extension LeftViewController : UITableViewDataSource {
             case .lead, .account, .contact, .opportunity, .NonMenu:
                 let cell = BaseTableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: BaseTableViewCell.identifier)
                 cell.setData(menus[indexPath.row])
+               cell.backgroundColor = UIColor(red: 8/255.0, green: 20/255.0, blue: 48/255.0, alpha: 1.0)
                 return cell
             }
         }

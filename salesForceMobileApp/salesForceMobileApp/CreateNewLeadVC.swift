@@ -1,5 +1,5 @@
 //
-//  OpporchunityViewController.swift
+//  LeadViewController.swift
 //  salesForceMobileApp
 //
 //  Created by mac on 17/10/16.
@@ -14,12 +14,11 @@ import SmartStore.SalesforceSDKManagerWithSmartStore
 import SmartSync
 import SmartStore
 
-class OpporchunityViewController: UIViewController, SFRestDelegate {
+class CreateNewLeadVC: UIViewController {
 
-    @IBOutlet weak var opportunityName: UITextField!
-    @IBOutlet weak var closeDate: UITextField!
-    @IBOutlet weak var amount: UITextField!
-    @IBOutlet weak var stage: UITextField!
+    @IBOutlet weak var lastName: UITextField!
+    @IBOutlet weak var companyName: UITextField!
+    @IBOutlet weak var leadStatus: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -34,26 +33,25 @@ class OpporchunityViewController: UIViewController, SFRestDelegate {
     @IBAction func saveAction(sender: AnyObject) {
         
         let fields = [
-            "Name" : opportunityName.text!,
-            "CloseDate" : closeDate.text!,
-            "Amount" : amount.text!,
-            "StageName" : stage.text!,
+            "LastName" : lastName.text!,
+            "Company" : companyName.text!,
+            "Status" : leadStatus.text!,
         ]
-        SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: { err in
+        SFRestAPI.sharedInstance().performCreateWithObjectType("Lead", fields: fields, failBlock: { err in
             dispatch_async(dispatch_get_main_queue(), {
                 let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
                 alert.show()
-                print(err?.localizedDescription)
             })
             print( (err))
         }) { succes in
             print(succes)
         }
+    }
 
+   
+
+    @IBAction func cancelAction(sender: AnyObject) {
         
     }
-    
-    @IBAction func cancelAction(sender: AnyObject) {
-    }
-    
+
 }

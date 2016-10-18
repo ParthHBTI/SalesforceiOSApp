@@ -13,7 +13,7 @@
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="crj-Qs-Xeq">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="160"/>
-                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="0.031372549019607843" green="0.078431372549019607" blue="0.18823529411764706" alpha="1" colorSpace="calibratedRGB"/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="User" translatesAutoresizingMaskIntoConstraints="NO" id="KsU-S4-hhE">
                     <rect key="frame" x="8" y="8" width="60" height="60"/>
@@ -36,7 +36,7 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.031372549019607843" green="0.078431372549019607" blue="0.18823529411764706" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="crj-Qs-Xeq" secondAttribute="bottom" id="2GQ-0j-7zw"/>
                 <constraint firstAttribute="trailing" secondItem="crj-Qs-Xeq" secondAttribute="trailing" id="CEW-Ct-L8O"/>

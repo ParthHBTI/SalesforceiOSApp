@@ -1037,7 +1037,7 @@ extension UIViewController {
     }
 
     public func toggleRight() {
-        slideMenuController()?.toggleRight()
+       // slideMenuController()?.toggleRight()
     }
     
     public func openLeft() {
@@ -1045,14 +1045,15 @@ extension UIViewController {
     }
     
     public func openRight() {
-        slideMenuController()?.openRight()    }
+       // slideMenuController()?.openRight()  
+    }
     
     public func closeLeft() {
         slideMenuController()?.closeLeft()
     }
     
     public func closeRight() {
-        slideMenuController()?.closeRight()
+        //slideMenuController()?.closeRight()
     }
     
     // Please specify if you want menu gesuture give priority to than targetScrollView

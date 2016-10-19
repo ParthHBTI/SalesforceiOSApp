@@ -12,18 +12,12 @@ import SalesforceRestAPI
 class MainViewController: UIViewController, SFRestDelegate {
 
     @IBOutlet weak var tableView: UITableView!
-    
-    var mainContens = ["data1", "data2", "data3", "data4", "data5", "data6", "data7", "data8", "data9", "data10", "data11", "data12", "data13", "data14", "data15"]
-    
     var dataRows = [NSDictionary]()
    var resArr:AnyObject = []
-    // MARK: - View lifecycle
-    override func loadView()
-    {
+    
+    override func loadView() {
         super.loadView()
         self.title = "Leads View"
-        
-        //Here we use a query that should work on either Force.com or Database.com
         let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Company FROM Lead limit 20");
         SFRestAPI.sharedInstance().send(request, delegate: self);
         
@@ -63,13 +57,25 @@ class MainViewController: UIViewController, SFRestDelegate {
         super.viewDidLoad()
         self.setNavigationBarItem()
         self.tableView.registerCellNib(DataTableViewCell.self)
+        self.addRightBarButtonWithImage1(UIImage(named: "ic_notifications_black_24dp")!)
+       
     }
     
+   func addRightBarButtonWithImage1(buttonImage: UIImage){
+    let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+         navigationItem.rightBarButtonItem = rightButton;
+    }
+    func toggleRight1() {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
+        navigationController?.pushViewController(nv, animated: true)
+    }
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
     }
     
     override func viewWillAppear(animated: Bool) {
+        self.addRightBarButtonWithImage1(UIImage(named: "ic_notifications_black_24dp")!)
         super.viewWillAppear(animated)
         self.setNavigationBarItem()
     }

@@ -57,9 +57,21 @@ class JavaViewController: UIViewController , SFRestDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.addRightBarButtonWithImage1(UIImage(named: "ic_notifications_black_24dp")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
     }
     
+    func addRightBarButtonWithImage1(buttonImage: UIImage) {
+        let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+        navigationItem.rightBarButtonItem = rightButton;
+    }
+    
+    func toggleRight1() {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
+        navigationController?.pushViewController(nv, animated: true)
+    }
+
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
     }

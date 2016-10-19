@@ -13,7 +13,7 @@ class MainViewController: UIViewController, SFRestDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     var dataRows = [NSDictionary]()
-   var resArr:AnyObject = []
+    var resArr:AnyObject = []
     
     override func loadView() {
         super.loadView()
@@ -34,22 +34,16 @@ class MainViewController: UIViewController, SFRestDelegate {
         })
     }
     
-    func request(request: SFRestRequest, didFailLoadWithError error: NSError)
-    {
+    func request(request: SFRestRequest, didFailLoadWithError error: NSError) {
         self.log(.Debug, msg: "didFailLoadWithError: \(error)")
-        // Add your failed error handling here
     }
     
-    func requestDidCancelLoad(request: SFRestRequest)
-    {
+    func requestDidCancelLoad(request: SFRestRequest) {
         self.log(.Debug, msg: "requestDidCancelLoad: \(request)")
-        // Add your failed error handling here
     }
     
-    func requestDidTimeout(request: SFRestRequest)
-    {
+    func requestDidTimeout(request: SFRestRequest) {
         self.log(.Debug, msg: "requestDidTimeout: \(request)")
-        // Add your failed error handling here
     }
 
     
@@ -61,13 +55,13 @@ class MainViewController: UIViewController, SFRestDelegate {
        
     }
     
-   func addRightBarButtonWithImage1(buttonImage: UIImage){
+   func addRightBarButtonWithImage1(buttonImage: UIImage) {
     let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
          navigationItem.rightBarButtonItem = rightButton;
     }
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
         navigationController?.pushViewController(nv, animated: true)
     }
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {

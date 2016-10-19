@@ -9,7 +9,7 @@ import UIKit
 import SalesforceRestAPI
 
 // class for Lead's data
-class MainViewController: UIViewController, SFRestDelegate {
+class MainViewController: UIViewController, SFRestDelegate, UIScrollViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     var dataRows = [NSDictionary]()
@@ -51,7 +51,7 @@ class MainViewController: UIViewController, SFRestDelegate {
         super.viewDidLoad()
         self.setNavigationBarItem()
         self.tableView.registerCellNib(DataTableViewCell.self)
-        self.addRightBarButtonWithImage1(UIImage(named: "ic_notifications_black_24dp")!)
+        self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
        
     }
     
@@ -69,7 +69,7 @@ class MainViewController: UIViewController, SFRestDelegate {
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.addRightBarButtonWithImage1(UIImage(named: "ic_notifications_black_24dp")!)
+        self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         super.viewWillAppear(animated)
         self.setNavigationBarItem()
     }

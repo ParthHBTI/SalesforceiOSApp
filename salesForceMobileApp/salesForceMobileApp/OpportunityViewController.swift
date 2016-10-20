@@ -58,7 +58,7 @@ class OpportunityViewController: UIViewController, SFRestDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
+         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
     }
     

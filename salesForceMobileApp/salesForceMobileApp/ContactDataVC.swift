@@ -11,7 +11,7 @@ import UIKit
 class ContactDataVC: UITableViewController {
     
     var getResponseArr:AnyObject = []
-    var cellTitleArr: NSArray = ["Name:","Company:","Email:","Phone:","Title:","Fax:"]
+    var cellTitleArr: NSArray = ["Name:","Title:","Birthdate:","Email:","Phone:","Fax:"]
     var contactDataArr:NSArray = []
     
     override func viewDidLoad() {

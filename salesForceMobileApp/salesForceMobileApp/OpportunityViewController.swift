@@ -58,7 +58,19 @@ class OpportunityViewController: UIViewController, SFRestDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
+    }
+    
+    func addRightBarButtonWithImage1(buttonImage: UIImage) {
+        let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+        navigationItem.rightBarButtonItem = rightButton;
+    }
+    
+    func toggleRight1() {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
+        navigationController?.pushViewController(nv, animated: true)
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {

@@ -38,7 +38,7 @@ public struct SlideMenuOptions {
 	public static var opacityViewBackgroundColor: UIColor = UIColor.blackColor()
 }
 
-public class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
+  public class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
 
     public enum SlideAction {
         case Open
@@ -650,6 +650,7 @@ public class SlideMenuController: UIViewController, UIGestureRecognizerDelegate 
         }
     }
     
+    
     public func isRightOpen() -> Bool {
         return rightViewController != nil && rightContainerView.frame.origin.x == CGRectGetWidth(view.bounds) - rightContainerView.frame.size.width
     }
@@ -1037,7 +1038,7 @@ extension UIViewController {
     }
 
     public func toggleRight() {
-        slideMenuController()?.toggleRight()
+       // slideMenuController()?.toggleRight()
     }
     
     public func openLeft() {
@@ -1045,14 +1046,15 @@ extension UIViewController {
     }
     
     public func openRight() {
-        slideMenuController()?.openRight()    }
+       // slideMenuController()?.openRight()  
+    }
     
     public func closeLeft() {
         slideMenuController()?.closeLeft()
     }
     
     public func closeRight() {
-        slideMenuController()?.closeRight()
+        //slideMenuController()?.closeRight()
     }
     
     // Please specify if you want menu gesuture give priority to than targetScrollView

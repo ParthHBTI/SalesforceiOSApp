@@ -132,8 +132,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
         self.window!.makeKeyAndVisible()
     }
     
-    func setupRootViewController()
-    {
+    func setupRootViewController() {
         let rootVC = RootViewController(nibName: nil, bundle: nil)
         let navVC = UINavigationController(rootViewController: rootVC)
         self.window!.rootViewController = navVC

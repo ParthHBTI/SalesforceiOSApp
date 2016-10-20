@@ -12,9 +12,6 @@ import SalesforceRestAPI
 class LeadViewController: UIViewController, SFRestDelegate {
 
     @IBOutlet weak var tableView: UITableView!
-    
-    var mainContens = ["data1", "data2", "data3", "data4", "data5", "data6", "data7", "data8", "data9", "data10", "data11", "data12", "data13", "data14", "data15"]
-    
     var dataRows = [NSDictionary]()
    var resArr:AnyObject = []
     // MARK: - View lifecycle
@@ -24,14 +21,17 @@ class LeadViewController: UIViewController, SFRestDelegate {
         self.title = "Leads View"
         
         //Here we use a query that should work on either Force.com or Database.com
-        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Company FROM Lead limit 20");
+        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Company,Email,Name,Phone,Title,Address FROM Lead limit 20");
         SFRestAPI.sharedInstance().send(request, delegate: self);
+        
+        //let req = SFRestAPI.sharedInstance().requestForQuery("SELECT Phone FROM Lead limit 20")
         
     }
     
     // MARK: - SFRestAPIDelegate
     func request(request: SFRestRequest, didLoadResponse jsonResponse: AnyObject)
     {
+        print(jsonResponse)
         self.dataRows = jsonResponse["records"] as! [NSDictionary]
         self.log(.Debug, msg: "request:didLoadResponse: #records: \(self.dataRows.count)")
         dispatch_async(dispatch_get_main_queue(), {
@@ -61,9 +61,22 @@ class LeadViewController: UIViewController, SFRestDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setNavigationBarItem()
+        self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
     }
+    
+    
+    func addRightBarButtonWithImage1(buttonImage: UIImage) {
+        let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+        navigationItem.rightBarButtonItem = rightButton;
+    }
+    
+    func toggleRight1() {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
+        navigationController?.pushViewController(nv, animated: true)
+    }
+    
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
@@ -100,9 +113,11 @@ extension LeadViewController : UITableViewDataSource {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
-        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("SubContentsViewController") as! SubContentsViewController
+        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("LeadContentVC") as! LeadContentVC
+        subContentsVC.getResponseArr = self.resArr.objectAtIndex(indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
+    
 }
 
 extension LeadViewController : SlideMenuControllerDelegate {

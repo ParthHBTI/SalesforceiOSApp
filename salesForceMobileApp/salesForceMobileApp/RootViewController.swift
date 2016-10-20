@@ -112,7 +112,7 @@ class RootViewController : UITableViewController, SFRestDelegate
         
         let mainViewController = storyboard.instantiateViewControllerWithIdentifier("LeadViewController") as! LeadViewController
         let leftViewController = storyboard.instantiateViewControllerWithIdentifier("LeftViewController") as! LeftViewController
-        let rightViewController = storyboard.instantiateViewControllerWithIdentifier("CreateNewAccountVC") as! CreateNewAccountVC
+        let rightViewController = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
         
         let nvc: UINavigationController = UINavigationController(rootViewController: mainViewController)
         

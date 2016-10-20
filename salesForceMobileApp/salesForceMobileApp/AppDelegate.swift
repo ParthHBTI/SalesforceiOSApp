@@ -167,7 +167,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
             // your app does not support multiple accounts.  The logic below will work either way.
             
             var numberOfAccounts : Int;
-            let allAccounts = SFUserAccountManager.sharedInstance().allUserAccounts as! [SFUserAccount]?
+            let allAccounts = SFUserAccountManager.sharedInstance().allUserAccounts as [SFUserAccount]?
             if allAccounts != nil {
                 numberOfAccounts = allAccounts!.count;
             } else {

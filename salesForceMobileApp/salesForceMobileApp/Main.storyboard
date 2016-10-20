@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -66,10 +66,10 @@
             </objects>
             <point key="canvasLocation" x="2466" y="89.25"/>
         </scene>
-        <!--Lead View Controller-->
+        <!--Main View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="LeadViewController" id="BYZ-38-t0r" customClass="LeadViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainViewController" id="BYZ-38-t0r" customClass="MainViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -249,10 +249,10 @@
             </objects>
             <point key="canvasLocation" x="-265.5" y="89.25"/>
         </scene>
-        <!--Account View Controller-->
+        <!--Swift View Controller-->
         <scene sceneID="qDe-KX-ho1">
             <objects>
-                <viewController storyboardIdentifier="AccountViewController" id="I9w-x4-mAi" customClass="AccountViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SwiftViewController" id="I9w-x4-mAi" customClass="SwiftViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jtW-TN-dF4"/>
                         <viewControllerLayoutGuide type="bottom" id="2n0-fL-47k"/>
@@ -275,7 +275,7 @@
                                                 <constraint firstAttribute="width" constant="181" id="rko-pc-Lwx"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                             <variation key="default">
                                                 <mask key="constraints">
@@ -304,8 +304,7 @@
                                                     <exclude reference="OSj-60-VQS"/>
                                                 </mask>
                                             </variation>
-                                            <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                                <rect key="frame" x="147" y="29" width="46" height="30"/>
+                                            <variation key="heightClass=regular-widthClass=compact">
                                                 <mask key="constraints">
                                                     <include reference="D4o-eb-GT7"/>
                                                     <include reference="OSj-60-VQS"/>
@@ -438,10 +437,10 @@
             </objects>
             <point key="canvasLocation" x="1104" y="89.25"/>
         </scene>
-        <!--Contact View Controller-->
+        <!--Java View Controller-->
         <scene sceneID="4cK-mI-MCG">
             <objects>
-                <viewController storyboardIdentifier="ContactViewController" id="TvI-C9-lSF" customClass="ContactViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="JavaViewController" id="TvI-C9-lSF" customClass="JavaViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qOh-Be-bJ9"/>
                         <viewControllerLayoutGuide type="bottom" id="yPA-d7-Ile"/>
@@ -460,7 +459,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recent Contacts " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SQ7-Z9-RfP">
                                             <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="box-image" translatesAutoresizingMaskIntoConstraints="NO" id="lRv-8U-iB9">
@@ -496,8 +495,7 @@
                                                     <exclude reference="nq3-Rp-4XP"/>
                                                 </mask>
                                             </variation>
-                                            <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                                <rect key="frame" x="164" y="25" width="46" height="30"/>
+                                            <variation key="heightClass=regular-widthClass=compact">
                                                 <mask key="constraints">
                                                     <include reference="ngS-5v-8gB"/>
                                                     <include reference="nq3-Rp-4XP"/>
@@ -600,10 +598,10 @@
             </objects>
             <point key="canvasLocation" x="420" y="89.25"/>
         </scene>
-        <!--Opportunity View Controller-->
+        <!--Go View Controller-->
         <scene sceneID="adq-KJ-u5Z">
             <objects>
-                <viewController storyboardIdentifier="OpportunityViewController" id="pwN-Wv-Ioh" customClass="OpportunityViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GoViewController" id="pwN-Wv-Ioh" customClass="GoViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="QEC-CO-vAa"/>
                         <viewControllerLayoutGuide type="bottom" id="4w6-Ph-vE3"/>
@@ -622,7 +620,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recent Opporcunities" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uff-MG-VKr">
                                             <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lh5-cD-RfQ">
@@ -639,8 +637,7 @@
                                                     <exclude reference="gtq-T9-XIf"/>
                                                 </mask>
                                             </variation>
-                                            <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                                <rect key="frame" x="164" y="25" width="46" height="30"/>
+                                            <variation key="heightClass=regular-widthClass=compact">
                                                 <mask key="constraints">
                                                     <include reference="T5a-lG-873"/>
                                                     <include reference="gtq-T9-XIf"/>
@@ -811,10 +808,10 @@
             </objects>
             <point key="canvasLocation" x="1116" y="1703.25"/>
         </scene>
-        <!--Create New OpportunityVC-->
+        <!--Opporchunity View Controller-->
         <scene sceneID="1dE-Up-hd6">
             <objects>
-                <viewController storyboardIdentifier="CreateNewOpportunityVC" id="GHh-qr-ghW" customClass="CreateNewOpportunityVC" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OpporchunityViewController" id="GHh-qr-ghW" customClass="OpporchunityViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8Dp-nR-6A7"/>
                         <viewControllerLayoutGuide type="bottom" id="iyx-E2-yb0"/>
@@ -1220,10 +1217,10 @@
             </objects>
             <point key="canvasLocation" x="1255.5" y="-685.5"/>
         </scene>
-        <!--Create New ContactVC-->
+        <!--Contact View Controller-->
         <scene sceneID="VeZ-y7-Nuf">
             <objects>
-                <viewController storyboardIdentifier="CreateNewContactVC" id="lMu-15-B1k" customClass="CreateNewContactVC" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ContactViewController" id="lMu-15-B1k" customClass="ContactViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="DAu-QM-42e"/>
                         <viewControllerLayoutGuide type="bottom" id="b9J-A3-cQI"/>
@@ -1732,10 +1729,10 @@
             </objects>
             <point key="canvasLocation" x="1914" y="-685.5"/>
         </scene>
-        <!--Create New AccountVC-->
+        <!--Account View Controller-->
         <scene sceneID="etM-0F-Ztc">
             <objects>
-                <viewController storyboardIdentifier="CreateNewAccountVC" id="JCr-gt-w0F" customClass="CreateNewAccountVC" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AccountViewController" id="JCr-gt-w0F" customClass="AccountViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="UAT-TL-5iZ"/>
                         <viewControllerLayoutGuide type="bottom" id="Xyv-tv-X8y"/>
@@ -2058,10 +2055,10 @@
             </objects>
             <point key="canvasLocation" x="-165" y="-685.5"/>
         </scene>
-        <!--Create New LeadVC-->
+        <!--Lead View Controller-->
         <scene sceneID="9jJ-nq-zVj">
             <objects>
-                <viewController storyboardIdentifier="CreateNewLeadVC" id="sPR-JI-rUg" customClass="CreateNewLeadVC" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LeadViewController" id="sPR-JI-rUg" customClass="LeadViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="UWl-pY-tta"/>
                         <viewControllerLayoutGuide type="bottom" id="fkz-WK-b8q"/>

@@ -12,8 +12,27 @@ class LeadContentVC: UITableViewController {
     
     var getResponseArr:AnyObject = []
     var cellTitleArr: NSArray = ["Name:","Company:","Email:","Phone:","Title:","Fax:"]
-    var leadDataArr:NSArray = []
+    var leadDataArr = []
 
+    
+    func isObjectNil(object:AnyObject!) -> Bool
+    {
+        if let _:AnyObject = object
+        {
+            return false
+        }
+        
+        return true
+    }
+    
+    func nullToNil(value : AnyObject?) -> AnyObject? {
+        if value is NSNull {
+            return nil
+        } else {
+            return value
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 70
@@ -23,12 +42,27 @@ class LeadContentVC: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        var email = ""
+        if  let _  = nullToNil( getResponseArr["Email"]) {
+            email =  (getResponseArr["Email"] as? String)!
+        }
+        
+        var phone = ""
+        if  let _  = nullToNil( getResponseArr["Phone"]) {
+            phone =  (getResponseArr["Phone"] as? String)!
+        }
+        
+        var title = ""
+        if  let _  = nullToNil( getResponseArr["Title"]) {
+            title =  (getResponseArr["Title"] as? String)!
+        }
+        
         leadDataArr = [
             getResponseArr["Name"] as! String,
             getResponseArr["Company"] as! String,
-            getResponseArr["Email"] as! String,
-            getResponseArr["Phone"] as! String,
-            getResponseArr["Title"] as! String
+            email ,
+            phone,
+           title
         ]
         //print(dataArr)
         //print(getResponseArr)

@@ -70,7 +70,7 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     
     func changeViewController(menu: LeftMenu) {
         switch menu {
-        case .lead:
+         case .lead:
             self.slideMenuController()?.changeMainViewController(self.mainViewController, close: true)
         case .account:
             self.slideMenuController()?.changeMainViewController(self.swiftViewController, close: true)

@@ -38,7 +38,7 @@ public struct SlideMenuOptions {
 	public static var opacityViewBackgroundColor: UIColor = UIColor.blackColor()
 }
 
-public class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
+  public class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
 
     public enum SlideAction {
         case Open
@@ -649,6 +649,7 @@ public class SlideMenuController: UIViewController, UIGestureRecognizerDelegate 
             openRight()
         }
     }
+    
     
     public func isRightOpen() -> Bool {
         return rightViewController != nil && rightContainerView.frame.origin.x == CGRectGetWidth(view.bounds) - rightContainerView.frame.size.width

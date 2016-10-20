@@ -95,4 +95,12 @@ extension ContactViewController : UITableViewDataSource {
         print(cell.textLabel?.text)
         return cell
     }
+    
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
+        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ContactDataVC") as! ContactDataVC
+        subContentsVC.getResponseArr = self.resArr.objectAtIndex(indexPath.row)
+        self.navigationController?.pushViewController(subContentsVC, animated: true)
+    }
 }

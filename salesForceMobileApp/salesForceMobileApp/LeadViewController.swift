@@ -24,14 +24,17 @@ class LeadViewController: UIViewController, SFRestDelegate {
         self.title = "Leads View"
         
         //Here we use a query that should work on either Force.com or Database.com
-        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Company FROM Lead limit 20");
+        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Company,Email,Name,Phone,Title,Address FROM Lead limit 20");
         SFRestAPI.sharedInstance().send(request, delegate: self);
+        
+        //let req = SFRestAPI.sharedInstance().requestForQuery("SELECT Phone FROM Lead limit 20")
         
     }
     
     // MARK: - SFRestAPIDelegate
     func request(request: SFRestRequest, didLoadResponse jsonResponse: AnyObject)
     {
+        print(jsonResponse)
         self.dataRows = jsonResponse["records"] as! [NSDictionary]
         self.log(.Debug, msg: "request:didLoadResponse: #records: \(self.dataRows.count)")
         dispatch_async(dispatch_get_main_queue(), {
@@ -100,9 +103,11 @@ extension LeadViewController : UITableViewDataSource {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
-        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("SubContentsViewController") as! SubContentsViewController
+        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("LeadContentVC") as! LeadContentVC
+        subContentsVC.getResponseArr = self.resArr.objectAtIndex(indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
+    
 }
 
 extension LeadViewController : SlideMenuControllerDelegate {

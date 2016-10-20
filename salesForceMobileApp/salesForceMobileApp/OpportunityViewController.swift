@@ -1,5 +1,5 @@
 //
-//  JavaViewController.swift
+//  OpportunityViewController.swift
 //  SlideMenuControllerSwift
 //
 //  Created by Yuji Hato on 1/19/15.
@@ -9,19 +9,19 @@
 import UIKit
 import SalesforceRestAPI
 
-class JavaViewController: UIViewController , SFRestDelegate{
+class OpportunityViewController: UIViewController, SFRestDelegate{
     
-    @IBOutlet weak var tableView: UITableView!
+@IBOutlet weak var tableView: UITableView!
     var dataRows = [NSDictionary]()
     var resArr:AnyObject = []
     // MARK: - View lifecycle
     override func loadView()
     {
         super.loadView()
-        self.title = "Contacts View"
+        self.title = "Opportunity View"
         
         //Here we use a query that should work on either Force.com or Database.com
-        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Email FROM Contact");
+        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Name FROM Opportunity");
         SFRestAPI.sharedInstance().send(request, delegate: self);
         
     }
@@ -58,7 +58,7 @@ class JavaViewController: UIViewController , SFRestDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
+         self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
     }
     
@@ -69,10 +69,10 @@ class JavaViewController: UIViewController , SFRestDelegate{
     
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
         navigationController?.pushViewController(nv, animated: true)
     }
-
+    
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
     }
@@ -85,17 +85,17 @@ class JavaViewController: UIViewController , SFRestDelegate{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
+
 }
 
-extension JavaViewController : UITableViewDelegate {
+extension OpportunityViewController : UITableViewDelegate {
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return DataTableViewCell.height()
     }
 }
 
-extension JavaViewController : UITableViewDataSource {
+extension OpportunityViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dataRows.count
     }
@@ -104,7 +104,7 @@ extension JavaViewController : UITableViewDataSource {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
         //        let data = DataTableViewCellData(imageUrl: "dummy", text: dataRows.objectAtIndexPath(indexPath.row)[""])
         //        cell.setData(data)
-        cell.dataText?.text = resArr.objectAtIndex(indexPath.row)["Email"] as? String
+        cell.dataText?.text = resArr.objectAtIndex(indexPath.row)["Name"] as? String
         print(cell.textLabel?.text)
         return cell
     }

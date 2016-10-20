@@ -64,10 +64,10 @@
             </objects>
             <point key="canvasLocation" x="2718" y="60.75"/>
         </scene>
-        <!--Main View Controller-->
+        <!--Lead View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="MainViewController" id="BYZ-38-t0r" customClass="MainViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LeadViewController" id="BYZ-38-t0r" customClass="LeadViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -127,10 +127,10 @@
             </objects>
             <point key="canvasLocation" x="-265.5" y="89.25"/>
         </scene>
-        <!--Swift View Controller-->
+        <!--Account View Controller-->
         <scene sceneID="qDe-KX-ho1">
             <objects>
-                <viewController storyboardIdentifier="SwiftViewController" id="I9w-x4-mAi" customClass="SwiftViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AccountViewController" id="I9w-x4-mAi" customClass="AccountViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jtW-TN-dF4"/>
                         <viewControllerLayoutGuide type="bottom" id="2n0-fL-47k"/>
@@ -191,10 +191,10 @@
             </objects>
             <point key="canvasLocation" x="1104" y="89.25"/>
         </scene>
-        <!--Java View Controller-->
+        <!--Contact View Controller-->
         <scene sceneID="4cK-mI-MCG">
             <objects>
-                <viewController storyboardIdentifier="JavaViewController" id="TvI-C9-lSF" customClass="JavaViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ContactViewController" id="TvI-C9-lSF" customClass="ContactViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qOh-Be-bJ9"/>
                         <viewControllerLayoutGuide type="bottom" id="yPA-d7-Ile"/>
@@ -255,10 +255,10 @@
             </objects>
             <point key="canvasLocation" x="420" y="89.25"/>
         </scene>
-        <!--Go View Controller-->
+        <!--Opportunity View Controller-->
         <scene sceneID="adq-KJ-u5Z">
             <objects>
-                <viewController storyboardIdentifier="GoViewController" id="pwN-Wv-Ioh" customClass="GoViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OpportunityViewController" id="pwN-Wv-Ioh" customClass="OpportunityViewController" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="QEC-CO-vAa"/>
                         <viewControllerLayoutGuide type="bottom" id="4w6-Ph-vE3"/>

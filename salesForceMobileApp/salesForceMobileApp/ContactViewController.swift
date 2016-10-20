@@ -1,5 +1,5 @@
 //
-//  GoViewController.swift
+//  ContactViewController.swift
 //  SlideMenuControllerSwift
 //
 //  Created by Yuji Hato on 1/19/15.
@@ -8,20 +8,19 @@
 
 import UIKit
 import SalesforceRestAPI
-
-class GoViewController: UIViewController, SFRestDelegate{
+class ContactViewController: UIViewController , SFRestDelegate{
     
-@IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableView: UITableView!
     var dataRows = [NSDictionary]()
     var resArr:AnyObject = []
     // MARK: - View lifecycle
     override func loadView()
     {
         super.loadView()
-        self.title = "Opportunity View"
+        self.title = "Contacts View"
         
         //Here we use a query that should work on either Force.com or Database.com
-        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Name FROM Opportunity");
+        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Email FROM Contact");
         SFRestAPI.sharedInstance().send(request, delegate: self);
         
     }
@@ -58,19 +57,7 @@ class GoViewController: UIViewController, SFRestDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
-    }
-    
-    func addRightBarButtonWithImage1(buttonImage: UIImage) {
-        let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
-        navigationItem.rightBarButtonItem = rightButton;
-    }
-    
-    func toggleRight1() {
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
-        navigationController?.pushViewController(nv, animated: true)
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -85,17 +72,17 @@ class GoViewController: UIViewController, SFRestDelegate{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
+    
 }
 
-extension GoViewController : UITableViewDelegate {
+extension ContactViewController : UITableViewDelegate {
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return DataTableViewCell.height()
     }
 }
 
-extension GoViewController : UITableViewDataSource {
+extension ContactViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dataRows.count
     }
@@ -104,8 +91,16 @@ extension GoViewController : UITableViewDataSource {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
         //        let data = DataTableViewCellData(imageUrl: "dummy", text: dataRows.objectAtIndexPath(indexPath.row)[""])
         //        cell.setData(data)
-        cell.dataText?.text = resArr.objectAtIndex(indexPath.row)["Name"] as? String
+        cell.dataText?.text = resArr.objectAtIndex(indexPath.row)["Email"] as? String
         print(cell.textLabel?.text)
         return cell
+    }
+    
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
+        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ContactDataVC") as! ContactDataVC
+        subContentsVC.getResponseArr = self.resArr.objectAtIndex(indexPath.row)
+        self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
 }

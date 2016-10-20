@@ -110,7 +110,7 @@ class RootViewController : UITableViewController, SFRestDelegate
         // create viewController code...
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-        let mainViewController = storyboard.instantiateViewControllerWithIdentifier("MainViewController") as! MainViewController
+        let mainViewController = storyboard.instantiateViewControllerWithIdentifier("LeadViewController") as! LeadViewController
         let leftViewController = storyboard.instantiateViewControllerWithIdentifier("LeftViewController") as! LeftViewController
         let rightViewController = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
         

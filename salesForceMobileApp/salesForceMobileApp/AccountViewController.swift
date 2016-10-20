@@ -1,5 +1,5 @@
 //
-//  SwiftViewController.swift
+//  AccountViewController.swift
 //  SlideMenuControllerSwift
 //
 //  Created by Yuji Hato on 1/19/15.
@@ -11,7 +11,7 @@
 import UIKit
 import SalesforceRestAPI
 
-class SwiftViewController:UIViewController, SFRestDelegate {
+class AccountViewController:UIViewController, SFRestDelegate {
     
     
     @IBOutlet weak var tableView: UITableView!
@@ -93,13 +93,13 @@ class SwiftViewController:UIViewController, SFRestDelegate {
     
 }
 
-extension SwiftViewController : UITableViewDelegate {
+extension AccountViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return DataTableViewCell.height()
     }
 }
 
-extension SwiftViewController : UITableViewDataSource {
+extension AccountViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dataRows.count
     }

@@ -12,9 +12,6 @@ import SalesforceRestAPI
 class LeadViewController: UIViewController, SFRestDelegate {
 
     @IBOutlet weak var tableView: UITableView!
-    
-    var mainContens = ["data1", "data2", "data3", "data4", "data5", "data6", "data7", "data8", "data9", "data10", "data11", "data12", "data13", "data14", "data15"]
-    
     var dataRows = [NSDictionary]()
    var resArr:AnyObject = []
     // MARK: - View lifecycle
@@ -64,9 +61,22 @@ class LeadViewController: UIViewController, SFRestDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setNavigationBarItem()
+        self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
     }
+    
+    
+    func addRightBarButtonWithImage1(buttonImage: UIImage) {
+        let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+        navigationItem.rightBarButtonItem = rightButton;
+    }
+    
+    func toggleRight1() {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
+        navigationController?.pushViewController(nv, animated: true)
+    }
+    
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)

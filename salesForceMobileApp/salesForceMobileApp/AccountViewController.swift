@@ -25,7 +25,7 @@ class AccountViewController:UIViewController, SFRestDelegate {
         self.title = "Account View"
         
         //Here we use a query that should work on either Force.com or Database.com
-        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Website FROM Account Limit 10");
+        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT AccountNumber,Fax,LastModifiedDate,Name,Ownership,Phone,Type,Website FROM Account Limit 10");
         SFRestAPI.sharedInstance().send(request, delegate: self);
         
     }
@@ -88,7 +88,7 @@ class AccountViewController:UIViewController, SFRestDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
+    
     
     
 }
@@ -108,5 +108,13 @@ extension AccountViewController : UITableViewDataSource {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
         cell.dataText?.text = resArr.objectAtIndex(indexPath.row)["Website"] as? String
         return cell
-}
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
+        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("AccountDataVC") as! AccountDataVC
+        subContentsVC.getResponseArr = self.resArr.objectAtIndex(indexPath.row)
+        self.navigationController?.pushViewController(subContentsVC, animated: true)
+        
+    }
 }

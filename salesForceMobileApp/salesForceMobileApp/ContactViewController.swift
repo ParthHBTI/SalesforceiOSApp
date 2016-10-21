@@ -20,7 +20,7 @@ class ContactViewController: UIViewController , SFRestDelegate{
         self.title = "Contacts View"
         
         //Here we use a query that should work on either Force.com or Database.com
-        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Birthdate,Email,Fax,Name,Phone,Title FROM Contact");
+        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Birthdate,Email,Fax,Name,Phone FROM Contact");
         SFRestAPI.sharedInstance().send(request, delegate: self);
         
     }
@@ -33,7 +33,7 @@ class ContactViewController: UIViewController , SFRestDelegate{
         dispatch_async(dispatch_get_main_queue(), {
             self.resArr = self.dataRows
             self.tableView.reloadData()
-            print(self.resArr)
+            //print(self.resArr)
         })
     }
     

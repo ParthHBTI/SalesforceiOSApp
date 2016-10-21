@@ -14,7 +14,7 @@ class OpportunityDataVC: UITableViewController {
     var opportunityDataArr = []
     var cellTitleArr: NSArray = ["Name:","Lead Source:","Stage Name:","Type:","Ammount:","Probability:","Is Private:","Created Date:","Close Date:","Is Closed:","Is Deleted:","Last Modified Date:"]
     
-    func isObjectNil(object:AnyObject!) -> Bool
+    /*func isObjectNil(object:AnyObject!) -> Bool
     {
         if let _:AnyObject = object
         {
@@ -22,7 +22,7 @@ class OpportunityDataVC: UITableViewController {
         }
         
         return true
-    }
+    }*/
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -42,7 +42,7 @@ class OpportunityDataVC: UITableViewController {
         
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        var leadSource = ""
+        var leadSource = "Not available"
         if  let _  = nullToNil( getResponseArr["LeadSource"]) {
             leadSource =  (getResponseArr["LeadSource"] as? String)!
         }

@@ -14,16 +14,6 @@ class AccountDataVC: UITableViewController {
     var accountCellTitleArr: NSArray = ["Account Name:","Account Number:","Type:","Ownership:","Website:","Phone:","Fax:","Last Modified Date:"]
     var accountDataArr = []
     
-    func isObjectNil(object:AnyObject!) -> Bool
-    {
-        if let _:AnyObject = object
-        {
-            return false
-        }
-        
-        return true
-    }
-    
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil

@@ -14,17 +14,6 @@ class LeadContentVC: UITableViewController {
     var cellTitleArr: NSArray = ["Name:","Company:","Email:","Phone:","Title:","Fax:"]
     var leadDataArr = []
     
-    
-    func isObjectNil(object:AnyObject!) -> Bool
-    {
-        if let _:AnyObject = object
-        {
-            return false
-        }
-        
-        return true
-    }
-    
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil
@@ -61,11 +50,10 @@ class LeadContentVC: UITableViewController {
         leadDataArr = [
             getResponseArr["Name"] as! String,
             getResponseArr["Company"] as! String,
-            email ,
+            email,
             phone,
             title
         ]
-        //print(dataArr)
         
     }
     

@@ -11,7 +11,7 @@ import SalesforceRestAPI
 
 class OpportunityViewController: UIViewController, SFRestDelegate{
     
-@IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableView: UITableView!
     var dataRows = [NSDictionary]()
     var resArr:AnyObject = []
     // MARK: - View lifecycle
@@ -21,7 +21,7 @@ class OpportunityViewController: UIViewController, SFRestDelegate{
         self.title = "Opportunity View"
         
         //Here we use a query that should work on either Force.com or Database.com
-        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Name FROM Opportunity");
+        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Amount,CloseDate,CreatedDate,IsClosed,IsDeleted,IsPrivate,LastModifiedDate,LeadSource,Name,Probability,StageName,Type FROM Opportunity Limit 10");
         SFRestAPI.sharedInstance().send(request, delegate: self);
         
     }
@@ -58,7 +58,11 @@ class OpportunityViewController: UIViewController, SFRestDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+<<<<<<< HEAD
          self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
+=======
+        //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
+>>>>>>> 0aafd9faaaf4bd1457983fc22f5ba67615853392
         self.tableView.registerCellNib(DataTableViewCell.self)
     }
     
@@ -85,7 +89,7 @@ class OpportunityViewController: UIViewController, SFRestDelegate{
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
+    
 }
 
 extension OpportunityViewController : UITableViewDelegate {
@@ -107,5 +111,12 @@ extension OpportunityViewController : UITableViewDataSource {
         cell.dataText?.text = resArr.objectAtIndex(indexPath.row)["Name"] as? String
         print(cell.textLabel?.text)
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
+        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("OpportunityDataVC") as! OpportunityDataVC
+        subContentsVC.getResponseArr = self.resArr.objectAtIndex(indexPath.row)
+        self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
 }

@@ -20,8 +20,11 @@ class CreateNewOpportunityVC: UIViewController, SFRestDelegate {
     @IBOutlet weak var closeDate: UITextField!
     @IBOutlet weak var amount: UITextField!
     @IBOutlet weak var stage: UITextField!
+    @IBOutlet weak var scrollView: UIScrollView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
+        scrollView.setNeedsDisplay()
 
         // Do any additional setup after loading the view.
     }
@@ -29,6 +32,11 @@ class CreateNewOpportunityVC: UIViewController, SFRestDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidLayoutSubviews()  {
+        super.viewDidLayoutSubviews()
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height + 300);
     }
     
     @IBAction func saveAction(sender: AnyObject) {

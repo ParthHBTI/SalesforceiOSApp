@@ -20,16 +20,22 @@ class CreateNewContactVC : UIViewController, SFRestDelegate {
     @IBOutlet weak var email: UITextField!
     @IBOutlet weak var phone: UITextField!
     @IBOutlet weak var fax: UITextField!
+    @IBOutlet weak var scrollView: UIScrollView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
+        scrollView.setNeedsDisplay()
 
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
+    
+    override func viewDidLayoutSubviews()  {
+        super.viewDidLayoutSubviews()
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height + 300);
+    }
     @IBAction func saveAction(sender: AnyObject) {
         
             let fields = [

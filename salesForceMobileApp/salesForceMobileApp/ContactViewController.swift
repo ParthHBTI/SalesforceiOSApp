@@ -70,7 +70,7 @@ class ContactViewController: UIViewController , SFRestDelegate{
     
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewAccountVC") as! CreateNewAccountVC
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
         navigationController?.pushViewController(nv, animated: true)
     }
 

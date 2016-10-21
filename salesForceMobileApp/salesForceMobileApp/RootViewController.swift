@@ -120,7 +120,7 @@ class RootViewController : UITableViewController, SFRestDelegate
         
         leftViewController.mainViewController = nvc
         
-        let slideMenuController = ExSlideMenuController(mainViewController:nvc, leftMenuViewController: leftViewController, rightMenuViewController: rightViewController)
+        let slideMenuController = ExSlideMenuController(mainViewController:nvc, leftMenuViewController: leftViewController)
         slideMenuController.automaticallyAdjustsScrollViewInsets = true
         slideMenuController.delegate = mainViewController
         self.presentViewController(slideMenuController, animated: true) { 

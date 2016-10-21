@@ -19,10 +19,17 @@ class CreateNewLeadVC: UIViewController {
     @IBOutlet weak var lastName: UITextField!
     @IBOutlet weak var companyName: UITextField!
     @IBOutlet weak var leadStatus: UITextField!
+    @IBOutlet weak var scrollView: UIScrollView!
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
+        scrollView.setNeedsDisplay()
         // Do any additional setup after loading the view.
+    }
+
+    override func viewDidLayoutSubviews()  {
+        super.viewDidLayoutSubviews()
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height + 100);
     }
 
     override func didReceiveMemoryWarning() {

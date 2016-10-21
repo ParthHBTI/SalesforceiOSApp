@@ -14,16 +14,24 @@ import SmartStore.SalesforceSDKManagerWithSmartStore
 import SmartSync
 import SmartStore
 
-class CreateNewAccountVC: UIViewController {
+class CreateNewAccountVC: UIViewController, UIScrollViewDelegate {
 
     @IBOutlet weak var accountName: UITextField!
     @IBOutlet weak var accountAddress: UITextField!
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
+        scrollView.setNeedsDisplay()
         // Do any additional setup after loading the view.
     }
-
+    
+    override func viewDidLayoutSubviews()  {
+        super.viewDidLayoutSubviews()
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height + 100);
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

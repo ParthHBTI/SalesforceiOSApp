@@ -61,6 +61,7 @@ class LeadViewController: UIViewController, SFRestDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setNavigationBarItem()
         self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
     }

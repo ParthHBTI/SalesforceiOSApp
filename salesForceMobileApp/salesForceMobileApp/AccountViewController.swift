@@ -13,30 +13,21 @@ import SalesforceRestAPI
 
 class AccountViewController:UIViewController, SFRestDelegate {
     
-    
     @IBOutlet weak var tableView: UITableView!
-    
-    var dataRows = [NSDictionary]()
     var resArr:AnyObject = []
     // MARK: - View lifecycle
-    override func loadView()
-    {
-        super.loadView()
-        self.title = "Account View"
-        
-        //Here we use a query that should work on either Force.com or Database.com
-        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT AccountNumber,Fax,LastModifiedDate,Name,Ownership,Phone,Type,Website FROM Account Limit 10");
-        SFRestAPI.sharedInstance().send(request, delegate: self);
-        
-    }
     
     // MARK: - SFRestAPIDelegate
     func request(request: SFRestRequest, didLoadResponse jsonResponse: AnyObject) {
-        self.dataRows = jsonResponse["records"] as! [NSDictionary]
-        self.log(.Debug, msg: "request:didLoadResponse: #records: \(self.dataRows.count)")
+        let dataRows = jsonResponse["records"] as! [NSDictionary]
+        self.log(.Debug, msg: "request:didLoadResponse: #records: \(dataRows.count)")
         dispatch_async(dispatch_get_main_queue(), {
-            self.resArr = self.dataRows
+            self.resArr = dataRows
             self.tableView.reloadData()
+            let defaults = NSUserDefaults.standardUserDefaults()
+            let accountDataKey = "accountListData"
+            let arrOfAccountData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
+            defaults.setObject(arrOfAccountData, forKey: accountDataKey)
         })
     }
     
@@ -61,9 +52,22 @@ class AccountViewController:UIViewController, SFRestDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Account View"
         self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
-    }
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let accountDataKey = "accountListData"
+        if let arrayOfObjectsData = defaults.valueForKey(accountDataKey) as? NSData {
+            self.resArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
+        }
+        else{
+            let request = SFRestAPI.sharedInstance().requestForQuery("SELECT AccountNumber,Fax,LastModifiedDate,Name,Ownership,Phone,Type,Website FROM Account Limit 10");
+            SFRestAPI.sharedInstance().send(request, delegate: self);
+         }
+     }
     
     func addRightBarButtonWithImage1(buttonImage: UIImage) {
         let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
@@ -88,9 +92,6 @@ class AccountViewController:UIViewController, SFRestDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    
-    
 }
 
 extension AccountViewController : UITableViewDelegate {
@@ -101,7 +102,7 @@ extension AccountViewController : UITableViewDelegate {
 
 extension AccountViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.dataRows.count
+        return self.resArr.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

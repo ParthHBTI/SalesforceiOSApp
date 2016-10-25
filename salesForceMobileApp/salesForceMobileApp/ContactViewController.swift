@@ -11,29 +11,21 @@ import SalesforceRestAPI
 class ContactViewController: UIViewController , SFRestDelegate{
     
     @IBOutlet weak var tableView: UITableView!
-    var dataRows = [NSDictionary]()
     var resArr:AnyObject = []
     // MARK: - View lifecycle
-    override func loadView()
-    {
-        super.loadView()
-        self.title = "Contacts View"
-        
-        //Here we use a query that should work on either Force.com or Database.com
-        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Birthdate,Email,Fax,Name,Phone FROM Contact");
-        SFRestAPI.sharedInstance().send(request, delegate: self);
-        
-    }
-    
+   
     // MARK: - SFRestAPIDelegate
     func request(request: SFRestRequest, didLoadResponse jsonResponse: AnyObject)
     {
-        self.dataRows = jsonResponse["records"] as! [NSDictionary]
-        self.log(.Debug, msg: "request:didLoadResponse: #records: \(self.dataRows.count)")
+        let dataRows = jsonResponse["records"] as! [NSDictionary]
+        self.log(.Debug, msg: "request:didLoadResponse: #records: \(dataRows.count)")
         dispatch_async(dispatch_get_main_queue(), {
-            self.resArr = self.dataRows
+            self.resArr = dataRows
             self.tableView.reloadData()
-            //print(self.resArr)
+            let defaults = NSUserDefaults.standardUserDefaults()
+            let contactDataKey = "contactListData"
+            let arrOfContactData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
+            defaults.setObject(arrOfContactData, forKey: contactDataKey)
         })
     }
     
@@ -58,9 +50,20 @@ class ContactViewController: UIViewController , SFRestDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+         self.title = "Contacts View"
         self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
-        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let arrayOfObjectsKey = "contactListData"
+        if let arrayOfObjectsData = defaults.objectForKey(arrayOfObjectsKey) as? NSData {
+            resArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
+        } else {
+            let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Birthdate,Email,Fax,Name,Phone FROM Contact");
+            SFRestAPI.sharedInstance().send(request, delegate: self);
+        }
     }
     
     func addRightBarButtonWithImage1(buttonImage: UIImage) {
@@ -99,7 +102,7 @@ extension ContactViewController : UITableViewDelegate {
 
 extension ContactViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.dataRows.count
+        return self.resArr.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

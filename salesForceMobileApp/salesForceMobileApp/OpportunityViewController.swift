@@ -12,28 +12,21 @@ import SalesforceRestAPI
 class OpportunityViewController: UIViewController, SFRestDelegate{
     
     @IBOutlet weak var tableView: UITableView!
-    var dataRows = [NSDictionary]()
     var resArr:AnyObject = []
     // MARK: - View lifecycle
-    override func loadView()
-    {
-        super.loadView()
-        self.title = "Opportunity View"
-        
-        //Here we use a query that should work on either Force.com or Database.com
-        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Amount,CloseDate,CreatedDate,IsClosed,IsDeleted,IsPrivate,LastModifiedDate,LeadSource,Name,Probability,StageName,Type FROM Opportunity Limit 10");
-        SFRestAPI.sharedInstance().send(request, delegate: self);
-        
-    }
     
     // MARK: - SFRestAPIDelegate
     func request(request: SFRestRequest, didLoadResponse jsonResponse: AnyObject)
     {
-        self.dataRows = jsonResponse["records"] as! [NSDictionary]
-        self.log(.Debug, msg: "request:didLoadResponse: #records: \(self.dataRows.count)")
+        let dataRows = jsonResponse["records"] as! [NSDictionary]
+        self.log(.Debug, msg: "request:didLoadResponse: #records: \(dataRows.count)")
         dispatch_async(dispatch_get_main_queue(), {
-            self.resArr = self.dataRows
+            self.resArr = dataRows
             self.tableView.reloadData()
+            let defaults = NSUserDefaults.standardUserDefaults()
+            let opportunityDataKey = "opportunityListKey"
+            let arrOfOpportunityData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
+            defaults.setObject(arrOfOpportunityData, forKey: opportunityDataKey)
         })
     }
     
@@ -58,8 +51,21 @@ class OpportunityViewController: UIViewController, SFRestDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
+        self.title = "Opportunity View"
+        self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let opportunityDataKey = "opportunityListKey"
+        if let arrayOfObjectsData = defaults.valueForKey(opportunityDataKey)as? NSData {
+            resArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
+        } else {
+            let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Amount,CloseDate,CreatedDate,IsClosed,IsDeleted,IsPrivate,LastModifiedDate,LeadSource,Name,Probability,StageName,Type FROM Opportunity Limit 10");
+            SFRestAPI.sharedInstance().send(request, delegate: self);
+        }
+        //Here we use a query that should work on either Force.com or Database.com
     }
     
     func addRightBarButtonWithImage1(buttonImage: UIImage) {
@@ -97,7 +103,7 @@ extension OpportunityViewController : UITableViewDelegate {
 
 extension OpportunityViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.dataRows.count
+        return self.resArr.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

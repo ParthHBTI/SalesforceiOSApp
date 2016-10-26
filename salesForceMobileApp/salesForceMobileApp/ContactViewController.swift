@@ -33,9 +33,11 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         }
     }
     
-    func leadQuery()  {
+    func executeQuery()  {
         resArr1 = exDelegate.resArr
-        tableView.reloadData()
+        dispatch_async(dispatch_get_main_queue(), {
+            self.tableView.reloadData()
+        })
     }
 
     

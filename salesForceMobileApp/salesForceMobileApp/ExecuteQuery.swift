@@ -17,10 +17,7 @@ import SalesforceRestAPI
 //}
 
 @objc public protocol ExecuteQueryDelegate {
-    optional func leadQuery()
-    optional func accountQuery()
-    optional func contactQuery()
-    optional func opporchunityQuery()
+    optional func executeQuery()
 }
 
 class ExecuteQuery: UIViewController, SFRestDelegate {
@@ -42,7 +39,7 @@ class ExecuteQuery: UIViewController, SFRestDelegate {
             let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
             defaults.setObject(arrOfLeadData, forKey: leadDataKey)
         })
-        delegate?.leadQuery!()
+        delegate?.executeQuery!()
     }
     
     func request(request: SFRestRequest, didFailLoadWithError error: NSError)

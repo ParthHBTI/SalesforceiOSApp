@@ -9,66 +9,35 @@ import UIKit
 import SalesforceRestAPI
 
 // class for Lead's data
-class LeadViewController: UIViewController, SFRestDelegate {
+class LeadViewController: UIViewController, ExecuteQueryDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    //var dataRows = [NSDictionary]()
-    var resArr:AnyObject = []
-    // MARK: - View lifecycle
-    
-    
-    // MARK: - SFRestAPIDelegate
-    func request(request: SFRestRequest, didLoadResponse jsonResponse: AnyObject)
-    {
-        print(jsonResponse)
-        let dataRows = jsonResponse["records"] as! [NSDictionary]
-        self.log(.Debug, msg: "request:didLoadResponse: #records: \(dataRows.count)")
-        dispatch_async(dispatch_get_main_queue(), {
-            self.resArr = dataRows
-            self.tableView.reloadData()
-            let defaults = NSUserDefaults.standardUserDefaults()
-            let leadDataKey = "leadListData"
-            let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
-            defaults.setObject(arrOfLeadData, forKey: leadDataKey)
-        })
-    }
-    
-    func request(request: SFRestRequest, didFailLoadWithError error: NSError)
-    {
-        self.log(.Debug, msg: "didFailLoadWithError: \(error)")
-        // Add your failed error handling here
-    }
-    
-    func requestDidCancelLoad(request: SFRestRequest)
-    {
-        self.log(.Debug, msg: "requestDidCancelLoad: \(request)")
-        // Add your failed error handling here
-    }
-    
-    func requestDidTimeout(request: SFRestRequest)
-    {
-        self.log(.Debug, msg: "requestDidTimeout: \(request)")
-        // Add your failed error handling here
-    }
+    var resArr1:AnyObject = []
+    var exDelegate: ExecuteQuery = ExecuteQuery()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        exDelegate.delegate = self
         self.title = "Leads View"
         self.setNavigationBarItem()
         self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
-        print(resArr)
         let defaults = NSUserDefaults.standardUserDefaults()
         let arrayOfObjectsKey = "leadListData"
+        defaults.removeObjectForKey(arrayOfObjectsKey)
         if let arrayOfObjectsData = defaults.objectForKey(arrayOfObjectsKey) as? NSData {
-            resArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
         } else {
-            let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Company,Email,Name,Phone,Title,Address FROM Lead limit 20");
-            SFRestAPI.sharedInstance().send(request, delegate: self);
+           exDelegate.leadQueryDe("lead")
         }
+    }
+    
+    func leadQuery()  {
+        resArr1 = exDelegate.resArr
+        tableView.reloadData()
     }
     
     func addRightBarButtonWithImage1(buttonImage: UIImage) {
@@ -99,6 +68,7 @@ class LeadViewController: UIViewController, SFRestDelegate {
 }
 
 
+
 extension LeadViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return DataTableViewCell.height()
@@ -107,19 +77,19 @@ extension LeadViewController : UITableViewDelegate {
 
 extension LeadViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return resArr.count
+        return resArr1.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
-        cell.dataText.text = resArr.objectAtIndex(indexPath.row)["Company"] as? String
+        cell.dataText.text = resArr1.objectAtIndex(indexPath.row)["Company"] as? String
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("LeadContentVC") as! LeadContentVC
-        subContentsVC.getResponseArr = self.resArr.objectAtIndex(indexPath.row)
+        subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
     

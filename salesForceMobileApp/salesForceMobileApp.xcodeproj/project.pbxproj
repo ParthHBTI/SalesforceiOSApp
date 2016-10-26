@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		04CB1DE41DAF807400D2621C /* SlideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB1DE31DAF807400D2621C /* SlideMenuController.swift */; };
+		04CE8B331DC087AE0057B0A9 /* ExecuteQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE8B321DC087AE0057B0A9 /* ExecuteQuery.swift */; };
 		04DB2FA31DB4ED2100C4519F /* CreateNewLeadVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA21DB4ED2100C4519F /* CreateNewLeadVC.swift */; };
 		04DB2FA51DB4ED3E00C4519F /* CreateNewAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA41DB4ED3E00C4519F /* CreateNewAccountVC.swift */; };
 		04DB2FA71DB4ED5300C4519F /* CreateNewOpportunityVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA61DB4ED5300C4519F /* CreateNewOpportunityVC.swift */; };
@@ -57,6 +58,7 @@
 		045D1C5BC2F1EADFDFB3671E /* Pods-salesForceMobileApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-salesForceMobileApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-salesForceMobileApp/Pods-salesForceMobileApp.release.xcconfig"; sourceTree = "<group>"; };
 		04CB1DE21DAF807400D2621C /* SlideMenuControllerSwift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideMenuControllerSwift.h; sourceTree = "<group>"; };
 		04CB1DE31DAF807400D2621C /* SlideMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideMenuController.swift; sourceTree = "<group>"; };
+		04CE8B321DC087AE0057B0A9 /* ExecuteQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExecuteQuery.swift; path = salesForceMobileApp/ExecuteQuery.swift; sourceTree = "<group>"; };
 		04DB2FA21DB4ED2100C4519F /* CreateNewLeadVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewLeadVC.swift; sourceTree = "<group>"; };
 		04DB2FA41DB4ED3E00C4519F /* CreateNewAccountVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewAccountVC.swift; sourceTree = "<group>"; };
 		04DB2FA61DB4ED5300C4519F /* CreateNewOpportunityVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewOpportunityVC.swift; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 		4FD6C46B1B754AF1002F9F90 = {
 			isa = PBXGroup;
 			children = (
+				04CE8B321DC087AE0057B0A9 /* ExecuteQuery.swift */,
 				4FD6C4761B754AF1002F9F90 /* salesForceMobileApp */,
 				4FD6C4751B754AF1002F9F90 /* Products */,
 				04F96F101DAF73E4000D715A /* Extension */,
@@ -215,12 +218,12 @@
 				4FD6C49B1B755242002F9F90 /* InitialViewController.xib */,
 				04F96F3F1DAF76DD000D715A /* LeftViewController.swift */,
 				4FD6C49C1B755242002F9F90 /* RootViewController.swift */,
-				04F96F0E1DAF7333000D715A /* LeadViewController.swift */,
 				04DB2FA21DB4ED2100C4519F /* CreateNewLeadVC.swift */,
 				04DB2FA61DB4ED5300C4519F /* CreateNewOpportunityVC.swift */,
 				04DB2FA41DB4ED3E00C4519F /* CreateNewAccountVC.swift */,
 				04F96F401DAF76DD000D715A /* CreateNewContactVC.swift */,
 				04F96F311DAF75E0000D715A /* SubContentsViewController.swift */,
+				04F96F0E1DAF7333000D715A /* LeadViewController.swift */,
 				04F96F371DAF761E000D715A /* AccountViewController.swift */,
 				04F96F391DAF762E000D715A /* ContactViewController.swift */,
 				04F96F3B1DAF763B000D715A /* OpportunityViewController.swift */,
@@ -401,6 +404,7 @@
 				4FD6C47A1B754AF1002F9F90 /* AppDelegate.swift in Sources */,
 				04F96F381DAF761F000D715A /* AccountViewController.swift in Sources */,
 				04DB2FA71DB4ED5300C4519F /* CreateNewOpportunityVC.swift in Sources */,
+				04CE8B331DC087AE0057B0A9 /* ExecuteQuery.swift in Sources */,
 				04F96F241DAF74F8000D715A /* ImageHeaderView.swift in Sources */,
 				4FD6C49F1B755242002F9F90 /* RootViewController.swift in Sources */,
 				4F393A291C3C8BCD00B3EA13 /* main.swift in Sources */,

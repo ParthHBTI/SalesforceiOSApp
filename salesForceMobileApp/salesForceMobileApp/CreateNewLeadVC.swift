@@ -15,7 +15,7 @@ import SmartSync
 import SmartStore
 
 class CreateNewLeadVC: UIViewController {
-
+    
     @IBOutlet weak var lastName: UITextField!
     @IBOutlet weak var companyName: UITextField!
     @IBOutlet weak var leadStatus: UITextField!
@@ -26,12 +26,12 @@ class CreateNewLeadVC: UIViewController {
         scrollView.setNeedsDisplay()
         // Do any additional setup after loading the view.
     }
-
+    
     override func viewDidLayoutSubviews()  {
         super.viewDidLayoutSubviews()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height + 100);
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -43,7 +43,7 @@ class CreateNewLeadVC: UIViewController {
             "LastName" : lastName.text!,
             "Company" : companyName.text!,
             "Status" : leadStatus.text!,
-        ]
+            ]
         SFRestAPI.sharedInstance().performCreateWithObjectType("Lead", fields: fields, failBlock: { err in
             dispatch_async(dispatch_get_main_queue(), {
                 let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
@@ -52,13 +52,17 @@ class CreateNewLeadVC: UIViewController {
             print( (err))
         }) { succes in
             print(succes)
+            // for archived data and then save to nsuser defaults
+            /*let defaults = NSUserDefaults.standardUserDefaults()
+             let leadDataKey = "leadData"
+             let leadData = [Lead(inDict: fields)]
+             let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadData)
+             defaults.setObject(arrOfLeadData, forKey: leadDataKey)*/
         }
     }
-
-   
-
+    
     @IBAction func cancelAction(sender: AnyObject) {
         
     }
-
+    
 }

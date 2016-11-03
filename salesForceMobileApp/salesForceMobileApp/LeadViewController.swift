@@ -35,14 +35,12 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         } else if let arrayOfObjectsData = defaults.objectForKey(arrayOfObjectsKey) as? NSData {
             loading.detailsLabelText = "Uploading Data from Local"
             loading.hide(true, afterDelay: 2)
-             loading.removeFromSuperViewOnHide = true
+            loading.removeFromSuperViewOnHide = true
             resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
-        } else {
-           exDelegate.leadQueryDe("lead")
-        }
+        } 
     }
     
     func executeQuery()  {

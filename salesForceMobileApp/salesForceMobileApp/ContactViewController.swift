@@ -25,7 +25,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         self.tableView.registerCellNib(DataTableViewCell.self)
         let defaults = NSUserDefaults.standardUserDefaults()
         let contacttDataKey = "contactListData"
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
             loading.detailsLabelText = "Uploading Data from Server"
@@ -40,9 +40,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
-        } else {
-            exDelegate.leadQueryDe("contact")
-        }
+        } 
     }
     
     func executeQuery()  {

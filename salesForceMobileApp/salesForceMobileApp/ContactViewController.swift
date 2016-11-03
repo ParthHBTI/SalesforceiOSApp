@@ -23,7 +23,9 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         self.tableView.registerCellNib(DataTableViewCell.self)
         let defaults = NSUserDefaults.standardUserDefaults()
         let contacttDataKey = "contactListData"
-        if let arrayOfObjectsData = defaults.objectForKey(contacttDataKey) as? NSData {
+        if exDelegate.isConnectedToNetwork() {
+            exDelegate.leadQueryDe("contact")
+        } else if let arrayOfObjectsData = defaults.objectForKey(contacttDataKey) as? NSData {
             resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()

@@ -26,7 +26,9 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
         self.tableView.registerCellNib(DataTableViewCell.self)
         let defaults = NSUserDefaults.standardUserDefaults()
         let accountDataKey = "accountListData"
-        if let arrayOfObjectsData = defaults.objectForKey(accountDataKey) as? NSData {
+        if exDelegate.isConnectedToNetwork() {
+            exDelegate.leadQueryDe("account")
+        } else if let arrayOfObjectsData = defaults.objectForKey(accountDataKey) as? NSData {
             resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()

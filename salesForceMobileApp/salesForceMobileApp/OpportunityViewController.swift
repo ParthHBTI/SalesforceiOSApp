@@ -24,7 +24,9 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate{
         self.tableView.registerCellNib(DataTableViewCell.self)
         let defaults = NSUserDefaults.standardUserDefaults()
         let opportunityDataKey = "opportunityDataKey"
-        if let arrayOfObjectsData = defaults.objectForKey(opportunityDataKey) as? NSData {
+        if exDelegate.isConnectedToNetwork() {
+            exDelegate.leadQueryDe("opporchunity")
+        } else if let arrayOfObjectsData = defaults.objectForKey(opportunityDataKey) as? NSData {
             resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()

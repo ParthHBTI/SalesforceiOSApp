@@ -7,7 +7,7 @@
 
 import UIKit
 import SalesforceRestAPI
-
+import SystemConfiguration
 // class for Lead's data
 class LeadViewController: UIViewController, ExecuteQueryDelegate {
     
@@ -24,8 +24,9 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         self.tableView.registerCellNib(DataTableViewCell.self)
         let defaults = NSUserDefaults.standardUserDefaults()
         let arrayOfObjectsKey = "leadListData"
-        defaults.removeObjectForKey(arrayOfObjectsKey)
-        if let arrayOfObjectsData = defaults.objectForKey(arrayOfObjectsKey) as? NSData {
+        if exDelegate.isConnectedToNetwork() {
+            exDelegate.leadQueryDe("lead")
+        } else if let arrayOfObjectsData = defaults.objectForKey(arrayOfObjectsKey) as? NSData {
             resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -67,6 +68,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         super.didReceiveMemoryWarning()
     }
     
+       
 }
 
 

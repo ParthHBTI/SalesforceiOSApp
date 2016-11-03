@@ -1,4 +1,6 @@
+#ifdef __OBJC__
 #import <UIKit/UIKit.h>
+#endif
 
 #import "SFMruSyncDownTarget.h"
 #import "SFObject.h"

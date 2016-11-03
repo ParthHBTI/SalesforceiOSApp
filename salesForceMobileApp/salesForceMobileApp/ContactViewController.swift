@@ -8,6 +8,8 @@
 
 import UIKit
 import SalesforceRestAPI
+import MBProgressHUD
+
 class ContactViewController: UIViewController , ExecuteQueryDelegate {
     
     @IBOutlet weak var tableView: UITableView!
@@ -21,16 +23,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         self.setNavigationBarItem()
         self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let contacttDataKey = "contactListData"
-        if let arrayOfObjectsData = defaults.objectForKey(contacttDataKey) as? NSData {
-            resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
-            dispatch_async(dispatch_get_main_queue(), {
-                self.tableView.reloadData()
-            })
-        } else {
-            exDelegate.leadQueryDe("contact")
-        }
+        loadContact()
     }
     
     func executeQuery()  {
@@ -66,6 +59,27 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         super.didReceiveMemoryWarning()
     }
     
+    func loadContact() {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let contacttDataKey = "contactListData"
+        let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
+        if exDelegate.isConnectedToNetwork() {
+            loading.detailsLabelText = "Uploading Data from Server"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            exDelegate.leadQueryDe("contact")
+        } else if let arrayOfObjectsData = defaults.objectForKey(contacttDataKey) as? NSData {
+            loading.detailsLabelText = "Uploading Data from Local"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
+        }
+
+    }
 }
 
 extension ContactViewController : UITableViewDelegate {

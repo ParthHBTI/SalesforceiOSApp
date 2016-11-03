@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SalesforceSDKCore
+import SalesforceRestAPI
 
 enum LeftMenu: Int {
     case lead = 0

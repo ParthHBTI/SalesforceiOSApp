@@ -1,4 +1,6 @@
+#ifdef __OBJC__
 #import <UIKit/UIKit.h>
+#endif
 
 #import "SFRestAPI+Blocks.h"
 #import "SFRestAPI+Files.h"

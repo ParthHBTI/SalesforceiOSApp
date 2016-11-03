@@ -8,6 +8,8 @@
 
 import UIKit
 import SalesforceRestAPI
+import MBProgressHUD
+
 class ContactViewController: UIViewController , ExecuteQueryDelegate {
     
     @IBOutlet weak var tableView: UITableView!
@@ -23,9 +25,17 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         self.tableView.registerCellNib(DataTableViewCell.self)
         let defaults = NSUserDefaults.standardUserDefaults()
         let contacttDataKey = "contactListData"
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
+            loading.detailsLabelText = "Uploading Data from Server"
+            loading.hide(true, afterDelay: 2)
+             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("contact")
         } else if let arrayOfObjectsData = defaults.objectForKey(contacttDataKey) as? NSData {
+            loading.detailsLabelText = "Uploading Data from Local"
+            loading.hide(true, afterDelay: 2)
+             loading.removeFromSuperViewOnHide = true
             resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()

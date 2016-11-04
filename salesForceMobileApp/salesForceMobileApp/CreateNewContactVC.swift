@@ -36,6 +36,7 @@ class CreateNewContactVC : UIViewController, SFRestDelegate {
         super.viewDidLayoutSubviews()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height + 300);
     }
+    
     @IBAction func saveAction(sender: AnyObject) {
         
             let fields = [
@@ -54,7 +55,7 @@ class CreateNewContactVC : UIViewController, SFRestDelegate {
         }) { succes in
                         print(succes)
         }
-           }
+    }
    
     
     @IBAction func cancelAction(sender: AnyObject) {

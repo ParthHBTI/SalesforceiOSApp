@@ -14,18 +14,19 @@ import SmartStore.SalesforceSDKManagerWithSmartStore
 import SmartSync
 import SmartStore
 
-class CreateNewOpportunityVC: UIViewController, SFRestDelegate {
+class CreateNewOpportunityVC: UIViewController, SFRestDelegate, UIScrollViewDelegate {
 
     @IBOutlet weak var opportunityName: UITextField!
     @IBOutlet weak var closeDate: UITextField!
     @IBOutlet weak var amount: UITextField!
     @IBOutlet weak var stage: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
-
+        
         // Do any additional setup after loading the view.
     }
 
@@ -36,7 +37,7 @@ class CreateNewOpportunityVC: UIViewController, SFRestDelegate {
     
     override func viewDidLayoutSubviews()  {
         super.viewDidLayoutSubviews()
-        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height + 300);
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height + 100);
     }
     
     @IBAction func saveAction(sender: AnyObject) {
@@ -64,4 +65,7 @@ class CreateNewOpportunityVC: UIViewController, SFRestDelegate {
     @IBAction func cancelAction(sender: AnyObject) {
     }
     
+     func touchesShouldCancelInContentView(view: UIView) -> Bool {
+        return false
+    }
 }

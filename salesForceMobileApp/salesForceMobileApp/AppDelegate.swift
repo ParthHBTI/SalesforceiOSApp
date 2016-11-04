@@ -25,7 +25,7 @@ WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
 import Foundation
 import UIKit
 import SalesforceSDKCore
-
+import SalesforceRestAPI
 
 // Fill these in when creating a new Connected Application on Force.com
 let RemoteAccessConsumerKey = "3MVG9Iu66FKeHhINkB1l7xt7kR8czFcCTUhgoA8Ol2Ltf1eYHOU4SqQRSEitYFDUpqRWcoQ2.dBv_a1Dyu5xa";
@@ -44,6 +44,8 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
         SalesforceSDKManager.sharedManager().connectedAppId = RemoteAccessConsumerKey
         SalesforceSDKManager.sharedManager().connectedAppCallbackUri = OAuthRedirectURI
         SalesforceSDKManager.sharedManager().authScopes = ["web", "api"];
+//        let userId = SFAuthenticationManager.sharedManager().idCoordinator.idData.userId
+//        let isAdminRequest = SFRestAPI.sharedInstance().requestForQuery("select MyApp_UserType__c from User where Id = '\(userId)'")
         SalesforceSDKManager.sharedManager().postLaunchAction = {
             [unowned self] (launchActionList: SFSDKLaunchAction) in
             let launchActionString = SalesforceSDKManager.launchActionsStringRepresentation(launchActionList)
@@ -166,7 +168,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
             // your app does not support multiple accounts.  The logic below will work either way.
             
             var numberOfAccounts : Int;
-            let allAccounts = SFUserAccountManager.sharedInstance().allUserAccounts as! [SFUserAccount]?
+            let allAccounts = SFUserAccountManager.sharedInstance().allUserAccounts as [SFUserAccount]?
             if allAccounts != nil {
                 numberOfAccounts = allAccounts!.count;
             } else {

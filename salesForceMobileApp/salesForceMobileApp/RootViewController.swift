@@ -105,7 +105,7 @@ class RootViewController : UITableViewController, SFRestDelegate
         return cell!
     }
     
-    private func createMenuView() {
+    private func createMenuView(indexPath: NSIndexPath) {
         
         // create viewController code...
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -119,6 +119,7 @@ class RootViewController : UITableViewController, SFRestDelegate
         UINavigationBar.appearance().tintColor = UIColor(hex: "689F38")
         
         leftViewController.mainViewController = nvc
+        leftViewController.userInfoDic = dataRows[indexPath.row] as? NSDictionary
         
         let slideMenuController = ExSlideMenuController(mainViewController:nvc, leftMenuViewController: leftViewController)
         slideMenuController.automaticallyAdjustsScrollViewInsets = true
@@ -133,7 +134,7 @@ class RootViewController : UITableViewController, SFRestDelegate
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        createMenuView()
+        createMenuView(indexPath)
 //        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
 //        let vc = storyboard.instantiateViewControllerWithIdentifier("MainViewController") as! MainViewController
 //       self.navigationController?.pushViewController(vc, animated: true)

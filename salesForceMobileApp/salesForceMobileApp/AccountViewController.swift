@@ -95,7 +95,11 @@ extension AccountViewController : UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
-        cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Website"] as? String
+        
+        //Name
+        
+        //cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Website"] as? String
+        cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         return cell
     }
     

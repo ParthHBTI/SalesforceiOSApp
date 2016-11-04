@@ -52,12 +52,17 @@ class OpportunityDataVC: UITableViewController {
             type =  (getResponseArr["Type"] as? String)!
         }
         
+        var amount = 0
+        if  let _  = nullToNil( getResponseArr["Amount"]) {
+            amount =   getResponseArr["Amount"] as! Int
+        }
+        
         opportunityDataArr = [
             getResponseArr["Name"] as! String,
             leadSource,
             getResponseArr["StageName"] as! String,
             type,
-            getResponseArr["Amount"] as! Int,
+            amount,
             getResponseArr["Probability"] as! Int,
             getResponseArr["IsPrivate"] as! Bool,
             getResponseArr["CreatedDate"] as! String,

@@ -32,6 +32,9 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     var nonMenuViewController: UIViewController!
     var imageHeaderView: ImageHeaderView!
     
+    var userInfoDic: NSDictionary!
+
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -58,6 +61,7 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
         
         self.imageHeaderView = ImageHeaderView.loadNib()
         self.view.addSubview(self.imageHeaderView)
+        self.imageHeaderView.userNameLbl.text =  userInfoDic["Name"] as? String
     }
     
     override func viewDidAppear(animated: Bool) {

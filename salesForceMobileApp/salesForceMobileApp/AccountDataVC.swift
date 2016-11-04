@@ -36,14 +36,45 @@ class AccountDataVC: UITableViewController {
             lastModifiedDate =  (getResponseArr["LastModifiedDate"] as? String)!
         }
         
+        var accountNumber = ""
+        if  let _  = nullToNil( getResponseArr["AccountNumber"]) {
+            accountNumber =   getResponseArr["AccountNumber"] as! String
+        }
+
+        
+        var type = ""
+        if  let _  = nullToNil( getResponseArr["Type"]) {
+            type =   getResponseArr["Type"] as! String
+        }
+        
+        var ownership = ""
+        if  let _  = nullToNil( getResponseArr["Ownership"]) {
+            ownership =   getResponseArr["Ownership"] as! String
+        }
+        
+        var website = ""
+        if  let _  = nullToNil( getResponseArr["Website"]) {
+            website =   getResponseArr["Website"] as! String
+        }
+        
+        var phone = ""
+        if  let _  = nullToNil( getResponseArr["Phone"]) {
+            phone =   getResponseArr["Phone"] as! String
+        }
+        
+        var fax = ""
+        if  let _  = nullToNil( getResponseArr["Fax"]) {
+            fax =   getResponseArr["Fax"] as! String
+        }
+        
         accountDataArr = [
             getResponseArr["Name"] as! String,
-            getResponseArr["AccountNumber"] as! String,
-            getResponseArr["Type"] as! String,
-            getResponseArr["Ownership"] as! String,
-            getResponseArr["Website"] as! String,
-            getResponseArr["Phone"] as! String,
-            getResponseArr["Fax"] as! String,
+            accountNumber,
+            type,
+            ownership,
+            website,
+            phone,
+            fax,
             lastModifiedDate
         ]
     }

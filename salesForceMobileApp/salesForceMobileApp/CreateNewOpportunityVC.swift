@@ -15,23 +15,16 @@ import SmartSync
 import SmartStore
 import MBProgressHUD
 
-<<<<<<< HEAD
-class CreateNewOpportunityVC: UIViewController, SFRestDelegate, UIScrollViewDelegate {
 
-=======
 class CreateNewOpportunityVC: UIViewController, SFRestDelegate,ExecuteQueryDelegate {
     
->>>>>>> f8da76c7a3b3a04d53e3077421be221b3a923334
     @IBOutlet weak var opportunityName: UITextField!
     @IBOutlet weak var closeDate: UITextField!
     @IBOutlet weak var amount: UITextField!
     @IBOutlet weak var stage: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
-<<<<<<< HEAD
     
-=======
     var exDelegate: ExecuteQuery = ExecuteQuery()
->>>>>>> f8da76c7a3b3a04d53e3077421be221b3a923334
     override func viewDidLoad() {
         super.viewDidLoad()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );

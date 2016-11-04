@@ -13,13 +13,15 @@ import SalesforceSDKCore
 import SmartStore.SalesforceSDKManagerWithSmartStore
 import SmartSync
 import SmartStore
+import MBProgressHUD
 
-class CreateNewLeadVC: UIViewController {
+class CreateNewLeadVC: UIViewController, ExecuteQueryDelegate {
     
     @IBOutlet weak var lastName: UITextField!
     @IBOutlet weak var companyName: UITextField!
     @IBOutlet weak var leadStatus: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
+    var exDelegate: ExecuteQuery = ExecuteQuery()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
@@ -38,26 +40,35 @@ class CreateNewLeadVC: UIViewController {
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        
-        let fields = [
-            "LastName" : lastName.text!,
-            "Company" : companyName.text!,
-            "Status" : leadStatus.text!,
-            ]
-        SFRestAPI.sharedInstance().performCreateWithObjectType("Lead", fields: fields, failBlock: { err in
-            dispatch_async(dispatch_get_main_queue(), {
-                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                alert.show()
-            })
-            print( (err))
-        }) { succes in
-            print(succes)
-            // for archived data and then save to nsuser defaults
-            /*let defaults = NSUserDefaults.standardUserDefaults()
-             let leadDataKey = "leadData"
-             let leadData = [Lead(inDict: fields)]
-             let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadData)
-             defaults.setObject(arrOfLeadData, forKey: leadDataKey)*/
+        if exDelegate.isConnectedToNetwork() {
+            let fields = [
+                "LastName" : lastName.text!,
+                "Company" : companyName.text!,
+                "Status" : leadStatus.text!,
+                ]
+            SFRestAPI.sharedInstance().performCreateWithObjectType("Lead", fields: fields, failBlock: { err in
+                dispatch_async(dispatch_get_main_queue(), {
+                    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                    alert.show()
+                })
+                print( (err))
+            }) { succes in
+                print(succes)
+                // for archived data and then save to nsuser defaults
+                /*let defaults = NSUserDefaults.standardUserDefaults()
+                 let leadDataKey = "leadData"
+                 let leadData = [Lead(inDict: fields)]
+                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadData)
+                 defaults.setObject(arrOfLeadData, forKey: leadDataKey)*/
+            }
+        }
+        else {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            //loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "Please check your Internet connection!"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
         }
     }
     

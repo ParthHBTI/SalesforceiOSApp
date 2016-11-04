@@ -8,7 +8,8 @@
 
 import UIKit
 import SalesforceRestAPI
-
+import SystemConfiguration
+import MBProgressHUD
 //public enum selectObject: String {
 //    case lead = "lead"
 //    case account = "account"
@@ -76,4 +77,37 @@ class ExecuteQuery: UIViewController, SFRestDelegate {
         }
      
     }
+    
+    func isConnectedToNetwork() -> Bool {
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
+            SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
+        }
+        var flags = SCNetworkReachabilityFlags()
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) {
+            return false
+        }
+        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
+        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
+        return (isReachable && !needsConnection)
+    }
+    
+//    func showServerHUD() {
+//        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+//        loading.mode = MBProgressHUDMode.Indeterminate
+//        loading.detailsLabelText = "Uploading Data from Server"
+//        loading.hide(true, afterDelay: 2)
+//        loading.removeFromSuperViewOnHide = true
+//    }
+//    
+//    func showLocalHUD() {
+//        let loading = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
+//        loading.mode = MBProgressHUDMode.Indeterminate
+//        loading.detailsLabelText = "Uploading Data from Local"
+//        loading.hide(true, afterDelay: 2)
+//        loading.removeFromSuperViewOnHide = true
+//    }
+
 }

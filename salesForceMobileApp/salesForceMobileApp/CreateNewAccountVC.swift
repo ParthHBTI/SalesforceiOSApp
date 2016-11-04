@@ -13,12 +13,14 @@ import SalesforceSDKCore
 import SmartStore.SalesforceSDKManagerWithSmartStore
 import SmartSync
 import SmartStore
+import MBProgressHUD
 
-class CreateNewAccountVC: UIViewController, UIScrollViewDelegate {
-
+class CreateNewAccountVC: UIViewController, UIScrollViewDelegate, ExecuteQueryDelegate {
+    
     @IBOutlet weak var accountName: UITextField!
     @IBOutlet weak var accountAddress: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
+    var exDelegate: ExecuteQuery = ExecuteQuery()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,24 +40,34 @@ class CreateNewAccountVC: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        
-        let fields = [
-            "Name" : accountName.text!,
-            "ShippingAddress" : accountAddress.text!,
-        ]
-        SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: { err in
-            dispatch_async(dispatch_get_main_queue(), {
-                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                alert.show()
-            })
-            print( (err))
-        }) { succes in
-            print(succes)
+        if exDelegate.isConnectedToNetwork() {
+            let fields = [
+                "Name" : accountName.text!,
+                "ShippingAddress" : accountAddress.text!,
+                ]
+            SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: { err in
+                dispatch_async(dispatch_get_main_queue(), {
+                    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                    alert.show()
+                })
+                print( (err))
+            }) { succes in
+                print(succes)
+            }
         }
-
+        else {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            //loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "Please check your Internet connection!"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+        }
     }
-
+    
     @IBAction func cancelAction(sender: AnyObject) {
+        
+        
     }
-   
+    
 }

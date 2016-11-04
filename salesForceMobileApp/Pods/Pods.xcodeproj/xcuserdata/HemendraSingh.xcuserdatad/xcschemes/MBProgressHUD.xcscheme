@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0730"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A0932F89B85A4C64F45D31BBBE5CC5E5"
-               BuildableName = "Pods_salesForceMobileApp.framework"
-               BlueprintName = "Pods-salesForceMobileApp"
+               BlueprintIdentifier = "6B1714E816AE794962516E2ECBB40A5A"
+               BuildableName = "MBProgressHUD.framework"
+               BlueprintName = "MBProgressHUD"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A0932F89B85A4C64F45D31BBBE5CC5E5"
-            BuildableName = "Pods_salesForceMobileApp.framework"
-            BlueprintName = "Pods-salesForceMobileApp"
+            BlueprintIdentifier = "6B1714E816AE794962516E2ECBB40A5A"
+            BuildableName = "MBProgressHUD.framework"
+            BlueprintName = "MBProgressHUD"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -60,6 +60,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "6B1714E816AE794962516E2ECBB40A5A"
+            BuildableName = "MBProgressHUD.framework"
+            BlueprintName = "MBProgressHUD"
+            ReferencedContainer = "container:Pods.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

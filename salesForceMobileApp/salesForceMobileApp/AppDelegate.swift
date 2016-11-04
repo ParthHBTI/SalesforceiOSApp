@@ -25,6 +25,7 @@ WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH 
 import Foundation
 import UIKit
 import SalesforceSDKCore
+import SalesforceRestAPI
 
 // Fill these in when creating a new Connected Application on Force.com
 let RemoteAccessConsumerKey = "3MVG9Iu66FKeHhINkB1l7xt7kR8czFcCTUhgoA8Ol2Ltf1eYHOU4SqQRSEitYFDUpqRWcoQ2.dBv_a1Dyu5xa";
@@ -40,10 +41,11 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
     init() {
         super.init()
         SFLogger.setLogLevel(.Debug)
-        
         SalesforceSDKManager.sharedManager().connectedAppId = RemoteAccessConsumerKey
         SalesforceSDKManager.sharedManager().connectedAppCallbackUri = OAuthRedirectURI
         SalesforceSDKManager.sharedManager().authScopes = ["web", "api"];
+//        let userId = SFAuthenticationManager.sharedManager().idCoordinator.idData.userId
+//        let isAdminRequest = SFRestAPI.sharedInstance().requestForQuery("select MyApp_UserType__c from User where Id = '\(userId)'")
         SalesforceSDKManager.sharedManager().postLaunchAction = {
             [unowned self] (launchActionList: SFSDKLaunchAction) in
             let launchActionString = SalesforceSDKManager.launchActionsStringRepresentation(launchActionList)

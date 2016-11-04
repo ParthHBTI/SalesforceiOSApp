@@ -85,6 +85,7 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/CocoaLumberjack/CocoaLumberjack.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/MBProgressHUD/MBProgressHUD.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SQLCipher/SQLCipher.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SalesforceNetwork/SalesforceNetwork.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SalesforceRestAPI/SalesforceRestAPI.framework"
@@ -94,6 +95,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/CocoaLumberjack/CocoaLumberjack.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/MBProgressHUD/MBProgressHUD.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SQLCipher/SQLCipher.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SalesforceNetwork/SalesforceNetwork.framework"
   install_framework "$BUILT_PRODUCTS_DIR/SalesforceRestAPI/SalesforceRestAPI.framework"

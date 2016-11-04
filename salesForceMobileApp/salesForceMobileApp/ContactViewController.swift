@@ -96,8 +96,8 @@ extension ContactViewController : UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
-        //        let data = DataTableViewCellData(imageUrl: "dummy", text: dataRows.objectAtIndexPath(indexPath.row)[""])
-        //        cell.setData(data)
+//        cell.textLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
+//        cell.detailTextLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         print(cell.textLabel?.text)
         return cell

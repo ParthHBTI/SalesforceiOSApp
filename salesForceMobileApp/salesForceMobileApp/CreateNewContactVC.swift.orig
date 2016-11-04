@@ -1,9 +1,8 @@
 //
-//  LeadViewController.swift
-//  salesForceMobileApp
+//  RightViewController.swift
+//  SlideMenuControllerSwift
 //
-//  Created by mac on 17/10/16.
-//  Copyright © 2016 Salesforce. All rights reserved.
+//  Created by Yuji Hato on 12/3/14.
 //
 
 import UIKit
@@ -15,18 +14,24 @@ import SmartSync
 import SmartStore
 import MBProgressHUD
 
-class CreateNewLeadVC: UIViewController, ExecuteQueryDelegate {
+class CreateNewContactVC : UIViewController, SFRestDelegate,ExecuteQueryDelegate {
     
+    @IBOutlet weak var firstName: UITextField!
     @IBOutlet weak var lastName: UITextField!
-    @IBOutlet weak var companyName: UITextField!
-    @IBOutlet weak var leadStatus: UITextField!
+    @IBOutlet weak var email: UITextField!
+    @IBOutlet weak var phone: UITextField!
+    @IBOutlet weak var fax: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
-        // Do any additional setup after loading the view.
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
     }
     
     override func viewDidLayoutSubviews()  {
@@ -34,19 +39,16 @@ class CreateNewLeadVC: UIViewController, ExecuteQueryDelegate {
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height + 100);
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     @IBAction func saveAction(sender: AnyObject) {
         if exDelegate.isConnectedToNetwork() {
             let fields = [
+                "FirstName" : firstName.text!,
                 "LastName" : lastName.text!,
-                "Company" : companyName.text!,
-                "Status" : leadStatus.text!,
-                ]
-            SFRestAPI.sharedInstance().performCreateWithObjectType("Lead", fields: fields, failBlock: { err in
+                "Email" : email.text!,
+                "Phone" : phone.text!,
+                "Fax" : fax.text!
+            ]
+            SFRestAPI.sharedInstance().performCreateWithObjectType("Contact", fields: fields, failBlock: { err in
                 dispatch_async(dispatch_get_main_queue(), {
                     let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
                     alert.show()
@@ -54,12 +56,6 @@ class CreateNewLeadVC: UIViewController, ExecuteQueryDelegate {
                 print( (err))
             }) { succes in
                 print(succes)
-                // for archived data and then save to nsuser defaults
-                /*let defaults = NSUserDefaults.standardUserDefaults()
-                 let leadDataKey = "leadData"
-                 let leadData = [Lead(inDict: fields)]
-                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadData)
-                 defaults.setObject(arrOfLeadData, forKey: leadDataKey)*/
             }
         }
         else {
@@ -71,6 +67,10 @@ class CreateNewLeadVC: UIViewController, ExecuteQueryDelegate {
             loading.removeFromSuperViewOnHide = true
         }
     }
+<<<<<<< HEAD
+   
+=======
+>>>>>>> f8da76c7a3b3a04d53e3077421be221b3a923334
     
     @IBAction func cancelAction(sender: AnyObject) {
         

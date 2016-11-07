@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SalesforceRestAPI
 
 class LeadContentVC: UITableViewController {
     
@@ -25,8 +26,16 @@ class LeadContentVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 70
-        //print(getResponseArr)
+        //
+        print(getResponseArr)
+        let nav = self.navigationController?.navigationBar
+        nav!.barTintColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
+        nav!.tintColor = UIColor.whiteColor()
+        nav!.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        let viewRecordingList: UIBarButtonItem = UIBarButtonItem(title: "Convert",style: .Plain, target: self, action: #selector(self.convertLead))
+        self.navigationItem.setRightBarButtonItem(viewRecordingList, animated: true)
         
+        //
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -81,6 +90,16 @@ class LeadContentVC: UITableViewController {
         return cell
     }
     
+    
+    func convertLead() {
+//        var request = SFRestRequest(method: post, path: "", queryParams: nil)
+//        request.endpoint = "/services/apexrest/{your endpoint}/{a lead Id}"
+//        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: {(err: NSError) -> Void in
+//            print("error: \(err)")
+//            }, completeBlock: {(success: AnyObject) -> Void in
+//                print("success: \(success)")
+//        })
+    }
     
     /*
      // Override to support conditional editing of the table view.

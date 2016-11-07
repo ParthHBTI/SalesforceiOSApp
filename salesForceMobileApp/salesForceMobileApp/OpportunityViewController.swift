@@ -97,6 +97,7 @@ extension OpportunityViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
              cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
+        cell.dataImage.image = UIImage.init(named: "oppo")
         print(cell.textLabel?.text)
         return cell
     }

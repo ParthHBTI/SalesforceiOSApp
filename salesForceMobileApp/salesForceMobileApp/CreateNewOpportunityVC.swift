@@ -25,12 +25,22 @@ class CreateNewOpportunityVC: UIViewController, SFRestDelegate,ExecuteQueryDeleg
     @IBOutlet weak var scrollView: UIScrollView!
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
-        
+        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewOpportunityVC.backAction))
+        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
         // Do any additional setup after loading the view.
+    }
+    
+    func backAction() {
+        for controller: UIViewController in self.navigationController!.viewControllers {
+            if (controller is OpportunityViewController) {
+                self.navigationController!.popToViewController(controller, animated: true)
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {

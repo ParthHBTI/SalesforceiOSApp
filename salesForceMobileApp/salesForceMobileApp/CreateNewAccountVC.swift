@@ -26,7 +26,17 @@ class CreateNewAccountVC: UIViewController, UIScrollViewDelegate, ExecuteQueryDe
         super.viewDidLoad()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
+        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewAccountVC.backAction))
+        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
         // Do any additional setup after loading the view.
+    }
+    
+    func backAction() {
+        for controller: UIViewController in self.navigationController!.viewControllers {
+            if (controller is AccountViewController) {
+                self.navigationController!.popToViewController(controller, animated: true)
+            }
+        }
     }
     
     override func viewDidLayoutSubviews()  {

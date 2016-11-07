@@ -100,6 +100,7 @@ extension AccountViewController : UITableViewDataSource {
         
         //cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Website"] as? String
         cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
+        cell.dataImage.image = UIImage.init(named: "account")
         return cell
     }
     

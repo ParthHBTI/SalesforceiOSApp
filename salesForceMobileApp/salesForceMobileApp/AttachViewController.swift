@@ -8,7 +8,7 @@
 
 import UIKit
 import SalesforceRestAPI
-class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
+class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate  {
     
 @IBOutlet weak var imageView: UIImageView!
 let imagePicker = UIImagePickerController()
@@ -26,9 +26,14 @@ let imagePicker = UIImagePickerController()
     }
     
     func shareAction() {
-        
-        //SFRestAPI.sharedInstance().requestForUploadFile(imageData, name: <#T##String#>, description: <#T##String#>, mimeType: <#T##String#>)
+        var image = UIImage()
+        image = imageView.image!
+        let imageData = UIImageJPEGRepresentation(image, 0.0)
+        let request = SFRestAPI.sharedInstance().requestForUploadFile(imageData!, name: "plus.png", description: "Test Img", mimeType: "image/png")
+        SFRestAPI.sharedInstance().send(request, delegate: self)
+        print(request)
     }
+    
     @IBAction func attachPopOver(sender: AnyObject) {
         imagePicker.allowsEditing = false
         imagePicker.sourceType = .PhotoLibrary
@@ -38,7 +43,6 @@ let imagePicker = UIImagePickerController()
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imageView.image = pickedImage
-            
         }
         dismissViewControllerAnimated(true, completion: nil)
     }

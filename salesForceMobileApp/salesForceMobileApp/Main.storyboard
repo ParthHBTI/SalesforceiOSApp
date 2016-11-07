@@ -57,6 +57,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Ok3-eq-C1A"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="xun-XA-1Xz">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J2f-lP-JkE">
@@ -156,9 +157,15 @@
                                 <exclude reference="1xo-nG-44A"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="KKn-bS-omV"/>
+                                <exclude reference="PHd-dk-6Wz"/>
+                                <exclude reference="sCR-ql-YGt"/>
                                 <exclude reference="Mil-Zp-LU3"/>
                                 <exclude reference="dsf-6w-IsA"/>
                                 <exclude reference="vL8-lw-Kyq"/>
+                                <exclude reference="51q-zT-ydY"/>
+                                <exclude reference="jyz-xL-SWH"/>
+                                <exclude reference="kQC-e3-IoO"/>
                                 <exclude reference="8eD-l8-Rua"/>
                                 <exclude reference="EDd-sy-nAk"/>
                                 <exclude reference="H7c-BZ-esS"/>
@@ -166,12 +173,6 @@
                                 <exclude reference="ajj-ln-dkV"/>
                                 <exclude reference="oHc-cm-bDg"/>
                                 <exclude reference="oVZ-1J-Wdz"/>
-                                <exclude reference="51q-zT-ydY"/>
-                                <exclude reference="jyz-xL-SWH"/>
-                                <exclude reference="kQC-e3-IoO"/>
-                                <exclude reference="KKn-bS-omV"/>
-                                <exclude reference="PHd-dk-6Wz"/>
-                                <exclude reference="sCR-ql-YGt"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -183,9 +184,15 @@
                                 <include reference="1xo-nG-44A"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="KKn-bS-omV"/>
+                                <include reference="PHd-dk-6Wz"/>
+                                <include reference="sCR-ql-YGt"/>
                                 <include reference="Mil-Zp-LU3"/>
                                 <include reference="dsf-6w-IsA"/>
                                 <include reference="vL8-lw-Kyq"/>
+                                <include reference="51q-zT-ydY"/>
+                                <include reference="jyz-xL-SWH"/>
+                                <include reference="kQC-e3-IoO"/>
                                 <include reference="8eD-l8-Rua"/>
                                 <include reference="EDd-sy-nAk"/>
                                 <include reference="H7c-BZ-esS"/>
@@ -193,12 +200,6 @@
                                 <include reference="ajj-ln-dkV"/>
                                 <include reference="oHc-cm-bDg"/>
                                 <include reference="oVZ-1J-Wdz"/>
-                                <include reference="51q-zT-ydY"/>
-                                <include reference="jyz-xL-SWH"/>
-                                <include reference="kQC-e3-IoO"/>
-                                <include reference="KKn-bS-omV"/>
-                                <include reference="PHd-dk-6Wz"/>
-                                <include reference="sCR-ql-YGt"/>
                             </mask>
                         </variation>
                     </view>
@@ -219,6 +220,7 @@
                         <viewControllerLayoutGuide type="bottom" id="kv2-DE-O6g"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="dua-wR-tTG">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>

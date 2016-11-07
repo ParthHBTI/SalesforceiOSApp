@@ -66,15 +66,8 @@ class CreateNewLeadVC: UIViewController, ExecuteQueryDelegate {
                 print( (err))
             }) { succes in
                 print(succes)
-                // for archived data and then save to nsuser defaults
-                /*let defaults = NSUserDefaults.standardUserDefaults()
-                 let leadDataKey = "leadData"
-                 let leadData = [Lead(inDict: fields)]
-                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadData)
-                 defaults.setObject(arrOfLeadData, forKey: leadDataKey)*/
-            }
         }
-        else {
+        } else {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
             //loading.mode = MBProgressHUDMode.Text

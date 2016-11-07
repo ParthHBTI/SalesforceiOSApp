@@ -12,6 +12,8 @@
 		04DB2FA31DB4ED2100C4519F /* CreateNewLeadVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA21DB4ED2100C4519F /* CreateNewLeadVC.swift */; };
 		04DB2FA51DB4ED3E00C4519F /* CreateNewAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA41DB4ED3E00C4519F /* CreateNewAccountVC.swift */; };
 		04DB2FA71DB4ED5300C4519F /* CreateNewOpportunityVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA61DB4ED5300C4519F /* CreateNewOpportunityVC.swift */; };
+		04EE4B0C1DD06D5E00590A7D /* AttachViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EE4B0B1DD06D5E00590A7D /* AttachViewController.swift */; };
+		04EE4B0E1DD07FE500590A7D /* PopOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EE4B0D1DD07FE500590A7D /* PopOverViewController.swift */; };
 		04F96ED01DAF6E01000D715A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04F96ECF1DAF6E01000D715A /* Main.storyboard */; };
 		04F96F0F1DAF7333000D715A /* LeadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F0E1DAF7333000D715A /* LeadViewController.swift */; };
 		04F96F191DAF740C000D715A /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F96F111DAF740C000D715A /* String.swift */; };
@@ -62,6 +64,8 @@
 		04DB2FA21DB4ED2100C4519F /* CreateNewLeadVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewLeadVC.swift; sourceTree = "<group>"; };
 		04DB2FA41DB4ED3E00C4519F /* CreateNewAccountVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewAccountVC.swift; sourceTree = "<group>"; };
 		04DB2FA61DB4ED5300C4519F /* CreateNewOpportunityVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewOpportunityVC.swift; sourceTree = "<group>"; };
+		04EE4B0B1DD06D5E00590A7D /* AttachViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttachViewController.swift; path = salesForceMobileApp/AttachViewController.swift; sourceTree = "<group>"; };
+		04EE4B0D1DD07FE500590A7D /* PopOverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopOverViewController.swift; path = salesForceMobileApp/PopOverViewController.swift; sourceTree = "<group>"; };
 		04F96ECF1DAF6E01000D715A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		04F96F0E1DAF7333000D715A /* LeadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadViewController.swift; sourceTree = "<group>"; };
 		04F96F111DAF740C000D715A /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -173,6 +177,8 @@
 		4FD6C46B1B754AF1002F9F90 = {
 			isa = PBXGroup;
 			children = (
+				04EE4B0B1DD06D5E00590A7D /* AttachViewController.swift */,
+				04EE4B0D1DD07FE500590A7D /* PopOverViewController.swift */,
 				04CE8B321DC087AE0057B0A9 /* ExecuteQuery.swift */,
 				4FD6C4761B754AF1002F9F90 /* salesForceMobileApp */,
 				4FD6C4751B754AF1002F9F90 /* Products */,
@@ -376,7 +382,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run \'pod install\' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -403,6 +409,7 @@
 				04F96F1C1DAF740C000D715A /* UIImageView.swift in Sources */,
 				4FD6C47A1B754AF1002F9F90 /* AppDelegate.swift in Sources */,
 				04F96F381DAF761F000D715A /* AccountViewController.swift in Sources */,
+				04EE4B0C1DD06D5E00590A7D /* AttachViewController.swift in Sources */,
 				04DB2FA71DB4ED5300C4519F /* CreateNewOpportunityVC.swift in Sources */,
 				04CE8B331DC087AE0057B0A9 /* ExecuteQuery.swift in Sources */,
 				04F96F241DAF74F8000D715A /* ImageHeaderView.swift in Sources */,
@@ -417,6 +424,7 @@
 				04F96F2A1DAF7517000D715A /* BaseTableViewCell.swift in Sources */,
 				04F96F3C1DAF763B000D715A /* OpportunityViewController.swift in Sources */,
 				04F96F1A1DAF740C000D715A /* UITableViewExtension.swift in Sources */,
+				04EE4B0E1DD07FE500590A7D /* PopOverViewController.swift in Sources */,
 				04F96F2B1DAF7517000D715A /* DataTableViewCell.swift in Sources */,
 				04F96F411DAF76DD000D715A /* LeftViewController.swift in Sources */,
 				04F96F361DAF75E0000D715A /* ExSlideMenuController.swift in Sources */,

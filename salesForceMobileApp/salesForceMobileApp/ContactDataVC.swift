@@ -59,7 +59,20 @@ class ContactDataVC: UITableViewController {
             phone,
             fax
         ]
+        
+        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(ContactDataVC.backAction))
+        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
+        // Do any additional setup after loading the view.
     }
+    
+    func backAction() {
+        for controller: UIViewController in self.navigationController!.viewControllers {
+            if (controller is ContactViewController) {
+                self.navigationController!.popToViewController(controller, animated: true)
+            }
+        }
+    }
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

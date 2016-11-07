@@ -25,6 +25,7 @@ class LeadContentVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 70
+        self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         //print(getResponseArr)
         
         // Uncomment the following line to preserve selection between presentations
@@ -55,8 +56,29 @@ class LeadContentVC: UITableViewController {
             title
         ]
         
+        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(LeadContentVC.backAction))
+        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
+        // Do any additional setup after loading the view.
     }
     
+    func backAction() {
+        for controller: UIViewController in self.navigationController!.viewControllers {
+            if (controller is LeadViewController) {
+                self.navigationController!.popToViewController(controller, animated: true)
+            }
+        }
+    }
+
+    func addRightBarButtonWithImage1(buttonImage: UIImage) {
+        let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+        navigationItem.rightBarButtonItem = rightButton;
+    }
+    
+    func toggleRight1() {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
+        navigationController?.pushViewController(nv, animated: true)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

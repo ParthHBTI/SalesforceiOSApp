@@ -33,8 +33,11 @@ class RootViewController : UITableViewController, SFRestDelegate
     override func loadView()
     {
         super.loadView()
-        self.title = "Mobile SDK Sample App"
-        
+        self.title = "SalesForce Mobile App"
+        let nav = self.navigationController?.navigationBar
+        nav!.barTintColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
+        nav!.tintColor = UIColor.whiteColor()
+        nav!.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         //Here we use a query that should work on either Force.com or Database.com
         let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Name FROM User LIMIT 10");
         SFRestAPI.sharedInstance().send(request, delegate: self);

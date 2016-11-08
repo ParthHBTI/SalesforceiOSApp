@@ -12,17 +12,17 @@ class OpportunityDataVC: UITableViewController {
     
     var getResponseArr:AnyObject = []
     var opportunityDataArr = []
-    var cellTitleArr: NSArray = ["Name:","Lead Source:","Stage Name:","Type:","Ammount:","Probability:","Is Private:","Created Date:","Close Date:","Is Closed:","Is Deleted:","Last Modified Date:"]
+    var cellTitleArr: NSArray = ["Opportunity Owner:","Opportunity Name:","Account Name:","Lead Source:","Stage Name:","Type:","Ammount:","Probability:","Is Private:","Created Date:","Close Date:","Is Closed:","Is Deleted:","Last Modified Date:"]
     
     /*func isObjectNil(object:AnyObject!) -> Bool
-    {
-        if let _:AnyObject = object
-        {
-            return false
-        }
-        
-        return true
-    }*/
+     {
+     if let _:AnyObject = object
+     {
+     return false
+     }
+     
+     return true
+     }*/
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -32,9 +32,9 @@ class OpportunityDataVC: UITableViewController {
         }
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setNavigationBarItem()
         tableView.rowHeight = 70
         print(getResponseArr)
         // Uncomment the following line to preserve selection between presentations
@@ -57,20 +57,22 @@ class OpportunityDataVC: UITableViewController {
             amount =   getResponseArr["Amount"] as! Int
         }
         
-        opportunityDataArr = [
-            getResponseArr["Name"] as! String,
-            leadSource,
-            getResponseArr["StageName"] as! String,
-            type,
-            amount,
-            getResponseArr["Probability"] as! Int,
-            getResponseArr["IsPrivate"] as! Bool,
-            getResponseArr["CreatedDate"] as! String,
-            getResponseArr["CloseDate"] as! String,
-            getResponseArr["IsClosed"] as! Bool,
-            getResponseArr["IsDeleted"] as! Bool,
-            getResponseArr["LastModifiedDate"] as! String
+        opportunityDataArr = [getResponseArr["Owner"]!!["Name"] as! String,
+                              getResponseArr["Name"] as! String,
+                              getResponseArr["Account"]!!["Name"] as! String,
+                              leadSource,
+                              getResponseArr["StageName"] as! String,
+                              type,
+                              amount,
+                              getResponseArr["Probability"] as! Int,
+                              getResponseArr["IsPrivate"] as! Bool,
+                              getResponseArr["CreatedDate"] as! String,
+                              getResponseArr["CloseDate"] as! String,
+                              getResponseArr["IsClosed"] as! Bool,
+                              getResponseArr["IsDeleted"] as! Bool,
+                              getResponseArr["LastModifiedDate"] as! String
         ]
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -88,12 +90,19 @@ class OpportunityDataVC: UITableViewController {
         return opportunityDataArr.count
     }
     
-    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("OpportunityDataCellID", forIndexPath: indexPath) as! OpportunityDataCell
         cell.TitltLbl.text = self.cellTitleArr.objectAtIndex(indexPath.row) as? String
         cell.TitleNameLbl.text = self.opportunityDataArr.objectAtIndex(indexPath.row) as? String
-        
+        if indexPath.row == 0 {
+            cell.TitleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
+        }
+        if cell.TitleNameLbl.text == "" {
+            tableView.rowHeight = 40
+        }
+        else {
+            tableView.rowHeight = 70
+        }
         return cell
     }
     

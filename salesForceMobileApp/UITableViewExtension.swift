@@ -30,4 +30,5 @@ public extension UITableView {
         let nib = UINib(nibName: identifier, bundle: nil)
         self.registerNib(nib, forHeaderFooterViewReuseIdentifier: identifier)
     }
+    
 }

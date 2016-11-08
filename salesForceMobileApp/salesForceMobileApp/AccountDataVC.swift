@@ -11,7 +11,7 @@ import UIKit
 class AccountDataVC: UITableViewController {
     
     var getResponseArr:AnyObject = []
-    var accountCellTitleArr: NSArray = ["Account Name:","Account Number:","Type:","Ownership:","Website:","Phone:","Fax:","Last Modified Date:"]
+    var accountCellTitleArr: NSArray = ["Account Owner:","Account Name:","Account Number:","Type:","Ownership:","Website:","Phone:","Fax:","Last Modified Date:"]
     var accountDataArr = []
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -24,6 +24,7 @@ class AccountDataVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setNavigationBarItem()
         tableView.rowHeight = 70
         //print(getResponseArr)
         // Uncomment the following line to preserve selection between presentations
@@ -40,7 +41,7 @@ class AccountDataVC: UITableViewController {
         if  let _  = nullToNil( getResponseArr["AccountNumber"]) {
             accountNumber =   getResponseArr["AccountNumber"] as! String
         }
-
+        
         
         var type = ""
         if  let _  = nullToNil( getResponseArr["Type"]) {
@@ -67,16 +68,17 @@ class AccountDataVC: UITableViewController {
             fax =   getResponseArr["Fax"] as! String
         }
         
-        accountDataArr = [
-            getResponseArr["Name"] as! String,
-            accountNumber,
-            type,
-            ownership,
-            website,
-            phone,
-            fax,
-            lastModifiedDate
+        accountDataArr = [getResponseArr["Owner"]!!["Name"] as! String,
+                          getResponseArr["Name"] as! String,
+                          accountNumber,
+                          type,
+                          ownership,
+                          website,
+                          phone,
+                          fax,
+                          lastModifiedDate
         ]
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -99,6 +101,15 @@ class AccountDataVC: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("AccountDataCellID", forIndexPath: indexPath) as! AccountDataCell
         cell.TitleLbl.text = self.accountCellTitleArr.objectAtIndex(indexPath.row) as? String
         cell.TitleNameLbl.text = self.accountDataArr.objectAtIndex(indexPath.row) as? String
+        if indexPath.row == 0 {
+            cell.TitleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
+        }
+        if cell.TitleNameLbl.text == "" {
+            tableView.rowHeight = 40
+        }
+        else {
+            tableView.rowHeight = 70
+        }
         return cell
     }
     

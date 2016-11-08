@@ -12,7 +12,7 @@ import SalesforceRestAPI
 class LeadContentVC: UITableViewController {
     
     var getResponseArr:AnyObject = []
-    var cellTitleArr: NSArray = ["Name:","Company:","Email:","Phone:","Title:","Fax:"]
+    var cellTitleArr: NSArray = ["Lead Owner:","Name:","Company:","Email:","Phone:","Title:","Fax:"]
     var leadDataArr = []
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -25,9 +25,9 @@ class LeadContentVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setNavigationBarItem()
         tableView.rowHeight = 70
-        //
-        print(getResponseArr)
+        //print(getResponseArr)
         let nav = self.navigationController?.navigationBar
         nav!.barTintColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
         nav!.tintColor = UIColor.whiteColor()
@@ -56,14 +56,23 @@ class LeadContentVC: UITableViewController {
             title =  (getResponseArr["Title"] as? String)!
         }
         
-        leadDataArr = [
-            getResponseArr["Name"] as! String,
-            getResponseArr["Company"] as! String,
-            email,
-            phone,
-            title
-        ]
+        var salutation = ""
+        if let _ = nullToNil(getResponseArr["Salutation"]) {
+            salutation = (getResponseArr["Salutation"] as? String)!
+        }
         
+        var leadName = getResponseArr["Name"] as! String
+        if salutation != "" {
+            leadName = salutation + " " + (getResponseArr["Name"] as! String)
+        }
+        
+        leadDataArr = [getResponseArr["Owner"]!["Name"] as! String,
+                       leadName,
+                       getResponseArr["Company"] as! String,
+                       email,
+                       phone,
+                       title
+        ]
     }
     
     override func didReceiveMemoryWarning() {
@@ -86,19 +95,26 @@ class LeadContentVC: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("leadContentCellID", forIndexPath: indexPath) as! LeadContentCell
         cell.titleLbl.text = self.cellTitleArr.objectAtIndex(indexPath.row) as? String
         cell.titleNameLbl.text = self.leadDataArr.objectAtIndex(indexPath.row) as? String
+        if indexPath.row == 0 {
+            cell.titleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
+        }
         
+        if cell.titleNameLbl.text == "" {
+            tableView.rowHeight = 40
+        } else {
+            tableView.rowHeight = 70
+        }
         return cell
     }
     
-    
     func convertLead() {
-//        var request = SFRestRequest(method: post, path: "", queryParams: nil)
-//        request.endpoint = "/services/apexrest/{your endpoint}/{a lead Id}"
-//        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: {(err: NSError) -> Void in
-//            print("error: \(err)")
-//            }, completeBlock: {(success: AnyObject) -> Void in
-//                print("success: \(success)")
-//        })
+        //        var request = SFRestRequest(method: post, path: "", queryParams: nil)
+        //        request.endpoint = "/services/apexrest/{your endpoint}/{a lead Id}"
+        //        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: {(err: NSError) -> Void in
+        //            print("error: \(err)")
+        //            }, completeBlock: {(success: AnyObject) -> Void in
+        //                print("success: \(success)")
+        //        })
     }
     
     /*

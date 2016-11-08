@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import SalesforceRestAPI
 
 class LeadContentVC: UITableViewController {
     
     var getResponseArr:AnyObject = []
-    var cellTitleArr: NSArray = ["Name:","Company:","Email:","Phone:","Title:","Fax:"]
+    var cellTitleArr: NSArray = ["Lead Owner:","Name:","Company:","Email:","Phone:","Title:","Fax:"]
     var leadDataArr = []
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -24,10 +25,17 @@ class LeadContentVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setNavigationBarItem()
         tableView.rowHeight = 70
-        self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         //print(getResponseArr)
+        let nav = self.navigationController?.navigationBar
+        nav!.barTintColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
+        nav!.tintColor = UIColor.whiteColor()
+        nav!.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        let viewRecordingList: UIBarButtonItem = UIBarButtonItem(title: "Convert",style: .Plain, target: self, action: #selector(self.convertLead))
+        self.navigationItem.setRightBarButtonItem(viewRecordingList, animated: true)
         
+        //
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -48,37 +56,25 @@ class LeadContentVC: UITableViewController {
             title =  (getResponseArr["Title"] as? String)!
         }
         
-        leadDataArr = [
-            getResponseArr["Name"] as! String,
-            getResponseArr["Company"] as! String,
-            email,
-            phone,
-            title
-        ]
-        
-        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(LeadContentVC.backAction))
-        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
-        // Do any additional setup after loading the view.
-    }
-    
-    func backAction() {
-        for controller: UIViewController in self.navigationController!.viewControllers {
-            if (controller is LeadViewController) {
-                self.navigationController!.popToViewController(controller, animated: true)
-            }
+        var salutation = ""
+        if let _ = nullToNil(getResponseArr["Salutation"]) {
+            salutation = (getResponseArr["Salutation"] as? String)!
         }
-    }
-
-    func addRightBarButtonWithImage1(buttonImage: UIImage) {
-        let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
-        navigationItem.rightBarButtonItem = rightButton;
+        
+        var leadName = getResponseArr["Name"] as! String
+        if salutation != "" {
+            leadName = salutation + " " + (getResponseArr["Name"] as! String)
+        }
+        
+        leadDataArr = [getResponseArr["Owner"]!["Name"] as! String,
+                       leadName,
+                       getResponseArr["Company"] as! String,
+                       email,
+                       phone,
+                       title
+        ]
     }
     
-    func toggleRight1() {
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
-        navigationController?.pushViewController(nv, animated: true)
-    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -99,10 +95,27 @@ class LeadContentVC: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("leadContentCellID", forIndexPath: indexPath) as! LeadContentCell
         cell.titleLbl.text = self.cellTitleArr.objectAtIndex(indexPath.row) as? String
         cell.titleNameLbl.text = self.leadDataArr.objectAtIndex(indexPath.row) as? String
+        if indexPath.row == 0 {
+            cell.titleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
+        }
         
+        if cell.titleNameLbl.text == "" {
+            tableView.rowHeight = 40
+        } else {
+            tableView.rowHeight = 70
+        }
         return cell
     }
     
+    func convertLead() {
+        //        var request = SFRestRequest(method: post, path: "", queryParams: nil)
+        //        request.endpoint = "/services/apexrest/{your endpoint}/{a lead Id}"
+        //        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: {(err: NSError) -> Void in
+        //            print("error: \(err)")
+        //            }, completeBlock: {(success: AnyObject) -> Void in
+        //                print("success: \(success)")
+        //        })
+    }
     
     /*
      // Override to support conditional editing of the table view.

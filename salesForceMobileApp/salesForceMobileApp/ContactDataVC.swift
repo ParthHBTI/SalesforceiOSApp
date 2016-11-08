@@ -11,7 +11,7 @@ import UIKit
 class ContactDataVC: UITableViewController {
     
     var getResponseArr:AnyObject = []
-    var cellTitleArr: NSArray = ["Name:","Email:","Birthdate:","Phone:","Fax:","Title:"]
+    var cellTitleArr: NSArray = ["Contact Owner:","Name:","Email:","Birthdate:","Phone:","Fax:","Title:"]
     var contactDataArr = []
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -24,7 +24,9 @@ class ContactDataVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setNavigationBarItem()
         tableView.rowHeight = 70
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -52,27 +54,25 @@ class ContactDataVC: UITableViewController {
             fax =  (getResponseArr["Fax"] as? String)!
         }
         
-        contactDataArr = [
-            getResponseArr["Name"] as! String,
-            email,
-            birthdate ,
-            phone,
-            fax
-        ]
+        var salutation = ""
+        if let _ = nullToNil(getResponseArr["Salutation"]) {
+            salutation = (getResponseArr["Salutation"] as? String)!
+        }
         
-        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(ContactDataVC.backAction))
-        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
-        // Do any additional setup after loading the view.
+        var contactName = getResponseArr["Name"] as! String
+        if salutation != "" {
+            contactName = salutation + " " + (getResponseArr["Name"] as! String)
+        }
+        
+        contactDataArr = [getResponseArr["Owner"]!!["Name"] as! String,
+                          contactName,
+                          email,
+                          birthdate ,
+                          phone,
+                          fax
+        ]
     }
     
-    func backAction() {
-        for controller: UIViewController in self.navigationController!.viewControllers {
-            if (controller is ContactViewController) {
-                self.navigationController!.popToViewController(controller, animated: true)
-            }
-        }
-    }
-
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -94,6 +94,15 @@ class ContactDataVC: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("ContactDataCellID", forIndexPath: indexPath) as! ContactDataCell
         cell.TitleLbl.text = cellTitleArr.objectAtIndex(indexPath.row) as? String
         cell.TitleNameLbl.text = contactDataArr.objectAtIndex(indexPath.row) as? String
+        if indexPath.row == 0 {
+            cell.TitleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
+        }
+        if cell.TitleNameLbl.text == "" {
+            tableView.rowHeight = 40
+        }
+        else {
+            tableView.rowHeight = 70
+        }
         return cell
     }
     

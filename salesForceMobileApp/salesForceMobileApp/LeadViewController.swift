@@ -24,6 +24,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
         loadLead()
+        print(resArr1)
     }
     
     func executeQuery()  {

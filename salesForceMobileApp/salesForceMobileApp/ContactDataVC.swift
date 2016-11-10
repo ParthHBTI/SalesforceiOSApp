@@ -26,14 +26,8 @@ class ContactDataVC: UITableViewController {
         super.viewDidLoad()
         self.setNavigationBarItem()
         tableView.rowHeight = 70
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        //print(getResponseArr)
-        
+        let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(ContactDataVC.shareAction))
+        self.navigationItem.setRightBarButtonItem(crossBtnItem, animated: true)
         var birthdate = ""
         if  let _  = nullToNil( getResponseArr["Birthdate"]) {
             birthdate =  (getResponseArr["Birthdate"] as? String)!
@@ -73,6 +67,11 @@ class ContactDataVC: UITableViewController {
         ]
     }
     
+    func shareAction() {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
+        navigationController?.pushViewController(nv, animated: true)
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

@@ -26,61 +26,49 @@ let imagePicker = UIImagePickerController()
     }
     
     func shareAction() {
-        var image = UIImage()
-        image = imageView.image!
-        //let imageData = UIImageJPEGRepresentation(image, 1.0)
-        
-//        let request = SFRestAPI.sharedInstance().requestForUploadFile(imageData!, name: "plus.png", description: "Test Img", mimeType: "image/png")
-//        SFRestAPI.sharedInstance().send(request, delegate: self)
-//        print(request)
-
-//       let entID = SFUserAccountManager.sharedInstance().currentUser?.idData.orgId
-//        let req = SFRestAPI.sharedInstance().requestForAddFileShare(entID!, entityId: entID!, shareType: "V")
-//         SFRestAPI.sharedInstance().send(req, delegate: self)
+        let paramDict:AnyObject = []
+        let method: SFRestMethod = SFRestMethod.POST
+        let reqs = SFRestRequest.init(method: method, path: "", queryParams: paramDict as? [String : String])
+        reqs.endpoint = "/services/data/v36.0/sobjects/Lead/00Q2800000SSZY6EAP/feed-items/"
+        let fileStr = NSBundle.mainBundle().pathForResource("swift_iOS_app_developers", ofType: "jpg")
+        reqs.addPostFileData(NSData(contentsOfFile: fileStr!)! , paramName: "feedElemntsFileUpload", fileName: "Feed File", mimeType: "image/jpg")
+        reqs.customHeaders =  [ "Content-Type" : "multipart/form-data" ]
+        SFRestAPI.sharedInstance().send(reqs, delegate: self)
+        let entID = SFUserAccountManager.sharedInstance().currentUser?.idData.orgId
+        let req = SFRestAPI.sharedInstance().requestForAddFileShare(entID!, entityId: entID!, shareType: "V")
+         SFRestAPI.sharedInstance().send(req, delegate: self)
     }
     
      func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
         if request.method == SFRestMethod.POST {
-            shareFile(dataResponse.objectForKey("id") as! String)
-        } else {
-            print("")
+        createFeedForAttachment(dataResponse.objectForKey("id") as! String)
         }
         let attachmentId = (dataResponse["id"] as! String)
-        let range = (request.path as NSString).rangeOfString("/feed-items")
          createFeedForAttachmentId(attachmentId)
     }
     
-    func shareFile(field: String) {
+    func createFeedForAttachment(field: String) {
     let entID = SFUserAccountManager.sharedInstance().currentUser?.idData.orgId
         let req = SFRestAPI.sharedInstance().requestForAddFileShare(field, entityId: entID!, shareType: "V")
         SFRestAPI.sharedInstance().send(req, delegate: self)
+        
     }
-    
     
     func createFeedForAttachmentId(attachmentId: String) {
-//        let filePath = NSBundle.mainBundle().pathForResource("feedTemplate", ofType: "json")!
-//        let url = NSURL.fileURLWithPath(filePath)
-//        let error: NSError? = nil
-//        let feedJSONTemplateData = try! NSData(contentsOfURL: url, options: NSDataReadingOptions.DataReadingMappedIfSafe)
-//        var feedJSONTemplateStr = String(data: feedJSONTemplateData, encoding: NSUTF8StringEncoding)
-//        feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__BODY_TEXT__", withString: "kloudrac")
-//        feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__ATTACHMENT_ID__", withString: attachmentId)
-//        let data = feedJSONTemplateStr!.dataUsingEncoding(NSUTF8StringEncoding)
-//        if let jsonObj: AnyObject = try! NSJSONSerialization.JSONObjectWithData(data!, options: []) as? [String:AnyObject] {
-//            if let dict = jsonObj as? NSDictionary {
-//                print(dict)
-//            } else {
-//                print("not a dictionary")
-//            }
-//        } else {
-//            print("Could not parse JSON: \(error!)")
-//        }
-//        let api = SFRestAPI.sharedInstance()
-//        _ = "/\(api.apiVersion)/chatter/feeds/record//feed-items/"
-//        
-//        
- 
+        let filePath = NSBundle.mainBundle().pathForResource("feedTemplate", ofType: "json")!
+        let url = NSURL.fileURLWithPath(filePath)
+        let feedJSONTemplateData = try! NSData(contentsOfURL: url, options: NSDataReadingOptions.DataReadingMappedIfSafe)
+        var feedJSONTemplateStr = String(data: feedJSONTemplateData, encoding: NSUTF8StringEncoding)
+        feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__BODY_TEXT__", withString: "kloudrac")
+        feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__ATTACHMENT_ID__", withString: attachmentId)
+        let data = feedJSONTemplateStr!.dataUsingEncoding(NSUTF8StringEncoding)
+        let jsonObj: AnyObject = try! NSJSONSerialization.JSONObjectWithData(data!, options: []) as! [String:AnyObject]
+        let method = SFRestMethod.POST
+        let path: String = "/services/data/v36.0/sobjects/Lead/00Q2800000SSZY6EAP/feed-items/"
+        let request = SFRestRequest.init(method: method, path: path, queryParams: jsonObj as? [String : String])
+        SFRestAPI.sharedInstance().send(request, delegate: self)
     }
+    
     @IBAction func attachPopOver(sender: AnyObject) {
         imagePicker.allowsEditing = false
         imagePicker.sourceType = .PhotoLibrary
@@ -92,7 +80,7 @@ let imagePicker = UIImagePickerController()
             
             imageView.image = pickedImage
             let imageData: NSData = UIImageJPEGRepresentation(pickedImage, 0.0)!
-            let req = SFRestAPI.sharedInstance().requestForUploadFile(imageData, name: "TestImage.png", description: "Share Image", mimeType: "image/png")
+            let req = SFRestAPI.sharedInstance().requestForUploadFile(imageData, name: "swift_iOS_app_developers.jpg", description: "Share Image", mimeType: "image/jpg")
             SFRestAPI.sharedInstance().send(req, delegate: self)
         }
         dismissViewControllerAnimated(true, completion: nil)

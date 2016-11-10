@@ -8,6 +8,7 @@
 import UIKit
 import SalesforceSDKCore
 import SalesforceRestAPI
+import SDWebImage
 
 enum LeftMenu: Int {
     case lead = 0
@@ -33,16 +34,16 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     var imageHeaderView: ImageHeaderView!
     
     var userInfoDic: NSDictionary!
-
+    
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        // print(userInfoDic)
         self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let swiftViewController = storyboard.instantiateViewControllerWithIdentifier("AccountViewController") as! AccountViewController
         self.swiftViewController = UINavigationController(rootViewController: swiftViewController)
@@ -56,16 +57,20 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
         let nonMenuController = storyboard.instantiateViewControllerWithIdentifier("NonMenuController") as! NonMenuController
         nonMenuController.delegate = self
         self.nonMenuViewController = UINavigationController(rootViewController: nonMenuController)
-        
         self.tableView.registerCellClass(BaseTableViewCell.self)
-        
         self.imageHeaderView = ImageHeaderView.loadNib()
         self.view.addSubview(self.imageHeaderView)
-        self.imageHeaderView.userNameLbl.text =  userInfoDic["Name"] as? String
+        self.imageHeaderView.userNameLbl.text =  (userInfoDic["Name"] as? String)! + " (" + (userInfoDic["CompanyName"] as? String)! + ")"
+        self.imageHeaderView.userEmailLbl.text = userInfoDic["Email"] as? String
+        //https://c.ap2.content.force.com/profilephoto/72928000000UKj3/F
+        //self.imageHeaderView.profileImage?.sd_setImageWithURL(NSURL(string: "https://c.ap2.content.force.com/profilephoto/72928000000UKj3/F"))
+        let url = NSURL(string: (userInfoDic["FullPhotoUrl"] as? String!)! + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
+        self.imageHeaderView.profileImage?.sd_setImageWithURL(url!,placeholderImage: UIImage(named: "User"))
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -76,7 +81,7 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     
     func changeViewController(menu: LeftMenu) {
         switch menu {
-         case .lead:
+        case .lead:
             self.slideMenuController()?.changeMainViewController(self.mainViewController, close: true)
         case .account:
             self.slideMenuController()?.changeMainViewController(self.swiftViewController, close: true)
@@ -108,7 +113,7 @@ extension LeftViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return menus.count
     }
-
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         if let menu = LeftMenu(rawValue: indexPath.item) {
@@ -116,7 +121,7 @@ extension LeftViewController : UITableViewDataSource {
             case .lead, .account, .contact, .opportunity, .NonMenu:
                 let cell = BaseTableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: BaseTableViewCell.identifier)
                 cell.setData(menus[indexPath.row])
-               cell.backgroundColor = UIColor(red: 8/255.0, green: 20/255.0, blue: 48/255.0, alpha: 1.0)
+                cell.backgroundColor = UIColor(red: 8/255.0, green: 20/255.0, blue: 48/255.0, alpha: 1.0)
                 return cell
             }
         }

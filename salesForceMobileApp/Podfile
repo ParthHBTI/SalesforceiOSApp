@@ -12,5 +12,6 @@ pod 'SalesforceRestAPI'
 pod 'SmartStore'
 pod 'SmartSync'
 pod 'MBProgressHUD', '~> 0.9.2'
+pod 'SDWebImage', '~> 3.8'
 end
 

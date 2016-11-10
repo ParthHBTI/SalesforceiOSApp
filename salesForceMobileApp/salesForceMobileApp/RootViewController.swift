@@ -39,7 +39,7 @@ class RootViewController : UITableViewController, SFRestDelegate
         nav!.tintColor = UIColor.whiteColor()
         nav!.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         //Here we use a query that should work on either Force.com or Database.com
-        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Name FROM User LIMIT 10");
+        let request = SFRestAPI.sharedInstance().requestForQuery("SELECT Name,Email,CompanyName,FullPhotoUrl FROM User LIMIT 10");
         SFRestAPI.sharedInstance().send(request, delegate: self);
        
     }
@@ -122,7 +122,7 @@ class RootViewController : UITableViewController, SFRestDelegate
         UINavigationBar.appearance().tintColor = UIColor(hex: "689F38")
         
         leftViewController.mainViewController = nvc
-        leftViewController.userInfoDic = dataRows[indexPath.row] as? NSDictionary
+        leftViewController.userInfoDic = dataRows[indexPath.row]
         
         let slideMenuController = ExSlideMenuController(mainViewController:nvc, leftMenuViewController: leftViewController)
         slideMenuController.automaticallyAdjustsScrollViewInsets = true

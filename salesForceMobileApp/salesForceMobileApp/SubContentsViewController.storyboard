@@ -185,12 +185,12 @@
                                             <exclude reference="EEA-gH-GfL"/>
                                         </mask>
                                         <mask key="constraints">
-                                            <exclude reference="LzR-9D-lOi"/>
-                                            <exclude reference="YlM-ed-4yc"/>
-                                            <exclude reference="uSK-3U-Tu8"/>
                                             <exclude reference="4vu-xS-A7N"/>
                                             <exclude reference="90H-uI-bzk"/>
                                             <exclude reference="yDj-aR-TTe"/>
+                                            <exclude reference="LzR-9D-lOi"/>
+                                            <exclude reference="YlM-ed-4yc"/>
+                                            <exclude reference="uSK-3U-Tu8"/>
                                         </mask>
                                     </variation>
                                     <variation key="heightClass=regular-widthClass=compact">
@@ -199,12 +199,12 @@
                                             <include reference="EEA-gH-GfL"/>
                                         </mask>
                                         <mask key="constraints">
-                                            <include reference="LzR-9D-lOi"/>
-                                            <include reference="YlM-ed-4yc"/>
-                                            <include reference="uSK-3U-Tu8"/>
                                             <include reference="4vu-xS-A7N"/>
                                             <include reference="90H-uI-bzk"/>
                                             <include reference="yDj-aR-TTe"/>
+                                            <include reference="LzR-9D-lOi"/>
+                                            <include reference="YlM-ed-4yc"/>
+                                            <include reference="uSK-3U-Tu8"/>
                                         </mask>
                                     </variation>
                                 </tableViewCellContentView>
@@ -401,12 +401,12 @@
                                             <exclude reference="2EQ-Zu-Vt1"/>
                                         </mask>
                                         <mask key="constraints">
-                                            <exclude reference="EYv-Mt-R0e"/>
-                                            <exclude reference="K9L-3i-89y"/>
-                                            <exclude reference="YOH-3t-dTk"/>
                                             <exclude reference="BrW-BF-7TJ"/>
                                             <exclude reference="Weh-Ke-Ye1"/>
                                             <exclude reference="rVq-JU-1Yj"/>
+                                            <exclude reference="EYv-Mt-R0e"/>
+                                            <exclude reference="K9L-3i-89y"/>
+                                            <exclude reference="YOH-3t-dTk"/>
                                         </mask>
                                     </variation>
                                     <variation key="heightClass=regular-widthClass=compact">
@@ -415,12 +415,12 @@
                                             <include reference="2EQ-Zu-Vt1"/>
                                         </mask>
                                         <mask key="constraints">
-                                            <include reference="EYv-Mt-R0e"/>
-                                            <include reference="K9L-3i-89y"/>
-                                            <include reference="YOH-3t-dTk"/>
                                             <include reference="BrW-BF-7TJ"/>
                                             <include reference="Weh-Ke-Ye1"/>
                                             <include reference="rVq-JU-1Yj"/>
+                                            <include reference="EYv-Mt-R0e"/>
+                                            <include reference="K9L-3i-89y"/>
+                                            <include reference="YOH-3t-dTk"/>
                                         </mask>
                                     </variation>
                                 </tableViewCellContentView>

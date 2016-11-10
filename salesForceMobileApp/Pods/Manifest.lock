@@ -33,6 +33,9 @@ PODS:
   - SalesforceSDKCore/SalesforceSDKCore/no-arc (4.3.1):
     - CocoaLumberjack (~> 2.3.0)
     - SalesforceSDKCore/SalesforceSDKCore/base
+  - SDWebImage (3.8.2):
+    - SDWebImage/Core (= 3.8.2)
+  - SDWebImage/Core (3.8.2)
   - SmartStore (4.3.1):
     - SmartStore/SmartStore (= 4.3.1)
   - SmartStore/SmartStore (4.3.1):
@@ -53,6 +56,7 @@ DEPENDENCIES:
   - SalesforceNetwork
   - SalesforceRestAPI
   - SalesforceSDKCore
+  - SDWebImage (~> 3.8)
   - SmartStore
   - SmartSync
 
@@ -62,10 +66,11 @@ SPEC CHECKSUMS:
   SalesforceNetwork: 0a53deea9a3dbfb11586584fba28de435d2797d9
   SalesforceRestAPI: 2334b3bff7b5e8b2e64b0b8a72031b05d46d9381
   SalesforceSDKCore: 64be7b51436f190c70ebac4adb0e56a70a46b0ad
+  SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   SmartStore: 0bc42f6ff4533469b245cc6e7df584f9494ec084
   SmartSync: 70a253beb77ee1244ded7d60f4bfb75df590df05
   SQLCipher: 4c768761421736a247ed6cf412d9045615d53dff
 
-PODFILE CHECKSUM: d0dc35df2969b401bfda103c74624b6107c59903
+PODFILE CHECKSUM: 6446a87947ab5f751beaaba6915f13ecd65751bd
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.0.1

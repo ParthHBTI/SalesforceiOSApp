@@ -15,6 +15,7 @@ class ImageHeaderView : UIView {
     @IBOutlet weak var userNameLbl : UILabel!
     @IBOutlet weak var userEmailLbl : UILabel!
     
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         self.backgroundColor = UIColor(hex: "E0E0E0")
@@ -22,7 +23,7 @@ class ImageHeaderView : UIView {
         self.profileImage.clipsToBounds = true
         self.profileImage.layer.borderWidth = 1
         self.profileImage.layer.borderColor = UIColor.whiteColor().CGColor
-        self.profileImage.setRandomDownloadImage(80, height: 80)
+        //self.profileImage.setRandomDownloadImage(80, height: 80)
         self.backgroundImage.setRandomDownloadImage(Int(self.frame.size.width), height: 160)
     }
 }

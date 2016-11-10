@@ -26,12 +26,8 @@ class AccountDataVC: UITableViewController {
         super.viewDidLoad()
         self.setNavigationBarItem()
         tableView.rowHeight = 70
-        //print(getResponseArr)
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(AccountDataVC.shareAction))
+        self.navigationItem.setRightBarButtonItem(crossBtnItem, animated: true)
         var lastModifiedDate = ""
         if  let _  = nullToNil( getResponseArr["LastModifiedDate"]) {
             lastModifiedDate =  (getResponseArr["LastModifiedDate"] as? String)!
@@ -79,6 +75,12 @@ class AccountDataVC: UITableViewController {
                           lastModifiedDate
         ]
         
+    }
+    
+    func shareAction() {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
+        navigationController?.pushViewController(nv, animated: true)
     }
     
     override func didReceiveMemoryWarning() {

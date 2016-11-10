@@ -32,9 +32,10 @@ class LeadContentVC: UITableViewController {
         nav!.barTintColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
         nav!.tintColor = UIColor.whiteColor()
         nav!.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
-        let viewRecordingList: UIBarButtonItem = UIBarButtonItem(title: "Convert",style: .Plain, target: self, action: #selector(self.convertLead))
-        self.navigationItem.setRightBarButtonItem(viewRecordingList, animated: true)
-        
+//        let viewRecordingList: UIBarButtonItem = UIBarButtonItem(title: "Convert",style: .Plain, target: self, action: #selector(self.convertLead))
+//        self.navigationItem.setRightBarButtonItem(viewRecordingList, animated: true)
+        let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(LeadContentVC.shareAction))
+        self.navigationItem.setRightBarButtonItem(crossBtnItem, animated: true)
         //
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -74,6 +75,13 @@ class LeadContentVC: UITableViewController {
                        title
         ]
     }
+    
+    func shareAction() {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
+        navigationController?.pushViewController(nv, animated: true)
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

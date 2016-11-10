@@ -14,16 +14,6 @@ class OpportunityDataVC: UITableViewController {
     var opportunityDataArr = []
     var cellTitleArr: NSArray = ["Opportunity Owner:","Opportunity Name:","Account Name:","Lead Source:","Stage Name:","Type:","Ammount:","Probability:","Is Private:","Created Date:","Close Date:","Is Closed:","Is Deleted:","Last Modified Date:"]
     
-    /*func isObjectNil(object:AnyObject!) -> Bool
-     {
-     if let _:AnyObject = object
-     {
-     return false
-     }
-     
-     return true
-     }*/
-    
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil
@@ -36,12 +26,9 @@ class OpportunityDataVC: UITableViewController {
         super.viewDidLoad()
         self.setNavigationBarItem()
         tableView.rowHeight = 70
+        let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(OpportunityDataVC.shareAction))
+        self.navigationItem.setRightBarButtonItem(crossBtnItem, animated: true)
         print(getResponseArr)
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         var leadSource = "Not available"
         if  let _  = nullToNil( getResponseArr["LeadSource"]) {
             leadSource =  (getResponseArr["LeadSource"] as? String)!
@@ -73,6 +60,12 @@ class OpportunityDataVC: UITableViewController {
                               getResponseArr["LastModifiedDate"] as! String
         ]
         
+    }
+    
+    func shareAction() {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
+        navigationController?.pushViewController(nv, animated: true)
     }
     
     override func didReceiveMemoryWarning() {

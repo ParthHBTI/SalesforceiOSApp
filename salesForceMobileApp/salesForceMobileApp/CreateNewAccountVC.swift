@@ -20,24 +20,32 @@ class CreateNewAccountVC: UIViewController, UIScrollViewDelegate, ExecuteQueryDe
     @IBOutlet weak var accountName: UITextField!
     @IBOutlet weak var accountAddress: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var saveBtn: UIButton!
+    @IBOutlet weak var cancleBtn: UIButton!
+    
     var exDelegate: ExecuteQuery = ExecuteQuery()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
-        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewAccountVC.backAction))
-        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
-        // Do any additional setup after loading the view.
+        /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewAccountVC.backAction))
+        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
+        let navColor = navigationController?.navigationBar.barTintColor
+        saveBtn.backgroundColor = navColor
+        saveBtn.layer.cornerRadius = 5.0
+        cancleBtn.backgroundColor = navColor
+        cancleBtn.layer.cornerRadius = 5.0
     }
     
-    func backAction() {
+    /*func backAction() {
         for controller: UIViewController in self.navigationController!.viewControllers {
             if (controller is AccountViewController) {
                 self.navigationController!.popToViewController(controller, animated: true)
             }
         }
-    }
+    }*/
     
     override func viewDidLayoutSubviews()  {
         super.viewDidLayoutSubviews()
@@ -78,6 +86,19 @@ class CreateNewAccountVC: UIViewController, UIScrollViewDelegate, ExecuteQueryDe
     @IBAction func cancelAction(sender: AnyObject) {
         
         
+    }
+    
+    override func setNavigationBarItem() {
+        self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
+    }
+    
+    func leftBarButtonWithImage(buttonImage: UIImage) {
+        let leftButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleLeft))
+        navigationItem.leftBarButtonItem = leftButton;
+    }
+    
+    override func toggleLeft() {
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
 }

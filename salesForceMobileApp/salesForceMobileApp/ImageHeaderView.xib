@@ -17,7 +17,7 @@
                     <color key="backgroundColor" red="0.031372549019607843" green="0.078431372549019607" blue="0.18823529411764706" alpha="1" colorSpace="calibratedRGB"/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="User" translatesAutoresizingMaskIntoConstraints="NO" id="KsU-S4-hhE">
-                    <rect key="frame" x="20" y="28" width="60" height="60"/>
+                    <rect key="frame" x="8" y="28" width="60" height="60"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="THq-40-VhC"/>
                         <constraint firstAttribute="width" constant="60" id="Vdp-yI-A0R"/>
@@ -42,6 +42,7 @@
             <color key="backgroundColor" red="0.031372549019607843" green="0.078431372549019607" blue="0.18823529411764706" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="crj-Qs-Xeq" secondAttribute="bottom" id="2GQ-0j-7zw"/>
+                <constraint firstItem="crj-Qs-Xeq" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="2z1-G3-ibl"/>
                 <constraint firstItem="KsU-S4-hhE" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="28" id="4jZ-Z0-Zi0"/>
                 <constraint firstItem="2Le-fi-ZpO" firstAttribute="leading" secondItem="xdx-mT-8fd" secondAttribute="leading" id="9TO-FI-Zj8"/>
                 <constraint firstAttribute="trailing" secondItem="crj-Qs-Xeq" secondAttribute="trailing" id="CEW-Ct-L8O"/>
@@ -49,10 +50,11 @@
                 <constraint firstItem="xdx-mT-8fd" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="GYg-M7-iFs"/>
                 <constraint firstItem="crj-Qs-Xeq" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Guc-J3-ibn"/>
                 <constraint firstAttribute="bottom" secondItem="KsU-S4-hhE" secondAttribute="bottom" constant="72" id="Kff-vI-5XQ"/>
+                <constraint firstItem="crj-Qs-Xeq" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="R04-sr-aGq"/>
                 <constraint firstItem="crj-Qs-Xeq" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="S4z-uS-qaB"/>
                 <constraint firstItem="xdx-mT-8fd" firstAttribute="width" secondItem="crj-Qs-Xeq" secondAttribute="width" multiplier="0.95" id="SQL-T0-RK8"/>
                 <constraint firstAttribute="bottom" secondItem="2Le-fi-ZpO" secondAttribute="bottom" constant="7" id="TN7-1L-AZq"/>
-                <constraint firstItem="KsU-S4-hhE" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="cn0-Hd-iVZ"/>
+                <constraint firstItem="KsU-S4-hhE" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="8" id="cn0-Hd-iVZ"/>
                 <constraint firstItem="2Le-fi-ZpO" firstAttribute="width" secondItem="xdx-mT-8fd" secondAttribute="width" id="fpy-nV-c6J"/>
                 <constraint firstItem="2Le-fi-ZpO" firstAttribute="height" secondItem="xdx-mT-8fd" secondAttribute="height" id="toZ-VZ-5if"/>
             </constraints>

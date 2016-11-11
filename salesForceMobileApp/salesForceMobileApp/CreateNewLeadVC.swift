@@ -15,7 +15,7 @@ import SmartSync
 import SmartStore
 import MBProgressHUD
 
-class CreateNewLeadVC: UIViewController, ExecuteQueryDelegate {
+class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     
     @IBOutlet weak var lastName: UITextField!
     @IBOutlet weak var companyName: UITextField!
@@ -27,6 +27,9 @@ class CreateNewLeadVC: UIViewController, ExecuteQueryDelegate {
     var exDelegate: ExecuteQuery = ExecuteQuery()
     override func viewDidLoad() {
         super.viewDidLoad()
+        lastName.delegate = self
+        companyName.delegate = self
+        leadStatus.delegate = self
         setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
@@ -42,14 +45,12 @@ class CreateNewLeadVC: UIViewController, ExecuteQueryDelegate {
     }
     
     /*func backAction() {
-        for controller: UIViewController in self.navigationController!.viewControllers {
-            if (controller is LeadViewController) {
-                self.navigationController!.popToViewController(controller, animated: true)
-            }
-        }
-    }*/
-
- 
+     for controller: UIViewController in self.navigationController!.viewControllers {
+     if (controller is LeadViewController) {
+     self.navigationController!.popToViewController(controller, animated: true)
+     }
+     }
+     }*/
     
     override func viewDidLayoutSubviews()  {
         super.viewDidLayoutSubviews()
@@ -62,21 +63,44 @@ class CreateNewLeadVC: UIViewController, ExecuteQueryDelegate {
     }
     
     @IBAction func saveAction(sender: AnyObject) {
+        let lastNameStr = self.lastName.text!
+        let companyNameStr = self.companyName.text!
+        let leadStatusStr = self.leadStatus.text!
+        let charSet = NSCharacterSet.whitespaceCharacterSet()
+        let lastNameWhiteSpaceSet = lastNameStr.stringByTrimmingCharactersInSet(charSet)
+        let companyNameWhiteSpaceSet = companyNameStr.stringByTrimmingCharactersInSet(charSet)
+        let leadStatusWhiteSpaceSet = leadStatusStr.stringByTrimmingCharactersInSet(charSet)
         if exDelegate.isConnectedToNetwork() {
-            let fields = [
-                "LastName" : lastName.text!,
-                "Company" : companyName.text!,
-                "Status" : leadStatus.text!,
-                ]
-            SFRestAPI.sharedInstance().performCreateWithObjectType("Lead", fields: fields, failBlock: { err in
-                dispatch_async(dispatch_get_main_queue(), {
-                    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                    alert.show()
-                })
-                print( (err))
-            }) { succes in
-                print(succes)
-        }
+            if lastName.text!.isEmpty == true || companyName.text!.isEmpty == true || leadStatus.text!.isEmpty == true {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Text
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                loading.detailsLabelText = "please give all values"
+                self.animateSubmitBtnOnWrongSubmit()
+            } else if lastNameWhiteSpaceSet == "" || companyNameWhiteSpaceSet == "" || leadStatusWhiteSpaceSet == "" {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Text
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                loading.detailsLabelText = "You entered white spaces only"
+                self.animateSubmitBtnOnWrongSubmit()
+            } else {
+                let fields = [
+                    "LastName" : lastName.text!,
+                    "Company" : companyName.text!,
+                    "Status" : leadStatus.text!,
+                    ]
+                SFRestAPI.sharedInstance().performCreateWithObjectType("Lead", fields: fields, failBlock: { err in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                        alert.show()
+                    })
+                    print( (err))
+                }) { succes in
+                    print(succes)
+                }
+            }
         } else {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
@@ -91,8 +115,7 @@ class CreateNewLeadVC: UIViewController, ExecuteQueryDelegate {
         
     }
     
-    
-     override func setNavigationBarItem() {
+    override func setNavigationBarItem() {
         self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
         //self.leftBarButtonWithImage(UIImage(named: "back_icon")!)
     }
@@ -102,8 +125,17 @@ class CreateNewLeadVC: UIViewController, ExecuteQueryDelegate {
         navigationItem.leftBarButtonItem = leftButton;
     }
     
-      override func toggleLeft() {
+    override func toggleLeft() {
         self.navigationController?.popViewControllerAnimated(true)
     }
+    
+    func animateSubmitBtnOnWrongSubmit(){
+        let bounds = self.saveBtn.bounds
+        UIView.animateWithDuration(1.0, delay: 0.0, usingSpringWithDamping: 0.2, initialSpringVelocity: 10, options: .CurveEaseOut, animations: {
+            self.saveBtn.bounds = CGRect(x: bounds.origin.x - 20, y: bounds.origin.y, width: bounds.size.width, height: bounds.size.height)
+            self.saveBtn.enabled = true
+            }, completion: nil)
+    }
+    
     
 }

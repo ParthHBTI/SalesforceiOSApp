@@ -14,7 +14,7 @@ import SmartSync
 import SmartStore
 import MBProgressHUD
 
-class CreateNewContactVC : UIViewController, SFRestDelegate,ExecuteQueryDelegate {
+class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryDelegate {
     
     @IBOutlet weak var firstName: UITextField!
     @IBOutlet weak var lastName: UITextField!
@@ -29,6 +29,11 @@ class CreateNewContactVC : UIViewController, SFRestDelegate,ExecuteQueryDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        firstName.delegate = self
+        lastName.delegate = self
+        email.delegate = self
+        phone.delegate = self
+        fax.delegate = self
         self.setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
@@ -60,7 +65,34 @@ class CreateNewContactVC : UIViewController, SFRestDelegate,ExecuteQueryDelegate
     }
     
     @IBAction func saveAction(sender: AnyObject) {
+        let firstNameStr = self.firstName.text!
+        let lastNameStr = self.lastName.text!
+        let emailStr = self.email.text!
+        let phoneStr = self.phone.text!
+        let faxStr = self.fax.text!
+        let charSet = NSCharacterSet.whitespaceCharacterSet()
+        let firstNameWhiteSpaceSet = firstNameStr.stringByTrimmingCharactersInSet(charSet)
+        let lastNameWhiteSpaceSet = lastNameStr.stringByTrimmingCharactersInSet(charSet)
+        let emailWhiteSpaceSet = emailStr.stringByTrimmingCharactersInSet(charSet)
+        let phoneWhiteSpaceSet = phoneStr.stringByTrimmingCharactersInSet(charSet)
+        let faxWhiteSpaceSet = faxStr.stringByTrimmingCharactersInSet(charSet)
+        
         if exDelegate.isConnectedToNetwork() {
+            if firstName.text!.isEmpty == true || lastName.text!.isEmpty == true || email.text!.isEmpty == true || phone.text!.isEmpty == true || fax.text!.isEmpty == true {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Text
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                loading.detailsLabelText = "please give all values"
+                self.animateSubmitBtnOnWrongSubmit()
+            } else if firstNameWhiteSpaceSet == "" || lastNameWhiteSpaceSet == "" || emailWhiteSpaceSet == "" || phoneWhiteSpaceSet == "" || faxWhiteSpaceSet == "" {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Text
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                loading.detailsLabelText = "You entered white spaces only"
+                self.animateSubmitBtnOnWrongSubmit()
+            } else {
             let fields = [
                 "FirstName" : firstName.text!,
                 "LastName" : lastName.text!,
@@ -78,6 +110,7 @@ class CreateNewContactVC : UIViewController, SFRestDelegate,ExecuteQueryDelegate
                 print(succes)
             }
         }
+    }
         else {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
@@ -105,4 +138,12 @@ class CreateNewContactVC : UIViewController, SFRestDelegate,ExecuteQueryDelegate
         self.navigationController?.popViewControllerAnimated(true)
     }
     
+    
+    func animateSubmitBtnOnWrongSubmit(){
+        let bounds = self.saveBtn.bounds
+        UIView.animateWithDuration(1.0, delay: 0.0, usingSpringWithDamping: 0.2, initialSpringVelocity: 10, options: .CurveEaseOut, animations: {
+            self.saveBtn.bounds = CGRect(x: bounds.origin.x - 20, y: bounds.origin.y, width: bounds.size.width, height: bounds.size.height)
+            self.saveBtn.enabled = true
+            }, completion: nil)
+    }
 }

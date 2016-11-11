@@ -15,7 +15,7 @@ import SmartSync
 import SmartStore
 import MBProgressHUD
 
-class CreateNewAccountVC: UIViewController, UIScrollViewDelegate, ExecuteQueryDelegate {
+class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, ExecuteQueryDelegate {
     
     @IBOutlet weak var accountName: UITextField!
     @IBOutlet weak var accountAddress: UITextField!
@@ -27,11 +27,13 @@ class CreateNewAccountVC: UIViewController, UIScrollViewDelegate, ExecuteQueryDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        accountName.delegate = self
+        accountAddress.delegate = self
         setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewAccountVC.backAction))
-        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
+         self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
@@ -40,12 +42,12 @@ class CreateNewAccountVC: UIViewController, UIScrollViewDelegate, ExecuteQueryDe
     }
     
     /*func backAction() {
-        for controller: UIViewController in self.navigationController!.viewControllers {
-            if (controller is AccountViewController) {
-                self.navigationController!.popToViewController(controller, animated: true)
-            }
-        }
-    }*/
+     for controller: UIViewController in self.navigationController!.viewControllers {
+     if (controller is AccountViewController) {
+     self.navigationController!.popToViewController(controller, animated: true)
+     }
+     }
+     }*/
     
     override func viewDidLayoutSubviews()  {
         super.viewDidLayoutSubviews()
@@ -58,19 +60,40 @@ class CreateNewAccountVC: UIViewController, UIScrollViewDelegate, ExecuteQueryDe
     }
     
     @IBAction func saveAction(sender: AnyObject) {
+        let accountNameStr = self.accountName.text!
+        let accountAddStr = self.accountAddress.text!
+        let charSet = NSCharacterSet.whitespaceCharacterSet()
+        let accountNameWhiteSpaceSet = accountNameStr.stringByTrimmingCharactersInSet(charSet)
+        let accountAddWhiteSpaceSet = accountAddStr.stringByTrimmingCharactersInSet(charSet)
         if exDelegate.isConnectedToNetwork() {
-            let fields = [
-                "Name" : accountName.text!,
-                "ShippingAddress" : accountAddress.text!,
-                ]
-            SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: { err in
-                dispatch_async(dispatch_get_main_queue(), {
-                    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                    alert.show()
-                })
-                print( (err))
-            }) { succes in
-                print(succes)
+            if accountName.text!.isEmpty == true || accountAddress.text!.isEmpty == true {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Text
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                loading.detailsLabelText = "please give all values"
+                self.animateSubmitBtnOnWrongSubmit()
+            } else if accountAddWhiteSpaceSet == "" || accountNameWhiteSpaceSet == "" {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Text
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                loading.detailsLabelText = "You entered white spaces only"
+                self.animateSubmitBtnOnWrongSubmit()
+            } else {
+                let fields = [
+                    "Name" : accountName.text!,
+                    "ShippingAddress" : accountAddress.text!,
+                    ]
+                SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: { err in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                        alert.show()
+                    })
+                    print( (err))
+                }) { succes in
+                    print(succes)
+                }
             }
         }
         else {
@@ -82,6 +105,7 @@ class CreateNewAccountVC: UIViewController, UIScrollViewDelegate, ExecuteQueryDe
             loading.removeFromSuperViewOnHide = true
         }
     }
+    
     
     @IBAction func cancelAction(sender: AnyObject) {
         
@@ -99,6 +123,14 @@ class CreateNewAccountVC: UIViewController, UIScrollViewDelegate, ExecuteQueryDe
     
     override func toggleLeft() {
         self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    func animateSubmitBtnOnWrongSubmit(){
+        let bounds = self.saveBtn.bounds
+        UIView.animateWithDuration(1.0, delay: 0.0, usingSpringWithDamping: 0.2, initialSpringVelocity: 10, options: .CurveEaseOut, animations: {
+            self.saveBtn.bounds = CGRect(x: bounds.origin.x - 20, y: bounds.origin.y, width: bounds.size.width, height: bounds.size.height)
+            self.saveBtn.enabled = true
+            }, completion: nil)
     }
     
 }

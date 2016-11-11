@@ -15,7 +15,7 @@ extension UITableViewController {
         //self.leftBarButtonWithImage(UIImage(named: "back_icon")!)
     }
     
-    func leftBarButtonWithImage(buttonImage: UIImage) {
+     func leftBarButtonWithImage(buttonImage: UIImage) {
         let leftButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleLeft))
         navigationItem.leftBarButtonItem = leftButton;
     }

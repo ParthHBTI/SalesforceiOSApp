@@ -32,18 +32,17 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     var goViewController: UIViewController!
     var nonMenuViewController: UIViewController!
     var imageHeaderView: ImageHeaderView!
-    
     var userInfoDic: NSDictionary!
-    
-    
+    var rootVC = RootViewController()
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // print(userInfoDic)
-        self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
+        //remove all blank rows from table view
+        tableView.tableFooterView = UIView()
+        //self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let swiftViewController = storyboard.instantiateViewControllerWithIdentifier("AccountViewController") as! AccountViewController
         self.swiftViewController = UINavigationController(rootViewController: swiftViewController)
@@ -75,7 +74,8 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.imageHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 160)
+        self.imageHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.imageHeaderView.backgroundImage.frame.height)
+        //self.imageHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 160)
         self.view.layoutIfNeeded()
     }
     
@@ -121,7 +121,8 @@ extension LeftViewController : UITableViewDataSource {
             case .lead, .account, .contact, .opportunity, .NonMenu:
                 let cell = BaseTableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: BaseTableViewCell.identifier)
                 cell.setData(menus[indexPath.row])
-                cell.backgroundColor = UIColor(red: 8/255.0, green: 20/255.0, blue: 48/255.0, alpha: 1.0)
+                tableView.backgroundColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
+                cell.backgroundColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
                 return cell
             }
         }

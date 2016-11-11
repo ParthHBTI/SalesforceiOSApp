@@ -22,24 +22,33 @@ class CreateNewContactVC : UIViewController, SFRestDelegate,ExecuteQueryDelegate
     @IBOutlet weak var phone: UITextField!
     @IBOutlet weak var fax: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var saveBtn: UIButton!
+    @IBOutlet weak var cancleBtn: UIButton!
+    
     var exDelegate: ExecuteQuery = ExecuteQuery()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
-        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewContactVC.backAction))
-        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
+        /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewContactVC.backAction))
+        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
+        let navColor = navigationController?.navigationBar.barTintColor
+        saveBtn.backgroundColor = navColor
+        saveBtn.layer.cornerRadius = 5.0
+        cancleBtn.backgroundColor = navColor
+        cancleBtn.layer.cornerRadius = 5.0
         // Do any additional setup after loading the view.
     }
     
-    func backAction() {
+    /*func backAction() {
         for controller: UIViewController in self.navigationController!.viewControllers {
             if (controller is ContactViewController) {
                 self.navigationController!.popToViewController(controller, animated: true)
             }
         }
-    }
+    }*/
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -81,6 +90,19 @@ class CreateNewContactVC : UIViewController, SFRestDelegate,ExecuteQueryDelegate
     
     @IBAction func cancelAction(sender: AnyObject) {
         
+    }
+    
+    override func setNavigationBarItem() {
+        self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
+    }
+    
+    func leftBarButtonWithImage(buttonImage: UIImage) {
+        let leftButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleLeft))
+        navigationItem.leftBarButtonItem = leftButton;
+    }
+    
+    override func toggleLeft() {
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
 }

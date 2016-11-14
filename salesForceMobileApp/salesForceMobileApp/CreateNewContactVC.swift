@@ -24,6 +24,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
+    @IBOutlet weak var phoneWarnigLbl: UILabel!
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
     
@@ -34,11 +35,12 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
         email.delegate = self
         phone.delegate = self
         fax.delegate = self
+        phoneWarnigLbl.hidden = true
         self.setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewContactVC.backAction))
-        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
+         self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
@@ -48,12 +50,12 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     }
     
     /*func backAction() {
-        for controller: UIViewController in self.navigationController!.viewControllers {
-            if (controller is ContactViewController) {
-                self.navigationController!.popToViewController(controller, animated: true)
-            }
-        }
-    }*/
+     for controller: UIViewController in self.navigationController!.viewControllers {
+     if (controller is ContactViewController) {
+     self.navigationController!.popToViewController(controller, animated: true)
+     }
+     }
+     }*/
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -92,25 +94,32 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
                 loading.removeFromSuperViewOnHide = true
                 loading.detailsLabelText = "You entered white spaces only"
                 self.animateSubmitBtnOnWrongSubmit()
+            }else if phone.text?.characters.count != 10 {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Text
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                loading.detailsLabelText = "Please enter a valid phone number"
+                self.animateSubmitBtnOnWrongSubmit()
             } else {
-            let fields = [
-                "FirstName" : firstName.text!,
-                "LastName" : lastName.text!,
-                "Email" : email.text!,
-                "Phone" : phone.text!,
-                "Fax" : fax.text!
-            ]
-            SFRestAPI.sharedInstance().performCreateWithObjectType("Contact", fields: fields, failBlock: { err in
-                dispatch_async(dispatch_get_main_queue(), {
-                    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                    alert.show()
-                })
-                print( (err))
-            }) { succes in
-                print(succes)
+                let fields = [
+                    "FirstName" : firstName.text!,
+                    "LastName" : lastName.text!,
+                    "Email" : email.text!,
+                    "Phone" : phone.text!,
+                    "Fax" : fax.text!
+                ]
+                SFRestAPI.sharedInstance().performCreateWithObjectType("Contact", fields: fields, failBlock: { err in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                        alert.show()
+                    })
+                    print( (err))
+                }) { succes in
+                    print(succes)
+                }
             }
         }
-    }
         else {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
@@ -145,5 +154,49 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
             self.saveBtn.bounds = CGRect(x: bounds.origin.x - 20, y: bounds.origin.y, width: bounds.size.width, height: bounds.size.height)
             self.saveBtn.enabled = true
             }, completion: nil)
+    }
+    
+    
+    func textField(textField: UITextField,
+                   shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        let prospectiveText = (currentText as NSString).stringByReplacingCharactersInRange(range, withString: string)
+        if string.characters.count == 0 {
+            if prospectiveText.characters.count <= 10 {
+                phoneWarnigLbl.hidden = true
+            }
+            return true
+        }
+        switch textField {
+        case  phone:
+            if prospectiveText.characters.count > 10 {
+                // phone.layer.borderWidth = 2.0
+                //phone.layer.borderColor = UIColor.redColor().CGColor
+                phoneWarnigLbl.hidden = false
+                phoneWarnigLbl.text = "*Please enter a valid phone number"
+                phoneWarnigLbl.textColor = UIColor.redColor()
+            }
+            return true
+        /*case email:
+            let flag = prospectiveText.isValidEmail()
+            print(flag)
+            if prospectiveText.isValidEmail() {
+                phoneWarnigLbl.hidden = false
+                phoneWarnigLbl.text = "*Please enter a valid email"
+                phoneWarnigLbl.textColor = UIColor.redColor()
+             }
+                return true*/
+            
+        default:
+            return true
+        }
+    }
+    
+}
+extension String {
+    func isValidEmail() -> Bool {
+        let regex = try? NSRegularExpression(pattern: "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$", options: .CaseInsensitive)
+       // let regex = try? NSRegularExpression(pattern: "^[A-Z0-9._%+]+@(?:[A-Z0-9]+\\.)+[A-Z]{3}$", options: .CaseInsensitive)
+        return regex?.firstMatchInString(self, options: [], range: NSMakeRange(0, self.characters.count)) != nil
     }
 }

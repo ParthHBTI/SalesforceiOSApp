@@ -113,6 +113,8 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     
     @IBAction func cancelAction(sender: AnyObject) {
         
+        
+        
     }
     
     override func setNavigationBarItem() {
@@ -138,4 +140,36 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     }
     
     
+    //delegate for text field
+    func textField(textField: UITextField,
+                   shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        let prospectiveText = (currentText as NSString).stringByReplacingCharactersInRange(range, withString: string)
+        if string.characters.count == 0 {
+            if prospectiveText.characters.count <= 30 {
+                lastName.layer.borderWidth = 2.0
+                lastName.layer.borderColor = UIColor.clearColor().CGColor
+                
+            }
+            return true
+        }
+        switch textField {
+        case  lastName:
+            if prospectiveText.characters.count > 30 {
+                lastName.layer.borderWidth = 2.0
+                lastName.layer.borderColor = UIColor.redColor().CGColor
+            } else {
+                lastName.layer.borderColor = UIColor.clearColor().CGColor
+            }
+            return true
+        case companyName:
+            return prospectiveText.characters.count <= 30
+            
+        case leadStatus:
+            return prospectiveText.characters.count <= 10
+            
+        default:
+            return true
+        }
+    }
 }

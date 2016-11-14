@@ -32,11 +32,12 @@ class LeadContentVC: UITableViewController {
         nav!.barTintColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
         nav!.tintColor = UIColor.whiteColor()
         nav!.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
-//        let viewRecordingList: UIBarButtonItem = UIBarButtonItem(title: "Convert",style: .Plain, target: self, action: #selector(self.convertLead))
-//        self.navigationItem.setRightBarButtonItem(viewRecordingList, animated: true)
-        let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(LeadContentVC.shareAction))
-        self.navigationItem.setRightBarButtonItem(crossBtnItem, animated: true)
         //
+        let leadConvertBtnItem : UIBarButtonItem = UIBarButtonItem(title: "Convert",style: .Plain, target: self, action: #selector(self.leadConvert))
+        let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(LeadContentVC.shareAction))
+        self.navigationItem.setRightBarButtonItems([crossBtnItem,leadConvertBtnItem], animated: true)
+        //
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -115,16 +116,34 @@ class LeadContentVC: UITableViewController {
         return cell
     }
     
-    func convertLead() {
-        //        var request = SFRestRequest(method: post, path: "", queryParams: nil)
-        //        request.endpoint = "/services/apexrest/{your endpoint}/{a lead Id}"
-        //        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: {(err: NSError) -> Void in
-        //            print("error: \(err)")
-        //            }, completeBlock: {(success: AnyObject) -> Void in
-        //                print("success: \(success)")
-        //        })
-    }
+    /*func convertLead() {
+        var request = SFRestRequest(method:, path: "", queryParams: nil)
+        request.endpoint = "/services/apexrest/{your endpoint}/{a lead Id}"
+        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: {(err: NSError) -> Void in
+            print("error: \(err)")
+            }, completeBlock: {(success: AnyObject) -> Void in
+                print("success: \(success)")
+        })
+    }*/
     
+    
+    func leadConvert() {
+       let fields =  [
+        "FirstName" : "Hello",
+        "LastName" : "ji",
+        "Email" :"hemendrasinghhbti@gmail.com"
+        ]
+        SFRestAPI.sharedInstance().performUpdateWithObjectType("Contact", objectId: "0032800000gKdeHAAS", fields: fields, failBlock: { err in
+            dispatch_async(dispatch_get_main_queue(), {
+                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+            })
+            print( (err))
+            })
+        { succes in
+            print(succes)
+        }
+    }
     /*
      // Override to support conditional editing of the table view.
      override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

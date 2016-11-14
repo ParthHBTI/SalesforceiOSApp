@@ -50,6 +50,7 @@ PODS:
   - SQLCipher/common (3.4.0)
   - SQLCipher/fts (3.4.0):
     - SQLCipher/common
+  - ZKSforce (37.0.0)
 
 DEPENDENCIES:
   - MBProgressHUD (~> 0.9.2)
@@ -59,6 +60,7 @@ DEPENDENCIES:
   - SDWebImage (~> 3.8)
   - SmartStore
   - SmartSync
+  - ZKSforce
 
 SPEC CHECKSUMS:
   CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
@@ -70,7 +72,8 @@ SPEC CHECKSUMS:
   SmartStore: 0bc42f6ff4533469b245cc6e7df584f9494ec084
   SmartSync: 70a253beb77ee1244ded7d60f4bfb75df590df05
   SQLCipher: 4c768761421736a247ed6cf412d9045615d53dff
+  ZKSforce: 1910a3133d09e18af837c3277b7268614b372156
 
-PODFILE CHECKSUM: 6446a87947ab5f751beaaba6915f13ecd65751bd
+PODFILE CHECKSUM: 194ac7df501c6bc2f31cb2f08ca87218496e3602
 
 COCOAPODS: 1.0.1

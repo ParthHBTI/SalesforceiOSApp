@@ -1,5 +1,6 @@
 {
     "body": {
+        "ParentId": "_Parent_Id_",
         "messageSegments": [
                             {
                             "type": "Text",

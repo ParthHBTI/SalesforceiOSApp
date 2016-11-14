@@ -9,16 +9,34 @@
 import UIKit
 import SalesforceRestAPI
 class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate  {
+    var leadDetailInfo:AnyObject = []
+    var leadId = ""
     
 @IBOutlet weak var imageView: UIImageView!
 let imagePicker = UIImagePickerController()
+    
+    
+    func nullToNil(value : AnyObject?) -> AnyObject? {
+        if value is NSNull {
+            return nil
+        } else {
+            return value
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "New Post"
         imagePicker.delegate = self
         let shareBarButton:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "share"), style: .Plain, target: self, action: #selector(AttachViewController.shareAction))
         self.navigationItem.setRightBarButtonItem(shareBarButton, animated: true)
-    
+        
+
+        if let _ = nullToNil(leadDetailInfo["Id"]) {
+            leadId = (leadDetailInfo["Id"] as? String)!
+        }
+        
+        
     }
 
        override func didReceiveMemoryWarning() {
@@ -56,6 +74,7 @@ let imagePicker = UIImagePickerController()
         var feedJSONTemplateStr = String(data: feedJSONTemplateData, encoding: NSUTF8StringEncoding)
         feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__BODY_TEXT__", withString: "kloudrac")
         feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__ATTACHMENT_ID__", withString: attachmentId)
+        feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("_Parent_Id_", withString: leadId)
         let data = feedJSONTemplateStr!.dataUsingEncoding(NSUTF8StringEncoding)
         let jsonObj: AnyObject = try! NSJSONSerialization.JSONObjectWithData(data!, options: []) as! [String:AnyObject]
         let path: String =  "/services/data/v36.0/sobjects/Lead/00Q2800000LcsYAEAZ"

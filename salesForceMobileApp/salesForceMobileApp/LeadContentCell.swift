@@ -12,6 +12,15 @@ class LeadContentCell: UITableViewCell {
 
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var titleNameLbl: UILabel!
+    @IBOutlet weak var userPhoto: UIImageView!
+    @IBOutlet weak var userFeedName: UILabel!
+    @IBOutlet weak var feedDateStatus: UILabel!
+    @IBOutlet weak var likeImage: UIImageView!
+    @IBOutlet weak var commentImage: UIImageView!
+    @IBOutlet weak var totalLike: UILabel!
+    @IBOutlet weak var totalComment: UILabel!
+    @IBOutlet weak var sharePhoto: UIImageView!
+    @IBOutlet weak var shareText: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -23,10 +23,13 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
+    var flag: Bool = false
+    var getLeadDataArr: NSArray = []
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
     override func viewDidLoad() {
-        super.viewDidLoad()
+       super.viewDidLoad()
+         print(getLeadDataArr)
         lastName.delegate = self
         companyName.delegate = self
         leadStatus.delegate = self
@@ -40,6 +43,10 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
         saveBtn.layer.cornerRadius = 5.0
         cancleBtn.backgroundColor = navColor
         cancleBtn.layer.cornerRadius = 5.0
+        if self.flag == true {
+        
+                companyName.text = getLeadDataArr.objectAtIndex(2) as? String
+        }
         
         // Do any additional setup after loading the view.
     }

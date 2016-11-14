@@ -28,18 +28,15 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
     @IBAction func leadAction(sender: AnyObject) {
         if leadSegment.selectedSegmentIndex == 0 {
             dispatch_async(dispatch_get_main_queue(), {
-                let path: String =  "/services/data/v36.0/sobjects/Lead/00Q2800000SSa7oEAD/feeds"
+                let path: String =  "/services/data/v36.0/sobjects/Lead/00Q2800000SSa7o/feeds"
                 let request = SFRestRequest(method: SFRestMethod.GET , path: path, queryParams: nil)
                 SFRestAPI.sharedInstance().send(request, delegate: self)
-                
+                self.tableView.reloadData()
             })
-            self.flag = true
-            tableView.reloadData()
-            print("First Tag")
         } else {
-            flag = false
-            tableView.reloadData()
-            print("Second Tag")
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
         }
     }
     override func viewDidLoad() {
@@ -93,6 +90,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
     func shareAction() {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
+        nv.leadDetailInfo = getResponseArr;
         navigationController?.pushViewController(nv, animated: true)
     }
     
@@ -111,11 +109,10 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if leadSegment.selectedSegmentIndex == 1 {
         return leadDataArr.count
-        } else if leadSegment.selectedSegmentIndex == 0 {
+        } else {
            return feedData.count
-            tableView.reloadData()
         }
-        return 1
+    
     }
     
     
@@ -138,30 +135,53 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
 
         } else {
         let feedCell = tableView.dequeueReusableCellWithIdentifier("feedCellID", forIndexPath: indexPath) as! LeadContentCell
-                    self.tableView.rowHeight = 216
-                    feedCell.feedDateStatus.text = feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
+                    self.tableView.rowHeight = 400
+                    feedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
                     String
-                    feedCell.totalLike.text = String(feedData.valueForKey("LikeCount")![indexPath.row])
-                    
-                    feedCell.totalComment.text = String(feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
-                    
-                    
-                    feedCell.shareText.text = feedData.objectAtIndex(indexPath.row)["Body"] as?
+                    feedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
+                    feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
+                    feedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                     String
+                     let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
+                 let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
+                    let requ = SFRestAPI.sharedInstance().requestForQuery(query)
+                  //  SFRestAPI.sharedInstance().send(requ, delegate: self);
+                    
+                    SFRestAPI.sharedInstance().sendRESTRequest(requ, failBlock: {
+                        erro in
+                        print(erro)
+                        }, completeBlock: { response in
+                            print(response)
+                            
+                            let imageData = response!["records"] as? NSArray
+                            let id = imageData!.objectAtIndex(0)["Id"] as! String
+
+                            let downloadImgReq: SFRestRequest = SFRestAPI.sharedInstance().requestForFileContents(id , version: nil)
+                            SFRestAPI.sharedInstance().sendRESTRequest(downloadImgReq, failBlock: {
+                                erro in
+                                print(erro)
+                                }, completeBlock: { response in
+                                    let image: UIImage = UIImage.sd_imageWithData(response as! NSData)
+                                    feedCell.sharePhoto.image = image
+                            })
+                            
+                    })
+                    
+                    
                     
                     
                     //        let url = NSURL(string: (userInfoDic["FullPhotoUrl"] as? String!)! + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
-
-                    let credentials :SFOAuthCredentials = SFRestAPI.sharedInstance().coordinator.credentials
-                        //[[[SFRestAPI sharedInstance] coordinator] credentials];
-                    let urlStr = String(format:"/services/data/v23.0/sobjects/Document/%@/Body?oauth_token=%@", credentials.instanceUrl!, "0D528000010vMLeCAM",SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! );
-                    
-                    
-                    //        let url = NSURL(string: (userInfoDic["FullPhotoUrl"] as? String!)! + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
-
-                    
-                    let url = NSURL(string: urlStr )
-                   feedCell.sharePhoto.sd_setImageWithURL(url!,placeholderImage: UIImage(named: "User"))
+//
+//                    let credentials :SFOAuthCredentials = SFRestAPI.sharedInstance().coordinator.credentials
+//                        //[[[SFRestAPI sharedInstance] coordinator] credentials];
+//                    let urlStr = String(format:"/services/data/v23.0/sobjects/Document/%@/Body?oauth_token=%@", credentials.instanceUrl!, "0D528000010vMLeCAM",SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! );
+//                    
+//                    
+//                    //        let url = NSURL(string: (userInfoDic["FullPhotoUrl"] as? String!)! + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
+//
+//                    
+//                    let url = NSURL(string: urlStr )
+//                   feedCell.sharePhoto.sd_setImageWithURL(url!,placeholderImage: UIImage(named: "User"))
                     
                 //    NSURL *myURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/services/data/v23.0/sobjects/Document/%@/Body", credentials.instanceUrl, "0D528000010vMLeCAM"];
 

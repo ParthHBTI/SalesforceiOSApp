@@ -108,6 +108,7 @@ extension AccountViewController : UITableViewDataSource {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("AccountDataVC") as! AccountDataVC
         subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)
+        subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
         self.navigationController?.pushViewController(subContentsVC, animated: true)
         
     }

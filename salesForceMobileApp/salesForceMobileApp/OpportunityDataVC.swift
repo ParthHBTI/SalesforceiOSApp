@@ -13,7 +13,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
     var getResponseArr:AnyObject = []
     var opportunityDataArr = []
     var cellTitleArr: NSArray = ["Opportunity Owner:","Opportunity Name:","Account Name:","Lead Source:","Stage Name:","Type:","Ammount:","Probability:","Is Private:","Created Date:","Close Date:","Is Closed:","Is Deleted:","Last Modified Date:"]
-    
+    var leadID = String()
     @IBOutlet weak var feedSegment: UISegmentedControl!
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -26,7 +26,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
     @IBAction func opporchunitySegAction(sender: AnyObject) {
         if feedSegment.selectedSegmentIndex == 0 {
             dispatch_async(dispatch_get_main_queue(), {
-                let path: String =  "/services/data/v36.0/sobjects/Lead/00Q2800000SSa7o/feeds"
+                let path: String =  "/services/data/v36.0/sobjects/Opportunity/\(self.leadID)/feeds"
                 let request = SFRestRequest(method: SFRestMethod.GET , path: path, queryParams: nil)
                 SFRestAPI.sharedInstance().send(request, delegate: self)
                 self.tableView.reloadData()
@@ -63,7 +63,6 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
         
         opportunityDataArr = [getResponseArr["Owner"]!!["Name"] as! String,
                               getResponseArr["Name"] as! String,
-                              getResponseArr["Account"]!!["Name"] as! String,
                               leadSource,
                               getResponseArr["StageName"] as! String,
                               type,

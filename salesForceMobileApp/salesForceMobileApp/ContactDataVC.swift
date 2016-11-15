@@ -14,6 +14,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate {
     var getResponseArr:AnyObject = []
     var cellTitleArr: NSArray = ["Contact Owner:","Name:","Email:","Birthdate:","Phone:","Fax:","Title:"]
     var contactDataArr = []
+    var leadID = String()
     @IBOutlet weak var feedSegment: UISegmentedControl!
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -27,7 +28,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate {
     @IBAction func contactSegAction(sender: AnyObject) {
         if feedSegment.selectedSegmentIndex == 0 {
             dispatch_async(dispatch_get_main_queue(), {
-                let path: String =  "/services/data/v36.0/sobjects/Lead/00Q2800000SSa7o/feeds"
+                let path: String =  "/services/data/v36.0/sobjects/Contact/\(self.leadID)/feeds"
                 let request = SFRestRequest(method: SFRestMethod.GET , path: path, queryParams: nil)
                 SFRestAPI.sharedInstance().send(request, delegate: self)
                 self.tableView.reloadData()

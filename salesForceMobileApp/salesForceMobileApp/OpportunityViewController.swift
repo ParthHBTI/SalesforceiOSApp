@@ -106,6 +106,7 @@ extension OpportunityViewController : UITableViewDataSource {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("OpportunityDataVC") as! OpportunityDataVC
         subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)
+        subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
 }

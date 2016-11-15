@@ -13,6 +13,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate {
     
     var feedData: AnyObject = []
     var getResponseArr:AnyObject = []
+    var leadID = String()
     var accountCellTitleArr: NSArray = ["Account Owner:","Account Name:","Account Number:","Type:","Ownership:","Website:","Phone:","Fax:","Last Modified Date:"]
     var accountDataArr = []
     @IBOutlet weak var feedSegment: UISegmentedControl!
@@ -28,7 +29,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate {
     @IBAction func accountSegAction(sender: AnyObject) {
         if feedSegment.selectedSegmentIndex == 0 {
             dispatch_async(dispatch_get_main_queue(), {
-                let path: String =  "/services/data/v36.0/sobjects/Lead/00Q2800000SSa7o/feeds"
+                let path: String =  "/services/data/v36.0/sobjects/Account/\(self.leadID)/feeds"
                 let request = SFRestRequest(method: SFRestMethod.GET , path: path, queryParams: nil)
                 SFRestAPI.sharedInstance().send(request, delegate: self)
                 self.tableView.reloadData()

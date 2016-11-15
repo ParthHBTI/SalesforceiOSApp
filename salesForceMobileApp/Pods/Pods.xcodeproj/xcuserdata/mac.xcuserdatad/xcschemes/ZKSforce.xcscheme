@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '4B3E8C64FFBDC35DC018068A602B8A26'
-               BlueprintName = 'SDWebImage'
+               BlueprintIdentifier = '88DB2A60E3A9D77898F0216CADC85197'
+               BlueprintName = 'ZKSforce'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'SDWebImage.framework'>
+               BuildableName = 'ZKSforce.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

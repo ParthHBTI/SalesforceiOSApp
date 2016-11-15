@@ -1,21 +1,14 @@
-//
-//  LeadContentVC.swift
-//  salesForceMobileApp
-//
-//  Created by HemendraSingh on 20/10/16.
-//  Copyright © 2016 Salesforce. All rights reserved.
-//
-
 import UIKit
 import SalesforceRestAPI
 
 class LeadContentVC: UITableViewController, SFRestDelegate {
+    
     @IBOutlet weak var leadSegment: UISegmentedControl!
     var getResponseArr:AnyObject = []
+    var leadID = String()
     var cellTitleArr: NSArray = ["Lead Owner:","Name:","Company:","Email:","Phone:","Title:","Fax:"]
     var leadDataArr = []
     var feedData: AnyObject = []
-    var flag = false
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -28,7 +21,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
     @IBAction func leadAction(sender: AnyObject) {
         if leadSegment.selectedSegmentIndex == 0 {
             dispatch_async(dispatch_get_main_queue(), {
-                let path: String =  "/services/data/v36.0/sobjects/Lead/00Q2800000SSa7o/feeds"
+                let path: String =  "/services/data/v36.0/sobjects/Lead/\(self.leadID)/feeds"
                 let request = SFRestRequest(method: SFRestMethod.GET , path: path, queryParams: nil)
                 SFRestAPI.sharedInstance().send(request, delegate: self)
                 self.tableView.reloadData()
@@ -172,28 +165,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
                     })
                     
             })
-            
-            
-            
-            
-            //        let url = NSURL(string: (userInfoDic["FullPhotoUrl"] as? String!)! + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
-            //
-            //                    let credentials :SFOAuthCredentials = SFRestAPI.sharedInstance().coordinator.credentials
-            //                        //[[[SFRestAPI sharedInstance] coordinator] credentials];
-            //                    let urlStr = String(format:"/services/data/v23.0/sobjects/Document/%@/Body?oauth_token=%@", credentials.instanceUrl!, "0D528000010vMLeCAM",SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! );
-            //
-            //
-            //                    //        let url = NSURL(string: (userInfoDic["FullPhotoUrl"] as? String!)! + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
-            //
-            //
-            //                    let url = NSURL(string: urlStr )
-            //                   feedCell.sharePhoto.sd_setImageWithURL(url!,placeholderImage: UIImage(named: "User"))
-            
-            //    NSURL *myURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/services/data/v23.0/sobjects/Document/%@/Body", credentials.instanceUrl, "0D528000010vMLeCAM"];
-            
-            
-            //feedCell.sharePhoto = feedData.(indexPath.row)["CreatedDate"] as?
-            //feedCell.feedDateStatus.text = feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
+
             
             return feedCell
         }

@@ -47,7 +47,7 @@ let imagePicker = UIImagePickerController()
         let paramDict:AnyObject = []
         let method: SFRestMethod = SFRestMethod.POST
         let reqs = SFRestRequest.init(method: method, path: "", queryParams: paramDict as? [String : String])
-        reqs.endpoint = "/services/data/v36.0/sobjects/Lead/06928000002vMyw/feed-items/"
+        reqs.endpoint = "/services/data/v36.0/sobjects/Lead/06928000002vMyw/feeds"
         let fileStr = NSBundle.mainBundle().pathForResource("swift_iOS_app_developers", ofType: "jpg")
         reqs.addPostFileData(NSData(contentsOfFile: fileStr!)! , paramName: "feedElemntsFileUpload", fileName: "Feed File", mimeType: "image/jpg")
         reqs.customHeaders =  [ "Content-Type" : "multipart/form-data" ]
@@ -72,17 +72,19 @@ let imagePicker = UIImagePickerController()
         let url = NSURL.fileURLWithPath(filePath)
         let feedJSONTemplateData = try! NSData(contentsOfURL: url, options: NSDataReadingOptions.DataReadingMappedIfSafe)
         var feedJSONTemplateStr = String(data: feedJSONTemplateData, encoding: NSUTF8StringEncoding)
-        feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__BODY_TEXT__", withString: "kloudrac")
+        feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__BODY_TEXT__", withString: "__kloudrac_softwares__")
         feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__ATTACHMENT_ID__", withString: attachmentId)
-        feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("_Parent_Id_", withString: leadId)
+//        feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__Parent_Id__", withString: leadId)
         let data = feedJSONTemplateStr!.dataUsingEncoding(NSUTF8StringEncoding)
         let jsonObj: AnyObject = try! NSJSONSerialization.JSONObjectWithData(data!, options: []) as! [String:AnyObject]
-        let path: String =  "/services/data/v36.0/sobjects/Lead/00Q2800000LcsYAEAZ"
-        
-       // path = [NSString stringWithFormat:@"/%@/chatter/feeds/record/%@/feed-items/", api.apiVersion,  self.selectedGroupIdFromSettings];
+        //var path: String =  "/%@/chatter/feeds/record/%@/feed-items/"
+      let api = SFRestAPI.sharedInstance()
+        let path: String = "/services/data/v23.0/chatter/feeds/to/me/feed-items"
 
+     let request = SFRestRequest(method: SFRestMethod.POST , path: path, queryParams: jsonObj as? [String : String])
+       // let method = SFRestMethod.POST
+        //let req = SFRestRequest.init(method: method, path: path, queryParams: jsonObj as? [String : String]
         
-       let request = SFRestRequest(method: SFRestMethod.DELETE , path: path, queryParams: jsonObj as? [String : String])
         SFRestAPI.sharedInstance().send(request, delegate: self)
     }
     
@@ -96,8 +98,11 @@ let imagePicker = UIImagePickerController()
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
             imageView.image = pickedImage
-            let imageData: NSData = UIImageJPEGRepresentation(pickedImage, 0.0)!
-            let req = SFRestAPI.sharedInstance().requestForUploadFile(imageData, name: "swift_iOS_app_developers.jpg", description: "Share Image", mimeType: "image/jpg/png")
+            let imageData: NSData = UIImageJPEGRepresentation(pickedImage, 0.1)!
+            let req = SFRestAPI.sharedInstance().requestForUploadFile(imageData, name: "swift_iOS_app_developers.jpg", description: "Share Image", mimeType: "image/jpeg")
+//            req.setHeaderValue(leadId, forHeaderName: "ParentId")
+//           req.setCustomRequestBodyData( leadId.dataUsingEncoding(NSUTF8StringEncoding)!, contentType: "ParentId")
+//            req.addPostFileData(imageData, paramName: "fileData", fileName: "swift_iOS_app_developers.jpg", mimeType: "image/jpg/png")
             SFRestAPI.sharedInstance().send(req, delegate: self)
       
         }
@@ -110,16 +115,19 @@ let imagePicker = UIImagePickerController()
     
     
     func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
-        //let attachmentID = dataResponse["id"] as! String
-        let data = dataResponse
-        //let id = data.valueForKey("id") as! String
-        createFeedForAttachmentId("")
         if request.method == SFRestMethod.POST {
-            createFeedForAttachment(dataResponse.objectForKey("id") as! String)
+            let range = (request.path as NSString).rangeOfString("/feed-items")
+            if range.location == NSNotFound {
+                createFeedForAttachmentId(dataResponse.objectForKey("id") as! String)
+            } else {
+                dispatch_async(dispatch_get_main_queue(), {() -> Void in
+                    self.presentingViewController!.presentingViewController!.dismissViewControllerAnimated(true, completion: { _ in })
+                })
+
+            }
         }
-        
-        let attachmentId = (dataResponse["id"] as! String)
-        createFeedForAttachmentId(attachmentId)
+//        let attachmentId = (dataResponse["id"] as! String)
+//        createFeedForAttachmentId(attachmentId)
     }
     
 //    func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {

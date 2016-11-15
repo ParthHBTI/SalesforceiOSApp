@@ -24,7 +24,6 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.tableView.registerCellNib(DataTableViewCell.self)
         loadLead()
-        print(resArr1)
     }
     
     func executeQuery()  {
@@ -106,6 +105,7 @@ extension LeadViewController : UITableViewDataSource {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("LeadContentVC") as! LeadContentVC
         subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)
+        subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
     

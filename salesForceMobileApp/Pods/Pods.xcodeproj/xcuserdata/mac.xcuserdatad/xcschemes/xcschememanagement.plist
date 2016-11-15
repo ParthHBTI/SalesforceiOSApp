@@ -8,185 +8,64 @@
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>1</integer>
 		</dict>
 		<key>MBProgressHUD.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>2</integer>
 		</dict>
 		<key>Pods-salesForceMobileApp.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>3</integer>
 		</dict>
 		<key>SDWebImage.xcscheme</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>11</integer>
+			<key>isShown</key>
+			<false/>
 		</dict>
 		<key>SQLCipher.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>10</integer>
 		</dict>
 		<key>SalesforceNetwork.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>4</integer>
 		</dict>
 		<key>SalesforceRestAPI.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>5</integer>
 		</dict>
 		<key>SalesforceSDKCore-SalesforceSDKResources.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>7</integer>
 		</dict>
 		<key>SalesforceSDKCore.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>6</integer>
 		</dict>
 		<key>SmartStore.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>8</integer>
 		</dict>
 		<key>SmartSync.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>9</integer>
+		</dict>
+		<key>ZKSforce.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
-	<dict>
-		<key>1E81B023B3BD13237804289C8B505A71</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>33DC88E62BD1402E7AECAFDA98A36128</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>3AA7DC94E55EA79855654BD77FB433DB</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>541E814BCD63C625778CD93132329610</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>5932A393E7CD65C34184094DBB58701D</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>6606DCD9F79B923CC88A5D442AB31450</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>6B1714E816AE794962516E2ECBB40A5A</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>6C4DA3CF0618D773AA59543CCECA7842</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>6F014FE3D46AB242B65EA1D728FD1AD1</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>7043F0F38111EC4C96F9F471706A30DD</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>850EFA1DEF1CAEEC563C04BDE0BA338F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>85F45232B50471A0E3EAC4D1FF510C45</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8A2E8FED01C8A6BC8ADFCF3C3B78368F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>95EA786A63A68F0E6CDF319399B3C184</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>973C0C2B349562FFB4A5A918927B7B0E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A0932F89B85A4C64F45D31BBBE5CC5E5</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A202CDC0F3F26FB31A6FD6FD4583A96F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A253153CB06B42AE71A3301A52619D4E</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>D9B1942D97B0833E5882FB2DFC4E946A</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>E61CE3B6DFA1FE6B3E296965C76C0E10</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>F8356BA97E08065BEB0C20B2280876E0</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-	</dict>
+	<dict/>
 </dict>
 </plist>

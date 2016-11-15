@@ -25,6 +25,8 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
     @IBOutlet weak var phoneWarnigLbl: UILabel!
+    var flag: Bool = false
+    var contactDataDic:AnyObject = []
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
     
@@ -41,11 +43,23 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
         scrollView.setNeedsDisplay()
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewContactVC.backAction))
          self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
+        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(updateAccountAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
         cancleBtn.backgroundColor = navColor
         cancleBtn.layer.cornerRadius = 5.0
+        if flag == true {
+            self.firstName.text = contactDataDic["FirstName"] as? String
+            self.lastName.text = contactDataDic["LastName"] as? String
+            self.email.text = contactDataDic["Email"] as? String
+            self.phone.text = contactDataDic["Phone"] as? String
+            self.fax.text = contactDataDic["Fax"] as? String
+            self.saveBtn.hidden = true
+            self.cancleBtn.hidden = true
+            title = "Update Account"
+            self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
+        }
         // Do any additional setup after loading the view.
     }
     
@@ -134,6 +148,34 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
         
     }
     
+    
+    //Update contact record
+    func updateAccountAction() {
+        let params = [
+            "FirstName" : firstName.text!,
+            "LastName" : lastName.text!,
+            "Email" : email.text!,
+            "Phone" : phone.text!,
+            "Fax" : fax.text!
+            ]
+        SFRestAPI.sharedInstance().performUpdateWithObjectType("Contact", objectId: (contactDataDic["Id"] as? String)!, fields: params, failBlock: { err in
+            dispatch_async(dispatch_get_main_queue(), {
+                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+            })
+            print( (err))
+        }){ succes in
+            dispatch_async(dispatch_get_main_queue(), {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Indeterminate
+                //loading.mode = MBProgressHUDMode.Text
+                loading.detailsLabelText = "Updated Successfully!"
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+            })
+        }
+    }
+    
     override func setNavigationBarItem() {
         self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
     }
@@ -177,15 +219,15 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
                 phoneWarnigLbl.textColor = UIColor.redColor()
             }
             return true
-        /*case email:
-            let flag = prospectiveText.isValidEmail()
-            print(flag)
-            if prospectiveText.isValidEmail() {
-                phoneWarnigLbl.hidden = false
-                phoneWarnigLbl.text = "*Please enter a valid email"
-                phoneWarnigLbl.textColor = UIColor.redColor()
+            /*case email:
+             let flag = prospectiveText.isValidEmail()
+             print(flag)
+             if prospectiveText.isValidEmail() {
+             phoneWarnigLbl.hidden = false
+             phoneWarnigLbl.text = "*Please enter a valid email"
+             phoneWarnigLbl.textColor = UIColor.redColor()
              }
-                return true*/
+             return true*/
             
         default:
             return true
@@ -196,7 +238,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
 extension String {
     func isValidEmail() -> Bool {
         let regex = try? NSRegularExpression(pattern: "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$", options: .CaseInsensitive)
-       // let regex = try? NSRegularExpression(pattern: "^[A-Z0-9._%+]+@(?:[A-Z0-9]+\\.)+[A-Z]{3}$", options: .CaseInsensitive)
+        // let regex = try? NSRegularExpression(pattern: "^[A-Z0-9._%+]+@(?:[A-Z0-9]+\\.)+[A-Z]{3}$", options: .CaseInsensitive)
         return regex?.firstMatchInString(self, options: [], range: NSMakeRange(0, self.characters.count)) != nil
     }
 }

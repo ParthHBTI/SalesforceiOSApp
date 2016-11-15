@@ -27,7 +27,8 @@ class AccountDataVC: UITableViewController {
         self.setNavigationBarItem()
         tableView.rowHeight = 70
         let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(AccountDataVC.shareAction))
-        self.navigationItem.setRightBarButtonItem(crossBtnItem, animated: true)
+        let navBarEditBtn = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action:#selector(self.editAction))
+        self.navigationItem.setRightBarButtonItems([crossBtnItem,navBarEditBtn], animated: true)
         var lastModifiedDate = ""
         if  let _  = nullToNil( getResponseArr["LastModifiedDate"]) {
             lastModifiedDate =  (getResponseArr["LastModifiedDate"] as? String)!
@@ -115,6 +116,15 @@ class AccountDataVC: UITableViewController {
         return cell
     }
     
+    
+    func editAction() {
+        let storyboard = UIStoryboard(name: "Main" , bundle: nil)
+        let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewAccountVC") as! CreateNewAccountVC
+        vc.accountDataDic = self.getResponseArr
+        vc.flag = true
+        self.navigationController?.pushViewController(vc, animated: true)
+        
+    }
     
     /*
      // Override to support conditional editing of the table view.

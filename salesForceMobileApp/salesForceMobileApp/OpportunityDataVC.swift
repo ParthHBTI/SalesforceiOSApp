@@ -27,7 +27,8 @@ class OpportunityDataVC: UITableViewController {
         self.setNavigationBarItem()
         tableView.rowHeight = 70
         let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(OpportunityDataVC.shareAction))
-        self.navigationItem.setRightBarButtonItem(crossBtnItem, animated: true)
+        let navBarEditBtn = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action:#selector(self.editAction))
+        self.navigationItem.setRightBarButtonItems([crossBtnItem,navBarEditBtn], animated: true)
         print(getResponseArr)
         var leadSource = "Not available"
         if  let _  = nullToNil( getResponseArr["LeadSource"]) {
@@ -99,6 +100,13 @@ class OpportunityDataVC: UITableViewController {
         return cell
     }
     
+    func editAction() {
+        let storyboard = UIStoryboard(name: "Main" , bundle: nil)
+        let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
+        vc.opportunityDataDic = self.getResponseArr
+        vc.flag = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
     
     /*
      // Override to support conditional editing of the table view.

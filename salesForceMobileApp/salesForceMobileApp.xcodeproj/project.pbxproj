@@ -13,7 +13,7 @@
 		04DB2FA31DB4ED2100C4519F /* CreateNewLeadVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA21DB4ED2100C4519F /* CreateNewLeadVC.swift */; };
 		04DB2FA51DB4ED3E00C4519F /* CreateNewAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA41DB4ED3E00C4519F /* CreateNewAccountVC.swift */; };
 		04DB2FA71DB4ED5300C4519F /* CreateNewOpportunityVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA61DB4ED5300C4519F /* CreateNewOpportunityVC.swift */; };
-		04EA09E41DD33237006B8859 /* swift_iOS_app_developers.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 04EA09E31DD33237006B8859 /* swift_iOS_app_developers.jpg */; };
+		04EA09E41DD33237006B8859 /* swift_iOS_app_developers.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 04EA09E31DD33237006B8859 /* swift_iOS_app_developers.jpeg */; };
 		04EE4B0C1DD06D5E00590A7D /* AttachViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EE4B0B1DD06D5E00590A7D /* AttachViewController.swift */; };
 		04EE4B0E1DD07FE500590A7D /* PopOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EE4B0D1DD07FE500590A7D /* PopOverViewController.swift */; };
 		04F96ED01DAF6E01000D715A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04F96ECF1DAF6E01000D715A /* Main.storyboard */; };
@@ -69,7 +69,7 @@
 		04DB2FA21DB4ED2100C4519F /* CreateNewLeadVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewLeadVC.swift; sourceTree = "<group>"; };
 		04DB2FA41DB4ED3E00C4519F /* CreateNewAccountVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewAccountVC.swift; sourceTree = "<group>"; };
 		04DB2FA61DB4ED5300C4519F /* CreateNewOpportunityVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewOpportunityVC.swift; sourceTree = "<group>"; };
-		04EA09E31DD33237006B8859 /* swift_iOS_app_developers.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = swift_iOS_app_developers.jpg; sourceTree = "<group>"; };
+		04EA09E31DD33237006B8859 /* swift_iOS_app_developers.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = swift_iOS_app_developers.jpeg; sourceTree = "<group>"; };
 		04EE4B0B1DD06D5E00590A7D /* AttachViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttachViewController.swift; path = salesForceMobileApp/AttachViewController.swift; sourceTree = "<group>"; };
 		04EE4B0D1DD07FE500590A7D /* PopOverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopOverViewController.swift; path = salesForceMobileApp/PopOverViewController.swift; sourceTree = "<group>"; };
 		04F96ECF1DAF6E01000D715A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -238,7 +238,7 @@
 				04DB2FA21DB4ED2100C4519F /* CreateNewLeadVC.swift */,
 				04DB2FA61DB4ED5300C4519F /* CreateNewOpportunityVC.swift */,
 				049EAE161DD1BCED00C178DA /* feedTemplate.json */,
-				04EA09E31DD33237006B8859 /* swift_iOS_app_developers.jpg */,
+				04EA09E31DD33237006B8859 /* swift_iOS_app_developers.jpeg */,
 				04DB2FA41DB4ED3E00C4519F /* CreateNewAccountVC.swift */,
 				04F96F401DAF76DD000D715A /* CreateNewContactVC.swift */,
 				04F96F311DAF75E0000D715A /* SubContentsViewController.swift */,
@@ -347,7 +347,7 @@
 			files = (
 				04F96F2C1DAF7517000D715A /* DataTableViewCell.xib in Resources */,
 				04F96ED01DAF6E01000D715A /* Main.storyboard in Resources */,
-				04EA09E41DD33237006B8859 /* swift_iOS_app_developers.jpg in Resources */,
+				04EA09E41DD33237006B8859 /* swift_iOS_app_developers.jpeg in Resources */,
 				04F96F351DAF75E0000D715A /* SubContentsViewController.storyboard in Resources */,
 				731BC9E01DB4F86600B3C6C7 /* Images.xcassets in Resources */,
 				4FD6C49E1B755242002F9F90 /* InitialViewController.xib in Resources */,

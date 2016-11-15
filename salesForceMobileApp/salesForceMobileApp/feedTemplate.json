@@ -1,6 +1,8 @@
+
+
 {
+  
     "body": {
-        "ParentId": "_Parent_Id_",
         "messageSegments": [
                             {
                             "type": "Text",
@@ -10,6 +12,7 @@
     },
     "attachment": {
         "attachmentType": "ExistingContent",
-        "contentDocumentId": "__ATTACHMENT_ID__"
+        "contentDocumentId": "__ATTACHMENT_ID__",
+        
     }
 }

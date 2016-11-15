@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import SalesforceRestAPI
 
-class AccountDataVC: UITableViewController {
+class AccountDataVC: UITableViewController, SFRestDelegate {
     
+    var feedData: AnyObject = []
     var getResponseArr:AnyObject = []
     var accountCellTitleArr: NSArray = ["Account Owner:","Account Name:","Account Number:","Type:","Ownership:","Website:","Phone:","Fax:","Last Modified Date:"]
     var accountDataArr = []
+    @IBOutlet weak var feedSegment: UISegmentedControl!
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -22,10 +25,27 @@ class AccountDataVC: UITableViewController {
         }
     }
     
+    @IBAction func accountSegAction(sender: AnyObject) {
+        if feedSegment.selectedSegmentIndex == 0 {
+            dispatch_async(dispatch_get_main_queue(), {
+                let path: String =  "/services/data/v36.0/sobjects/Lead/00Q2800000SSa7o/feeds"
+                let request = SFRestRequest(method: SFRestMethod.GET , path: path, queryParams: nil)
+                SFRestAPI.sharedInstance().send(request, delegate: self)
+                self.tableView.reloadData()
+            })
+        } else {
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
+        }
+
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setNavigationBarItem()
         tableView.rowHeight = 70
+        feedSegment.selectedSegmentIndex = 1
         let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(AccountDataVC.shareAction))
         self.navigationItem.setRightBarButtonItem(crossBtnItem, animated: true)
         var lastModifiedDate = ""
@@ -95,70 +115,96 @@ class AccountDataVC: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return accountDataArr.count
+        if feedSegment.selectedSegmentIndex == 1 {
+            return accountDataArr.count
+        } else {
+            return feedData.count
+        }
     }
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("AccountDataCellID", forIndexPath: indexPath) as! AccountDataCell
-        cell.TitleLbl.text = self.accountCellTitleArr.objectAtIndex(indexPath.row) as? String
-        cell.TitleNameLbl.text = self.accountDataArr.objectAtIndex(indexPath.row) as? String
-        if indexPath.row == 0 {
-            cell.TitleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
+       
+        
+        
+        
+        if feedSegment.selectedSegmentIndex == 1 {
+            let cell = tableView.dequeueReusableCellWithIdentifier("AccountDataCellID", forIndexPath: indexPath) as! AccountDataCell
+            cell.TitleLbl.text = self.accountCellTitleArr.objectAtIndex(indexPath.row) as? String
+            cell.TitleNameLbl.text = self.accountDataArr.objectAtIndex(indexPath.row) as? String
+            if indexPath.row == 0 {
+                cell.TitleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
+            }
+            if cell.TitleNameLbl.text == "" {
+                tableView.rowHeight = 40
+            }
+            else {
+                tableView.rowHeight = 70
+            }
+            return cell
+        } else {
+            let feedCell = tableView.dequeueReusableCellWithIdentifier("feedCellID", forIndexPath: indexPath) as! LeadContentCell
+            self.tableView.rowHeight = 400
+            feedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
+            String
+            feedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
+            feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
+            feedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
+            String
+            let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
+            let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
+            let requ = SFRestAPI.sharedInstance().requestForQuery(query)
+            //  SFRestAPI.sharedInstance().send(requ, delegate: self);
+            
+            SFRestAPI.sharedInstance().sendRESTRequest(requ, failBlock: {
+                erro in
+                print(erro)
+                }, completeBlock: { response in
+                    print(response)
+                    
+                    let imageData = response!["records"] as? NSArray
+                    let id = imageData!.objectAtIndex(0)["Id"] as! String
+                    
+                    let downloadImgReq: SFRestRequest = SFRestAPI.sharedInstance().requestForFileContents(id , version: nil)
+                    SFRestAPI.sharedInstance().sendRESTRequest(downloadImgReq, failBlock: {
+                        erro in
+                        print(erro)
+                        }, completeBlock: { response in
+                            let image: UIImage = UIImage.sd_imageWithData(response as! NSData)
+                            feedCell.sharePhoto.image = image
+                    })
+            })
+            return feedCell
         }
-        if cell.TitleNameLbl.text == "" {
-            tableView.rowHeight = 40
-        }
-        else {
-            tableView.rowHeight = 70
-        }
-        return cell
+
+        
     }
     
+    func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
+        //let attachmentID = dataResponse["id"] as! String
+        self.feedData = dataResponse["records"]
+        print(feedData)
+        self.tableView.reloadData()
+    }
     
-    /*
-     // Override to support conditional editing of the table view.
-     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-     // Return false if you do not want the specified item to be editable.
-     return true
-     }
-     */
+    func request(request: SFRestRequest, didFailLoadWithError error: NSError)
+    {
+        self.log(.Debug, msg: "didFailLoadWithError: \(error)")
+        // Add your failed error handling here
+    }
     
-    /*
-     // Override to support editing the table view.
-     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-     if editingStyle == .Delete {
-     // Delete the row from the data source
-     tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-     } else if editingStyle == .Insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
+    func requestDidCancelLoad(request: SFRestRequest)
+    {
+        self.log(.Debug, msg: "requestDidCancelLoad: \(request)")
+        // Add your failed error handling here
+    }
     
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-     
-     }
-     */
-    
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
+    func requestDidTimeout(request: SFRestRequest)
+    {
+        self.log(.Debug, msg: "requestDidTimeout: \(request)")
+        // Add your failed error handling here
+    }
+
+
     
 }

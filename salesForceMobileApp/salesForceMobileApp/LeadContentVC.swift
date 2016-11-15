@@ -1,15 +1,8 @@
-//
-//  LeadContentVC.swift
-//  salesForceMobileApp
-//
-//  Created by HemendraSingh on 20/10/16.
-//  Copyright © 2016 Salesforce. All rights reserved.
-//
-
 import UIKit
 import SalesforceRestAPI
 
 class LeadContentVC: UITableViewController, SFRestDelegate {
+    
     @IBOutlet weak var leadSegment: UISegmentedControl!
     var getResponseArr:AnyObject = []
     var cellTitleArr: NSArray = ["Lead Owner:","Name:","Company:","Email:","Phone:","Title:","Fax:"]
@@ -49,8 +42,8 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
         nav!.barTintColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
         nav!.tintColor = UIColor.whiteColor()
         nav!.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
-//        let viewRecordingList: UIBarButtonItem = UIBarButtonItem(title: "Convert",style: .Plain, target: self, action: #selector(self.convertLead))
-//        self.navigationItem.setRightBarButtonItem(viewRecordingList, animated: true)
+        //        let viewRecordingList: UIBarButtonItem = UIBarButtonItem(title: "Convert",style: .Plain, target: self, action: #selector(self.convertLead))
+        //        self.navigationItem.setRightBarButtonItem(viewRecordingList, animated: true)
         let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(LeadContentVC.shareAction))
         self.navigationItem.setRightBarButtonItem(crossBtnItem, animated: true)
         var email = ""
@@ -108,17 +101,17 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if leadSegment.selectedSegmentIndex == 1 {
-        return leadDataArr.count
+            return leadDataArr.count
         } else {
-           return feedData.count
+            return feedData.count
         }
-    
+        
     }
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-                if leadSegment.selectedSegmentIndex == 1 {
+        if leadSegment.selectedSegmentIndex == 1 {
             let detailCell = tableView.dequeueReusableCellWithIdentifier("leadContentCellID", forIndexPath: indexPath) as! LeadContentCell
             detailCell.titleLbl.text = self.cellTitleArr.objectAtIndex(indexPath.row) as? String
             detailCell.titleNameLbl.text = self.leadDataArr.objectAtIndex(indexPath.row) as? String
@@ -132,65 +125,65 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
                 tableView.rowHeight = 70
             }
             return detailCell
-
+            
         } else {
-        let feedCell = tableView.dequeueReusableCellWithIdentifier("feedCellID", forIndexPath: indexPath) as! LeadContentCell
-                    self.tableView.rowHeight = 400
-                    feedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
-                    String
-                    feedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
-                    feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
-                    feedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
-                    String
-                     let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
-                 let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
-                    let requ = SFRestAPI.sharedInstance().requestForQuery(query)
-                  //  SFRestAPI.sharedInstance().send(requ, delegate: self);
+            let feedCell = tableView.dequeueReusableCellWithIdentifier("feedCellID", forIndexPath: indexPath) as! LeadContentCell
+            self.tableView.rowHeight = 400
+            feedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
+            String
+            feedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
+            feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
+            feedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
+            String
+            let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
+            let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
+            let requ = SFRestAPI.sharedInstance().requestForQuery(query)
+            //  SFRestAPI.sharedInstance().send(requ, delegate: self);
+            
+            SFRestAPI.sharedInstance().sendRESTRequest(requ, failBlock: {
+                erro in
+                print(erro)
+                }, completeBlock: { response in
+                    print(response)
                     
-                    SFRestAPI.sharedInstance().sendRESTRequest(requ, failBlock: {
+                    let imageData = response!["records"] as? NSArray
+                    let id = imageData!.objectAtIndex(0)["Id"] as! String
+                    
+                    let downloadImgReq: SFRestRequest = SFRestAPI.sharedInstance().requestForFileContents(id , version: nil)
+                    SFRestAPI.sharedInstance().sendRESTRequest(downloadImgReq, failBlock: {
                         erro in
                         print(erro)
                         }, completeBlock: { response in
-                            print(response)
-                            
-                            let imageData = response!["records"] as? NSArray
-                            let id = imageData!.objectAtIndex(0)["Id"] as! String
-
-                            let downloadImgReq: SFRestRequest = SFRestAPI.sharedInstance().requestForFileContents(id , version: nil)
-                            SFRestAPI.sharedInstance().sendRESTRequest(downloadImgReq, failBlock: {
-                                erro in
-                                print(erro)
-                                }, completeBlock: { response in
-                                    let image: UIImage = UIImage.sd_imageWithData(response as! NSData)
-                                    feedCell.sharePhoto.image = image
-                            })
-                            
+                            let image: UIImage = UIImage.sd_imageWithData(response as! NSData)
+                            feedCell.sharePhoto.image = image
                     })
                     
-                    
-                    
-                    
-                    //        let url = NSURL(string: (userInfoDic["FullPhotoUrl"] as? String!)! + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
-//
-//                    let credentials :SFOAuthCredentials = SFRestAPI.sharedInstance().coordinator.credentials
-//                        //[[[SFRestAPI sharedInstance] coordinator] credentials];
-//                    let urlStr = String(format:"/services/data/v23.0/sobjects/Document/%@/Body?oauth_token=%@", credentials.instanceUrl!, "0D528000010vMLeCAM",SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! );
-//                    
-//                    
-//                    //        let url = NSURL(string: (userInfoDic["FullPhotoUrl"] as? String!)! + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
-//
-//                    
-//                    let url = NSURL(string: urlStr )
-//                   feedCell.sharePhoto.sd_setImageWithURL(url!,placeholderImage: UIImage(named: "User"))
-                    
-                //    NSURL *myURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/services/data/v23.0/sobjects/Document/%@/Body", credentials.instanceUrl, "0D528000010vMLeCAM"];
-
-
-                    //feedCell.sharePhoto = feedData.(indexPath.row)["CreatedDate"] as?
-                    //feedCell.feedDateStatus.text = feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
-                    
-                    return feedCell
-                }
+            })
+            
+            
+            
+            
+            //        let url = NSURL(string: (userInfoDic["FullPhotoUrl"] as? String!)! + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
+            //
+            //                    let credentials :SFOAuthCredentials = SFRestAPI.sharedInstance().coordinator.credentials
+            //                        //[[[SFRestAPI sharedInstance] coordinator] credentials];
+            //                    let urlStr = String(format:"/services/data/v23.0/sobjects/Document/%@/Body?oauth_token=%@", credentials.instanceUrl!, "0D528000010vMLeCAM",SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! );
+            //
+            //
+            //                    //        let url = NSURL(string: (userInfoDic["FullPhotoUrl"] as? String!)! + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
+            //
+            //
+            //                    let url = NSURL(string: urlStr )
+            //                   feedCell.sharePhoto.sd_setImageWithURL(url!,placeholderImage: UIImage(named: "User"))
+            
+            //    NSURL *myURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/services/data/v23.0/sobjects/Document/%@/Body", credentials.instanceUrl, "0D528000010vMLeCAM"];
+            
+            
+            //feedCell.sharePhoto = feedData.(indexPath.row)["CreatedDate"] as?
+            //feedCell.feedDateStatus.text = feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
+            
+            return feedCell
+        }
         
     }
     
@@ -203,29 +196,29 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
         //                print("success: \(success)")
         //        })
     }
-  
+    
     func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
         //let attachmentID = dataResponse["id"] as! String
         self.feedData = dataResponse["records"]
         print(feedData)
         self.tableView.reloadData()
     }
-
+    
     func request(request: SFRestRequest, didFailLoadWithError error: NSError)
-{
-    self.log(.Debug, msg: "didFailLoadWithError: \(error)")
-    // Add your failed error handling here
-}
-
-func requestDidCancelLoad(request: SFRestRequest)
-{
-    self.log(.Debug, msg: "requestDidCancelLoad: \(request)")
-    // Add your failed error handling here
-}
-
-func requestDidTimeout(request: SFRestRequest)
-{
-    self.log(.Debug, msg: "requestDidTimeout: \(request)")
-    // Add your failed error handling here
-}
+    {
+        self.log(.Debug, msg: "didFailLoadWithError: \(error)")
+        // Add your failed error handling here
+    }
+    
+    func requestDidCancelLoad(request: SFRestRequest)
+    {
+        self.log(.Debug, msg: "requestDidCancelLoad: \(request)")
+        // Add your failed error handling here
+    }
+    
+    func requestDidTimeout(request: SFRestRequest)
+    {
+        self.log(.Debug, msg: "requestDidTimeout: \(request)")
+        // Add your failed error handling here
+    }
 }

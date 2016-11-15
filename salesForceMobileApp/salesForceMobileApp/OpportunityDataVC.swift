@@ -44,7 +44,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
         tableView.rowHeight = 70
         feedSegment.selectedSegmentIndex = 1
         let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(OpportunityDataVC.shareAction))
-        let navBarEditBtn = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action:#selector(self.editAction))
+        let navBarEditBtn = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action: #selector(OpportunityDataVC.editAction))
         self.navigationItem.setRightBarButtonItems([crossBtnItem,navBarEditBtn], animated: true)
         print(getResponseArr)
         var leadSource = "Not available"
@@ -78,6 +78,15 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
         ]
         
     }
+    
+    func editAction() {
+        let storyboard = UIStoryboard(name: "Main" , bundle: nil)
+        let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
+        vc.opportunityDataDic = self.getResponseArr
+        vc.flag = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+
     
     func shareAction() {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
@@ -139,13 +148,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
     print(erro)
     }, completeBlock: { response in
     print(response)
-    func editAction() {
-        let storyboard = UIStoryboard(name: "Main" , bundle: nil)
-        let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
-        vc.opportunityDataDic = self.getResponseArr
-        vc.flag = true
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
+    
     
     let imageData = response!["records"] as? NSArray
     let id = imageData!.objectAtIndex(0)["Id"] as! String
@@ -161,8 +164,9 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
     
     })
     return feedCell
-}
-
+    }
+        
+     
 }
     func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
         //let attachmentID = dataResponse["id"] as! String

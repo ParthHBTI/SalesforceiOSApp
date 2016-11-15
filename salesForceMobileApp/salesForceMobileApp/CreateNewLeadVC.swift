@@ -24,12 +24,12 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
     var flag: Bool = false
-    var getLeadDataArr: NSArray = []
+    var leadDataDict:AnyObject = []
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
     override func viewDidLoad() {
-       super.viewDidLoad()
-         print(getLeadDataArr)
+        super.viewDidLoad()
+        print(leadDataDict)
         lastName.delegate = self
         companyName.delegate = self
         leadStatus.delegate = self
@@ -38,14 +38,20 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
         scrollView.setNeedsDisplay()
         //let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewLeadVC.backAction))
         //self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
+        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(updateLeadAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
         cancleBtn.backgroundColor = navColor
         cancleBtn.layer.cornerRadius = 5.0
         if self.flag == true {
-        
-                companyName.text = getLeadDataArr.objectAtIndex(2) as? String
+            companyName.text = leadDataDict["Company"] as? String
+            lastName.text = leadDataDict["LastName"] as? String
+            leadStatus.text = leadDataDict["Status"] as? String
+            saveBtn.hidden = true
+            cancleBtn.hidden = true
+            title = "Update Lead"
+            self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
         }
         
         // Do any additional setup after loading the view.
@@ -122,6 +128,31 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
         
         
         
+    }
+    
+    //Update lead record
+    func updateLeadAction() {
+        let params = [
+            "LastName" : lastName.text!,
+            "Company" : companyName.text!,
+            "Status" : leadStatus.text!,
+            ]
+        SFRestAPI.sharedInstance().performUpdateWithObjectType("Lead", objectId: (leadDataDict["Id"] as? String)!, fields: params, failBlock: { err in
+            dispatch_async(dispatch_get_main_queue(), {
+                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+            })
+            print( (err))
+        }){ succes in
+            dispatch_async(dispatch_get_main_queue(), {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Indeterminate
+                //loading.mode = MBProgressHUDMode.Text
+                loading.detailsLabelText = "Updated Successfully!"
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+            })
+        }
     }
     
     override func setNavigationBarItem() {

@@ -27,7 +27,9 @@ class ContactDataVC: UITableViewController {
         self.setNavigationBarItem()
         tableView.rowHeight = 70
         let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(ContactDataVC.shareAction))
-        self.navigationItem.setRightBarButtonItem(crossBtnItem, animated: true)
+        let navBarEditBtn = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action:#selector(self.editAction))
+        self.navigationItem.setRightBarButtonItems([crossBtnItem,navBarEditBtn], animated: true)
+        
         var birthdate = ""
         if  let _  = nullToNil( getResponseArr["Birthdate"]) {
             birthdate =  (getResponseArr["Birthdate"] as? String)!
@@ -105,6 +107,15 @@ class ContactDataVC: UITableViewController {
         return cell
     }
     
+    
+    func editAction() {
+        let storyboard = UIStoryboard(name: "Main" , bundle: nil)
+        let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
+        vc.contactDataDic = self.getResponseArr
+        vc.flag = true
+        self.navigationController?.pushViewController(vc, animated: true)
+        
+    }
     
     /*
      // Override to support conditional editing of the table view.

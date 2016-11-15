@@ -22,6 +22,8 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
+    var flag: Bool = false
+    var accountDataDic:AnyObject = []
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
     
@@ -34,11 +36,20 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
         scrollView.setNeedsDisplay()
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewAccountVC.backAction))
          self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
+        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(updateAccountAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
         cancleBtn.backgroundColor = navColor
         cancleBtn.layer.cornerRadius = 5.0
+        if flag == true {
+            self.accountName.text = accountDataDic["Name"] as? String
+            self.accountAddress.text = accountDataDic["BillingAddress"] as? String
+            self.saveBtn.hidden = true
+            self.cancleBtn.hidden = true
+            title = "Update Account"
+            self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
+        }
     }
     
     /*func backAction() {
@@ -83,7 +94,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
             } else {
                 let fields = [
                     "Name" : accountName.text!,
-                    "ShippingAddress" : accountAddress.text!,
+                    "BillingAddress" : accountAddress.text!,
                     ]
                 SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: { err in
                     dispatch_async(dispatch_get_main_queue(), {
@@ -110,6 +121,30 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     @IBAction func cancelAction(sender: AnyObject) {
         
         
+    }
+    
+    //update account record
+    func updateAccountAction() {
+        let params = [
+            "Name" : accountName.text!,
+            "BillingAddress" : accountAddress.text!,
+            ]
+        SFRestAPI.sharedInstance().performUpdateWithObjectType("Account", objectId: (accountDataDic["Id"] as? String)!, fields: params, failBlock: { err in
+            dispatch_async(dispatch_get_main_queue(), {
+                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+            })
+            print( (err))
+        }){ succes in
+            dispatch_async(dispatch_get_main_queue(), {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Indeterminate
+                //loading.mode = MBProgressHUDMode.Text
+                loading.detailsLabelText = "Updated Successfully!"
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+            })
+        }
     }
     
     override func setNavigationBarItem() {

@@ -25,8 +25,18 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
+    var flag:Bool = false
+    var opportunityDataDic:AnyObject = []
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    
+    func nullToNil(value : AnyObject?) -> AnyObject? {
+        if value is NSNull {
+            return nil
+        } else {
+            return value
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,11 +50,27 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewOpportunityVC.backAction))
          self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
         // Do any additional setup after loading the view.
+        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(updateOpportunityAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
         cancleBtn.backgroundColor = navColor
         cancleBtn.layer.cornerRadius = 5.0
+        if flag == true {
+            var opportunityAmount:NSNumber = NSInteger()
+            if  let _  = nullToNil( opportunityDataDic["Amount"]) {
+                opportunityAmount =  (opportunityDataDic["Amount"] as? NSNumber)!
+            }
+            //let amount:NSNumber = (opportunityDataDic["Amount"] as? NSNumber)!
+            self.opportunityName.text = opportunityDataDic["Name"] as? String
+            self.closeDate.text = opportunityDataDic["CloseDate"] as? String
+            self.amount.text = String(opportunityAmount)
+            self.stage.text = opportunityDataDic["StageName"] as? String
+            self.saveBtn.hidden = true
+            self.cancleBtn.hidden = true
+            title = "Update Opportunity"
+            self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
+        }
     }
     
     /*func backAction() {
@@ -121,6 +147,31 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     
     @IBAction func cancelAction(sender: AnyObject) {
         
+    }
+    
+    func updateOpportunityAction() {
+        let params = [
+            "Name" : opportunityName.text!,
+            "CloseDate" : closeDate.text!,
+            "Amount" : amount.text!,
+            "StageName" : stage.text!
+        ]
+        SFRestAPI.sharedInstance().performUpdateWithObjectType("Opportunity", objectId: (opportunityDataDic["Id"] as? String)!, fields: params, failBlock: { err in
+            dispatch_async(dispatch_get_main_queue(), {
+                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+            })
+            print( (err))
+        }){ succes in
+            dispatch_async(dispatch_get_main_queue(), {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Indeterminate
+                //loading.mode = MBProgressHUDMode.Text
+                loading.detailsLabelText = "Updated Successfully!"
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+            })
+        }
     }
     
     func touchesShouldCancelInContentView(view: UIView) -> Bool {

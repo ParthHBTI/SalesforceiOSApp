@@ -133,38 +133,55 @@ class ContactDataVC: UITableViewController, SFRestDelegate {
 
             
         } else {
-            let feedCell = tableView.dequeueReusableCellWithIdentifier("feedCellID", forIndexPath: indexPath) as! LeadContentCell
-            self.tableView.rowHeight = 400
-            feedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
-            String
-            feedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
-            feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
-            feedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
-            String
-            let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
-            let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
-            let requ = SFRestAPI.sharedInstance().requestForQuery(query)
-            //  SFRestAPI.sharedInstance().send(requ, delegate: self);
-            
-            SFRestAPI.sharedInstance().sendRESTRequest(requ, failBlock: {
-                erro in
-                print(erro)
-                }, completeBlock: { response in
-                    print(response)
-                    
-                    let imageData = response!["records"] as? NSArray
-                    let id = imageData!.objectAtIndex(0)["Id"] as! String
-                    
-                    let downloadImgReq: SFRestRequest = SFRestAPI.sharedInstance().requestForFileContents(id , version: nil)
-                    SFRestAPI.sharedInstance().sendRESTRequest(downloadImgReq, failBlock: {
-                        erro in
-                        print(erro)
-                        }, completeBlock: { response in
-                            let image: UIImage = UIImage.sd_imageWithData(response as! NSData)
-                            feedCell.sharePhoto.image = image
-                    })
-            })
-            return feedCell
+            let fileContentName  = nullToNil(self.feedData.objectAtIndex(indexPath.row)["ContentFileName"])
+            if fileContentName == nil {
+                let textFeedCell = tableView.dequeueReusableCellWithIdentifier("textFeedCellID", forIndexPath: indexPath) as! LeadContentCell
+                textFeedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
+                String
+                textFeedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
+                textFeedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
+                textFeedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
+                String
+                
+                self.tableView.rowHeight = 200
+                textFeedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
+                String
+                return textFeedCell
+            } else {
+                let feedCell = tableView.dequeueReusableCellWithIdentifier("feedCellID", forIndexPath: indexPath) as! LeadContentCell
+                self.tableView.rowHeight = 400
+                feedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
+                String
+                feedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
+                feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
+                feedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
+                String
+                
+                let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
+                let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
+                let requ = SFRestAPI.sharedInstance().requestForQuery(query)
+                //  SFRestAPI.sharedInstance().send(requ, delegate: self);
+                
+                SFRestAPI.sharedInstance().sendRESTRequest(requ, failBlock: {
+                    erro in
+                    print(erro)
+                    }, completeBlock: { response in
+                        print(response)
+                        
+                        let imageData = response!["records"] as? NSArray
+                        let id = imageData!.objectAtIndex(0)["Id"] as! String
+                        
+                        let downloadImgReq: SFRestRequest = SFRestAPI.sharedInstance().requestForFileContents(id , version: nil)
+                        SFRestAPI.sharedInstance().sendRESTRequest(downloadImgReq, failBlock: {
+                            erro in
+                            print(erro)
+                            }, completeBlock: { response in
+                                let image: UIImage = UIImage.sd_imageWithData(response as! NSData)
+                                feedCell.sharePhoto.image = image
+                        })
+                })
+                return feedCell
+            }
         }
     }
     

@@ -37,7 +37,13 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
+    func nullToNil(value : AnyObject?) -> AnyObject? {
+        if value is NSNull {
+            return nil
+        } else {
+            return value
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         //remove all blank rows from table view
@@ -59,10 +65,20 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
         self.tableView.registerCellClass(BaseTableViewCell.self)
         self.imageHeaderView = ImageHeaderView.loadNib()
         self.view.addSubview(self.imageHeaderView)
-        self.imageHeaderView.userNameLbl.text =  (userInfoDic["Name"] as? String)! + " (" + (userInfoDic["CompanyName"] as? String)! + ")"
+        
+        
+       var userName = ""
+        if  let _  = nullToNil( userInfoDic["Name"]) {
+            userName =  (userInfoDic["Name"] as? String)!
+        }
+        var userCompanyName = ""
+        if  let _  = nullToNil( userInfoDic["CompanyName"]) {
+            userCompanyName =  (userInfoDic["CompanyName"] as? String)!
+        }
+        
+        
+        self.imageHeaderView.userNameLbl.text = userName + " (" + userCompanyName + ")"
         self.imageHeaderView.userEmailLbl.text = userInfoDic["Email"] as? String
-        //https://c.ap2.content.force.com/profilephoto/72928000000UKj3/F
-        //self.imageHeaderView.profileImage?.sd_setImageWithURL(NSURL(string: "https://c.ap2.content.force.com/profilephoto/72928000000UKj3/F"))
         let url = NSURL(string: (userInfoDic["FullPhotoUrl"] as? String!)! + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
         self.imageHeaderView.profileImage?.sd_setImageWithURL(url!,placeholderImage: UIImage(named: "User"))
     }

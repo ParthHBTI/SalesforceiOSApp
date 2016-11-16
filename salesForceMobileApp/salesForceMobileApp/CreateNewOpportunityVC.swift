@@ -25,6 +25,8 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
+    var datePickerView: UIDatePicker = UIDatePicker()
+    var currentDate:NSDate = NSDate()
     var flag:Bool = false
     var opportunityDataDic:AnyObject = []
     
@@ -41,21 +43,26 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     override func viewDidLoad() {
         super.viewDidLoad()
         opportunityName.delegate = self
-        closeDate.delegate = self
+        //closeDate.delegate = self
         amount.delegate = self
         stage.delegate = self
+        closeDate.inputView = datePickerView
+        datePickerView.minimumDate = currentDate
+        datePickerView.datePickerMode = UIDatePickerMode.Date
+        datePickerView.addTarget(self, action: #selector(CreateNewOpportunityVC.datePickerValueChanged), forControlEvents: UIControlEvents.ValueChanged)
         self.setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewOpportunityVC.backAction))
          self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
         // Do any additional setup after loading the view.
-        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(updateOpportunityAction))
+        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateOpportunityAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
         cancleBtn.backgroundColor = navColor
         cancleBtn.layer.cornerRadius = 5.0
+        title = "New Opportunity"
         if flag == true {
             var opportunityAmount:NSNumber = NSInteger()
             if  let _  = nullToNil( opportunityDataDic["Amount"]) {
@@ -149,6 +156,22 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
         
     }
     
+    @IBAction func closeDateTxtFieldEditing(sender: UITextField) {
+        let todaysDate = NSDate()
+        let datePickerView:UIDatePicker = UIDatePicker()
+        datePickerView.minimumDate = todaysDate
+        datePickerView.datePickerMode = UIDatePickerMode.Date
+        sender.inputView = datePickerView
+        datePickerView.addTarget(self, action: #selector(CreateNewOpportunityVC.datePickerValueChanged), forControlEvents: UIControlEvents.ValueChanged)
+    }
+    
+    func datePickerValueChanged(sender: UIDatePicker) {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
+        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
+        closeDate.text = dateFormatter.stringFromDate(sender.date)
+     }
+   
     func updateOpportunityAction() {
         let params = [
             "Name" : opportunityName.text!,

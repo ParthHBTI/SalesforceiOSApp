@@ -38,12 +38,13 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
         scrollView.setNeedsDisplay()
         //let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewLeadVC.backAction))
         //self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
-        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(updateLeadAction))
+        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateLeadAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
         cancleBtn.backgroundColor = navColor
         cancleBtn.layer.cornerRadius = 5.0
+        title = "New Lead"
         if self.flag == true {
             companyName.text = leadDataDict["Company"] as? String
             lastName.text = leadDataDict["LastName"] as? String

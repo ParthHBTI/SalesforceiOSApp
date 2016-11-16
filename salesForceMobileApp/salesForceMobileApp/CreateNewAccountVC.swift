@@ -18,10 +18,15 @@ import MBProgressHUD
 class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, ExecuteQueryDelegate {
     
     @IBOutlet weak var accountName: UITextField!
-    @IBOutlet weak var accountAddress: UITextField!
+    @IBOutlet weak var billingStreet: UITextField!
+    @IBOutlet weak var billingCity: UITextField!
+    @IBOutlet weak var billingState: UITextField!
+    @IBOutlet weak var billingCountry: UITextField!
+    @IBOutlet weak var postalCode: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
+    @IBOutlet weak var postalWarningLbl: UILabel!
     var flag: Bool = false
     var accountDataDic:AnyObject = []
     
@@ -30,21 +35,31 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     override func viewDidLoad() {
         super.viewDidLoad()
         accountName.delegate = self
-        accountAddress.delegate = self
+        billingStreet.delegate = self
+        billingCity.delegate = self
+        billingState.delegate = self
+        billingCountry.delegate = self
+        postalCode.delegate = self
+        postalWarningLbl.hidden = true
         setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewAccountVC.backAction))
          self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
-        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(updateAccountAction))
+        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateAccountAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
         cancleBtn.backgroundColor = navColor
         cancleBtn.layer.cornerRadius = 5.0
+        title = "New Account"
         if flag == true {
             self.accountName.text = accountDataDic["Name"] as? String
-            self.accountAddress.text = accountDataDic["BillingAddress"] as? String
+            self.billingStreet.text = accountDataDic["BillingStreet"] as? String
+            self.billingCity.text = accountDataDic["BillingCity"] as? String
+            self.billingState.text = accountDataDic["BillingState"] as? String
+            self.billingCountry.text = accountDataDic["BillingCountry"] as? String
+            self.postalCode.text = accountDataDic["BillingPostalCode"] as? String
             self.saveBtn.hidden = true
             self.cancleBtn.hidden = true
             title = "Update Account"
@@ -71,31 +86,45 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        let accountNameStr = self.accountName.text!
-        let accountAddStr = self.accountAddress.text!
         let charSet = NSCharacterSet.whitespaceCharacterSet()
-        let accountNameWhiteSpaceSet = accountNameStr.stringByTrimmingCharactersInSet(charSet)
-        let accountAddWhiteSpaceSet = accountAddStr.stringByTrimmingCharactersInSet(charSet)
+        let accNameWhiteSpaceSet = self.accountName.text!.stringByTrimmingCharactersInSet(charSet)
+        let billStreetWhiteSpaceSet = self.billingStreet.text!.stringByTrimmingCharactersInSet(charSet)
+        let billCityWhiteSpaceSet = self.billingCity.text!.stringByTrimmingCharactersInSet(charSet)
+        let billStateWhiteSpaceSet = self.billingState.text!.stringByTrimmingCharactersInSet(charSet)
+        let billCntryWhiteSpaceSet = self.billingCountry.text!.stringByTrimmingCharactersInSet(charSet)
+        let billPostalCodeWhiteSpaceSet = self.postalCode.text!.stringByTrimmingCharactersInSet(charSet)
         if exDelegate.isConnectedToNetwork() {
-            if accountName.text!.isEmpty == true || accountAddress.text!.isEmpty == true {
+            if accountName.text!.isEmpty == true || billingStreet.text!.isEmpty == true || billingCity.text!.isEmpty == true || billingState.text!.isEmpty == true ||  postalCode.text!.isEmpty == true {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)
                 loading.removeFromSuperViewOnHide = true
                 loading.detailsLabelText = "please give all values"
                 self.animateSubmitBtnOnWrongSubmit()
-            } else if accountAddWhiteSpaceSet == "" || accountNameWhiteSpaceSet == "" {
+            } else if billPostalCodeWhiteSpaceSet == "" || accNameWhiteSpaceSet == "" || billStreetWhiteSpaceSet == ""  || billCntryWhiteSpaceSet == ""  || billCityWhiteSpaceSet == ""  || billStateWhiteSpaceSet == ""  {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)
                 loading.removeFromSuperViewOnHide = true
                 loading.detailsLabelText = "You entered white spaces only"
                 self.animateSubmitBtnOnWrongSubmit()
+                
+            } else if postalCode.text!.characters.count != 6 {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Text
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                loading.detailsLabelText = "Please enter a valid postal code"
+                self.animateSubmitBtnOnWrongSubmit()
             } else {
                 let fields = [
                     "Name" : accountName.text!,
-                    "BillingAddress" : accountAddress.text!,
-                    ]
+                    "BillingStreet" : billingStreet.text!,
+                    "BillingCity" : billingCity.text!,
+                    "BillingState" : billingState.text!,
+                    "BillingCountry" : billingCountry.text!,
+                    "BillingPostalCode" : postalCode.text!
+                ]
                 SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: { err in
                     dispatch_async(dispatch_get_main_queue(), {
                         let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
@@ -127,9 +156,14 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     func updateAccountAction() {
         let params = [
             "Name" : accountName.text!,
-            "BillingAddress" : accountAddress.text!,
-            ]
-        SFRestAPI.sharedInstance().performUpdateWithObjectType("Account", objectId: (accountDataDic["Id"] as? String)!, fields: params, failBlock: { err in
+            //"BillingAddress" : ["city": accountAddress.text!]
+            "BillingStreet" : billingStreet.text!,
+            "BillingCity" : billingCity.text!,
+            "BillingState" : billingState.text!,
+            "BillingCountry" : billingCountry.text!,
+            "BillingPostalCode" : postalCode.text!
+        ]
+        SFRestAPI.sharedInstance().performUpdateWithObjectType("Account", objectId: (accountDataDic["Id"] as? String)!, fields: params , failBlock: { err in
             dispatch_async(dispatch_get_main_queue(), {
                 let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
                 alert.show()
@@ -166,6 +200,33 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
             self.saveBtn.bounds = CGRect(x: bounds.origin.x - 20, y: bounds.origin.y, width: bounds.size.width, height: bounds.size.height)
             self.saveBtn.enabled = true
             }, completion: nil)
+    }
+    
+    
+    func textField(textField: UITextField,
+                   shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        let prospectiveText = (currentText as NSString).stringByReplacingCharactersInRange(range, withString: string)
+        if string.characters.count == 0 {
+            if prospectiveText.characters.count <= 6 {
+                postalWarningLbl.hidden = true
+            }
+            return true
+        }
+        switch textField {
+        case  postalCode:
+            if prospectiveText.characters.count > 6 {
+                // phone.layer.borderWidth = 2.0
+                //phone.layer.borderColor = UIColor.redColor().CGColor
+                postalWarningLbl.hidden = false
+                postalWarningLbl.text = "*Please enter a valid postal code"
+                postalWarningLbl.textColor = UIColor.redColor()
+            }
+            return true
+            
+        default:
+            return true
+        }
     }
     
 }

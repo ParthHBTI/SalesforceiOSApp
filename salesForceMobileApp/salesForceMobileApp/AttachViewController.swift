@@ -202,6 +202,23 @@ let imagePicker = UIImagePickerController()
     }
     
     func createFeedForAttachmentId(attachmentId: String) {
+        //Load json template from "feedTemplate.json" file as a string. Then replace __BODY_TEXT__ and __ATTACHMENT_ID__ w/
+        // addPostTextField.text and attachmentId and pass that to post to chatter feed.
+        //    {
+        //        "body": {
+        //            "messageSegments": [
+        //                                {
+        //                                    "type": "Text",
+        //                                    "text": "__BODY_TEXT__"
+        //                                }
+        //                                ]
+        //        },
+        //        "attachment": {
+        //            "attachmentType": "ExistingContent",
+        //            "contentDocumentId": "__ATTACHMENT_ID__"
+        //        }
+        //    }
+        
         let filePath = NSBundle.mainBundle().pathForResource("feedTemplate", ofType: "json")!
         let url = NSURL.fileURLWithPath(filePath)
         let feedJSONTemplateData = try! NSData(contentsOfURL: url, options: NSDataReadingOptions.DataReadingMappedIfSafe)
@@ -213,9 +230,11 @@ let imagePicker = UIImagePickerController()
         let jsonObj: AnyObject = try! NSJSONSerialization.JSONObjectWithData(data!, options: []) as! [String:AnyObject]
         //var path: String =  "/%@/chatter/feeds/record/%@/feed-items/"
       let api = SFRestAPI.sharedInstance()
-        let path: String = "/services/data/v23.0/chatter/feeds/to/me/feed-items"
-
+        let path: String = "/services/data/v36.0/chatter/groups/00D28000001acWmEAI/photos"
+//let getSessionId = SFUserAccountManager.sharedInstance().currentUser?.idData.userId
      let request = SFRestRequest(method: SFRestMethod.POST , path: path, queryParams: jsonObj as? [String : String])
+        request.setHeaderValue("Authorization", forHeaderName: "OAuth " )
+        request.setHeaderValue("Content-Type:", forHeaderName: "application/json");
        // let method = SFRestMethod.POST
         //let req = SFRestRequest.init(method: method, path: path, queryParams: jsonObj as? [String : String]
         
@@ -232,12 +251,12 @@ let imagePicker = UIImagePickerController()
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
             imageView.image = pickedImage
-          /*  let imageData: NSData = UIImageJPEGRepresentation(pickedImage, 0.1)!
+          let imageData: NSData = UIImageJPEGRepresentation(pickedImage, 0.1)!
             let req = SFRestAPI.sharedInstance().requestForUploadFile(imageData, name: "swift_iOS_app_developers.jpg", description: "Share Image", mimeType: "image/jpeg")
 //            req.setHeaderValue(leadId, forHeaderName: "ParentId")
 //           req.setCustomRequestBodyData( leadId.dataUsingEncoding(NSUTF8StringEncoding)!, contentType: "ParentId")
 //            req.addPostFileData(imageData, paramName: "fileData", fileName: "swift_iOS_app_developers.jpg", mimeType: "image/jpg/png")
-            SFRestAPI.sharedInstance().send(req, delegate: self)*/
+            SFRestAPI.sharedInstance().send(req, delegate: self)
       
         }
         dismissViewControllerAnimated(true, completion: nil)
@@ -252,7 +271,7 @@ let imagePicker = UIImagePickerController()
         if request.method == SFRestMethod.POST {
             let range = (request.path as NSString).rangeOfString("/feed-items")
             if range.location == NSNotFound {
-                //createFeedForAttachmentId(dataResponse.objectForKey("id") as! String)
+                createFeedForAttachmentId(dataResponse.objectForKey("id") as! String)
             } else {
                 dispatch_async(dispatch_get_main_queue(), {() -> Void in
                     self.presentingViewController!.presentingViewController!.dismissViewControllerAnimated(true, completion: { _ in })
@@ -264,6 +283,24 @@ let imagePicker = UIImagePickerController()
 //        createFeedForAttachmentId(attachmentId)
     }
     
+    
+    
+    
+    func oauthCoordinator(coordinator: SFOAuthCoordinator, didFailWithError error: NSError?) {
+        print("oauthCoordinator:didFailWithError: \(error)")
+        coordinator.view.removeFromSuperview()
+        if error!.code == kSFOAuthErrorInvalidGrant {
+            print("Logging out because oauth failed with error code: \(error!.code)")
+        }
+        else if error!.code == kSFOAuthErrorAccessDenied {
+            print("Logging out because AccessDenied error code: \(error!.code)")
+            self.performSelector(#selector(SFUserAccountManager.log(_:msg:) ), withObject: nil, afterDelay: 0)
+        }
+        else {
+            let alert = UIAlertView(title: "Salesforce Error", message: "Can't connect to salesforce: \(error)", delegate: self, cancelButtonTitle: "Retry")
+            alert.show()
+        }
+    }
 //    func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
 //        let attachmentId = dataResponse.valueForKey("id") as! String
 //        let range = (request.path as NSString).rangeOfString("/feed-items")
@@ -283,6 +320,7 @@ let imagePicker = UIImagePickerController()
     func request(request: SFRestRequest, didFailLoadWithError error: NSError)
     {
         self.log(.Debug, msg: "didFailLoadWithError: \(error)")
+        
         // Add your failed error handling here
     }
     

@@ -43,12 +43,13 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
         scrollView.setNeedsDisplay()
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewContactVC.backAction))
          self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
-        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(updateAccountAction))
+        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateAccountAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
         cancleBtn.backgroundColor = navColor
         cancleBtn.layer.cornerRadius = 5.0
+        title = "New Contact"
         if flag == true {
             self.firstName.text = contactDataDic["FirstName"] as? String
             self.lastName.text = contactDataDic["LastName"] as? String
@@ -147,7 +148,6 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     @IBAction func cancelAction(sender: AnyObject) {
         
     }
-    
     
     //Update contact record
     func updateAccountAction() {

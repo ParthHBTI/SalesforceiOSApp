@@ -20,7 +20,8 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate{
         exDelegate.delegate = self
         self.title = "Opportunity View"
         self.setNavigationBarItem()
-        self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
+        //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
+        self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
         loadOpporchunity()
     }
@@ -30,13 +31,13 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate{
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
         })
-      
     }
-
     
-    func addRightBarButtonWithImage1(buttonImage: UIImage) {
-        let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
-        navigationItem.rightBarButtonItem = rightButton;
+    //func addRightBarButtonWithImage1(buttonImage: UIImage) {
+    //let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+    func addRightBarButtonWithImage1() {
+        let navBarAddBtn: UIBarButtonItem = UIBarButtonItem(title: "Add", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+        navigationItem.rightBarButtonItem = navBarAddBtn;
     }
     
     func toggleRight1() {
@@ -77,9 +78,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate{
                 self.tableView.reloadData()
             })
         }
-
     }
-    
 }
 
 extension OpportunityViewController : UITableViewDelegate {
@@ -96,7 +95,7 @@ extension OpportunityViewController : UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
-             cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
+        cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         cell.dataImage.image = UIImage.init(named: "oppo")
         print(cell.textLabel?.text)
         return cell

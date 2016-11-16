@@ -25,9 +25,9 @@ class ExecuteQuery: UIViewController, SFRestDelegate {
     
     internal weak var delegate : ExecuteQueryDelegate?
     var resArr:AnyObject = []
-    var leadRequest = "SELECT Owner.Name,Salutation,Company,Email,Name,Phone,Title,Address,Id FROM Lead limit 20"
-   var accountRequest = "SELECT Owner.Name,AccountNumber,Fax,LastModifiedDate,Name,Ownership,Phone,Type,Website,Id FROM Account Limit 10"
-    var contactRequest = "SELECT  Salutation,Owner.Name,Birthdate,Email,Fax,Name,Phone,Id FROM Contact"
+    var leadRequest = "SELECT Owner.Name,Salutation,Company,Email,Name,Phone,Title,Address,Id,Status,LastName FROM Lead limit 20"
+   var accountRequest = "SELECT Owner.Name,AccountNumber,Fax,LastModifiedDate,Name,Ownership,Phone,Type,Website,Id,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet FROM Account Limit 10"
+    var contactRequest = "SELECT  Salutation,Owner.Name,Birthdate,Email,Fax,Name,Phone,Id,FirstName,LastName FROM Contact"
     var opporchunityRequest = "SELECT Owner.Name,Amount,CloseDate,CreatedDate,IsClosed,IsDeleted,IsPrivate,LastModifiedDate,LeadSource,Name,Probability,StageName,Type,Id FROM Opportunity Limit 10"
     
     func request(request: SFRestRequest, didLoadResponse jsonResponse: AnyObject) {

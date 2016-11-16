@@ -21,7 +21,8 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         exDelegate.delegate = self
         self.title = "Leads View"
         self.setNavigationBarItem()
-        self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
+        //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
+        self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
         loadLead()
     }
@@ -33,9 +34,9 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         })
     }
     
-    func addRightBarButtonWithImage1(buttonImage: UIImage) {
-        let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
-        navigationItem.rightBarButtonItem = rightButton;
+    func addRightBarButtonWithImage1() {
+        let navBarAddBtn: UIBarButtonItem = UIBarButtonItem(title: "Add", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+        navigationItem.rightBarButtonItem = navBarAddBtn;
     }
     
     func toggleRight1() {

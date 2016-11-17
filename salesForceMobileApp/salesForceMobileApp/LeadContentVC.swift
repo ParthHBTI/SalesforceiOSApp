@@ -1,5 +1,7 @@
 import UIKit
 import SalesforceRestAPI
+import SalesforceNetwork
+import SystemConfiguration
 
 class LeadContentVC: UITableViewController, SFRestDelegate {
     
@@ -9,7 +11,9 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
     var cellTitleArr: NSArray = ["Lead Owner:","Name:","Company:","Email:","Phone:","Title:","Fax:"]
     var leadDataArr = []
     var feedData: AnyObject = []
-    
+    var feedItems: AnyObject = []
+     var tempCell = LeadContentCell()
+    var tapGesture = UITapGestureRecognizer()
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil
@@ -38,6 +42,8 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
         leadSegment.selectedSegmentIndex = 1
         tableView.rowHeight = 70
         print(getResponseArr)
+       tapGesture = UITapGestureRecognizer(target: self, action: #selector(LeadContentVC.likeButtonClickedOnCell(_:)))
+        //Add the recognizer to your view.
         let nav = self.navigationController?.navigationBar
         nav!.barTintColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
         nav!.tintColor = UIColor.whiteColor()
@@ -146,6 +152,9 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
                 self.tableView.rowHeight = 200
                 textFeedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
+//                 textFeedCell.likeImage.addGestureRecognizer(tapGesture)
+//                tempCell = textFeedCell
+                likeButtonClickedOnCell(indexPath.row)
                 return textFeedCell
             } else {
                 let feedCell = tableView.dequeueReusableCellWithIdentifier("feedCellID", forIndexPath: indexPath) as! LeadContentCell
@@ -180,9 +189,54 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
                                     feedCell.sharePhoto.image = image
                             })
                     })
+                likeButtonClickedOnCell(indexPath.row)
+//                feedCell.likeImage.addGestureRecognizer(tapGesture)
+//                tempCell = feedCell
           return feedCell
             }
         }
+    }
+    
+    func likeButtonClickedOnCell(cell: AnyObject) {
+        
+        
+//        let indexPath = self.tableView.indexPathForCell(cell as! LeadContentCell)!
+//        let feed = self.feedItems[indexPath.row]
+//        print(feed)
+//        let latestTotalLike = self.feedData.valueForKey("LikeCount")![indexPath.row]
+//        tempCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
+
+        //self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        //HTTP POST to services/data/<Version>/chatter/feed-items/<FeedItemId>/likes to "Like" the feed item.
+        //let api = SFRestAPI.sharedInstance()
+        let query = "SELECT Id, (SELECT Id, CreatedById, CreatedDate, FeedItemId, FeedEntityId FROM FeedLikes) FROM UserFeed"
+       let reqs = SFRestAPI.sharedInstance().requestForQuery(query)
+        SFRestAPI.sharedInstance().sendRESTRequest(reqs, failBlock: {
+            erro in
+            print(erro)
+            }, completeBlock: { response in
+                print(response)
+                
+                let imageData = response!["records"] as? NSArray
+                let id = imageData!.objectAtIndex(0)["Id"] as! String
+                
+                let downloadImgReq: SFRestRequest = SFRestAPI.sharedInstance().requestForFileContents(id , version: nil)
+                SFRestAPI.sharedInstance().sendRESTRequest(downloadImgReq, failBlock: {
+                    erro in
+                    print(erro)
+                    }, completeBlock: { response in
+                        print("successfully call api")
+                })
+        })
+        
+        let body: String = "{ \"body\" :{\"messageSegments\" :[{ \"type\" : \"Text\",\"text\" : \"My Comment\"}]}}"
+        let queryParams = SFJsonUtils.objectFromJSONString(body) as! [String:AnyObject]
+        let request = SFRestRequest(method: SFRestMethod.POST, path: "/services/data/v36.0/chatter/feed-items/0D528000010sazNCAQ/likes", queryParams: queryParams as? [String:String])
+        SFRestAPI.sharedInstance().send(request, delegate: self)
+
+//        let path =  "/services/data/v36.0/chatter/feed-items/06928000002uyvWAAQ/likes" // "/\(api.apiVersion)/chatter/feed-items/0032800000dfz2e/likes"
+//        let request = SFRestRequest(method: SFRestMethod.POST, path: path, queryParams: nil)
+//        SFRestAPI.sharedInstance().send(request, delegate: self)
     }
     
     func editAction() {

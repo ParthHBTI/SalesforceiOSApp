@@ -48,15 +48,20 @@ let imagePicker = UIImagePickerController()
     
     func saherAction2()  {
         let imageData = UIImagePNGRepresentation(imageView.image!)
-        
+
         if imageData != nil{
-            let request = NSMutableURLRequest(URL: NSURL(string:"Enter Your URL")!)
-            var session = NSURLSession.sharedSession()
+            let request = NSMutableURLRequest(URL: NSURL(string:"https://ap1.salesforce.com/services/data/v35.0/chatter/feeds/news/me/feed-items")!)
+            
+            var messgeDic = ["body":["messageSegments":[["text":"Mesaage","type":"Text"]],"feedElementType":"FeedItem","subjectId":"00Q2800000Q751L"]]
+            
+          //  {"body":{"messageSegments":[{"text":"this is the body ","type":"text"},{"type":"mention","id":"005U0000000GIQkIAO"}]},"attachment":{"title":"this is the file name","desc":"this is the file description","fileName":"Screen shot 2012-05-19 at 4.11.12 PM.png"}}
+
+            
             
             request.HTTPMethod = "POST"
             
-            var boundary = NSString(format: "---------------------------14737809831466499882746641449")
-            var contentType = NSString(format: "multipart/form-data; boundary=%@",boundary)
+            let boundary = NSString(format: "---------------------------14737809831466499882746641449")
+            let contentType = NSString(format: "multipart/form-data; boundary=%@",boundary)
             //  println("Content Type \(contentType)")
             request.addValue(contentType as String, forHTTPHeaderField: "Content-Type")
             
@@ -69,7 +74,7 @@ let imagePicker = UIImagePickerController()
             
             // Image
             body.appendData(NSString(format: "\r\n--%@\r\n", boundary).dataUsingEncoding(NSUTF8StringEncoding)!)
-            body.appendData(NSString(format:"Content-Disposition: form-data; name=\"profile_img\"; filename=\"img.jpg\"\\r\n").dataUsingEncoding(NSUTF8StringEncoding)!)
+            body.appendData(NSString(format:"Content-Disposition: form-data; name=\"feedItemFileUpload\"; filename=\"img.jpg\"\\r\n").dataUsingEncoding(NSUTF8StringEncoding)!)
             body.appendData(NSString(format: "Content-Type: application/octet-stream\r\n\r\n").dataUsingEncoding(NSUTF8StringEncoding)!)
             body.appendData(imageData!)
             body.appendData(NSString(format: "\r\n--%@\r\n", boundary).dataUsingEncoding(NSUTF8StringEncoding)!)
@@ -78,7 +83,8 @@ let imagePicker = UIImagePickerController()
             var response: NSURLResponse?
             let urlData = try? NSURLConnection.sendSynchronousRequest(request, returningResponse: &response)
 
-            
+            //            [formData appendPartWithFileData:attachData name:@"feedItemFileUpload" fileName:@"photo.jpg" mimeType:@"image/jpeg"];
+
             
             
             let results = NSString(data:urlData!, encoding:NSUTF8StringEncoding)
@@ -138,6 +144,37 @@ let imagePicker = UIImagePickerController()
     }
     
     func shareAction() {
+        
+        
+        let imageData: NSData = UIImageJPEGRepresentation(imageView.image!, 0.1)!
+        let b64 = imageData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.EncodingEndLineWithLineFeed)
+            
+            //[imageData base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithLineFeed];
+        
+        let fields = [
+            "Name": "background.png",
+            "Body": b64,
+            "ParentId":leadId
+        ]
+        //"00Q2800000RyOjpEAF"
+        let request = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Attachment", fields: fields)
+
+        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
+            print(error)
+
+        }) { response in
+print(response)
+        }
+        
+        return;
+        
+      //  SFRestRequest *request  = [[SFRestAPI sharedInstance] requestForCreateWithObjectType:"Attachment" fields:fields];
+        
+//        [[SFRestAPI sharedInstance] sendRESTRequest:request failBlock:^(NSError *e) {
+//        NSLog(@"Error");
+//        } completeBlock:^(id dict){
+//        NSLog(@"Uploaded");
+//        }];
      /*
         SFRestMethod method = SFRestMethodPOST;
         SFRestRequest *request = [SFRestRequest requestWithMethod:method path:nil queryParams:paramDict];
@@ -176,7 +213,6 @@ let imagePicker = UIImagePickerController()
         let reqs = SFRestRequest.init(method: method, path: "", queryParams: paramDict as? [String : String])
         reqs.endpoint = "/services/data/v35.0/chatter/feed-elements"
         
-        let imageData: NSData = UIImageJPEGRepresentation(imageView.image!, 0.1)!
        // let fileStr = NSBundle.mainBundle().pathForResource("swift_iOS_app_developers", ofType: "jpg")
         reqs.addPostFileData(imageData , paramName: "feedElementFileUpload", fileName: "Feed File", mimeType: "image/jpg")
         reqs.customHeaders =  [ "Content-Type" : "multipart/form-data;" ]
@@ -232,12 +268,15 @@ let imagePicker = UIImagePickerController()
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
             imageView.image = pickedImage
-          /*  let imageData: NSData = UIImageJPEGRepresentation(pickedImage, 0.1)!
-            let req = SFRestAPI.sharedInstance().requestForUploadFile(imageData, name: "swift_iOS_app_developers.jpg", description: "Share Image", mimeType: "image/jpeg")
-//            req.setHeaderValue(leadId, forHeaderName: "ParentId")
+           // let imageData: NSData = UIImageJPEGRepresentation(pickedImage, 0.1)!
+          //  let req = SFRestAPI.sharedInstance().requestForUploadFile(imageData, name: "swift_iOS_app_developers.jpg", description: "Share Image", mimeType: "image/jpeg")
+
+            
+            //            req.setHeaderValue(leadId, forHeaderName: "ParentId")
 //           req.setCustomRequestBodyData( leadId.dataUsingEncoding(NSUTF8StringEncoding)!, contentType: "ParentId")
 //            req.addPostFileData(imageData, paramName: "fileData", fileName: "swift_iOS_app_developers.jpg", mimeType: "image/jpg/png")
-            SFRestAPI.sharedInstance().send(req, delegate: self)*/
+           
+           // SFRestAPI.sharedInstance().send(req, delegate: self)
       
         }
         dismissViewControllerAnimated(true, completion: nil)
@@ -249,6 +288,8 @@ let imagePicker = UIImagePickerController()
     
     
     func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
+       
+        print(dataResponse);
         if request.method == SFRestMethod.POST {
             let range = (request.path as NSString).rangeOfString("/feed-items")
             if range.location == NSNotFound {

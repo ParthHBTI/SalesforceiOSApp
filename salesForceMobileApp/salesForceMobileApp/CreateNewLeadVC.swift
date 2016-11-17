@@ -51,7 +51,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
             leadStatus.text = leadDataDict["Status"] as? String
             saveBtn.hidden = true
             cancleBtn.hidden = true
-            title = "Update Lead"
+            title = "Edit Lead"
             self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
         }
         
@@ -77,15 +77,10 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        let lastNameStr = self.lastName.text!
-        let companyNameStr = self.companyName.text!
-        let leadStatusStr = self.leadStatus.text!
         let charSet = NSCharacterSet.whitespaceCharacterSet()
-        let lastNameWhiteSpaceSet = lastNameStr.stringByTrimmingCharactersInSet(charSet)
-        let companyNameWhiteSpaceSet = companyNameStr.stringByTrimmingCharactersInSet(charSet)
-        let leadStatusWhiteSpaceSet = leadStatusStr.stringByTrimmingCharactersInSet(charSet)
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
+        let lastNameWhiteSpaceSet = self.lastName.text!.stringByTrimmingCharactersInSet(charSet)
+        let companyNameWhiteSpaceSet = self.companyName.text!.stringByTrimmingCharactersInSet(charSet)
+        let leadStatusWhiteSpaceSet = self.leadStatus.text!.stringByTrimmingCharactersInSet(charSet)
         if exDelegate.isConnectedToNetwork() {
             if lastName.text!.isEmpty == true || companyName.text!.isEmpty == true || leadStatus.text!.isEmpty == true {
                 loading.mode = MBProgressHUDMode.Text

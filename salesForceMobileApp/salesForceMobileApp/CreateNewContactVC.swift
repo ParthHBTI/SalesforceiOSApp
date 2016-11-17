@@ -58,7 +58,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
             self.fax.text = contactDataDic["Fax"] as? String
             self.saveBtn.hidden = true
             self.cancleBtn.hidden = true
-            title = "Update Account"
+            title = "Edit Account"
             self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
         }
         // Do any additional setup after loading the view.
@@ -82,19 +82,13 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        let firstNameStr = self.firstName.text!
-        let lastNameStr = self.lastName.text!
-        let emailStr = self.email.text!
-        let phoneStr = self.phone.text!
-        let faxStr = self.fax.text!
         let charSet = NSCharacterSet.whitespaceCharacterSet()
-        let firstNameWhiteSpaceSet = firstNameStr.stringByTrimmingCharactersInSet(charSet)
-        let lastNameWhiteSpaceSet = lastNameStr.stringByTrimmingCharactersInSet(charSet)
-        let emailWhiteSpaceSet = emailStr.stringByTrimmingCharactersInSet(charSet)
-        let phoneWhiteSpaceSet = phoneStr.stringByTrimmingCharactersInSet(charSet)
-        let faxWhiteSpaceSet = faxStr.stringByTrimmingCharactersInSet(charSet)
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
+        let firstNameWhiteSpaceSet = self.firstName.text!.stringByTrimmingCharactersInSet(charSet)
+        let lastNameWhiteSpaceSet = self.lastName.text!.stringByTrimmingCharactersInSet(charSet)
+        let emailWhiteSpaceSet = self.email.text!.stringByTrimmingCharactersInSet(charSet)
+        let phoneWhiteSpaceSet = self.phone.text!.stringByTrimmingCharactersInSet(charSet)
+        let faxWhiteSpaceSet = self.fax.text!.stringByTrimmingCharactersInSet(charSet)
+        
         if exDelegate.isConnectedToNetwork() {
             if firstName.text!.isEmpty == true || lastName.text!.isEmpty == true || email.text!.isEmpty == true || phone.text!.isEmpty == true || fax.text!.isEmpty == true {
                 loading.mode = MBProgressHUDMode.Text

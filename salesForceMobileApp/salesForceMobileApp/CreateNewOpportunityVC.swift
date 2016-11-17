@@ -27,7 +27,10 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     @IBOutlet weak var cancleBtn: UIButton!
     var datePickerView: UIDatePicker = UIDatePicker()
     var currentDate:NSDate = NSDate()
+    var dateVal: String = " "
     var flag:Bool = false
+    var flag1:Bool = false
+    var flag2:Bool = false
     var opportunityDataDic:AnyObject = []
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
@@ -42,6 +45,10 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        dispatch_async(dispatch_get_main_queue(), {
+        self.dateVal = self.closeDate.text!
+            })
+        //print(dateVal)
         opportunityName.delegate = self
         //closeDate.delegate = self
         amount.delegate = self
@@ -53,6 +60,20 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
         self.setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
+        ///
+        //let toolbar: UIToolbar = UIToolbar(frame: CGRectMake(0, 0, 320, 44))
+        let toolBar = UIToolbar()
+        toolBar.barStyle = UIBarStyle.BlackOpaque
+        //toolBar.barTintColor = self.navigationController?.navigationBar.barTintColor
+        toolBar.translucent = true
+        toolBar.tintColor = UIColor.whiteColor()
+        toolBar.sizeToFit()
+        let doneBtn: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(self.doneAction))
+        doneBtn.accessibilityFrame = (frame: CGRectMake(250/255.0, 0/255.0, 106.0/255, 53.0/25))
+        let spaceBtn = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil)
+        let cancelBtn = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(self.toolBarCancelAction))
+        toolBar.setItems([cancelBtn,spaceBtn,doneBtn], animated: true)
+        closeDate.inputAccessoryView = toolBar
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewOpportunityVC.backAction))
          self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
         // Do any additional setup after loading the view.
@@ -75,7 +96,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
             self.stage.text = opportunityDataDic["StageName"] as? String
             self.saveBtn.hidden = true
             self.cancleBtn.hidden = true
-            title = "Update Opportunity"
+            title = "Edit Opportunity"
             self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
         }
     }
@@ -99,17 +120,11 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        let oppNameStr = self.opportunityName.text!
-        let closeDateStr = self.closeDate.text!
-        let amountStr = self.amount.text!
-        let stageStr = self.stage.text!
         let charSet = NSCharacterSet.whitespaceCharacterSet()
-        let oppNameWhiteSpaceSet = oppNameStr.stringByTrimmingCharactersInSet(charSet)
-        let closeDateWhiteSpaceSet = closeDateStr.stringByTrimmingCharactersInSet(charSet)
-        let amountWhiteSpaceSet = amountStr.stringByTrimmingCharactersInSet(charSet)
-        let stageWhiteSpaceSet = stageStr.stringByTrimmingCharactersInSet(charSet)
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
+        let oppNameWhiteSpaceSet = self.opportunityName.text!.stringByTrimmingCharactersInSet(charSet)
+        let closeDateWhiteSpaceSet = self.closeDate.text!.stringByTrimmingCharactersInSet(charSet)
+        let amountWhiteSpaceSet = self.amount.text!.stringByTrimmingCharactersInSet(charSet)
+        let stageWhiteSpaceSet = self.stage.text!.stringByTrimmingCharactersInSet(charSet)
         if exDelegate.isConnectedToNetwork() {
             if self.opportunityName.text!.isEmpty == true || self.closeDate.text!.isEmpty == true || self.amount.text!.isEmpty == true || self.stage.text!.isEmpty == true {
                 loading.mode = MBProgressHUDMode.Text
@@ -167,8 +182,23 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
         
     }
     
+    func doneAction() {
+        self.flag1 = true
+        let datePickerView:UIDatePicker = UIDatePicker()
+        self.datePickerValueChanged(datePickerView)
+        //datePickerView.addTarget(self, action: #selector(CreateNewOpportunityVC.datePickerValueChanged), forControlEvents: UIControlEvents.ValueChanged)
+    }
+    
+    func toolBarCancelAction() {
+        self.flag2 = true
+        let datePickerView:UIDatePicker = UIDatePicker()
+        self.datePickerValueChanged(datePickerView)
+        
+    }
+    
     @IBAction func closeDateTxtFieldEditing(sender: UITextField) {
         let todaysDate = NSDate()
+        self.closeDate.text = self.dateVal
         let datePickerView:UIDatePicker = UIDatePicker()
         datePickerView.minimumDate = todaysDate
         datePickerView.datePickerMode = UIDatePickerMode.Date
@@ -177,13 +207,25 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     }
     
     func datePickerValueChanged(sender: UIDatePicker) {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateStyle = NSDateFormatterStyle.MediumStyle
-        dateFormatter.timeStyle = NSDateFormatterStyle.NoStyle
-        closeDate.text = dateFormatter.stringFromDate(sender.date)
-     }
-   
+        let dateFormatter:NSDateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "YYYY-MM-dd"
+        if flag1 == true {
+            //closeDate.text = dateFormatter.stringFromDate(sender.date)
+            closeDate.text = self.closeDate.text
+            closeDate.resignFirstResponder()
+            self.dateVal = self.closeDate.text!
+        } else if flag2 == true {
+            closeDate.text = self.dateVal
+            closeDate.resignFirstResponder()
+        } else {
+            closeDate.text = dateFormatter.stringFromDate(sender.date)
+        }
+        flag1 = false
+        flag2 = false
+    }
+    
     func updateOpportunityAction() {
+        //let dateFormate = self.closeDate.text!
         let params = [
             "Name" : opportunityName.text!,
             "CloseDate" : closeDate.text!,

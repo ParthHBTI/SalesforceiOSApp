@@ -93,24 +93,22 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
         let emailWhiteSpaceSet = emailStr.stringByTrimmingCharactersInSet(charSet)
         let phoneWhiteSpaceSet = phoneStr.stringByTrimmingCharactersInSet(charSet)
         let faxWhiteSpaceSet = faxStr.stringByTrimmingCharactersInSet(charSet)
-        
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
             if firstName.text!.isEmpty == true || lastName.text!.isEmpty == true || email.text!.isEmpty == true || phone.text!.isEmpty == true || fax.text!.isEmpty == true {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)
                 loading.removeFromSuperViewOnHide = true
                 loading.detailsLabelText = "please give all values"
                 self.animateSubmitBtnOnWrongSubmit()
             } else if firstNameWhiteSpaceSet == "" || lastNameWhiteSpaceSet == "" || emailWhiteSpaceSet == "" || phoneWhiteSpaceSet == "" || faxWhiteSpaceSet == "" {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)
                 loading.removeFromSuperViewOnHide = true
                 loading.detailsLabelText = "You entered white spaces only"
                 self.animateSubmitBtnOnWrongSubmit()
             }else if phone.text?.characters.count != 10 {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)
                 loading.removeFromSuperViewOnHide = true
@@ -131,7 +129,17 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
                     })
                     print( (err))
                 }) { succes in
-                    print(succes)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        loading.mode = MBProgressHUDMode.Text
+                        loading.detailsLabelText = "Successfully Created Contact Record"
+                        loading.removeFromSuperViewOnHide = true
+                        loading.hide(true, afterDelay: 2)
+                        self.firstName.text = nil
+                        self.lastName.text = nil
+                        self.email.text = nil
+                        self.phone.text = nil
+                        self.fax.text = nil
+                    })
                 }
             }
         }

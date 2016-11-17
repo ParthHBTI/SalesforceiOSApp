@@ -84,16 +84,16 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
         let lastNameWhiteSpaceSet = lastNameStr.stringByTrimmingCharactersInSet(charSet)
         let companyNameWhiteSpaceSet = companyNameStr.stringByTrimmingCharactersInSet(charSet)
         let leadStatusWhiteSpaceSet = leadStatusStr.stringByTrimmingCharactersInSet(charSet)
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
             if lastName.text!.isEmpty == true || companyName.text!.isEmpty == true || leadStatus.text!.isEmpty == true {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)
                 loading.removeFromSuperViewOnHide = true
                 loading.detailsLabelText = "please give all values"
                 self.animateSubmitBtnOnWrongSubmit()
             } else if lastNameWhiteSpaceSet == "" || companyNameWhiteSpaceSet == "" || leadStatusWhiteSpaceSet == "" {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)
                 loading.removeFromSuperViewOnHide = true
@@ -112,8 +112,18 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
                     })
                     print( (err))
                 }) { succes in
-                    print(succes)
-                }
+                    dispatch_async(dispatch_get_main_queue(), {
+                        loading.mode = MBProgressHUDMode.Text
+                        loading.detailsLabelText = "Successfully Created Lead Record"
+                        loading.removeFromSuperViewOnHide = true
+                        loading.hide(true, afterDelay: 2)
+                        self.lastName.text = nil
+                        self.companyName.text = nil
+                        self.leadStatus.text = nil
+                        })
+               
+               
+                                    }
             }
         } else {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)

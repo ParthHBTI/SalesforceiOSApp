@@ -108,16 +108,16 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
         let closeDateWhiteSpaceSet = closeDateStr.stringByTrimmingCharactersInSet(charSet)
         let amountWhiteSpaceSet = amountStr.stringByTrimmingCharactersInSet(charSet)
         let stageWhiteSpaceSet = stageStr.stringByTrimmingCharactersInSet(charSet)
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
             if self.opportunityName.text!.isEmpty == true || self.closeDate.text!.isEmpty == true || self.amount.text!.isEmpty == true || self.stage.text!.isEmpty == true {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)
                 loading.removeFromSuperViewOnHide = true
                 loading.detailsLabelText = "please give all values"
                 self.animateSubmitBtnOnWrongSubmit()
             } else if oppNameWhiteSpaceSet == "" || amountWhiteSpaceSet == "" || stageWhiteSpaceSet == "" || closeDateWhiteSpaceSet == "" {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)
                 loading.removeFromSuperViewOnHide = true
@@ -138,7 +138,18 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
                     })
                     print( (err))
                 }) { succes in
-                    print(succes)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        loading.mode = MBProgressHUDMode.Text
+                        loading.detailsLabelText = "Successfully Created Opporcunity Record"
+                        loading.removeFromSuperViewOnHide = true
+                        loading.hide(true, afterDelay: 2)
+                        self.opportunityName.text = nil
+                        self.closeDate.text = nil
+                        self.amount.text = nil
+                        self.stage.text = nil
+                    })
+                    
+                    
                 }
             }
         }

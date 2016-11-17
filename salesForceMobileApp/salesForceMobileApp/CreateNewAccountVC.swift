@@ -93,16 +93,16 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
         let billStateWhiteSpaceSet = self.billingState.text!.stringByTrimmingCharactersInSet(charSet)
         let billCntryWhiteSpaceSet = self.billingCountry.text!.stringByTrimmingCharactersInSet(charSet)
         let billPostalCodeWhiteSpaceSet = self.postalCode.text!.stringByTrimmingCharactersInSet(charSet)
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
             if accountName.text!.isEmpty == true || billingStreet.text!.isEmpty == true || billingCity.text!.isEmpty == true || billingState.text!.isEmpty == true ||  postalCode.text!.isEmpty == true {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)
                 loading.removeFromSuperViewOnHide = true
                 loading.detailsLabelText = "please give all values"
                 self.animateSubmitBtnOnWrongSubmit()
             } else if billPostalCodeWhiteSpaceSet == "" || accNameWhiteSpaceSet == "" || billStreetWhiteSpaceSet == ""  || billCntryWhiteSpaceSet == ""  || billCityWhiteSpaceSet == ""  || billStateWhiteSpaceSet == ""  {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)
                 loading.removeFromSuperViewOnHide = true
@@ -110,7 +110,6 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                 self.animateSubmitBtnOnWrongSubmit()
                 
             } else if postalCode.text!.characters.count != 6 {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)
                 loading.removeFromSuperViewOnHide = true
@@ -132,7 +131,20 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                     })
                     print( (err))
                 }) { succes in
-                    print(succes)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        loading.mode = MBProgressHUDMode.Text
+                        loading.detailsLabelText = "Successfully Created Accont Record"
+                        loading.removeFromSuperViewOnHide = true
+                        loading.hide(true, afterDelay: 2)
+                        self.accountName.text = nil
+                        self.billingStreet.text = nil
+                        self.billingCity.text = nil
+                        self.billingState.text = nil
+                        self.billingCountry.text = nil
+                        self.billingCountry.text = nil
+                    })
+                    
+                    
                 }
             }
         }

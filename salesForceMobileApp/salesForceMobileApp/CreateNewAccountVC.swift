@@ -62,7 +62,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
             self.postalCode.text = accountDataDic["BillingPostalCode"] as? String
             self.saveBtn.hidden = true
             self.cancleBtn.hidden = true
-            title = "Update Account"
+            title = "Edit Account"
             self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
         }
     }

@@ -86,37 +86,8 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        let charSet = NSCharacterSet.whitespaceCharacterSet()
-        let accNameWhiteSpaceSet = self.accountName.text!.stringByTrimmingCharactersInSet(charSet)
-        let billStreetWhiteSpaceSet = self.billingStreet.text!.stringByTrimmingCharactersInSet(charSet)
-        let billCityWhiteSpaceSet = self.billingCity.text!.stringByTrimmingCharactersInSet(charSet)
-        let billStateWhiteSpaceSet = self.billingState.text!.stringByTrimmingCharactersInSet(charSet)
-        let billCntryWhiteSpaceSet = self.billingCountry.text!.stringByTrimmingCharactersInSet(charSet)
-        let billPostalCodeWhiteSpaceSet = self.postalCode.text!.stringByTrimmingCharactersInSet(charSet)
         if exDelegate.isConnectedToNetwork() {
-            if accountName.text!.isEmpty == true || billingStreet.text!.isEmpty == true || billingCity.text!.isEmpty == true || billingState.text!.isEmpty == true ||  postalCode.text!.isEmpty == true {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "please give all values"
-                self.animateSubmitBtnOnWrongSubmit()
-            } else if billPostalCodeWhiteSpaceSet == "" || accNameWhiteSpaceSet == "" || billStreetWhiteSpaceSet == ""  || billCntryWhiteSpaceSet == ""  || billCityWhiteSpaceSet == ""  || billStateWhiteSpaceSet == ""  {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "You entered white spaces only"
-                self.animateSubmitBtnOnWrongSubmit()
-                
-            } else if postalCode.text!.characters.count != 6 {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "Please enter a valid postal code"
-                self.animateSubmitBtnOnWrongSubmit()
-            } else {
+            if self.isSubmitCorrectVal() {
                 let fields = [
                     "Name" : accountName.text!,
                     "BillingStreet" : billingStreet.text!,
@@ -132,7 +103,13 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                     })
                     print( (err))
                 }) { succes in
-                    print(succes)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        loading.mode = MBProgressHUDMode.Indeterminate
+                        loading.detailsLabelText = "Saving Successfully!"
+                        loading.hide(true, afterDelay: 2)
+                        loading.removeFromSuperViewOnHide = true
+                    })
                 }
             }
         }
@@ -154,32 +131,79 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     
     //update account record
     func updateAccountAction() {
-        let params = [
-            "Name" : accountName.text!,
-            //"BillingAddress" : ["city": accountAddress.text!]
-            "BillingStreet" : billingStreet.text!,
-            "BillingCity" : billingCity.text!,
-            "BillingState" : billingState.text!,
-            "BillingCountry" : billingCountry.text!,
-            "BillingPostalCode" : postalCode.text!
-        ]
-        SFRestAPI.sharedInstance().performUpdateWithObjectType("Account", objectId: (accountDataDic["Id"] as? String)!, fields: params , failBlock: { err in
-            dispatch_async(dispatch_get_main_queue(), {
-                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                alert.show()
-            })
-            print( (err))
-        }){ succes in
-            dispatch_async(dispatch_get_main_queue(), {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Indeterminate
-                //loading.mode = MBProgressHUDMode.Text
-                loading.detailsLabelText = "Updated Successfully!"
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-            })
+        if exDelegate.isConnectedToNetwork() {
+            if self.isSubmitCorrectVal() {
+                let params = [
+                    "Name" : accountName.text!,
+                    //"BillingAddress" : ["city": accountAddress.text!]
+                    "BillingStreet" : billingStreet.text!,
+                    "BillingCity" : billingCity.text!,
+                    "BillingState" : billingState.text!,
+                    "BillingCountry" : billingCountry.text!,
+                    "BillingPostalCode" : postalCode.text!
+                ]
+                SFRestAPI.sharedInstance().performUpdateWithObjectType("Account", objectId: (accountDataDic["Id"] as? String)!, fields: params , failBlock: { err in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                        alert.show()
+                    })
+                    print( (err))
+                }){ succes in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        loading.mode = MBProgressHUDMode.Indeterminate
+                        loading.detailsLabelText = "Updated Successfully!"
+                        loading.hide(true, afterDelay: 2)
+                        loading.removeFromSuperViewOnHide = true
+                    })
+                }
+            }
+        } else {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            loading.detailsLabelText = "Please check your Internet connection!"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
         }
     }
+    
+    
+    func isSubmitCorrectVal() -> Bool {
+        let charSet = NSCharacterSet.whitespaceCharacterSet()
+        let accNameWhiteSpaceSet = self.accountName.text!.stringByTrimmingCharactersInSet(charSet)
+        let billStreetWhiteSpaceSet = self.billingStreet.text!.stringByTrimmingCharactersInSet(charSet)
+        let billCityWhiteSpaceSet = self.billingCity.text!.stringByTrimmingCharactersInSet(charSet)
+        let billStateWhiteSpaceSet = self.billingState.text!.stringByTrimmingCharactersInSet(charSet)
+        let billCntryWhiteSpaceSet = self.billingCountry.text!.stringByTrimmingCharactersInSet(charSet)
+        let billPostalCodeWhiteSpaceSet = self.postalCode.text!.stringByTrimmingCharactersInSet(charSet)
+        if accountName.text!.isEmpty == true || billingStreet.text!.isEmpty == true || billingCity.text!.isEmpty == true || billingState.text!.isEmpty == true ||  postalCode.text!.isEmpty == true {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            loading.detailsLabelText = "please give all values"
+            self.animateSubmitBtnOnWrongSubmit()
+            return false
+        } else if billPostalCodeWhiteSpaceSet == "" || accNameWhiteSpaceSet == "" || billStreetWhiteSpaceSet == ""  || billCntryWhiteSpaceSet == ""  || billCityWhiteSpaceSet == ""  || billStateWhiteSpaceSet == ""  {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            loading.detailsLabelText = "You entered white spaces only"
+            self.animateSubmitBtnOnWrongSubmit()
+            return false
+        } else if postalCode.text!.characters.count != 6 {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            loading.detailsLabelText = "Please enter a valid postal code"
+            self.animateSubmitBtnOnWrongSubmit()
+            return false
+        }
+        return true
+    }
+    
     
     override func setNavigationBarItem() {
         self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)

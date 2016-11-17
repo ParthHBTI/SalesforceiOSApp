@@ -82,36 +82,8 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        let charSet = NSCharacterSet.whitespaceCharacterSet()
-        let firstNameWhiteSpaceSet = self.firstName.text!.stringByTrimmingCharactersInSet(charSet)
-        let lastNameWhiteSpaceSet = self.lastName.text!.stringByTrimmingCharactersInSet(charSet)
-        let emailWhiteSpaceSet = self.email.text!.stringByTrimmingCharactersInSet(charSet)
-        let phoneWhiteSpaceSet = self.phone.text!.stringByTrimmingCharactersInSet(charSet)
-        let faxWhiteSpaceSet = self.fax.text!.stringByTrimmingCharactersInSet(charSet)
-        
         if exDelegate.isConnectedToNetwork() {
-            if firstName.text!.isEmpty == true || lastName.text!.isEmpty == true || email.text!.isEmpty == true || phone.text!.isEmpty == true || fax.text!.isEmpty == true {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "please give all values"
-                self.animateSubmitBtnOnWrongSubmit()
-            } else if firstNameWhiteSpaceSet == "" || lastNameWhiteSpaceSet == "" || emailWhiteSpaceSet == "" || phoneWhiteSpaceSet == "" || faxWhiteSpaceSet == "" {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "You entered white spaces only"
-                self.animateSubmitBtnOnWrongSubmit()
-            }else if phone.text?.characters.count != 10 {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "Please enter a valid phone number"
-                self.animateSubmitBtnOnWrongSubmit()
-            } else {
+            if self.isSubmitCorrectVal() {
                 let fields = [
                     "FirstName" : firstName.text!,
                     "LastName" : lastName.text!,
@@ -126,19 +98,25 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
                     })
                     print( (err))
                 }) { succes in
-                    print(succes)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        loading.mode = MBProgressHUDMode.Indeterminate
+                        loading.detailsLabelText = "Saving Successfully!"
+                        loading.hide(true, afterDelay: 2)
+                        loading.removeFromSuperViewOnHide = true
+                    })
                 }
             }
         }
         else {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
-            //loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Please check your Internet connection!"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
         }
     }
+    
     
     @IBAction func cancelAction(sender: AnyObject) {
         
@@ -146,30 +124,41 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     
     //Update contact record
     func updateAccountAction() {
-        let params = [
-            "FirstName" : firstName.text!,
-            "LastName" : lastName.text!,
-            "Email" : email.text!,
-            "Phone" : phone.text!,
-            "Fax" : fax.text!
-            ]
-        SFRestAPI.sharedInstance().performUpdateWithObjectType("Contact", objectId: (contactDataDic["Id"] as? String)!, fields: params, failBlock: { err in
-            dispatch_async(dispatch_get_main_queue(), {
-                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                alert.show()
-            })
-            print( (err))
-        }){ succes in
-            dispatch_async(dispatch_get_main_queue(), {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Indeterminate
-                //loading.mode = MBProgressHUDMode.Text
-                loading.detailsLabelText = "Updated Successfully!"
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-            })
+        if exDelegate.isConnectedToNetwork() {
+            if self.isSubmitCorrectVal() {
+                let params = [
+                    "FirstName" : firstName.text!,
+                    "LastName" : lastName.text!,
+                    "Email" : email.text!,
+                    "Phone" : phone.text!,
+                    "Fax" : fax.text!
+                ]
+                SFRestAPI.sharedInstance().performUpdateWithObjectType("Contact", objectId: (contactDataDic["Id"] as? String)!, fields: params, failBlock: { err in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                        alert.show()
+                    })
+                    print( (err))
+                }){ succes in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        loading.mode = MBProgressHUDMode.Indeterminate
+                        //loading.mode = MBProgressHUDMode.Text
+                        loading.detailsLabelText = "Updated Successfully!"
+                        loading.hide(true, afterDelay: 2)
+                        loading.removeFromSuperViewOnHide = true
+                    })
+                }
+            } 
+        } else {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            loading.detailsLabelText = "Please check your Internet connection!"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
         }
     }
+    
     
     override func setNavigationBarItem() {
         self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
@@ -191,6 +180,42 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
             self.saveBtn.bounds = CGRect(x: bounds.origin.x - 20, y: bounds.origin.y, width: bounds.size.width, height: bounds.size.height)
             self.saveBtn.enabled = true
             }, completion: nil)
+    }
+    
+    
+    func isSubmitCorrectVal() -> Bool {
+        let charSet = NSCharacterSet.whitespaceCharacterSet()
+        let firstNameWhiteSpaceSet = self.firstName.text!.stringByTrimmingCharactersInSet(charSet)
+        let lastNameWhiteSpaceSet = self.lastName.text!.stringByTrimmingCharactersInSet(charSet)
+        let emailWhiteSpaceSet = self.email.text!.stringByTrimmingCharactersInSet(charSet)
+        let phoneWhiteSpaceSet = self.phone.text!.stringByTrimmingCharactersInSet(charSet)
+        let faxWhiteSpaceSet = self.fax.text!.stringByTrimmingCharactersInSet(charSet)
+        if firstName.text!.isEmpty == true || lastName.text!.isEmpty == true || email.text!.isEmpty == true || phone.text!.isEmpty == true || fax.text!.isEmpty == true {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            loading.detailsLabelText = "please give all values"
+            self.animateSubmitBtnOnWrongSubmit()
+            return false
+        } else if firstNameWhiteSpaceSet == "" || lastNameWhiteSpaceSet == "" || emailWhiteSpaceSet == "" || phoneWhiteSpaceSet == "" || faxWhiteSpaceSet == "" {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            loading.detailsLabelText = "You entered white spaces only"
+            self.animateSubmitBtnOnWrongSubmit()
+            return false
+        } else if phone.text?.characters.count != 10 {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            loading.detailsLabelText = "Please enter a valid phone number"
+            self.animateSubmitBtnOnWrongSubmit()
+            return false
+        }
+        return true
     }
     
     

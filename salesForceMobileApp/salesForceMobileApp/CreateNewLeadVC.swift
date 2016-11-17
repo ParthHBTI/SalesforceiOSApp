@@ -77,26 +77,8 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        let charSet = NSCharacterSet.whitespaceCharacterSet()
-        let lastNameWhiteSpaceSet = self.lastName.text!.stringByTrimmingCharactersInSet(charSet)
-        let companyNameWhiteSpaceSet = self.companyName.text!.stringByTrimmingCharactersInSet(charSet)
-        let leadStatusWhiteSpaceSet = self.leadStatus.text!.stringByTrimmingCharactersInSet(charSet)
         if exDelegate.isConnectedToNetwork() {
-            if lastName.text!.isEmpty == true || companyName.text!.isEmpty == true || leadStatus.text!.isEmpty == true {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "please give all values"
-                self.animateSubmitBtnOnWrongSubmit()
-            } else if lastNameWhiteSpaceSet == "" || companyNameWhiteSpaceSet == "" || leadStatusWhiteSpaceSet == "" {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "You entered white spaces only"
-                self.animateSubmitBtnOnWrongSubmit()
-            } else {
+            if self.isSubmittedCorrectVal() {
                 let fields = [
                     "LastName" : lastName.text!,
                     "Company" : companyName.text!,
@@ -109,49 +91,91 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
                     })
                     print( (err))
                 }) { succes in
-                    print(succes)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        loading.mode = MBProgressHUDMode.Indeterminate
+                        loading.detailsLabelText = "Saving Successfully!"
+                        loading.hide(true, afterDelay: 2)
+                        loading.removeFromSuperViewOnHide = true
+                    })
                 }
             }
         } else {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
-            //loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Please check your Internet connection!"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
         }
     }
     
+    
     @IBAction func cancelAction(sender: AnyObject) {
-        
         
         
     }
     
     //Update lead record
     func updateLeadAction() {
-        let params = [
-            "LastName" : lastName.text!,
-            "Company" : companyName.text!,
-            "Status" : leadStatus.text!,
-            ]
-        SFRestAPI.sharedInstance().performUpdateWithObjectType("Lead", objectId: (leadDataDict["Id"] as? String)!, fields: params, failBlock: { err in
-            dispatch_async(dispatch_get_main_queue(), {
-                let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                alert.show()
-            })
-            print( (err))
-        }){ succes in
-            dispatch_async(dispatch_get_main_queue(), {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Indeterminate
-                //loading.mode = MBProgressHUDMode.Text
-                loading.detailsLabelText = "Updated Successfully!"
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-            })
+        if exDelegate.isConnectedToNetwork() {
+            if self.isSubmittedCorrectVal() {
+                let params = [
+                    "LastName" : lastName.text!,
+                    "Company" : companyName.text!,
+                    "Status" : leadStatus.text!,
+                    ]
+                SFRestAPI.sharedInstance().performUpdateWithObjectType("Lead", objectId: (leadDataDict["Id"] as? String)!, fields: params, failBlock: { err in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                        alert.show()
+                    })
+                    print( (err))
+                }){ succes in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        loading.mode = MBProgressHUDMode.Indeterminate
+                        //loading.mode = MBProgressHUDMode.Text
+                        loading.detailsLabelText = "Updated Successfully!"
+                        loading.hide(true, afterDelay: 2)
+                        loading.removeFromSuperViewOnHide = true
+                    })
+                }
+            }
+        } else {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            loading.detailsLabelText = "Please check your Internet connection!"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
         }
     }
+    
+    
+    func isSubmittedCorrectVal() -> Bool {
+        let charSet = NSCharacterSet.whitespaceCharacterSet()
+        let lastNameWhiteSpaceSet = self.lastName.text!.stringByTrimmingCharactersInSet(charSet)
+        let companyNameWhiteSpaceSet = self.companyName.text!.stringByTrimmingCharactersInSet(charSet)
+        let leadStatusWhiteSpaceSet = self.leadStatus.text!.stringByTrimmingCharactersInSet(charSet)
+        if lastName.text!.isEmpty == true || companyName.text!.isEmpty == true || leadStatus.text!.isEmpty == true {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            loading.detailsLabelText = "please give all values"
+            self.animateSubmitBtnOnWrongSubmit()
+            return false
+        } else if lastNameWhiteSpaceSet == "" || companyNameWhiteSpaceSet == "" || leadStatusWhiteSpaceSet == "" {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            loading.detailsLabelText = "You entered white spaces only"
+            self.animateSubmitBtnOnWrongSubmit()
+            return false
+        }
+        return true
+    }
+    
     
     override func setNavigationBarItem() {
         self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
@@ -185,7 +209,6 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
             if prospectiveText.characters.count <= 30 {
                 lastName.layer.borderWidth = 2.0
                 lastName.layer.borderColor = UIColor.clearColor().CGColor
-                
             }
             return true
         }

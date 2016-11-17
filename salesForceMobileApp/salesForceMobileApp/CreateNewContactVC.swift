@@ -88,7 +88,8 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
         let emailWhiteSpaceSet = self.email.text!.stringByTrimmingCharactersInSet(charSet)
         let phoneWhiteSpaceSet = self.phone.text!.stringByTrimmingCharactersInSet(charSet)
         let faxWhiteSpaceSet = self.fax.text!.stringByTrimmingCharactersInSet(charSet)
-        
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
             if firstName.text!.isEmpty == true || lastName.text!.isEmpty == true || email.text!.isEmpty == true || phone.text!.isEmpty == true || fax.text!.isEmpty == true {
                 loading.mode = MBProgressHUDMode.Text

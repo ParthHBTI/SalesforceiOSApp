@@ -12,6 +12,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
     var leadDataArr = []
     var feedData: AnyObject = []
     var feedItems: AnyObject = []
+    var checkResponseType = false
      var tempCell = LeadContentCell()
     var tapGesture = UITapGestureRecognizer()
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -36,6 +37,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
             })
         }
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setNavigationBarItem()
@@ -154,7 +156,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
                 String
 //                 textFeedCell.likeImage.addGestureRecognizer(tapGesture)
 //                tempCell = textFeedCell
-                likeButtonClickedOnCell(indexPath.row)
                 return textFeedCell
             } else {
                 let feedCell = tableView.dequeueReusableCellWithIdentifier("feedCellID", forIndexPath: indexPath) as! LeadContentCell
@@ -189,7 +190,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
                                     feedCell.sharePhoto.image = image
                             })
                     })
-                likeButtonClickedOnCell(indexPath.row)
 //                feedCell.likeImage.addGestureRecognizer(tapGesture)
 //                tempCell = feedCell
           return feedCell
@@ -197,46 +197,41 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
         }
     }
     
-    func likeButtonClickedOnCell(cell: AnyObject) {
-        
-        
-//        let indexPath = self.tableView.indexPathForCell(cell as! LeadContentCell)!
-//        let feed = self.feedItems[indexPath.row]
-//        print(feed)
-//        let latestTotalLike = self.feedData.valueForKey("LikeCount")![indexPath.row]
-//        tempCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
-
-        //self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        //HTTP POST to services/data/<Version>/chatter/feed-items/<FeedItemId>/likes to "Like" the feed item.
-        //let api = SFRestAPI.sharedInstance()
-        let query = "SELECT Id, (SELECT Id, CreatedById, CreatedDate, FeedItemId, FeedEntityId FROM FeedLikes) FROM UserFeed"
-       let reqs = SFRestAPI.sharedInstance().requestForQuery(query)
-        SFRestAPI.sharedInstance().sendRESTRequest(reqs, failBlock: {
-            erro in
-            print(erro)
-            }, completeBlock: { response in
-                print(response)
-                
-                let imageData = response!["records"] as? NSArray
-                let id = imageData!.objectAtIndex(0)["Id"] as! String
-                
-                let downloadImgReq: SFRestRequest = SFRestAPI.sharedInstance().requestForFileContents(id , version: nil)
-                SFRestAPI.sharedInstance().sendRESTRequest(downloadImgReq, failBlock: {
-                    erro in
-                    print(erro)
-                    }, completeBlock: { response in
-                        print("successfully call api")
-                })
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        commentButtonClickOnCell(indexPath.row)
+        //likeButtonClickedOnCell(indexPath.row)
+    }
+    
+    func likeButtonClickedOnCell(index: Int) {
+        checkResponseType = true
+        UIView.animateWithDuration(10.0, animations: {
+            let path =  "/services/data/v23.0/chatter/feed-items/\(self.feedData.objectAtIndex(index)["Id"])/likes"
+            let request = SFRestRequest(method: SFRestMethod.POST, path: path, queryParams: nil)
+            SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
+                print(error)
+                }, completeBlock: {response in
+                    print(response)
+            })
+            self.checkResponseType = false
+           
         })
-        
-        let body: String = "{ \"body\" :{\"messageSegments\" :[{ \"type\" : \"Text\",\"text\" : \"My Comment\"}]}}"
-        let queryParams = SFJsonUtils.objectFromJSONString(body) as! [String:AnyObject]
-        let request = SFRestRequest(method: SFRestMethod.POST, path: "/services/data/v36.0/chatter/feed-items/0D528000010sazNCAQ/likes", queryParams: queryParams as? [String:String])
-        SFRestAPI.sharedInstance().send(request, delegate: self)
+    }
+    
+    func commentButtonClickOnCell(index: Int){
+        // services/data/v23.0/chatter/feed-items/0D528000012YcgSCAS/comments?text=abc123
+        checkResponseType = true
+        UIView.animateWithDuration(10.0, animations: {
+            let path =  "/services/data/v23.0/chatter/feed-items/\(self.feedData.objectAtIndex(index)["Id"])/comments?text=Congragulation Dost"
+            let request = SFRestRequest(method: SFRestMethod.POST, path: path, queryParams: nil)
+            SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
+                print(error)
+                }, completeBlock: {response in
+                    print(response)
+            })
+            self.checkResponseType = false
+            
+        })
 
-//        let path =  "/services/data/v36.0/chatter/feed-items/06928000002uyvWAAQ/likes" // "/\(api.apiVersion)/chatter/feed-items/0032800000dfz2e/likes"
-//        let request = SFRestRequest(method: SFRestMethod.POST, path: path, queryParams: nil)
-//        SFRestAPI.sharedInstance().send(request, delegate: self)
     }
     
     func editAction() {
@@ -259,7 +254,9 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
     
     func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
         //let attachmentID = dataResponse["id"] as! String
+        if !checkResponseType {
         self.feedData = dataResponse["records"]
+        }
         print(feedData)
         self.tableView.reloadData()
     }

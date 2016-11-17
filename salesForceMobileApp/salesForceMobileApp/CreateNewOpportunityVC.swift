@@ -125,6 +125,8 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
         let closeDateWhiteSpaceSet = self.closeDate.text!.stringByTrimmingCharactersInSet(charSet)
         let amountWhiteSpaceSet = self.amount.text!.stringByTrimmingCharactersInSet(charSet)
         let stageWhiteSpaceSet = self.stage.text!.stringByTrimmingCharactersInSet(charSet)
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        
         if exDelegate.isConnectedToNetwork() {
             if self.opportunityName.text!.isEmpty == true || self.closeDate.text!.isEmpty == true || self.amount.text!.isEmpty == true || self.stage.text!.isEmpty == true {
                 loading.mode = MBProgressHUDMode.Text

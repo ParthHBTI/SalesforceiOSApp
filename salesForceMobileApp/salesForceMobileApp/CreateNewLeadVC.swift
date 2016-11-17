@@ -81,6 +81,8 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
         let lastNameWhiteSpaceSet = self.lastName.text!.stringByTrimmingCharactersInSet(charSet)
         let companyNameWhiteSpaceSet = self.companyName.text!.stringByTrimmingCharactersInSet(charSet)
         let leadStatusWhiteSpaceSet = self.leadStatus.text!.stringByTrimmingCharactersInSet(charSet)
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
             if lastName.text!.isEmpty == true || companyName.text!.isEmpty == true || leadStatus.text!.isEmpty == true {
                 loading.mode = MBProgressHUDMode.Text

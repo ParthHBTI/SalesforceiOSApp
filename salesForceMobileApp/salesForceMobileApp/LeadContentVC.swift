@@ -15,7 +15,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     var noteArr: AnyObject = []
     var checkResponseType = false
     var coutFile = Int()
-     var tempCell = LeadContentCell()
+    var tempCell = LeadContentCell()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var indx:Int = 0
     var isFirstLoaded: Bool = false
@@ -94,20 +94,16 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                        phone,
                        title
         ]
-        
-        
-
     }
     
-
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         if !self.isFirstLoaded {
-        exDelegate.leadQueryDe("lead")
-            getResponseArr = []
-        //getResponseArr = exDelegate.resArr
+            exDelegate.leadQueryDe("lead")
+            //getResponseArr = exDelegate.resArr
             //print("getResponseArr = \(exDelegate.resArr)")
-        //self.makeLeadDataArr(getResponseArr.objectAtIndex(indx) as! NSDictionary)
+            //self.makeLeadDataArr(getResponseArr.objectAtIndex(indx) as! NSDictionary)
         }
         
         self.isFirstLoaded = false
@@ -124,7 +120,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 print(response)
                 self.attachmentArr = response!["records"]
                 self.tableView.reloadData()
-
+                
                 
         })
         let attachQuery = "SELECT ContentType,IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
@@ -139,7 +135,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 
                 
         })
-
+        
     }
     
     func shareAction() {
@@ -178,10 +174,10 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 return attachmentArr.count
             case 2:
                 return noteArr.count
-             default:
+            default:
                 return 1
             }
-//            return (section==0) ? leadDataArr.count : attachmentArr.count
+            //            return (section==0) ? leadDataArr.count : attachmentArr.count
         } else {
             return feedData.count
         }
@@ -208,25 +204,25 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
                 textFeedCell.fileType.text = self.attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
                 textFeedCell.fileModifyDate.text = self.attachmentArr.objectAtIndex(indexPath.row)["CreatedDate"] as? String
-                  return textFeedCell
+                return textFeedCell
             } else {
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
                 //textFeedCell.fileType.text = self.noteArr.objectAtIndex(indexPath.row)["Title"] as? String
                 textFeedCell.fileModifyDate.text = self.noteArr.objectAtIndex(indexPath.row)["LastModifiedDate"] as? String
                 return textFeedCell
-
+                
             }
         } else {
             let fileContentName  = nullToNil(self.feedData.objectAtIndex(indexPath.row)["ContentFileName"])
             if fileContentName == nil {
-                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("textFeedCellID", forIndexPath: indexPath) as! AccountDataCell
+                let textFeedCell = tableView.dequeueReusableCellWithIdentifier("textFeedCellID", forIndexPath: indexPath) as! AccountDataCell
                 textFeedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
                 String
                 textFeedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
                 textFeedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
                 textFeedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
-
+                
                 self.tableView.rowHeight = 200
                 textFeedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
@@ -243,32 +239,32 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
                 feedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
-
-                    let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
-                    let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
-                    let requ = SFRestAPI.sharedInstance().requestForQuery(query)
-                    SFRestAPI.sharedInstance().sendRESTRequest(requ, failBlock: {
-                        erro in
-                        print(erro)
-                        }, completeBlock: { response in
-                            print(response)
-                            
-                            let imageData = response!["records"] as? NSArray
-                            let id = imageData!.objectAtIndex(0)["Id"] as! String
-                            
-                            let downloadImgReq: SFRestRequest = SFRestAPI.sharedInstance().requestForFileContents(id , version: nil)
-                            SFRestAPI.sharedInstance().sendRESTRequest(downloadImgReq, failBlock: {
-                                erro in
-                                print(erro)
-                                }, completeBlock: { response in
-                                    let image: UIImage = UIImage.sd_imageWithData(response as! NSData)
-                                    feedCell.sharePhoto.image = image
-                            })
-                    })
+                
+                let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
+                let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
+                let requ = SFRestAPI.sharedInstance().requestForQuery(query)
+                SFRestAPI.sharedInstance().sendRESTRequest(requ, failBlock: {
+                    erro in
+                    print(erro)
+                    }, completeBlock: { response in
+                        print(response)
+                        
+                        let imageData = response!["records"] as? NSArray
+                        let id = imageData!.objectAtIndex(0)["Id"] as! String
+                        
+                        let downloadImgReq: SFRestRequest = SFRestAPI.sharedInstance().requestForFileContents(id , version: nil)
+                        SFRestAPI.sharedInstance().sendRESTRequest(downloadImgReq, failBlock: {
+                            erro in
+                            print(erro)
+                            }, completeBlock: { response in
+                                let image: UIImage = UIImage.sd_imageWithData(response as! NSData)
+                                feedCell.sharePhoto.image = image
+                        })
+                })
                 let tapGesture = UITapGestureRecognizer(target: self, action: #selector(LeadContentVC.tapOnImage(_:)))
                 feedCell.likeImage.addGestureRecognizer(tapGesture)
                 feedCell.commentImage.addGestureRecognizer(tapGesture)
-          return feedCell
+                return feedCell
             }
         }
     }
@@ -290,7 +286,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 self.checkResponseType = false
                 
             })
-
+            
         } else {
             indexPath = self.tableView.indexPathForCell(tempcell as! AccountDataCell)
             checkResponseType = true
@@ -310,7 +306,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     func editAction() {
         let storyboard = UIStoryboard(name: "Main" , bundle: nil)
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
-        vc.leadDataDict = self.getResponseArr 
+        vc.leadDataDict = self.getResponseArr
         vc.flag = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -347,11 +343,11 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         }
         
         self.leadDataArr = [getLeadArr["Owner"]!["Name"] as! String,
-                       leadName,
-                       getLeadArr["Company"] as! String,
-                       email,
-                       phone,
-                       title
+                            leadName,
+                            getLeadArr["Company"] as! String,
+                            email,
+                            phone,
+                            title
         ]
     }
     
@@ -369,7 +365,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
         //let attachmentID = dataResponse["id"] as! String
         if !checkResponseType {
-        self.feedData = dataResponse["records"]
+            self.feedData = dataResponse["records"]
         }
         print(feedData)
         self.tableView.reloadData()

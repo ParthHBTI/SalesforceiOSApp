@@ -9,11 +9,14 @@
 import UIKit
 import SalesforceRestAPI
 
-class AccountDataVC: UITableViewController, SFRestDelegate {
+class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate {
     
     var feedData: AnyObject = []
     var getResponseArr:AnyObject = []
+    var exDelegate: ExecuteQuery = ExecuteQuery()
     var leadID = String()
+    var isFirstLoad: Bool = false
+    var parentIndex : Int = 0
     var accountCellTitleArr: NSArray = ["Account Owner:","Account Name:","Account Number:","Type:","Ownership:","Website:","Phone:","Fax:","Last Modified Date:"]
     var accountDataArr = []
     @IBOutlet weak var feedSegment: UISegmentedControl!
@@ -45,11 +48,38 @@ class AccountDataVC: UITableViewController, SFRestDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setNavigationBarItem()
+        isFirstLoad = true
+        exDelegate.delegate = self
         tableView.rowHeight = 70
         feedSegment.selectedSegmentIndex = 1
         let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(AccountDataVC.shareAction))
         let navBarEditBtn = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action:#selector(self.editAction))
         self.navigationItem.setRightBarButtonItems([crossBtnItem,navBarEditBtn], animated: true)
+        self.isAccDataNil(getResponseArr as! NSDictionary)
+    }
+    
+    
+    func executeQuery()  {
+        getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex)
+        self.isAccDataNil(getResponseArr as! NSDictionary)
+        dispatch_async(dispatch_get_main_queue(), {
+            self.tableView.reloadData()
+        })
+    }
+    
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if !isFirstLoad {
+            exDelegate.leadQueryDe("account")
+        }
+        self.isFirstLoad = false
+        self.setNavigationBarItem()
+    }
+    
+    
+    func isAccDataNil(accDic:NSDictionary) {
+        
         var lastModifiedDate = ""
         if  let _  = nullToNil( getResponseArr["LastModifiedDate"]) {
             lastModifiedDate =  (getResponseArr["LastModifiedDate"] as? String)!
@@ -96,7 +126,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate {
                           fax,
                           lastModifiedDate
         ]
-        
+    
     }
     
     func shareAction() {

@@ -13,6 +13,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     var feedData: AnyObject = []
     var feedItems: AnyObject = []
     var checkResponseType = false
+    var coutFile = Int()
      var tempCell = LeadContentCell()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var indx:Int = 0
@@ -124,11 +125,12 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if leadSegment.selectedSegmentIndex == 1 {
+            coutFile = leadDataArr.count
             return leadDataArr.count
         } else {
             return feedData.count
@@ -138,22 +140,25 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
         if leadSegment.selectedSegmentIndex == 1 {
-            let detailCell = tableView.dequeueReusableCellWithIdentifier("leadContentCellID", forIndexPath: indexPath) as! LeadContentCell
-            detailCell.titleLbl.text = self.cellTitleArr.objectAtIndex(indexPath.row) as? String
-            detailCell.titleNameLbl.text = self.leadDataArr.objectAtIndex(indexPath.row) as? String
-            if indexPath.row == 0 {
-                detailCell.titleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
-            }
-            
-            if detailCell.titleNameLbl.text == "" {
-                tableView.rowHeight = 40
+            if indexPath.section == 0 {
+                let detailCell = tableView.dequeueReusableCellWithIdentifier("leadContentCellID", forIndexPath: indexPath) as! LeadContentCell
+                detailCell.titleLbl.text = self.cellTitleArr.objectAtIndex(indexPath.row) as? String
+                detailCell.titleNameLbl.text = self.leadDataArr.objectAtIndex(indexPath.row) as? String
+                if indexPath.row == 0 {
+                    detailCell.titleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
+                }
+                if detailCell.titleNameLbl.text == "" {
+                    tableView.rowHeight = 40
+                } else {
+                    tableView.rowHeight = 70
+                }
+                return detailCell
             } else {
-                tableView.rowHeight = 70
+                let query = ""
+                let textFeedCell = tableView.dequeueReusableCellWithIdentifier("noteAttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
+                return textFeedCell
             }
-            return detailCell
-            
         } else {
             let fileContentName  = nullToNil(self.feedData.objectAtIndex(indexPath.row)["ContentFileName"])
             if fileContentName == nil {
@@ -210,7 +215,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             }
         }
     }
-    
     
     func tapOnImage(tap : UITapGestureRecognizer) {
         let tempcell = tap.view?.superview?.superview?.superview

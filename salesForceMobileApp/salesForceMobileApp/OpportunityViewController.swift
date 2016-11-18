@@ -14,9 +14,11 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate{
     @IBOutlet weak var tableView: UITableView!
     var resArr1:AnyObject = []
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    var isFirstLoad : Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        isFirstLoad = true
         exDelegate.delegate = self
         self.title = "Opportunity View"
         self.setNavigationBarItem()
@@ -52,6 +54,10 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate{
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        if !isFirstLoad {
+            exDelegate.leadQueryDe("opporchunity")
+        }
+        isFirstLoad = false
         self.setNavigationBarItem()
     }
     

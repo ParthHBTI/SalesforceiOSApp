@@ -15,9 +15,11 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     @IBOutlet weak var tableView: UITableView!
     var resArr1:AnyObject = []
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    var isFirstLoad: Bool = false
   
     override func viewDidLoad() {
         super.viewDidLoad()
+        isFirstLoad = true
         exDelegate.delegate = self
          self.title = "Contacts View"
         self.setNavigationBarItem()
@@ -53,6 +55,10 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        if !isFirstLoad {
+            exDelegate.leadQueryDe("contact")
+        }
+        isFirstLoad = false
         self.setNavigationBarItem()
     }
     

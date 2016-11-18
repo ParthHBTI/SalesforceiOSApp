@@ -88,6 +88,11 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
         ]
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+    
     func shareAction() {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController

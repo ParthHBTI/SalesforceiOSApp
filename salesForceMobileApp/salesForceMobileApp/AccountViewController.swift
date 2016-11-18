@@ -17,9 +17,11 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     @IBOutlet weak var tableView: UITableView!
     var resArr1:AnyObject = []
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    var isFirstLoad:Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        isFirstLoad = true
         exDelegate.delegate = self
         self.title = "Account View"
         self.setNavigationBarItem()
@@ -54,6 +56,10 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        if !isFirstLoad {
+            exDelegate.leadQueryDe("account")
+        }
+        self.isFirstLoad = false
         self.setNavigationBarItem()
     }
     

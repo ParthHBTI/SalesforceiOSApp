@@ -14,7 +14,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
     var feedItems: AnyObject = []
     var checkResponseType = false
      var tempCell = LeadContentCell()
-    var tapGesture = UITapGestureRecognizer()
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil
@@ -43,15 +42,10 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
         self.setNavigationBarItem()
         leadSegment.selectedSegmentIndex = 1
         tableView.rowHeight = 70
-        print(getResponseArr)
-       tapGesture = UITapGestureRecognizer(target: self, action: #selector(LeadContentVC.likeButtonClickedOnCell(_:)))
-        //Add the recognizer to your view.
         let nav = self.navigationController?.navigationBar
         nav!.barTintColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
         nav!.tintColor = UIColor.whiteColor()
         nav!.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
-        //        let viewRecordingList: UIBarButtonItem = UIBarButtonItem(title: "Convert",style: .Plain, target: self, action: #selector(self.convertLead))
-        //        self.navigationItem.setRightBarButtonItem(viewRecordingList, animated: true)
         let navEditBtn = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action:#selector(self.editAction))
         let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(LeadContentVC.shareAction))
         self.navigationItem.setRightBarButtonItems([crossBtnItem,navEditBtn], animated: true)
@@ -143,7 +137,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
         } else {
             let fileContentName  = nullToNil(self.feedData.objectAtIndex(indexPath.row)["ContentFileName"])
             if fileContentName == nil {
-                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("textFeedCellID", forIndexPath: indexPath) as! LeadContentCell
+                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("textFeedCellID", forIndexPath: indexPath) as! AccountDataCell
                 textFeedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
                 String
                 textFeedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
@@ -154,8 +148,9 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
                 self.tableView.rowHeight = 200
                 textFeedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
-//                 textFeedCell.likeImage.addGestureRecognizer(tapGesture)
-//                tempCell = textFeedCell
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(LeadContentVC.tapOnImage(_:)))
+                textFeedCell.likeImage.addGestureRecognizer(tapGesture)
+                textFeedCell.commentImage.addGestureRecognizer(tapGesture)
                 return textFeedCell
             } else {
                 let feedCell = tableView.dequeueReusableCellWithIdentifier("feedCellID", forIndexPath: indexPath) as! LeadContentCell
@@ -170,8 +165,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
                     let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
                     let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
                     let requ = SFRestAPI.sharedInstance().requestForQuery(query)
-                    //  SFRestAPI.sharedInstance().send(requ, delegate: self);
-                    
                     SFRestAPI.sharedInstance().sendRESTRequest(requ, failBlock: {
                         erro in
                         print(erro)
@@ -190,48 +183,47 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
                                     feedCell.sharePhoto.image = image
                             })
                     })
-//                feedCell.likeImage.addGestureRecognizer(tapGesture)
-//                tempCell = feedCell
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(LeadContentVC.tapOnImage(_:)))
+                feedCell.likeImage.addGestureRecognizer(tapGesture)
+                feedCell.commentImage.addGestureRecognizer(tapGesture)
           return feedCell
             }
         }
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        commentButtonClickOnCell(indexPath.row)
-        //likeButtonClickedOnCell(indexPath.row)
-    }
     
-    func likeButtonClickedOnCell(index: Int) {
-        checkResponseType = true
-        UIView.animateWithDuration(10.0, animations: {
-            let path =  "/services/data/v23.0/chatter/feed-items/\(self.feedData.objectAtIndex(index)["Id"])/likes"
-            let request = SFRestRequest(method: SFRestMethod.POST, path: path, queryParams: nil)
-            SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
-                print(error)
-                }, completeBlock: {response in
-                    print(response)
+    func tapOnImage(tap : UITapGestureRecognizer) {
+        let tempcell = tap.view?.superview?.superview?.superview
+        let indexPath : NSIndexPath?
+        if tempcell is LeadContentCell {
+            indexPath = self.tableView.indexPathForCell(tempcell as! LeadContentCell)
+            checkResponseType = true
+            UIView.animateWithDuration(10.0, animations: {
+                let path =  "/services/data/v23.0/chatter/feed-items/\(self.feedData.objectAtIndex((indexPath?.row)!)["Id"])/likes"
+                let request = SFRestRequest(method: SFRestMethod.POST, path: path, queryParams: nil)
+                SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
+                    print(error)
+                    }, completeBlock: {response in
+                        print(response)
+                })
+                self.checkResponseType = false
+                
             })
-            self.checkResponseType = false
-           
-        })
-    }
-    
-    func commentButtonClickOnCell(index: Int){
-        // services/data/v23.0/chatter/feed-items/0D528000012YcgSCAS/comments?text=abc123
-        checkResponseType = true
-        UIView.animateWithDuration(10.0, animations: {
-            let path =  "/services/data/v23.0/chatter/feed-items/\(self.feedData.objectAtIndex(index)["Id"])/comments?text=Congragulation Dost"
-            let request = SFRestRequest(method: SFRestMethod.POST, path: path, queryParams: nil)
-            SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
-                print(error)
-                }, completeBlock: {response in
-                    print(response)
-            })
-            self.checkResponseType = false
-            
-        })
 
+        } else {
+            indexPath = self.tableView.indexPathForCell(tempcell as! AccountDataCell)
+            checkResponseType = true
+            UIView.animateWithDuration(10.0, animations: {
+                let path =  "/services/data/v23.0/chatter/feed-items/\(self.feedData.objectAtIndex((indexPath?.row)!)["Id"])/comments?text=Congragulation Dost"
+                let request = SFRestRequest(method: SFRestMethod.POST, path: path, queryParams: nil)
+                SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
+                    print(error)
+                    }, completeBlock: {response in
+                        print(response)
+                })
+                self.checkResponseType = false
+            })
+        }
     }
     
     func editAction() {

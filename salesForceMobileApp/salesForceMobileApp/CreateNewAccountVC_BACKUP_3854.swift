@@ -86,6 +86,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     }
     
     @IBAction func saveAction(sender: AnyObject) {
+<<<<<<< HEAD
         let charSet = NSCharacterSet.whitespaceCharacterSet()
         let accNameWhiteSpaceSet = self.accountName.text!.stringByTrimmingCharactersInSet(charSet)
         let billStreetWhiteSpaceSet = self.billingStreet.text!.stringByTrimmingCharactersInSet(charSet)
@@ -116,6 +117,10 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                 loading.detailsLabelText = "Please enter a valid postal code"
                 self.animateSubmitBtnOnWrongSubmit()
             } else {
+=======
+        if exDelegate.isConnectedToNetwork() {
+            if self.isSubmitCorrectVal() {
+>>>>>>> 7285b97c6194b4e17a5a5d57e79fef7f955b58da
                 let fields = [
                     "Name" : accountName.text!,
                     "BillingStreet" : billingStreet.text!,
@@ -132,6 +137,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                     print( (err))
                 }) { succes in
                     dispatch_async(dispatch_get_main_queue(), {
+<<<<<<< HEAD
                         loading.mode = MBProgressHUDMode.Text
                         loading.detailsLabelText = "Successfully Created Accont Record"
                         loading.removeFromSuperViewOnHide = true
@@ -145,6 +151,14 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                     })
                     
                     
+=======
+                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        loading.mode = MBProgressHUDMode.Indeterminate
+                        loading.detailsLabelText = "Saving Successfully!"
+                        loading.hide(true, afterDelay: 2)
+                        loading.removeFromSuperViewOnHide = true
+                    })
+>>>>>>> 7285b97c6194b4e17a5a5d57e79fef7f955b58da
                 }
             }
         }

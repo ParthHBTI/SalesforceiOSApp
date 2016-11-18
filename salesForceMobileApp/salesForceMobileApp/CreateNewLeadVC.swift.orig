@@ -77,8 +77,31 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     }
     
     @IBAction func saveAction(sender: AnyObject) {
+<<<<<<< HEAD
+        let charSet = NSCharacterSet.whitespaceCharacterSet()
+        let lastNameWhiteSpaceSet = self.lastName.text!.stringByTrimmingCharactersInSet(charSet)
+        let companyNameWhiteSpaceSet = self.companyName.text!.stringByTrimmingCharactersInSet(charSet)
+        let leadStatusWhiteSpaceSet = self.leadStatus.text!.stringByTrimmingCharactersInSet(charSet)
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
+        if exDelegate.isConnectedToNetwork() {
+            if lastName.text!.isEmpty == true || companyName.text!.isEmpty == true || leadStatus.text!.isEmpty == true {
+                loading.mode = MBProgressHUDMode.Text
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                loading.detailsLabelText = "please give all values"
+                self.animateSubmitBtnOnWrongSubmit()
+            } else if lastNameWhiteSpaceSet == "" || companyNameWhiteSpaceSet == "" || leadStatusWhiteSpaceSet == "" {
+                loading.mode = MBProgressHUDMode.Text
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                loading.detailsLabelText = "You entered white spaces only"
+                self.animateSubmitBtnOnWrongSubmit()
+            } else {
+=======
         if exDelegate.isConnectedToNetwork() {
             if self.isSubmittedCorrectVal() {
+>>>>>>> 7285b97c6194b4e17a5a5d57e79fef7f955b58da
                 let fields = [
                     "LastName" : lastName.text!,
                     "Company" : companyName.text!,
@@ -92,6 +115,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
                     print( (err))
                 }) { succes in
                     dispatch_async(dispatch_get_main_queue(), {
+<<<<<<< HEAD
                         loading.mode = MBProgressHUDMode.Text
                         loading.detailsLabelText = "Successfully Created Lead Record"
                         loading.removeFromSuperViewOnHide = true
@@ -103,6 +127,15 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
                
                
                                     }
+=======
+                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        loading.mode = MBProgressHUDMode.Indeterminate
+                        loading.detailsLabelText = "Saving Successfully!"
+                        loading.hide(true, afterDelay: 2)
+                        loading.removeFromSuperViewOnHide = true
+                    })
+                }
+>>>>>>> 7285b97c6194b4e17a5a5d57e79fef7f955b58da
             }
         } else {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)

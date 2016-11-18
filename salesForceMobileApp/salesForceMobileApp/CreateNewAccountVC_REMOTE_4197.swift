@@ -1,5 +1,5 @@
 //
-//  LeadViewController.swift
+//  AccountViewController.swift
 //  salesForceMobileApp
 //
 //  Created by mac on 17/10/16.
@@ -15,52 +15,61 @@ import SmartSync
 import SmartStore
 import MBProgressHUD
 
-class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
+class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, ExecuteQueryDelegate {
     
-    @IBOutlet weak var lastName: UITextField!
-    @IBOutlet weak var companyName: UITextField!
-    @IBOutlet weak var leadStatus: UITextField!
+    @IBOutlet weak var accountName: UITextField!
+    @IBOutlet weak var billingStreet: UITextField!
+    @IBOutlet weak var billingCity: UITextField!
+    @IBOutlet weak var billingState: UITextField!
+    @IBOutlet weak var billingCountry: UITextField!
+    @IBOutlet weak var postalCode: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
+    @IBOutlet weak var postalWarningLbl: UILabel!
     var flag: Bool = false
-    var leadDataDict:AnyObject = []
+    var accountDataDic:AnyObject = []
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(leadDataDict)
-        lastName.delegate = self
-        companyName.delegate = self
-        leadStatus.delegate = self
+        accountName.delegate = self
+        billingStreet.delegate = self
+        billingCity.delegate = self
+        billingState.delegate = self
+        billingCountry.delegate = self
+        postalCode.delegate = self
+        postalWarningLbl.hidden = true
         setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
-        //let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewLeadVC.backAction))
-        //self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
-        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateLeadAction))
+        /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewAccountVC.backAction))
+         self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
+        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateAccountAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
         cancleBtn.backgroundColor = navColor
         cancleBtn.layer.cornerRadius = 5.0
-        title = "New Lead"
-        if self.flag == true {
-            companyName.text = leadDataDict["Company"] as? String
-            lastName.text = leadDataDict["LastName"] as? String
-            leadStatus.text = leadDataDict["Status"] as? String
-            saveBtn.hidden = true
-            cancleBtn.hidden = true
-            title = "Edit Lead"
+        title = "New Account"
+        if flag == true {
+            self.accountName.text = accountDataDic["Name"] as? String
+            self.billingStreet.text = accountDataDic["BillingStreet"] as? String
+            self.billingCity.text = accountDataDic["BillingCity"] as? String
+            self.billingState.text = accountDataDic["BillingState"] as? String
+            self.billingCountry.text = accountDataDic["BillingCountry"] as? String
+            self.postalCode.text = accountDataDic["BillingPostalCode"] as? String
+            self.saveBtn.hidden = true
+            self.cancleBtn.hidden = true
+            title = "Edit Account"
             self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
         }
-        
-        // Do any additional setup after loading the view.
     }
     
     /*func backAction() {
      for controller: UIViewController in self.navigationController!.viewControllers {
-     if (controller is LeadViewController) {
+     if (controller is AccountViewController) {
      self.navigationController!.popToViewController(controller, animated: true)
      }
      }
@@ -78,13 +87,16 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     
     @IBAction func saveAction(sender: AnyObject) {
         if exDelegate.isConnectedToNetwork() {
-            if self.isSubmittedCorrectVal() {
+            if self.isSubmitCorrectVal() {
                 let fields = [
-                    "LastName" : lastName.text!,
-                    "Company" : companyName.text!,
-                    "Status" : leadStatus.text!,
-                    ]
-                SFRestAPI.sharedInstance().performCreateWithObjectType("Lead", fields: fields, failBlock: { err in
+                    "Name" : accountName.text!,
+                    "BillingStreet" : billingStreet.text!,
+                    "BillingCity" : billingCity.text!,
+                    "BillingState" : billingState.text!,
+                    "BillingCountry" : billingCountry.text!,
+                    "BillingPostalCode" : postalCode.text!
+                ]
+                SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: { err in
                     dispatch_async(dispatch_get_main_queue(), {
                         let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
                         alert.show()
@@ -92,21 +104,19 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
                     print( (err))
                 }) { succes in
                     dispatch_async(dispatch_get_main_queue(), {
-                        loading.mode = MBProgressHUDMode.Text
-                        loading.detailsLabelText = "Successfully Created Lead Record"
-                        loading.removeFromSuperViewOnHide = true
+                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        loading.mode = MBProgressHUDMode.Indeterminate
+                        loading.detailsLabelText = "Saving Successfully!"
                         loading.hide(true, afterDelay: 2)
-                        self.lastName.text = nil
-                        self.companyName.text = nil
-                        self.leadStatus.text = nil
-                        })
-               
-               
-                                    }
+                        loading.removeFromSuperViewOnHide = true
+                    })
+                }
             }
-        } else {
+        }
+        else {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
+            //loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Please check your Internet connection!"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -119,16 +129,20 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
         
     }
     
-    //Update lead record
-    func updateLeadAction() {
+    //update account record
+    func updateAccountAction() {
         if exDelegate.isConnectedToNetwork() {
-            if self.isSubmittedCorrectVal() {
+            if self.isSubmitCorrectVal() {
                 let params = [
-                    "LastName" : lastName.text!,
-                    "Company" : companyName.text!,
-                    "Status" : leadStatus.text!,
-                    ]
-                SFRestAPI.sharedInstance().performUpdateWithObjectType("Lead", objectId: (leadDataDict["Id"] as? String)!, fields: params, failBlock: { err in
+                    "Name" : accountName.text!,
+                    //"BillingAddress" : ["city": accountAddress.text!]
+                    "BillingStreet" : billingStreet.text!,
+                    "BillingCity" : billingCity.text!,
+                    "BillingState" : billingState.text!,
+                    "BillingCountry" : billingCountry.text!,
+                    "BillingPostalCode" : postalCode.text!
+                ]
+                SFRestAPI.sharedInstance().performUpdateWithObjectType("Account", objectId: (accountDataDic["Id"] as? String)!, fields: params , failBlock: { err in
                     dispatch_async(dispatch_get_main_queue(), {
                         let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
                         alert.show()
@@ -138,7 +152,6 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
                     dispatch_async(dispatch_get_main_queue(), {
                         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                         loading.mode = MBProgressHUDMode.Indeterminate
-                        //loading.mode = MBProgressHUDMode.Text
                         loading.detailsLabelText = "Updated Successfully!"
                         loading.hide(true, afterDelay: 2)
                         loading.removeFromSuperViewOnHide = true
@@ -155,12 +168,15 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     }
     
     
-    func isSubmittedCorrectVal() -> Bool {
+    func isSubmitCorrectVal() -> Bool {
         let charSet = NSCharacterSet.whitespaceCharacterSet()
-        let lastNameWhiteSpaceSet = self.lastName.text!.stringByTrimmingCharactersInSet(charSet)
-        let companyNameWhiteSpaceSet = self.companyName.text!.stringByTrimmingCharactersInSet(charSet)
-        let leadStatusWhiteSpaceSet = self.leadStatus.text!.stringByTrimmingCharactersInSet(charSet)
-        if lastName.text!.isEmpty == true || companyName.text!.isEmpty == true || leadStatus.text!.isEmpty == true {
+        let accNameWhiteSpaceSet = self.accountName.text!.stringByTrimmingCharactersInSet(charSet)
+        let billStreetWhiteSpaceSet = self.billingStreet.text!.stringByTrimmingCharactersInSet(charSet)
+        let billCityWhiteSpaceSet = self.billingCity.text!.stringByTrimmingCharactersInSet(charSet)
+        let billStateWhiteSpaceSet = self.billingState.text!.stringByTrimmingCharactersInSet(charSet)
+        let billCntryWhiteSpaceSet = self.billingCountry.text!.stringByTrimmingCharactersInSet(charSet)
+        let billPostalCodeWhiteSpaceSet = self.postalCode.text!.stringByTrimmingCharactersInSet(charSet)
+        if accountName.text!.isEmpty == true || billingStreet.text!.isEmpty == true || billingCity.text!.isEmpty == true || billingState.text!.isEmpty == true ||  postalCode.text!.isEmpty == true {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
             loading.hide(true, afterDelay: 2)
@@ -168,12 +184,20 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
             loading.detailsLabelText = "please give all values"
             self.animateSubmitBtnOnWrongSubmit()
             return false
-        } else if lastNameWhiteSpaceSet == "" || companyNameWhiteSpaceSet == "" || leadStatusWhiteSpaceSet == "" {
+        } else if billPostalCodeWhiteSpaceSet == "" || accNameWhiteSpaceSet == "" || billStreetWhiteSpaceSet == ""  || billCntryWhiteSpaceSet == ""  || billCityWhiteSpaceSet == ""  || billStateWhiteSpaceSet == ""  {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             loading.detailsLabelText = "You entered white spaces only"
+            self.animateSubmitBtnOnWrongSubmit()
+            return false
+        } else if postalCode.text!.characters.count != 6 {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            loading.detailsLabelText = "Please enter a valid postal code"
             self.animateSubmitBtnOnWrongSubmit()
             return false
         }
@@ -183,7 +207,6 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     
     override func setNavigationBarItem() {
         self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
-        //self.leftBarButtonWithImage(UIImage(named: "back_icon")!)
     }
     
     func leftBarButtonWithImage(buttonImage: UIImage) {
@@ -204,35 +227,30 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     }
     
     
-    //delegate for text field
     func textField(textField: UITextField,
                    shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         let prospectiveText = (currentText as NSString).stringByReplacingCharactersInRange(range, withString: string)
         if string.characters.count == 0 {
-            if prospectiveText.characters.count <= 30 {
-                lastName.layer.borderWidth = 2.0
-                lastName.layer.borderColor = UIColor.clearColor().CGColor
+            if prospectiveText.characters.count <= 6 {
+                postalWarningLbl.hidden = true
             }
             return true
         }
         switch textField {
-        case  lastName:
-            if prospectiveText.characters.count > 30 {
-                lastName.layer.borderWidth = 2.0
-                lastName.layer.borderColor = UIColor.redColor().CGColor
-            } else {
-                lastName.layer.borderColor = UIColor.clearColor().CGColor
+        case  postalCode:
+            if prospectiveText.characters.count > 6 {
+                // phone.layer.borderWidth = 2.0
+                //phone.layer.borderColor = UIColor.redColor().CGColor
+                postalWarningLbl.hidden = false
+                postalWarningLbl.text = "*Please enter a valid postal code"
+                postalWarningLbl.textColor = UIColor.redColor()
             }
             return true
-        case companyName:
-            return prospectiveText.characters.count <= 30
-            
-        case leadStatus:
-            return prospectiveText.characters.count <= 10
             
         default:
             return true
         }
     }
+    
 }

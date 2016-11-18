@@ -123,8 +123,32 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     
     
     @IBAction func saveAction(sender: AnyObject) {
+<<<<<<< HEAD
+        let charSet = NSCharacterSet.whitespaceCharacterSet()
+        let oppNameWhiteSpaceSet = self.opportunityName.text!.stringByTrimmingCharactersInSet(charSet)
+        let closeDateWhiteSpaceSet = self.closeDate.text!.stringByTrimmingCharactersInSet(charSet)
+        let amountWhiteSpaceSet = self.amount.text!.stringByTrimmingCharactersInSet(charSet)
+        let stageWhiteSpaceSet = self.stage.text!.stringByTrimmingCharactersInSet(charSet)
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        
+        if exDelegate.isConnectedToNetwork() {
+            if self.opportunityName.text!.isEmpty == true || self.closeDate.text!.isEmpty == true || self.amount.text!.isEmpty == true || self.stage.text!.isEmpty == true {
+                loading.mode = MBProgressHUDMode.Text
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                loading.detailsLabelText = "please give all values"
+                self.animateSubmitBtnOnWrongSubmit()
+            } else if oppNameWhiteSpaceSet == "" || amountWhiteSpaceSet == "" || stageWhiteSpaceSet == "" || closeDateWhiteSpaceSet == "" {
+                loading.mode = MBProgressHUDMode.Text
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                loading.detailsLabelText = "You entered white spaces only"
+                self.animateSubmitBtnOnWrongSubmit()
+            } else {
+=======
         if exDelegate.isConnectedToNetwork() {
             if self.isSubmitCorrectVal() {
+>>>>>>> 7285b97c6194b4e17a5a5d57e79fef7f955b58da
                 let fields = [
                     "Name" : opportunityName.text!,
                     "CloseDate" : closeDate.text!,
@@ -140,6 +164,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
                     print( (err))
                 }) { succes in
                     dispatch_async(dispatch_get_main_queue(), {
+<<<<<<< HEAD
                         loading.mode = MBProgressHUDMode.Text
                         loading.detailsLabelText = "Successfully Created Opporcunity Record"
                         loading.removeFromSuperViewOnHide = true
@@ -151,6 +176,15 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
                     })
                     
                     
+=======
+                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        loading.mode = MBProgressHUDMode.Indeterminate
+                        //loading.mode = MBProgressHUDMode.Text
+                        loading.detailsLabelText = "Saving Successfully!"
+                        loading.hide(true, afterDelay: 2)
+                        loading.removeFromSuperViewOnHide = true
+                    })
+>>>>>>> 7285b97c6194b4e17a5a5d57e79fef7f955b58da
                 }
             }
         }

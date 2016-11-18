@@ -3,7 +3,7 @@ import SalesforceRestAPI
 import SalesforceNetwork
 import SystemConfiguration
 
-class LeadContentVC: UITableViewController, SFRestDelegate {
+class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate {
     
     @IBOutlet weak var leadSegment: UISegmentedControl!
     var getResponseArr:AnyObject = []
@@ -14,6 +14,10 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
     var feedItems: AnyObject = []
     var checkResponseType = false
      var tempCell = LeadContentCell()
+    var exDelegate: ExecuteQuery = ExecuteQuery()
+    var indx:Int = 0
+    var isFirstLoaded: Bool = false
+    
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil
@@ -39,6 +43,8 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //print("indexPath = \(indx)")
+        isFirstLoaded = true
         self.setNavigationBarItem()
         leadSegment.selectedSegmentIndex = 1
         tableView.rowHeight = 70
@@ -88,9 +94,18 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
         ]
     }
     
+
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        if !self.isFirstLoaded {
+        exDelegate.leadQueryDe("lead")
+            getResponseArr = []
+        //getResponseArr = exDelegate.resArr
+            //print("getResponseArr = \(exDelegate.resArr)")
+        //self.makeLeadDataArr(getResponseArr.objectAtIndex(indx) as! NSDictionary)
+        }
         
+        self.isFirstLoaded = false
     }
     
     func shareAction() {
@@ -238,6 +253,47 @@ class LeadContentVC: UITableViewController, SFRestDelegate {
         vc.flag = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func makeLeadDataArr(getLeadArr: NSDictionary) {
+        
+        var email = ""
+        if  let _  = nullToNil( getLeadArr["Email"]) {
+            email =  (getLeadArr["Email"] as? String)!
+        }
+        
+        var phone = ""
+        if  let _  = nullToNil( getLeadArr["Phone"]) {
+            phone =  (getLeadArr["Phone"] as? String)!
+        }
+        
+        var title = ""
+        if  let _  = nullToNil( getLeadArr["Title"]) {
+            title =  (getLeadArr["Title"] as? String)!
+        }
+        
+        /*var salutation = ""
+         if let _ = nullToNil(getResponseArr["Salutation"]) {
+         salutation = (getResponseArr["Salutation"] as? String)!
+         }*/
+        
+        /* var leadName = getResponseArr["Name"] as! String
+         if salutation != "" {
+         leadName = salutation + " " + (getResponseArr["Name"] as! String)
+         }*/
+        var leadName = ""
+        if let _ = nullToNil(getLeadArr["Name"]) {
+            leadName = (getLeadArr["Name"] as! String)
+        }
+        
+        self.leadDataArr = [getLeadArr["Owner"]!["Name"] as! String,
+                       leadName,
+                       getLeadArr["Company"] as! String,
+                       email,
+                       phone,
+                       title
+        ]
+    }
+    
     
     func convertLead() {
         //        var request = SFRestRequest(method: post, path: "", queryParams: nil)

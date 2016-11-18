@@ -130,13 +130,13 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
                 }
                 return detailCell
             } else {
-                let textFeedCell = tableView.dequeueReusableCellWithIdentifier("noteAttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
+                let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
                 return textFeedCell
             }
         } else {
         let fileContentName  = nullToNil(self.feedData.objectAtIndex(indexPath.row)["ContentFileName"])
         if fileContentName == nil {
-            let textFeedCell = tableView.dequeueReusableCellWithIdentifier("textFeedCellID", forIndexPath: indexPath) as! LeadContentCell
+            let textFeedCell = tableView.dequeueReusableCellWithIdentifier("textFeedCellID", forIndexPath: indexPath) as! AccountDataCell
             textFeedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
             String
             textFeedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])

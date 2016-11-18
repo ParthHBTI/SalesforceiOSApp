@@ -1,5 +1,5 @@
 //
-//  noteAndAttachFileCellI.swift
+//  NoteAndAttachFileCell.swift
 //  salesForceMobileApp
 //
 //  Created by mac on 18/11/16.

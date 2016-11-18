@@ -83,6 +83,8 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     
     @IBAction func saveAction(sender: AnyObject) {
         if exDelegate.isConnectedToNetwork() {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
             if firstName.text!.isEmpty == true || lastName.text!.isEmpty == true || email.text!.isEmpty == true || phone.text!.isEmpty == true || fax.text!.isEmpty == true {
                 loading.mode = MBProgressHUDMode.Text
                 loading.hide(true, afterDelay: 2)

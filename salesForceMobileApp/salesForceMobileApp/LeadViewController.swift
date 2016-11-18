@@ -52,6 +52,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        exDelegate.leadQueryDe("lead")
         self.setNavigationBarItem()
     }
     
@@ -78,7 +79,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
                 self.tableView.reloadData()
             })
         }
-
+        
     }
 }
 

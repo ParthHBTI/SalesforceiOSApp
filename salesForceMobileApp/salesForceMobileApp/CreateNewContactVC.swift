@@ -81,74 +81,75 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height + 100);
     }
     
-    @IBAction func saveAction(sender: AnyObject) {
-        if exDelegate.isConnectedToNetwork() {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            if firstName.text!.isEmpty == true || lastName.text!.isEmpty == true || email.text!.isEmpty == true || phone.text!.isEmpty == true || fax.text!.isEmpty == true {
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "please give all values"
-                self.animateSubmitBtnOnWrongSubmit()
-            } else if firstNameWhiteSpaceSet == "" || lastNameWhiteSpaceSet == "" || emailWhiteSpaceSet == "" || phoneWhiteSpaceSet == "" || faxWhiteSpaceSet == "" {
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "You entered white spaces only"
-                self.animateSubmitBtnOnWrongSubmit()
-            }else if phone.text?.characters.count != 10 {
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "Please enter a valid phone number"
-                self.animateSubmitBtnOnWrongSubmit()
-            } else {
-            if self.isSubmitCorrectVal() {
-                let fields = [
-                    "FirstName" : firstName.text!,
-                    "LastName" : lastName.text!,
-                    "Email" : email.text!,
-                    "Phone" : phone.text!,
-                    "Fax" : fax.text!
-                ]
-                SFRestAPI.sharedInstance().performCreateWithObjectType("Contact", fields: fields, failBlock: { err in
-                    dispatch_async(dispatch_get_main_queue(), {
-                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                        alert.show()
-                    })
-                    print( (err))
-                }) { succes in
-                    dispatch_async(dispatch_get_main_queue(), {
-                        loading.mode = MBProgressHUDMode.Text
-                        loading.detailsLabelText = "Successfully Created Contact Record"
-                        loading.removeFromSuperViewOnHide = true
-                        loading.hide(true, afterDelay: 2)
-                        self.firstName.text = nil
-                        self.lastName.text = nil
-                        self.email.text = nil
-                        self.phone.text = nil
-                        self.fax.text = nil
-                    })
-                    dispatch_async(dispatch_get_main_queue(), {
-                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                        loading.mode = MBProgressHUDMode.Indeterminate
-                        loading.detailsLabelText = "Saving Successfully!"
-                        loading.hide(true, afterDelay: 2)
-                        loading.removeFromSuperViewOnHide = true
-                    })
-                }
-            }
-        }
-        else {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
-        }
-    }
-    
+//    @IBAction func saveAction(sender: AnyObject) {
+//        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+//        loading.mode = MBProgressHUDMode.Indeterminate
+//        if exDelegate.isConnectedToNetwork() {
+//            if firstName.text!.isEmpty == true || lastName.text!.isEmpty == true || email.text!.isEmpty == true || phone.text!.isEmpty == true || fax.text!.isEmpty == true {
+//                loading.mode = MBProgressHUDMode.Text
+//                loading.hide(true, afterDelay: 2)
+//                loading.removeFromSuperViewOnHide = true
+//                loading.detailsLabelText = "please give all values"
+//                self.animateSubmitBtnOnWrongSubmit()
+//            } else if firstNameWhiteSpaceSet == "" || lastNameWhiteSpaceSet == "" || emailWhiteSpaceSet == "" || phoneWhiteSpaceSet == "" || faxWhiteSpaceSet == "" {
+//                loading.mode = MBProgressHUDMode.Text
+//                loading.hide(true, afterDelay: 2)
+//                loading.removeFromSuperViewOnHide = true
+//                loading.detailsLabelText = "You entered white spaces only"
+//                self.animateSubmitBtnOnWrongSubmit()
+//            }else if phone.text?.characters.count != 10 {
+//                loading.mode = MBProgressHUDMode.Text
+//                loading.hide(true, afterDelay: 2)
+//                loading.removeFromSuperViewOnHide = true
+//                loading.detailsLabelText = "Please enter a valid phone number"
+//                //self.animateSubmitBtnOnWrongSubmit()
+//            } else {
+//                if self.isSubmitCorrectVal() {
+//                let fields = [
+//                    "FirstName" : firstName.text!,
+//                    "LastName" : lastName.text!,
+//                    "Email" : email.text!,
+//                    "Phone" : phone.text!,
+//                    "Fax" : fax.text!
+//                ]
+//                SFRestAPI.sharedInstance().performCreateWithObjectType("Contact", fields: fields, failBlock: { err in
+//                    dispatch_async(dispatch_get_main_queue(), {
+//                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+//                        alert.show()
+//                    })
+//                    print( (err))
+//                }) { succes in
+//                    dispatch_async(dispatch_get_main_queue(), {
+//                        loading.mode = MBProgressHUDMode.Text
+//                        loading.detailsLabelText = "Successfully Created Contact Record"
+//                        loading.removeFromSuperViewOnHide = true
+//                        loading.hide(true, afterDelay: 2)
+//                        self.firstName.text = nil
+//                        self.lastName.text = nil
+//                        self.email.text = nil
+//                        self.phone.text = nil
+//                        self.fax.text = nil
+//                    })
+//                    dispatch_async(dispatch_get_main_queue(), {
+//                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+//                        loading.mode = MBProgressHUDMode.Indeterminate
+//                        loading.detailsLabelText = "Saving Successfully!"
+//                        loading.hide(true, afterDelay: 2)
+//                        loading.removeFromSuperViewOnHide = true
+//                    })
+//                }
+//            }
+//        }
+////        else {
+////            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+////            loading.mode = MBProgressHUDMode.Indeterminate
+////            loading.detailsLabelText = "Please check your Internet connection!"
+////            loading.hide(true, afterDelay: 2)
+////            loading.removeFromSuperViewOnHide = true
+////        }
+//    }
+//    
+//    }
     
     @IBAction func cancelAction(sender: AnyObject) {
         
@@ -285,8 +286,8 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
             return true
         }
     }
-    
 }
+
 extension String {
     func isValidEmail() -> Bool {
         let regex = try? NSRegularExpression(pattern: "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$", options: .CaseInsensitive)

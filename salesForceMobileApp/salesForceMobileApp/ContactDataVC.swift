@@ -104,7 +104,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate {
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
-        return 1
+        return 2
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -117,21 +117,23 @@ class ContactDataVC: UITableViewController, SFRestDelegate {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if feedSegment.selectedSegmentIndex == 1 {
-            let cell = tableView.dequeueReusableCellWithIdentifier("ContactDataCellID", forIndexPath: indexPath) as! ContactDataCell
-            cell.TitleLbl.text = cellTitleArr.objectAtIndex(indexPath.row) as? String
-            cell.TitleNameLbl.text = contactDataArr.objectAtIndex(indexPath.row) as? String
-            if indexPath.row == 0 {
-                cell.TitleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
+            if indexPath.section == 0 {
+                let detailCell = tableView.dequeueReusableCellWithIdentifier("leadContentCellID", forIndexPath: indexPath) as! LeadContentCell
+                detailCell.titleLbl.text = self.cellTitleArr.objectAtIndex(indexPath.row) as? String
+                detailCell.titleNameLbl.text = self.contactDataArr.objectAtIndex(indexPath.row) as? String
+                if indexPath.row == 0 {
+                    detailCell.titleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
+                }
+                if detailCell.titleNameLbl.text == "" {
+                    tableView.rowHeight = 40
+                } else {
+                    tableView.rowHeight = 70
+                }
+                return detailCell
+            } else {
+                let textFeedCell = tableView.dequeueReusableCellWithIdentifier("noteAttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
+                return textFeedCell
             }
-            if cell.TitleNameLbl.text == "" {
-                tableView.rowHeight = 40
-            }
-            else {
-                tableView.rowHeight = 70
-            }
-            return cell
-
-            
         } else {
             let fileContentName  = nullToNil(self.feedData.objectAtIndex(indexPath.row)["ContentFileName"])
             if fileContentName == nil {

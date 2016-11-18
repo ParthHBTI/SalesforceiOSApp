@@ -156,55 +156,36 @@ let imagePicker = UIImagePickerController()
             "Body": b64,
             "ParentId":leadId
         ]
-        //"00Q2800000RyOjpEAF"
-        let request = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Attachment", fields: fields)
+//        //"00Q2800000RyOjpEAF"
+//        let request = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Attachment", fields: fields)
+//
+//        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
+//            print(error)
+//
+//        }) { response in
+//print(response)
+//        }
+        
+        
+        let noteFields = [
+            "Type" : "Note",
+            "Title": "Note Title by Kamlesh",
+            "Text": "This Text is for New Note by Kamlesh",
+            "ParentId":leadId
+        ]
+        
+        let request1 = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Note", fields: noteFields)
 
-        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
+        SFRestAPI.sharedInstance().sendRESTRequest(request1, failBlock: { error in
             print(error)
 
         }) { response in
 print(response)
         }
-        
+
         return;
         
-      //  SFRestRequest *request  = [[SFRestAPI sharedInstance] requestForCreateWithObjectType:"Attachment" fields:fields];
-        
-//        [[SFRestAPI sharedInstance] sendRESTRequest:request failBlock:^(NSError *e) {
-//        NSLog(@"Error");
-//        } completeBlock:^(id dict){
-//        NSLog(@"Uploaded");
-//        }];
-     /*
-        SFRestMethod method = SFRestMethodPOST;
-        SFRestRequest *request = [SFRestRequest requestWithMethod:method path:nil queryParams:paramDict];
-        request.endpoint = @"/services/data/v33.0/connect/communities/0DB28000000Cafi/chatter/feed-elements";
-        
-        NSString *filestr= [[NSBundle mainBundle] pathForResource:@"Pic" ofType:@"png"];
-        [request addPostFileData:[NSData dataWithContentsOfFile:filestr] paramName:@"feedElementFileUpload" fileName:@"test.png" mimeType:@"image/png"];
-        [request setCustomHeaders:[NSDictionary dictionaryWithObject:@"multipart/form-data" forKey:@"Content-Type"]];
-        [[SFRestAPI sharedInstance] send:request delegate:self];
-         
-         {
-         body = {
-         messageSegments = (
-         {
-         text = "test msg";
-         type = Text;
-         }
-         );
-         };
-         capabilities = {
-         content = {
-         description = "Test image";
-         title = "test.png";
-         };
-         };
-         feedElementType = FeedItem;
-         subjectId = 00Q2800000Q751L;
-         }
-*/
-        let paramDict:AnyObject = ["feedElementType":"FeedItem","subjectId":"me","parentId":"00Q2800000Q751L"]
+             let paramDict:AnyObject = ["feedElementType":"FeedItem","subjectId":"me","parentId":"00Q2800000Q751L"]
 
         
       //  let paramDict:AnyObject = ["body":"{\"feedElementType\" = \"FeedItem\",\"subjectId\" = \"00Q2800000Q751L\"}"]
@@ -238,23 +219,6 @@ print(response)
     }
     
     func createFeedForAttachmentId(attachmentId: String) {
-        //Load json template from "feedTemplate.json" file as a string. Then replace __BODY_TEXT__ and __ATTACHMENT_ID__ w/
-        // addPostTextField.text and attachmentId and pass that to post to chatter feed.
-        //    {
-        //        "body": {
-        //            "messageSegments": [
-        //                                {
-        //                                    "type": "Text",
-        //                                    "text": "__BODY_TEXT__"
-        //                                }
-        //                                ]
-        //        },
-        //        "attachment": {
-        //            "attachmentType": "ExistingContent",
-        //            "contentDocumentId": "__ATTACHMENT_ID__"
-        //        }
-        //    }
-        
         let filePath = NSBundle.mainBundle().pathForResource("feedTemplate", ofType: "json")!
         let url = NSURL.fileURLWithPath(filePath)
         let feedJSONTemplateData = try! NSData(contentsOfURL: url, options: NSDataReadingOptions.DataReadingMappedIfSafe)

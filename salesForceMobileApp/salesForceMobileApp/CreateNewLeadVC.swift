@@ -77,6 +77,8 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     }
     
     @IBAction func saveAction(sender: AnyObject) {
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
             if self.isSubmittedCorrectVal() {
                 let fields = [

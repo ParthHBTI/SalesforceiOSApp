@@ -102,7 +102,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
     // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -115,21 +115,25 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    if feedSegment.selectedSegmentIndex == 1 {
-    let cell = tableView.dequeueReusableCellWithIdentifier("OpportunityDataCellID", forIndexPath: indexPath) as! OpportunityDataCell
-    cell.TitltLbl.text = self.cellTitleArr.objectAtIndex(indexPath.row) as? String
-    cell.TitleNameLbl.text = self.opportunityDataArr.objectAtIndex(indexPath.row) as? String
-    if indexPath.row == 0 {
-    cell.TitleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
-    }
-    if cell.TitleNameLbl.text == "" {
-    tableView.rowHeight = 40
-    }
-    else {
-    tableView.rowHeight = 70
-    }
-    return cell
-    } else {
+        if feedSegment.selectedSegmentIndex == 1 {
+            if indexPath.section == 0 {
+                let detailCell = tableView.dequeueReusableCellWithIdentifier("leadContentCellID", forIndexPath: indexPath) as! LeadContentCell
+                detailCell.titleLbl.text = self.cellTitleArr.objectAtIndex(indexPath.row) as? String
+                detailCell.titleNameLbl.text = self.opportunityDataArr.objectAtIndex(indexPath.row) as? String
+                if indexPath.row == 0 {
+                    detailCell.titleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
+                }
+                if detailCell.titleNameLbl.text == "" {
+                    tableView.rowHeight = 40
+                } else {
+                    tableView.rowHeight = 70
+                }
+                return detailCell
+            } else {
+                let textFeedCell = tableView.dequeueReusableCellWithIdentifier("noteAttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
+                return textFeedCell
+            }
+        } else {
         let fileContentName  = nullToNil(self.feedData.objectAtIndex(indexPath.row)["ContentFileName"])
         if fileContentName == nil {
             let textFeedCell = tableView.dequeueReusableCellWithIdentifier("textFeedCellID", forIndexPath: indexPath) as! LeadContentCell

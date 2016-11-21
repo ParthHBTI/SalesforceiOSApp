@@ -87,8 +87,9 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             }, completeBlock: { response in
                 print(response)
                 self.attachmentArr = response!["records"]
-                self.tableView.reloadData()
-                
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.tableView.reloadData()
+                })
                 
         })
         let attachQuery = "SELECT ContentType,IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
@@ -99,8 +100,9 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             }, completeBlock: { response in
                 print(response)
                 self.noteArr = response!["records"]
-                self.tableView.reloadData()
-                
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.tableView.reloadData()
+                })
                 
         })
         
@@ -237,14 +239,27 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 }
                 return detailCell
             } else if indexPath.section == 1 {
+                
+                let attachmentDic = self.attachmentArr.objectAtIndex(indexPath.row)
+                
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
-                textFeedCell.fileType.text = self.attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
-                textFeedCell.fileModifyDate.text = self.attachmentArr.objectAtIndex(indexPath.row)["CreatedDate"] as? String
+                
+                textFeedCell.fileTitle.text = attachmentDic["Name"] as? String
+                textFeedCell.fileType.text = attachmentDic["attributes"]!["type"] as? String
+                textFeedCell.fileModifyDate.text = attachmentDic["LastModifiedDate"] as? String
+
                 return textFeedCell
             } else {
+                let notesDic = self.noteArr.objectAtIndex(indexPath.row)
+
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
-                //textFeedCell.fileType.text = self.noteArr.objectAtIndex(indexPath.row)["Title"] as? String
-                textFeedCell.fileModifyDate.text = self.noteArr.objectAtIndex(indexPath.row)["LastModifiedDate"] as? String
+                
+                textFeedCell.fileTitle.text = notesDic["Title"] as? String
+                textFeedCell.fileType.text = notesDic["attributes"]!["type"] as? String
+                textFeedCell.fileModifyDate.text = notesDic["CreatedDate"] as? String
+
+                
+                
                 return textFeedCell
                 
             }

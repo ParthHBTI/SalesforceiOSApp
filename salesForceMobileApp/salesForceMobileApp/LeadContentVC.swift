@@ -226,7 +226,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 textFeedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
                 textFeedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
-
                 self.tableView.rowHeight = 200
                 textFeedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
@@ -243,7 +242,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
                 feedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
-
                     let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
                     let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
                     let requ = SFRestAPI.sharedInstance().requestForQuery(query)

@@ -1012,7 +1012,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AttachCellID" rowHeight="69" id="7cD-HA-23i" customClass="NoteAndAttachFileCell" customModule="salesForceMobileApp" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="598" width="600" height="69"/>
+                                <rect key="frame" x="0.0" y="667" width="600" height="69"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7cD-HA-23i" id="lr7-cU-8TG">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="68"/>
@@ -1189,28 +1189,28 @@
                                             <exclude reference="xbk-Ef-UeV"/>
                                         </mask>
                                         <mask key="constraints">
-                                            <exclude reference="D76-Rj-Yxu"/>
-                                            <exclude reference="qGh-mC-eTE"/>
-                                            <exclude reference="Pxh-Mz-5vT"/>
                                             <exclude reference="2H8-ih-BVJ"/>
                                             <exclude reference="M2Y-qK-H9q"/>
                                             <exclude reference="wiV-YC-7Md"/>
-                                            <exclude reference="WZj-6K-TiH"/>
                                             <exclude reference="RDe-0w-TSC"/>
                                             <exclude reference="jtE-OX-Ceo"/>
                                             <exclude reference="yz3-VK-Yr8"/>
+                                            <exclude reference="D76-Rj-Yxu"/>
+                                            <exclude reference="qGh-mC-eTE"/>
+                                            <exclude reference="1nO-np-KHY"/>
+                                            <exclude reference="xyl-YL-AC4"/>
                                             <exclude reference="3Yz-aM-Z6b"/>
                                             <exclude reference="TOp-Xk-3di"/>
                                             <exclude reference="i7p-bj-Bec"/>
+                                            <exclude reference="3LR-hZ-uPn"/>
+                                            <exclude reference="I6U-Q4-jAd"/>
+                                            <exclude reference="i7T-7K-6Uq"/>
+                                            <exclude reference="Pxh-Mz-5vT"/>
+                                            <exclude reference="WZj-6K-TiH"/>
                                             <exclude reference="3AY-1d-ZhH"/>
                                             <exclude reference="C2F-QS-5cG"/>
                                             <exclude reference="Qrr-Pv-cVW"/>
                                             <exclude reference="dsO-1L-6MI"/>
-                                            <exclude reference="3LR-hZ-uPn"/>
-                                            <exclude reference="I6U-Q4-jAd"/>
-                                            <exclude reference="i7T-7K-6Uq"/>
-                                            <exclude reference="1nO-np-KHY"/>
-                                            <exclude reference="xyl-YL-AC4"/>
                                         </mask>
                                     </variation>
                                     <variation key="heightClass=regular-widthClass=compact">
@@ -1226,28 +1226,28 @@
                                             <include reference="xbk-Ef-UeV"/>
                                         </mask>
                                         <mask key="constraints">
-                                            <include reference="D76-Rj-Yxu"/>
-                                            <include reference="qGh-mC-eTE"/>
-                                            <include reference="Pxh-Mz-5vT"/>
                                             <include reference="2H8-ih-BVJ"/>
                                             <include reference="M2Y-qK-H9q"/>
                                             <include reference="wiV-YC-7Md"/>
-                                            <include reference="WZj-6K-TiH"/>
                                             <include reference="RDe-0w-TSC"/>
                                             <include reference="jtE-OX-Ceo"/>
                                             <include reference="yz3-VK-Yr8"/>
+                                            <include reference="D76-Rj-Yxu"/>
+                                            <include reference="qGh-mC-eTE"/>
+                                            <include reference="1nO-np-KHY"/>
+                                            <include reference="xyl-YL-AC4"/>
                                             <include reference="3Yz-aM-Z6b"/>
                                             <include reference="TOp-Xk-3di"/>
                                             <include reference="i7p-bj-Bec"/>
+                                            <include reference="3LR-hZ-uPn"/>
+                                            <include reference="I6U-Q4-jAd"/>
+                                            <include reference="i7T-7K-6Uq"/>
+                                            <include reference="Pxh-Mz-5vT"/>
+                                            <include reference="WZj-6K-TiH"/>
                                             <include reference="3AY-1d-ZhH"/>
                                             <include reference="C2F-QS-5cG"/>
                                             <include reference="Qrr-Pv-cVW"/>
                                             <include reference="dsO-1L-6MI"/>
-                                            <include reference="3LR-hZ-uPn"/>
-                                            <include reference="I6U-Q4-jAd"/>
-                                            <include reference="i7T-7K-6Uq"/>
-                                            <include reference="1nO-np-KHY"/>
-                                            <include reference="xyl-YL-AC4"/>
                                         </mask>
                                     </variation>
                                 </tableViewCellContentView>
@@ -2843,6 +2843,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="feedDateStatus" destination="bPI-zO-mcz" id="mfs-pz-kLW"/>
+                                    <outlet property="likeImage" destination="ZiC-fq-UKR" id="G80-U0-oAd"/>
                                     <outlet property="sharePhoto" destination="VKc-ni-Qxu" id="c0i-so-L56"/>
                                     <outlet property="shareText" destination="52h-jH-umd" id="bou-aX-9fP"/>
                                     <outlet property="totalComment" destination="HFJ-nZ-QNg" id="bWh-Gl-N9V"/>
@@ -3550,8 +3551,8 @@
                                     </variation>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="TitleNameLbl" destination="2EQ-Zu-Vt1" id="V9w-mG-kvn"/>
-                                    <outlet property="TitltLbl" destination="caV-8s-woI" id="9kS-f3-4PL"/>
+                                    <outlet property="titleLbl" destination="caV-8s-woI" id="X1g-d1-6pG"/>
+                                    <outlet property="titleNameLbl" destination="2EQ-Zu-Vt1" id="zsV-jA-DuJ"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="feedCellID" rowHeight="277" id="uMl-ou-prb" customClass="LeadContentCell" customModule="salesForceMobileApp" customModuleProvider="target">
@@ -4510,7 +4511,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eHw-81-P9V" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="856.5" y="-717"/>
+            <point key="canvasLocation" x="763.5" y="-767.25"/>
         </scene>
     </scenes>
     <resources>

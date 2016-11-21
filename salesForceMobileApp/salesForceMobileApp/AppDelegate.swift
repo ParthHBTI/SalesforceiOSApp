@@ -138,7 +138,42 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
         let rootVC = RootViewController(nibName: nil, bundle: nil)
         let navVC = UINavigationController(rootViewController: rootVC)
         self.window!.rootViewController = navVC
+//    }
+//    
+//    func createMenuView(indexPath: NSIndexPath) {
+        
+        // create viewController code...
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let mainViewController = storyboard.instantiateViewControllerWithIdentifier("LeadViewController") as! LeadViewController
+        let leftViewController = storyboard.instantiateViewControllerWithIdentifier("LeftViewController") as! LeftViewController
+        let rightViewController = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
+        
+        let nvc: UINavigationController = UINavigationController(rootViewController: mainViewController)
+        
+        UINavigationBar.appearance().tintColor = UIColor(hex: "689F38")
+        
+        leftViewController.mainViewController = nvc
+    //    leftViewController.userInfoDic = dataRows[indexPath.row]
+        
+        let slideMenuController = ExSlideMenuController(mainViewController:nvc, leftMenuViewController: leftViewController)
+        slideMenuController.automaticallyAdjustsScrollViewInsets = true
+        slideMenuController.delegate = mainViewController
+        
+        self.window!.rootViewController = slideMenuController;
+        
+//        self.presentViewController(slideMenuController, animated: true) {
+//            
+//        }
+        
+        //        self.window?.backgroundColor = UIColor(red: 236.0, green: 238.0, blue: 241.0, alpha: 1.0)
+        //        self.window?.rootViewController = slideMenuController
+        //        self.window?.makeKeyAndVisible()
     }
+    
+    
+    
+    
     
     func resetViewState(postResetBlock: () -> ())
     {

@@ -239,29 +239,19 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 }
                 return detailCell
             } else if indexPath.section == 1 {
-                
-                let attachmentDic = self.attachmentArr.objectAtIndex(indexPath.row)
-                
+                tableView.rowHeight = 70
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
-                
-                textFeedCell.fileTitle.text = attachmentDic["Name"] as? String
-                textFeedCell.fileType.text = attachmentDic["attributes"]!["type"] as? String
-                textFeedCell.fileModifyDate.text = attachmentDic["LastModifiedDate"] as? String
-
+                textFeedCell.attachAndNoteFileName.text = attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
+                let typeArr: AnyObject = attachmentArr.objectAtIndex(indexPath.row)["attributes"]
+                    textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 return textFeedCell
             } else {
-                let notesDic = self.noteArr.objectAtIndex(indexPath.row)
-
+                tableView.rowHeight = 70
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
-                
-                textFeedCell.fileTitle.text = notesDic["Title"] as? String
-                textFeedCell.fileType.text = notesDic["attributes"]!["type"] as? String
-                textFeedCell.fileModifyDate.text = notesDic["CreatedDate"] as? String
-
-                
-                
+                textFeedCell.attachAndNoteFileName.text = noteArr.objectAtIndex(indexPath.row)["Name"] as? String
+                let typeArr: AnyObject = noteArr.objectAtIndex(indexPath.row)["attributes"]
+                textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 return textFeedCell
-                
             }
         } else {
             let fileContentName  = nullToNil(self.feedData.objectAtIndex(indexPath.row)["ContentFileName"])

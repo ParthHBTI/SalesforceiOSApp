@@ -212,17 +212,20 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
                 }
                 return detailCell
             } else if indexPath.section == 1 {
+                tableView.rowHeight = 70
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
-                textFeedCell.fileType.text = self.attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
-                textFeedCell.fileModifyDate.text = self.attachmentArr.objectAtIndex(indexPath.row)["CreatedDate"] as? String
+                textFeedCell.attachAndNoteFileName.text = attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
+                let typeArr: AnyObject = attachmentArr.objectAtIndex(indexPath.row)["attributes"]
+                textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 return textFeedCell
             } else {
+                tableView.rowHeight = 70
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
-                //textFeedCell.fileType.text = self.noteArr.objectAtIndex(indexPath.row)["Title"] as? String
-                textFeedCell.fileModifyDate.text = self.noteArr.objectAtIndex(indexPath.row)["LastModifiedDate"] as? String
+                textFeedCell.attachAndNoteFileName.text = noteArr.objectAtIndex(indexPath.row)["Name"] as? String
+                let typeArr: AnyObject = noteArr.objectAtIndex(indexPath.row)["attributes"]
+                textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 return textFeedCell
             }
-
         } else {
             let fileContentName  = nullToNil(self.feedData.objectAtIndex(indexPath.row)["ContentFileName"])
             if fileContentName == nil {

@@ -10,13 +10,12 @@ import UIKit
 
 class NoteAndAttachFileCell: UITableViewCell {
 
-    @IBOutlet weak var editButton: UIButton!
-    @IBOutlet weak var delButton: UIButton!
-    @IBOutlet weak var fileType: UILabel!
-    @IBOutlet weak var fileTitle: UILabel!
-    @IBOutlet weak var fileModifyDate: UILabel!
-    @IBOutlet weak var fileCreatedBy: UILabel!
-    override func awakeFromNib() {
+    @IBOutlet weak var attachPhoto: UIImageView!
+    @IBOutlet weak var attachAndNoteFileName: UILabel!
+    @IBOutlet weak var attachNoteTime: UILabel!
+    @IBOutlet weak var attachNoteFileSize: UILabel!
+    @IBOutlet weak var attachFileExt: UILabel!
+       override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }

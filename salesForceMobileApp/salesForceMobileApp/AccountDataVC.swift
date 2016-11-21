@@ -9,7 +9,7 @@
 import UIKit
 import SalesforceRestAPI
 
-class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate {
+class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate {
     
     var feedData: AnyObject = []
     var getResponseArr:AnyObject = []
@@ -163,10 +163,40 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
 
     
     func shareAction() {
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
-        navigationController?.pushViewController(nv, animated: true)
+        let actionSheet = UIActionSheet(title: "Choose Option", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Add Attachment", "Add Note")
+        
+        actionSheet.showInView(self.view)
+        
     }
+    
+    func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int)
+    {
+        print("\(buttonIndex)")
+        switch (buttonIndex){
+            
+        case 0:
+            print("Cancel")
+        case 1:
+            let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+            let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
+            nv.leadDetailInfo = getResponseArr;
+            navigationController?.pushViewController(nv, animated: true)
+            print("Save")
+        case 2:
+            let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+            let nv = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
+            //nv.leadDetailInfo = getResponseArr;
+            nv.leadId = leadID
+            navigationController?.pushViewController(nv, animated: true)
+            
+            print("Delete")
+        default:
+            print("Default")
+            //Some code here..
+            
+        }
+    }
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

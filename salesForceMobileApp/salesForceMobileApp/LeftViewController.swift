@@ -15,6 +15,7 @@ enum LeftMenu: Int {
     case account
     case contact
     case opportunity
+    case Logout
     case NonMenu
 }
 
@@ -111,6 +112,11 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
         self.view.layoutIfNeeded()
     }
     
+    func logoutFromApp()  {
+        SFAuthenticationManager.sharedManager().logout()
+     //   UIAppDelegate.handleSdkManagerLogout()
+    }
+    
     func changeViewController(menu: LeftMenu) {
         switch menu {
         case .lead:
@@ -121,6 +127,7 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
             self.slideMenuController()?.changeMainViewController(self.javaViewController, close: true)
         case .opportunity:
             self.slideMenuController()?.changeMainViewController(self.goViewController, close: true)
+        case .Logout: logoutFromApp()
         case .NonMenu:
             self.slideMenuController()?.changeMainViewController(self.nonMenuViewController, close: true)
         }
@@ -132,7 +139,7 @@ extension LeftViewController : UITableViewDelegate {
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if let menu = LeftMenu(rawValue: indexPath.item) {
             switch menu {
-            case .lead, .account, .contact, .opportunity, .NonMenu:
+            case .lead, .account, .contact, .opportunity, .Logout, .NonMenu:
                 return BaseTableViewCell.height()
             }
         }
@@ -150,7 +157,7 @@ extension LeftViewController : UITableViewDataSource {
         
         if let menu = LeftMenu(rawValue: indexPath.item) {
             switch menu {
-            case .lead, .account, .contact, .opportunity, .NonMenu:
+            case .lead, .account, .contact, .opportunity, .Logout, .NonMenu:
                 let cell = BaseTableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: BaseTableViewCell.identifier)
                 cell.setData(menus[indexPath.row])
                 tableView.backgroundColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)

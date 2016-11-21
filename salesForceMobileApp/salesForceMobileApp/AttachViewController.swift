@@ -166,23 +166,33 @@ let imagePicker = UIImagePickerController()
 //print(response)
 //        }
         
-        
         let noteFields = [
-            "Type" : "Note",
-            "Title": "Note Title by Kamlesh",
-            "Text": "This Text is for New Note by Kamlesh",
+            
+            "Title":"Welcome to Not",
+            
+            "Body": "Hello Salesforce, This is note File",
+            
             "ParentId":leadId
+            
         ]
         
+        print(noteFields)
+        
         let request1 = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Note", fields: noteFields)
-
+        
+        
+        
         SFRestAPI.sharedInstance().sendRESTRequest(request1, failBlock: { error in
+            
             print(error)
-
+            
+            
+            
         }) { response in
-print(response)
+            
+            print(response)
+            
         }
-
         return;
         
              let paramDict:AnyObject = ["feedElementType":"FeedItem","subjectId":"me","parentId":"00Q2800000Q751L"]

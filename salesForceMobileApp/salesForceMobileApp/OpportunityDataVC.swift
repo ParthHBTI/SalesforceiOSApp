@@ -12,6 +12,8 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
     var feedData: AnyObject = []
     var getResponseArr:AnyObject = []
     var opportunityDataArr = []
+    var attachmentArr: AnyObject = []
+    var noteArr: AnyObject = []
     var cellTitleArr: NSArray = ["Opportunity Owner:","Opportunity Name:","Account Name:","Lead Source:","Stage Name:","Type:","Ammount:","Probability:","Is Private:","Created Date:","Close Date:","Is Closed:","Is Deleted:","Last Modified Date:"]
     var leadID = String()
     @IBOutlet weak var feedSegment: UISegmentedControl!
@@ -99,21 +101,71 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    // MARK: - Table view data source
+    
+       override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        dowloadAttachment()
+    }
+    
+    func dowloadAttachment() {
+        let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
+        let reqs = SFRestAPI.sharedInstance().requestForQuery(query)
+        SFRestAPI.sharedInstance().sendRESTRequest(reqs, failBlock: {
+            erro in
+            print(erro)
+            }, completeBlock: { response in
+                print(response)
+                self.attachmentArr = response!["records"]
+                self.tableView.reloadData()
+                
+                
+        })
+        let attachQuery = "SELECT ContentType,IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
+        let attachReq = SFRestAPI.sharedInstance().requestForQuery(attachQuery)
+        SFRestAPI.sharedInstance().sendRESTRequest(attachReq, failBlock: {
+            erro in
+            print(erro)
+            }, completeBlock: { response in
+                print(response)
+                self.noteArr = response!["records"]
+                self.tableView.reloadData()
+                
+                
+        })
+        
+    }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+        if feedSegment.selectedSegmentIndex == 1 {
+            return 3
+        } else {
+            return 1
+        }
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if feedSegment.selectedSegmentIndex == 1 {
-            return opportunityDataArr.count
+            
+            switch (section) {
+            case 0:
+                return opportunityDataArr.count
+                
+            case 1:
+                return attachmentArr.count
+                
+            case 2:
+                return noteArr.count
+                
+            default:
+                return 1
+            }
+            //            return (section==0) ? leadDataArr.count : attachmentArr.count
         } else {
             return feedData.count
         }
-
     }
-    
+
+
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if feedSegment.selectedSegmentIndex == 1 {
             if indexPath.section == 0 {
@@ -129,8 +181,15 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate {
                     tableView.rowHeight = 70
                 }
                 return detailCell
-            } else {
+            } else if indexPath.section == 1 {
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
+                textFeedCell.fileType.text = self.attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
+                textFeedCell.fileModifyDate.text = self.attachmentArr.objectAtIndex(indexPath.row)["CreatedDate"] as? String
+                return textFeedCell
+            } else {
+                let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
+                //textFeedCell.fileType.text = self.noteArr.objectAtIndex(indexPath.row)["Title"] as? String
+                textFeedCell.fileModifyDate.text = self.noteArr.objectAtIndex(indexPath.row)["LastModifiedDate"] as? String
                 return textFeedCell
             }
         } else {

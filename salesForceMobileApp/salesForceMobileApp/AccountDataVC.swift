@@ -19,6 +19,8 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
     var parentIndex : Int = 0
     var accountCellTitleArr: NSArray = ["Account Owner:","Account Name:","Account Number:","Type:","Ownership:","Website:","Phone:","Fax:","Last Modified Date:"]
     var accountDataArr = []
+    var attachmentArr: AnyObject = []
+    var noteArr: AnyObject = []
     @IBOutlet weak var feedSegment: UISegmentedControl!
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -128,6 +130,39 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
         ]
     
     }
+    override func viewWillAppear(animated: Bool) {
+         super.viewWillAppear(animated)
+        dowloadAttachment()
+    }
+    
+    func dowloadAttachment() {
+        let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
+        let reqs = SFRestAPI.sharedInstance().requestForQuery(query)
+        SFRestAPI.sharedInstance().sendRESTRequest(reqs, failBlock: {
+            erro in
+            print(erro)
+            }, completeBlock: { response in
+                print(response)
+                self.attachmentArr = response!["records"]
+                self.tableView.reloadData()
+                
+                
+        })
+        let attachQuery = "SELECT ContentType,IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
+        let attachReq = SFRestAPI.sharedInstance().requestForQuery(attachQuery)
+        SFRestAPI.sharedInstance().sendRESTRequest(attachReq, failBlock: {
+            erro in
+            print(erro)
+            }, completeBlock: { response in
+                print(response)
+                self.noteArr = response!["records"]
+                self.tableView.reloadData()
+                
+                
+        })
+        
+    }
+
     
     func shareAction() {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
@@ -143,12 +178,30 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
     // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+        if feedSegment.selectedSegmentIndex == 1 {
+            return 3
+        } else {
+            return 1
+        }
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if feedSegment.selectedSegmentIndex == 1 {
-            return accountDataArr.count
+            
+            switch (section) {
+            case 0:
+                return accountDataArr.count
+                
+            case 1:
+                return attachmentArr.count
+                
+            case 2:
+                return noteArr.count
+                
+            default:
+                return 1
+            }
+            //            return (section==0) ? leadDataArr.count : attachmentArr.count
         } else {
             return feedData.count
         }
@@ -170,11 +223,18 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
                     tableView.rowHeight = 70
                 }
                 return detailCell
-            } else {
+            } else if indexPath.section == 1 {
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
+                textFeedCell.fileType.text = self.attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
+                textFeedCell.fileModifyDate.text = self.attachmentArr.objectAtIndex(indexPath.row)["CreatedDate"] as? String
+                return textFeedCell
+            } else {
+                let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
+                //textFeedCell.fileType.text = self.noteArr.objectAtIndex(indexPath.row)["Title"] as? String
+                textFeedCell.fileModifyDate.text = self.noteArr.objectAtIndex(indexPath.row)["LastModifiedDate"] as? String
                 return textFeedCell
             }
-        } else {
+        } else { 
             let fileContentName  = nullToNil(self.feedData.objectAtIndex(indexPath.row)["ContentFileName"])
             if fileContentName == nil {
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("textFeedCellID", forIndexPath: indexPath) as! AccountDataCell
@@ -198,7 +258,6 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
                 feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
                 feedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
-                
                 let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
                 let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
                 let requ = SFRestAPI.sharedInstance().requestForQuery(query)

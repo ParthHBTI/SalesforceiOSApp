@@ -58,61 +58,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "salesForceMobileApp/LeadContentVC.swift"
-            timestampString = "501140350.819058"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "201"
-            endingLineNumber = "201"
-            landmarkName = "tableView(_:cellForRowAtIndexPath:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "salesForceMobileApp/LeadContentVC.swift"
             timestampString = "501140353.603179"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "219"
             endingLineNumber = "219"
-            landmarkName = "tapOnImage(_:)"
+            landmarkName = "tableView(_:cellForRowAtIndexPath:)"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "salesForceMobileApp.LeadContentVC.(tapOnImage (__ObjC.UITapGestureRecognizer) -&gt; ()).(closure #2)"
-                  moduleName = "salesForceMobileApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mac/Desktop/SalesforceiOSApp/salesForceMobileApp/salesForceMobileApp/LeadContentVC.swift"
-                  timestampString = "501141638.732579"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "219"
-                  endingLineNumber = "219"
-                  offsetFromSymbolStart = "948">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "salesForceMobileApp.LeadContentVC.(tapOnImage (__ObjC.UITapGestureRecognizer) -&gt; ()).(closure #2).(closure #1)"
-                  moduleName = "salesForceMobileApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mac/Desktop/SalesforceiOSApp/salesForceMobileApp/salesForceMobileApp/LeadContentVC.swift"
-                  timestampString = "501141638.732746"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "220"
-                  endingLineNumber = "220"
-                  offsetFromSymbolStart = "19">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -121,13 +73,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "salesForceMobileApp/LeadContentVC.swift"
-            timestampString = "501141107.115236"
+            filePath = "salesForceMobileApp/AppDelegate.swift"
+            timestampString = "501407842.050702"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "198"
-            endingLineNumber = "198"
-            landmarkName = "tableView(_:cellForRowAtIndexPath:)"
+            startingLineNumber = "196"
+            endingLineNumber = "196"
+            landmarkName = "handleSdkManagerLogout()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

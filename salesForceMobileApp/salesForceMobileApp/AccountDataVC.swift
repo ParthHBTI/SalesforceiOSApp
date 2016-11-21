@@ -55,13 +55,13 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
         let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(AccountDataVC.shareAction))
         let navBarEditBtn = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action:#selector(self.editAction))
         self.navigationItem.setRightBarButtonItems([crossBtnItem,navBarEditBtn], animated: true)
-        self.isAccDataNil(getResponseArr as! NSDictionary)
+        self.isAccDataNil()
     }
     
     
     func executeQuery()  {
         getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex)
-        self.isAccDataNil(getResponseArr as! NSDictionary)
+        self.isAccDataNil()
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
         })
@@ -78,7 +78,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
     }
     
     
-    func isAccDataNil(accDic:NSDictionary) {
+    func isAccDataNil() {
         
         var lastModifiedDate = ""
         if  let _  = nullToNil( getResponseArr["LastModifiedDate"]) {

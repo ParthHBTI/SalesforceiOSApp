@@ -9,12 +9,16 @@
 import UIKit
 import SalesforceRestAPI
 
-class ContactDataVC: UITableViewController, SFRestDelegate {
+class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate {
+    
+    var exDelegate: ExecuteQuery = ExecuteQuery()
     var feedData: AnyObject = []
     var getResponseArr:AnyObject = []
     var cellTitleArr: NSArray = ["Contact Owner:","Name:","Email:","Birthdate:","Phone:","Fax:","Title:"]
     var contactDataArr = []
     var leadID = String()
+    var parentIndex:Int = 0
+    var isFirstLoad: Bool = false
     @IBOutlet weak var feedSegment: UISegmentedControl!
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -38,18 +42,41 @@ class ContactDataVC: UITableViewController, SFRestDelegate {
                 self.tableView.reloadData()
             })
         }
-
+        
         
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setNavigationBarItem()
+        isFirstLoad = true
+        exDelegate.delegate = self
         tableView.rowHeight = 70
         feedSegment.selectedSegmentIndex = 1
         let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(ContactDataVC.shareAction))
         let navBarEditBtn = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action:#selector(self.editAction))
         self.navigationItem.setRightBarButtonItems([crossBtnItem,navBarEditBtn], animated: true)
-        
+        self.isContactDataNil()
+    }
+    
+    
+    func executeQuery()  {
+        getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex)
+        self.isContactDataNil()
+        dispatch_async(dispatch_get_main_queue(), {
+            self.tableView.reloadData()
+        })
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        if !isFirstLoad {
+            exDelegate.leadQueryDe("contact")
+        }
+        self.isFirstLoad = false
+    }
+    
+    func isContactDataNil() {
         var birthdate = ""
         if  let _  = nullToNil( getResponseArr["Birthdate"]) {
             birthdate =  (getResponseArr["Birthdate"] as? String)!
@@ -88,6 +115,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate {
                           fax
         ]
     }
+    
     
     func shareAction() {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
@@ -227,5 +255,5 @@ class ContactDataVC: UITableViewController, SFRestDelegate {
         self.log(.Debug, msg: "requestDidTimeout: \(request)")
         // Add your failed error handling here
     }
-
+    
 }

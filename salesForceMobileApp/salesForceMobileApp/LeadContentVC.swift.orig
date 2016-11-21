@@ -3,7 +3,7 @@ import SalesforceRestAPI
 import SalesforceNetwork
 import SystemConfiguration
 
-class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate, UIActionSheetDelegate {
+class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate {
     
     @IBOutlet weak var leadSegment: UISegmentedControl!
     var getResponseArr:AnyObject = []
@@ -17,7 +17,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     var coutFile = Int()
     var tempCell = LeadContentCell()
     var exDelegate: ExecuteQuery = ExecuteQuery()
-    var parentIndex:Int = 0
+    var indx:Int = 0
     var isFirstLoaded: Bool = false
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -45,9 +45,9 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setNavigationBarItem()
+        //print("indexPath = \(indx)")
         isFirstLoaded = true
-        exDelegate.delegate = self
+        self.setNavigationBarItem()
         leadSegment.selectedSegmentIndex = 1
         tableView.rowHeight = 70
         let nav = self.navigationController?.navigationBar
@@ -57,57 +57,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         let navEditBtn = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action:#selector(self.editAction))
         let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(LeadContentVC.shareAction))
         self.navigationItem.setRightBarButtonItems([crossBtnItem,navEditBtn], animated: true)
-        self.isLeadDataNil()
-    }
-    
-    
-    func executeQuery() {
-        getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex)
-        self.isLeadDataNil()
-        dispatch_async(dispatch_get_main_queue(), {
-            self.tableView.reloadData()
-        })
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        if !self.isFirstLoaded {
-            exDelegate.leadQueryDe("lead")
-        }
-        self.isFirstLoaded = false
-        dowloadAttachment()
-    }
-    
-    func dowloadAttachment() {
-        let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
-        let reqs = SFRestAPI.sharedInstance().requestForQuery(query)
-        SFRestAPI.sharedInstance().sendRESTRequest(reqs, failBlock: {
-            erro in
-            print(erro)
-            }, completeBlock: { response in
-                print(response)
-                self.attachmentArr = response!["records"]
-                self.tableView.reloadData()
-                
-                
-        })
-        let attachQuery = "SELECT ContentType,IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
-        let attachReq = SFRestAPI.sharedInstance().requestForQuery(attachQuery)
-        SFRestAPI.sharedInstance().sendRESTRequest(attachReq, failBlock: {
-            erro in
-            print(erro)
-            }, completeBlock: { response in
-                print(response)
-                self.noteArr = response!["records"]
-                self.tableView.reloadData()
-                
-                
-        })
         
-    }
-    
-    
-    func isLeadDataNil() {
         var email = ""
         if  let _  = nullToNil( getResponseArr["Email"]) {
             email =  (getResponseArr["Email"] as? String)!
@@ -147,40 +97,54 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     }
     
     
-    func shareAction() {
-        let actionSheet = UIActionSheet(title: "Choose Option", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Add Attachment", "Add Note")
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if !self.isFirstLoaded {
+            exDelegate.leadQueryDe("lead")
+            //getResponseArr = exDelegate.resArr
+            //print("getResponseArr = \(exDelegate.resArr)")
+            //self.makeLeadDataArr(getResponseArr.objectAtIndex(indx) as! NSDictionary)
+        }
         
-        actionSheet.showInView(self.view)
+        self.isFirstLoaded = false
+        dowloadAttachment()
+    }
+    
+    func dowloadAttachment() {
+        let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
+        let reqs = SFRestAPI.sharedInstance().requestForQuery(query)
+        SFRestAPI.sharedInstance().sendRESTRequest(reqs, failBlock: {
+            erro in
+            print(erro)
+            }, completeBlock: { response in
+                print(response)
+                self.attachmentArr = response!["records"]
+                self.tableView.reloadData()
+                
+                
+        })
+        let attachQuery = "SELECT ContentType,IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
+        let attachReq = SFRestAPI.sharedInstance().requestForQuery(attachQuery)
+        SFRestAPI.sharedInstance().sendRESTRequest(attachReq, failBlock: {
+            erro in
+            print(erro)
+            }, completeBlock: { response in
+                print(response)
+                self.noteArr = response!["records"]
+                self.tableView.reloadData()
+                
+                
+        })
         
     }
     
-    func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int)
-    {
-        print("\(buttonIndex)")
-        switch (buttonIndex){
-            
-        case 0:
-            print("Cancel")
-        case 1:
-            let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-            let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
-            nv.leadDetailInfo = getResponseArr;
-            navigationController?.pushViewController(nv, animated: true)
-            print("Save")
-        case 2:
-            let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
-            let nv = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
-            //nv.leadDetailInfo = getResponseArr;
-            nv.leadId = leadID
-            navigationController?.pushViewController(nv, animated: true)
-            
-            print("Delete")
-        default:
-            print("Default")
-            //Some code here..
-            
-        }
+    func shareAction() {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
+        nv.leadDetailInfo = getResponseArr;
+        navigationController?.pushViewController(nv, animated: true)
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -274,27 +238,27 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
                 feedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
-                let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
-                let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
-                let requ = SFRestAPI.sharedInstance().requestForQuery(query)
-                SFRestAPI.sharedInstance().sendRESTRequest(requ, failBlock: {
-                    erro in
-                    print(erro)
-                    }, completeBlock: { response in
-                        print(response)
-                        
-                        let imageData = response!["records"] as? NSArray
-                        let id = imageData!.objectAtIndex(0)["Id"] as! String
-                        
-                        let downloadImgReq: SFRestRequest = SFRestAPI.sharedInstance().requestForFileContents(id , version: nil)
-                        SFRestAPI.sharedInstance().sendRESTRequest(downloadImgReq, failBlock: {
-                            erro in
-                            print(erro)
-                            }, completeBlock: { response in
-                                let image: UIImage = UIImage.sd_imageWithData(response as! NSData)
-                                feedCell.sharePhoto.image = image
-                        })
-                })
+                    let recordID = self.feedData.objectAtIndex(indexPath.row)["RelatedRecordId"]
+                    let query = "SELECT Id FROM ContentDocument where LatestPublishedVersionId = '\(recordID)'"
+                    let requ = SFRestAPI.sharedInstance().requestForQuery(query)
+                    SFRestAPI.sharedInstance().sendRESTRequest(requ, failBlock: {
+                        erro in
+                        print(erro)
+                        }, completeBlock: { response in
+                            print(response)
+                            
+                            let imageData = response!["records"] as? NSArray
+                            let id = imageData!.objectAtIndex(0)["Id"] as! String
+                            
+                            let downloadImgReq: SFRestRequest = SFRestAPI.sharedInstance().requestForFileContents(id , version: nil)
+                            SFRestAPI.sharedInstance().sendRESTRequest(downloadImgReq, failBlock: {
+                                erro in
+                                print(erro)
+                                }, completeBlock: { response in
+                                    let image: UIImage = UIImage.sd_imageWithData(response as! NSData)
+                                    feedCell.sharePhoto.image = image
+                            })
+                    })
                 let tapGesture = UITapGestureRecognizer(target: self, action: #selector(LeadContentVC.tapOnImage(_:)))
                 feedCell.likeImage.addGestureRecognizer(tapGesture)
                 feedCell.commentImage.addGestureRecognizer(tapGesture)

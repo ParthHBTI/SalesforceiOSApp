@@ -108,7 +108,7 @@ extension LeadViewController : UITableViewDataSource {
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("LeadContentVC") as! LeadContentVC
         subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)
         subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
-        subContentsVC.indx = (indexPath.row)
+        subContentsVC.parentIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
     

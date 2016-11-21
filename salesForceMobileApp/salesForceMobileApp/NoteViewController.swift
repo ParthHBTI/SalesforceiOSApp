@@ -27,6 +27,10 @@ class NoteViewController: UIViewController, SFRestDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let borderColor = UIColor(red: 204.0 / 255.0, green: 204.0 / 255.0, blue: 204.0 / 255.0, alpha: 1.0)
+        noteBodyTextView.layer.borderColor = borderColor.CGColor
+        noteBodyTextView.layer.borderWidth = 1.0
+        noteBodyTextView.layer.cornerRadius = 5.0
         let shareBarButton = UIBarButtonItem(title: "Share", style: .Plain, target: self, action: #selector(NoteViewController.shareAction))
         
         self.navigationItem.setRightBarButtonItem(shareBarButton, animated: true)
@@ -66,18 +70,27 @@ class NoteViewController: UIViewController, SFRestDelegate {
     }
 }
     @IBAction func saveNoteAction(sender: AnyObject) {
-        
-    }
-    @IBAction func cancelNoteAction(sender: AnyObject) {
-    }
-    /*
-    // MARK: - Navigation
+        dispatch_async(dispatch_get_main_queue(), {
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        let noteFields = [
+            
+            "Title":self.noteTitleText.text,
+            
+            "Body": self.noteBodyTextView.text,
+            
+            "ParentId":self.leadId
+            
+        ]
+                   let request1 = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Note", fields: noteFields)
+            SFRestAPI.sharedInstance().sendRESTRequest(request1, failBlock: { error in
+                print(error)
+                })
+            { response in
+                self.noteTitleText.text = nil
+                self.noteBodyTextView.text = nil
+                print(response)
+            }
+        })
     }
-    */
-
+   
 }

@@ -247,6 +247,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 return textFeedCell
             } else {
                 tableView.rowHeight = 70
+                
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
                 textFeedCell.attachAndNoteFileName.text = noteArr.objectAtIndex(indexPath.row)["Name"] as? String
                 let typeArr: AnyObject = noteArr.objectAtIndex(indexPath.row)["attributes"]

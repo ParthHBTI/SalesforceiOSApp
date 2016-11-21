@@ -68,8 +68,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
             self.tableView.reloadData()
         })
     }
-    
-    
+ 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         if !isFirstLoad {
@@ -77,6 +76,8 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
         }
         self.isFirstLoad = false
         self.setNavigationBarItem()
+        dowloadAttachment()
+
     }
     
     
@@ -130,10 +131,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
         ]
     
     }
-    override func viewWillAppear(animated: Bool) {
-         super.viewWillAppear(animated)
-        dowloadAttachment()
-    }
+   
     
     func dowloadAttachment() {
         let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"

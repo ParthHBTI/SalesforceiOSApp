@@ -72,6 +72,8 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
             exDelegate.leadQueryDe("opporchunity")
         }
         self.isFirstLoad = false
+        dowloadAttachment()
+
     }
     
     
@@ -129,10 +131,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     }
     
     
-       override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        dowloadAttachment()
-    }
+   
     
     func dowloadAttachment() {
         let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"

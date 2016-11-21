@@ -70,12 +70,16 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
         })
     }
     
+    
+  
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
         if !isFirstLoad {
             exDelegate.leadQueryDe("contact")
         }
         self.isFirstLoad = false
+        dowloadAttachment()
+
     }
     
     func isContactDataNil() {
@@ -131,11 +135,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate 
     }
     
     // MARK: - Table view data source
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        dowloadAttachment()
-    }
+ 
     
     func dowloadAttachment() {
         let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"

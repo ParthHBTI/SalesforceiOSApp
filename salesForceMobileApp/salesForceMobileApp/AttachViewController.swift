@@ -11,6 +11,7 @@ import SalesforceRestAPI
 class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate  {
     var leadDetailInfo:AnyObject = []
     var leadId = ""
+    @IBOutlet weak var attachTextView: UITextView!
     
 @IBOutlet weak var imageView: UIImageView!
 let imagePicker = UIImagePickerController()
@@ -28,7 +29,10 @@ let imagePicker = UIImagePickerController()
         super.viewDidLoad()
         self.title = "New Post"
         imagePicker.delegate = self
-        
+        let borderColor = UIColor(red: 204.0 / 255.0, green: 204.0 / 255.0, blue: 204.0 / 255.0, alpha: 1.0)
+        attachTextView.layer.borderColor = borderColor.CGColor
+        attachTextView.layer.borderWidth = 1.0
+        attachTextView.layer.cornerRadius = 5.0
         let shareBarButton = UIBarButtonItem(title: "Share", style: .Plain, target: self, action: #selector(AttachViewController.shareAction))
         
         self.navigationItem.setRightBarButtonItem(shareBarButton, animated: true)

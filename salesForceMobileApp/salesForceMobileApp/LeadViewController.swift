@@ -9,12 +9,18 @@ import UIKit
 import SalesforceRestAPI
 import SystemConfiguration
 import MBProgressHUD
+import ZKSforce
+
 // class for Lead's data
 class LeadViewController: UIViewController, ExecuteQueryDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     var resArr1:AnyObject = []
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    
+    
+    var  client:ZKSforceClient?
+    var  results:ZKQueryResult?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +31,41 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
         loadLead()
+        client = ZKSforceClient()
+
+        
+        let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
+       client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
+        
+        
+    //ZKOAuthInfo.oauthInfoWithRefreshToken(authoCordinater.refreshToken, authHost: authoCordinater.identityUrl, sessionId: authoCordinater.accessToken, instanceUrl: authoCordinater.instanceUrl, clientId: RemoteAccessConsumerKey)
+    }
+    
+    func convertLeadWithLeadId(leadId:String)  {
+      //  client?.loginFromOAuthCallbackUrl(OAuthRedirectURI, oAuthConsumerKey: RemoteAccessConsumerKey)
+        
+        let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
+        print("accessToken",authoCordinater.accessToken ,"activationCode", authoCordinater.activationCode ,"=additionalOAuthFields=", authoCordinater.additionalOAuthFields ,"=apiUrl=",authoCordinater.apiUrl,"=apiUrl=" , authoCordinater.clientId,"=apiUrl=" , authoCordinater.communityId,"=communityUrl=" ,authoCordinater.communityUrl,"=domain=",authoCordinater.domain,"=identifier=",authoCordinater.identifier,"=identityUrl=",authoCordinater.identityUrl,"=instanceUrl=",authoCordinater.instanceUrl,"=refreshToken=",authoCordinater.refreshToken,"=redirectUri=",authoCordinater.redirectUri)
+        
+        print("\n\n\n=description=", authoCordinater.description)
+
+        
+        let leadConvertObj = ZKLeadConvert()
+        leadConvertObj.leadId = leadId;
+        leadConvertObj.convertedStatus = "Closed - Converted";
+
+        
+    
+        client?.performConvertLead([leadConvertObj], failBlock: { exp in
+            print(exp)
+
+            }, completeBlock: { success in
+                print(success)
+
+        })
+        
+
+
     }
     
     func executeQuery()  {
@@ -104,6 +145,9 @@ extension LeadViewController : UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        convertLeadWithLeadId(self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String)
+        return;
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("LeadContentVC") as! LeadContentVC
         subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)

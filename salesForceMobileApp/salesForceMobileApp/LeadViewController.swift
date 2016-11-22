@@ -143,6 +143,8 @@ extension LeadViewController : UITableViewDataSource {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
         cell.dataText.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         cell.dataImage.image = UIImage.init(named: "lead")
+        cell.convertButton.addTarget(self, action: #selector(self.btnClicked), forControlEvents: .TouchUpInside)
+        
         /*let img = UIImage(named: "lead")
         let tintedImage = img?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         cell.dataImage.image = tintedImage
@@ -150,10 +152,19 @@ extension LeadViewController : UITableViewDataSource {
         return cell
     }
     
+    func btnClicked(sender: UIButton) {
+        print(sender.tag)
+        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
+        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ConvertLeadViewController") as! ConvertLeadViewController
+       subContentsVC.convertDataArr = self.resArr1.objectAtIndex(sender.tag)
+        subContentsVC.convertLeadDataArr = self.resArr1.objectAtIndex(sender.tag) 
+        self.navigationController?.pushViewController(subContentsVC, animated: true)
+        //convertLeadWithLeadId(self.resArr1.objectAtIndex(sender.tag)["Id"] as! String)
+            }
+    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        convertLeadWithLeadId(self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String)
-        return;
+        //convertLeadWithLeadId(self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String)
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("LeadContentVC") as! LeadContentVC
         subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)

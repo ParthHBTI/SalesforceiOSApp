@@ -20,9 +20,13 @@ struct DataTableViewCellData {
 
 class DataTableViewCell : BaseTableViewCell {
     
+    @IBAction func convertLead(sender: AnyObject) {
+        
+    }
     @IBOutlet weak var dataImage: UIImageView!
     @IBOutlet weak var dataText: UILabel!
     
+    @IBOutlet weak var convertButton: UIButton!
     override func awakeFromNib() {
         self.dataText?.font = UIFont.italicSystemFontOfSize(16)
         self.dataText?.textColor = UIColor(hex: "9E9E9E")

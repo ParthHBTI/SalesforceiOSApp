@@ -55,9 +55,10 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         exDelegate.delegate = self
         tableView.rowHeight = 70
         feedSegment.selectedSegmentIndex = 1
-        let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(ContactDataVC.shareAction))
-        let navBarEditBtn = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action:#selector(self.editAction))
-        self.navigationItem.setRightBarButtonItems([crossBtnItem,navBarEditBtn], animated: true)
+        //let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(ContactDataVC.shareAction))
+        let navBarActionBtn: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(LeadContentVC.shareAction))
+        let navBarEditBtn = UIBarButtonItem(image: UIImage(named: "editImg-1"), style: .Plain, target: self, action:#selector(self.editAction))
+        self.navigationItem.setRightBarButtonItems([navBarActionBtn,navBarEditBtn], animated: true)
         self.isContactDataNil()
     }
     

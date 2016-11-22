@@ -50,9 +50,10 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         exDelegate.delegate = self
         tableView.rowHeight = 70
         feedSegment.selectedSegmentIndex = 1
-        let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(OpportunityDataVC.shareAction))
-        let navBarEditBtn = UIBarButtonItem(title: "Edit", style: .Plain, target: self, action: #selector(OpportunityDataVC.editAction))
-        self.navigationItem.setRightBarButtonItems([crossBtnItem,navBarEditBtn], animated: true)
+        //let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(OpportunityDataVC.shareAction))
+        let navBarActionBtn: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(LeadContentVC.shareAction))
+        let navBarEditBtn = UIBarButtonItem(image: UIImage(named: "editImg-1"), style: .Plain, target: self, action: #selector(OpportunityDataVC.editAction))
+        self.navigationItem.setRightBarButtonItems([navBarActionBtn,navBarEditBtn], animated: true)
         print(getResponseArr)
         self.isOpportunityDataNil()
         

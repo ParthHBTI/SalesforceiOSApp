@@ -27,6 +27,7 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     
     @IBOutlet weak var tableView: UITableView!
     var menus = ["Leads", "Accounts", "Contacts", "Opportunities", "Logout"]
+    var menuIconsArr:[UIImage] = [UIImage(named: "leadImg")!, UIImage(named: "accImg")!,UIImage(named: "contact-1")!, UIImage(named: "opportunity")!, UIImage(named: "userLogOutImg")!]
     var mainViewController: UIViewController!
     var swiftViewController: UIViewController!
     var javaViewController: UIViewController!
@@ -160,6 +161,7 @@ extension LeftViewController : UITableViewDataSource {
             case .lead, .account, .contact, .opportunity, .Logout, .NonMenu:
                 let cell = BaseTableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: BaseTableViewCell.identifier)
                 cell.setData(menus[indexPath.row])
+                cell.imageView?.image = menuIconsArr[indexPath.row]
                 tableView.backgroundColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
                 cell.backgroundColor = UIColor.init(colorLiteralRed: 78.0/255, green: 158.0/255, blue: 255.0/255, alpha: 1.0)
                 return cell

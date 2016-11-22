@@ -40,7 +40,8 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     }
     
     func addRightBarButtonWithImage1() {
-        let navBarAddBtn: UIBarButtonItem = UIBarButtonItem(title: "Add", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+        //let navBarAddBtn: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "addImg"), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+        let navBarAddBtn: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(self.toggleRight1))
         navigationItem.rightBarButtonItem = navBarAddBtn
     }
     

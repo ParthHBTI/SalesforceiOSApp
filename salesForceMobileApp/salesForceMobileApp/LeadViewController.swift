@@ -76,7 +76,9 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     }
     
     func addRightBarButtonWithImage1() {
-        let navBarAddBtn: UIBarButtonItem = UIBarButtonItem(title: "Add", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+        //let navBarAddBtn: UIBarButtonItem = UIBarButtonItem(title: "Add", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+        //let navBarAddBtn: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "addImg"), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
+        let navBarAddBtn = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(self.toggleRight1))
         navigationItem.rightBarButtonItem = navBarAddBtn;
     }
     
@@ -141,6 +143,10 @@ extension LeadViewController : UITableViewDataSource {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
         cell.dataText.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         cell.dataImage.image = UIImage.init(named: "lead")
+        /*let img = UIImage(named: "lead")
+        let tintedImage = img?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+        cell.dataImage.image = tintedImage
+        cell.dataImage.tintColor = UIColor.redColor()*/
         return cell
     }
     

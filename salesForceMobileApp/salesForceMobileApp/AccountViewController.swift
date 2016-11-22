@@ -109,7 +109,9 @@ extension AccountViewController : UITableViewDataSource {
         
         //cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Website"] as? String
         cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
-        cell.dataImage.image = UIImage.init(named: "account")
+        cell.dataImage.backgroundColor = UIColor.init(hex: "7D8AD9")
+        cell.dataImage.layer.cornerRadius = 2.0
+        cell.dataImage.image = UIImage.init(named: "accImg")
         return cell
     }
     

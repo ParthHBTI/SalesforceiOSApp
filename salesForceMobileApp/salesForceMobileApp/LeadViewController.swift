@@ -142,7 +142,8 @@ extension LeadViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
         cell.dataText.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
-        cell.dataImage.image = UIImage.init(named: "lead")
+        cell.dataImage.layer.cornerRadius = 2.0
+        cell.dataImage.image = UIImage.init(named: "leadImg")
         /*let img = UIImage(named: "lead")
         let tintedImage = img?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         cell.dataImage.image = tintedImage

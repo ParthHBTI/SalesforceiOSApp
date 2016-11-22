@@ -107,8 +107,10 @@ extension ContactViewController : UITableViewDataSource {
 //        cell.textLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
 //        cell.detailTextLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
-        cell.dataImage.image = UIImage.init(named: "contact")
-        print(cell.textLabel?.text)
+        cell.dataImage.backgroundColor = UIColor.init(hex: "9996D2")
+        cell.dataImage.layer.cornerRadius = 2.0
+        cell.dataImage.image = UIImage.init(named: "add_contact")
+        //print(cell.textLabel?.text)
         return cell
     }
     

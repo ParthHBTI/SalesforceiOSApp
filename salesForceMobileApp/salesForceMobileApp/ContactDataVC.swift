@@ -262,7 +262,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("textFeedCellID", forIndexPath: indexPath) as! AccountDataCell
                 textFeedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
                 String
-                textFeedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
+                textFeedCell.totalLike.text = String(self.feedData.objectAtIndex(indexPath.row)["LikeCount"])
                 textFeedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
                 textFeedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
@@ -276,8 +276,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                 self.tableView.rowHeight = 400
                 feedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
                 String
-                feedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
-                feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
+                feedCell.totalLike.text = String(self.feedData.objectAtIndex(indexPath.row)["LikeCount"]);                feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
                 feedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
                 

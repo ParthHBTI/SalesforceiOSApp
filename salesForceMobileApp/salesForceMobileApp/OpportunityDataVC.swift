@@ -259,7 +259,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("textFeedCellID", forIndexPath: indexPath) as! AccountDataCell
                 textFeedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
                 String
-                textFeedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
+                textFeedCell.totalLike.text = String(self.feedData.objectAtIndex(indexPath.row)["LikeCount"])
                 textFeedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
                 textFeedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String
@@ -273,7 +273,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
                 self.tableView.rowHeight = 400
                 feedCell.feedDateStatus.text = self.feedData.objectAtIndex(indexPath.row)["CreatedDate"] as?
                 String
-                feedCell.totalLike.text = String(self.feedData.valueForKey("LikeCount")![indexPath.row])
+                feedCell.totalLike.text = String(self.feedData.objectAtIndex(indexPath.row)["LikeCount"])
                 feedCell.totalComment.text = String(self.feedData.objectAtIndex(indexPath.row)["CommentCount"])// as?
                 feedCell.shareText.text = self.feedData.objectAtIndex(indexPath.row)["Body"] as?
                 String

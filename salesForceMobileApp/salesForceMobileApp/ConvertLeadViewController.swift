@@ -44,6 +44,8 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Convert Lead"
+         self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
         let query = "SELECT Id, Name FROM RecentlyViewed WHERE Type IN ('Account')  Limit 5"
         let request = SFRestAPI.sharedInstance().requestForQuery(query)
         SFRestAPI.sharedInstance().send(request, delegate: self)
@@ -74,6 +76,15 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
 
 
         // Do any additional setup after loading the view.
+    }
+    
+    func leftBarButtonWithImage(buttonImage: UIImage) {
+        let leftButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleLeft))
+        navigationItem.leftBarButtonItem = leftButton;
+    }
+    
+    override func toggleLeft() {
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     func textFieldActive() {

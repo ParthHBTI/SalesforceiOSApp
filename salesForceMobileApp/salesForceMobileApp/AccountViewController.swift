@@ -104,7 +104,7 @@ extension AccountViewController : UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
-        
+        cell.convertButton.hidden = true
         //Name
         
         //cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Website"] as? String

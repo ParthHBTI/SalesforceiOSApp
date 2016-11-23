@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -37,40 +36,10 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b6u-4L-H5f">
-                        <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="30" id="K24-Iq-r0L"/>
-                            <constraint firstAttribute="width" constant="62" id="gfP-Qu-zqk"/>
-                        </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                        <state key="normal" title="Convert">
-                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        </state>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="K24-Iq-r0L"/>
-                                <exclude reference="gfP-Qu-zqk"/>
-                            </mask>
-                        </variation>
-                        <variation key="heightClass=regular-widthClass=compact">
-                            <mask key="constraints">
-                                <include reference="K24-Iq-r0L"/>
-                                <include reference="gfP-Qu-zqk"/>
-                            </mask>
-                        </variation>
-                        <connections>
-                            <action selector="convertLead:" destination="c3H-ux-4zZ" eventType="touchUpInside" id="xIk-5j-dve"/>
-                        </connections>
-                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="I30-9I-EnW" firstAttribute="leading" secondItem="ppM-43-tik" secondAttribute="trailing" constant="8" id="0sI-CM-qrq">
                         <variation key="heightClass=regular-widthClass=compact" constant="8"/>
-                    </constraint>
-                    <constraint firstItem="b6u-4L-H5f" firstAttribute="centerY" secondItem="I30-9I-EnW" secondAttribute="centerY" id="AEp-bI-UPZ">
-                        <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                     </constraint>
                     <constraint firstItem="I30-9I-EnW" firstAttribute="centerY" secondItem="eWK-b2-p7R" secondAttribute="centerY" id="CC8-Ve-GEE">
                         <variation key="heightClass=regular-widthClass=compact" constant="-5.5"/>
@@ -78,36 +47,16 @@
                     <constraint firstItem="ppM-43-tik" firstAttribute="top" secondItem="eWK-b2-p7R" secondAttribute="top" id="Ejt-ht-YfW">
                         <variation key="heightClass=regular-widthClass=compact" constant="19"/>
                     </constraint>
-                    <constraint firstAttribute="trailingMargin" secondItem="b6u-4L-H5f" secondAttribute="trailing" id="HLH-ln-ZBW"/>
                     <constraint firstItem="ppM-43-tik" firstAttribute="leading" secondItem="eWK-b2-p7R" secondAttribute="leading" id="c9f-ya-sBc">
                         <variation key="heightClass=regular-widthClass=compact" constant="10"/>
                     </constraint>
-                    <constraint firstItem="b6u-4L-H5f" firstAttribute="leading" secondItem="I30-9I-EnW" secondAttribute="trailing" constant="31" id="kIp-AF-9Ae"/>
+                    <constraint firstAttribute="trailing" secondItem="I30-9I-EnW" secondAttribute="trailing" constant="8" id="rG9-lK-Ze8">
+                        <variation key="heightClass=regular-widthClass=compact" constant="48"/>
+                    </constraint>
                 </constraints>
-                <variation key="default">
-                    <mask key="subviews">
-                        <exclude reference="b6u-4L-H5f"/>
-                    </mask>
-                    <mask key="constraints">
-                        <exclude reference="AEp-bI-UPZ"/>
-                        <exclude reference="HLH-ln-ZBW"/>
-                        <exclude reference="kIp-AF-9Ae"/>
-                    </mask>
-                </variation>
-                <variation key="heightClass=regular-widthClass=compact">
-                    <mask key="subviews">
-                        <include reference="b6u-4L-H5f"/>
-                    </mask>
-                    <mask key="constraints">
-                        <include reference="AEp-bI-UPZ"/>
-                        <include reference="HLH-ln-ZBW"/>
-                        <include reference="kIp-AF-9Ae"/>
-                    </mask>
-                </variation>
             </tableViewCellContentView>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <connections>
-                <outlet property="convertButton" destination="b6u-4L-H5f" id="WC9-bA-xHJ"/>
                 <outlet property="dataImage" destination="ppM-43-tik" id="xdO-QO-GUo"/>
                 <outlet property="dataText" destination="I30-9I-EnW" id="vsj-dK-z9n"/>
             </connections>

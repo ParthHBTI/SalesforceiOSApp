@@ -156,7 +156,6 @@ extension LeadViewController : UITableViewDataSource {
         print(sender.tag)
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ConvertLeadViewController") as! ConvertLeadViewController
-       subContentsVC.convertDataArr = self.resArr1.objectAtIndex(sender.tag)
         subContentsVC.convertLeadDataArr = self.resArr1.objectAtIndex(sender.tag) 
         self.navigationController?.pushViewController(subContentsVC, animated: true)
         //convertLeadWithLeadId(self.resArr1.objectAtIndex(sender.tag)["Id"] as! String)

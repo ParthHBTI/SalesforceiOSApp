@@ -11,7 +11,7 @@ import MBProgressHUD
 import ZKSforce
 import SalesforceRestAPI
 
-class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate {
+class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, SFRestDelegate {
 
     @IBOutlet weak var checkAction: UIButton!
     @IBOutlet weak var height: NSLayoutConstraint!
@@ -23,7 +23,7 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
     var convertLeadDataArr: AnyObject = []
     var  client:ZKSforceClient?
     var  results:ZKQueryResult?
-    var values = ["123 Main Street", "789 King Street", "456 Queen Street", "99 Apple Street", "21 Apple Street" ,"22 Apple Street"]
+    var accountNameArr: AnyObject = []
     let cellReuseIdentifier = "cell"
     
     
@@ -44,13 +44,16 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let query = "SELECT Id, Name FROM RecentlyViewed WHERE Type IN ('Account')  Limit 5"
+        let request = SFRestAPI.sharedInstance().requestForQuery(query)
+        SFRestAPI.sharedInstance().send(request, delegate: self)
         checkAction.layer.cornerRadius = 5
         checkAction.layer.borderWidth = 1
         checkAction.layer.borderColor = UIColor.blackColor().CGColor
         accountNameText.rightViewMode = .Always
 //        let rightImageView = UIImageView(image: UIImage(named: "downArrow")!)
 //        accountNameText.rightView! = rightImageView
-       // accountNameText.text = convertLeadDataArr.valueForKey("Company") as? String
+        accountNameText.text = convertLeadDataArr.valueForKey("Company") as? String
         opporchunityText.text = convertLeadDataArr.valueForKey("Company") as? String
         
         client = ZKSforceClient()
@@ -134,14 +137,16 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return values.count;
+        return accountNameArr.count;
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell!
         // Set text from the data model
-        cell.textLabel?.text = values[indexPath.row]
-        cell.textLabel?.font = accountNameText.font
+        cell.textLabel?.text = accountNameArr.objectAtIndex(indexPath.row)["Name"] as? String
+        if indexPath.row == 5{
+            cell.textLabel?.text = convertLeadDataArr.valueForKey("Company") as? String        }
+        //cell.textLabel?.font = accountNameText.font
         return cell
     }
     
@@ -149,7 +154,8 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         // Row selected, so set textField to relevant value, hide tableView
         // endEditing can trigger some other action according to requirements
-        accountNameText.text = values[indexPath.row]
+        accountNameText.text = accountNameArr.objectAtIndex(indexPath.row)["Name"] as? String
+
         tableView.hidden = true
         accountNameText.endEditing(true)
     }
@@ -170,7 +176,7 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
         leadConvertObj.leadId = leadId;
         leadConvertObj.convertedStatus = "Closed - Converted";
         leadConvertObj.doNotCreateOpportunity = checkButton
-        
+        leadConvertObj.opportunityName = self.opporchunityText.text
         client?.performConvertLead([leadConvertObj], failBlock: { exp in
             print(exp)
             
@@ -187,14 +193,26 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
         
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
+        self.accountNameArr = dataResponse["records"]
+        print(dataResponse)
     }
-    */
-
+    
+    func request(request: SFRestRequest, didFailLoadWithError error: NSError)
+    {
+        self.log(.Debug, msg: "didFailLoadWithError: \(error)")
+        // Add your failed error handling here
+    }
+    
+    func requestDidCancelLoad(request: SFRestRequest)
+    {
+        self.log(.Debug, msg: "requestDidCancelLoad: \(request)")
+        // Add your failed error handling here
+    }
+    
+    func requestDidTimeout(request: SFRestRequest)
+    {
+        self.log(.Debug, msg: "requestDidTimeout: \(request)")
+        // Add your failed error handling here
+    }
 }

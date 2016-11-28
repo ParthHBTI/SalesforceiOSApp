@@ -11,8 +11,10 @@ import SalesforceRestAPI
 class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate  {
     var leadDetailInfo:AnyObject = []
     var leadId = ""
+    var checkButton = false
     @IBOutlet weak var attachTextView: UITextView!
     
+    @IBOutlet weak var checkUncheckBtn: UIButton!
 @IBOutlet weak var imageView: UIImageView!
 let imagePicker = UIImagePickerController()
     
@@ -28,6 +30,9 @@ let imagePicker = UIImagePickerController()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "New Post"
+        checkUncheckBtn.layer.cornerRadius = 5
+        checkUncheckBtn.layer.borderWidth = 1
+        checkUncheckBtn.layer.borderColor = UIColor.blackColor().CGColor
         imagePicker.delegate = self
         let borderColor = UIColor(red: 204.0 / 255.0, green: 204.0 / 255.0, blue: 204.0 / 255.0, alpha: 1.0)
         attachTextView.layer.borderColor = borderColor.CGColor
@@ -43,6 +48,15 @@ let imagePicker = UIImagePickerController()
         }
         
         
+    }
+    @IBAction func checkPrivateAction(sender: AnyObject) {
+        if !checkButton {
+            checkButton = true
+            checkUncheckBtn.setImage(UIImage(named: "checkUncheck"), forState: UIControlState.Normal)
+        } else {
+            checkButton = false
+            checkUncheckBtn.setImage(nil, forState: UIControlState.Normal)
+        }
     }
 
        override func didReceiveMemoryWarning() {

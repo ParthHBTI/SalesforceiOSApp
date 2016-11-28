@@ -17,7 +17,8 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
     @IBOutlet weak var height: NSLayoutConstraint!
      @IBOutlet weak var heighConstraints: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var accountNameText: NoCopyPasteUITextField!
+    //@IBOutlet weak var accountNameText: NoCopyPasteUITextField!
+    @IBOutlet weak var accountNameText: UITextField!
     @IBOutlet weak var opporchunityText: UITextField!
     var checkButton = false
     var convertLeadDataArr: AnyObject = []
@@ -68,14 +69,10 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
         tableView.delegate = self
         tableView.dataSource = self
         accountNameText.delegate = self
-        
         tableView.hidden = true
-        
-        // Manage tableView visibility via TouchDown in textField
         accountNameText.addTarget(self, action: #selector(textFieldActive), forControlEvents: UIControlEvents.TouchDown)
+        
 
-
-        // Do any additional setup after loading the view.
     }
     
     func leftBarButtonWithImage(buttonImage: UIImage) {
@@ -88,7 +85,7 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func textFieldActive() {
-        tableView.hidden = !tableView.hidden
+       // tableView.hidden = !tableView.hidden
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -98,15 +95,15 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?)
     {
-        guard let touch:UITouch = touches.first else
-        {
-            return;
-        }
-        if touch.view != tableView
-        {
-            accountNameText.endEditing(true)
-            tableView.hidden = true
-        }
+//        guard let touch:UITouch = touches.first else
+//        {
+//            return;
+//        }
+//        if touch.view != tableView
+//        {
+//            accountNameText.endEditing(true)
+//            tableView.hidden = true
+//        }
     }
     
     // Toggle the tableView visibility when click on textField
@@ -118,7 +115,14 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+        //textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+        let presentVC = storyboard.instantiateViewControllerWithIdentifier( "AccountListViewController") as? AccountListViewController
+        self.presentViewController(presentVC!, animated: true, completion:nil)
         return true
     }
     

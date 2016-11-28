@@ -41,6 +41,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
         billingCountry.delegate = self
         postalCode.delegate = self
         postalWarningLbl.hidden = true
+        self.cancleBtn.hidden = true
         setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
@@ -61,7 +62,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
             self.billingCountry.text = accountDataDic["BillingCountry"] as? String
             self.postalCode.text = accountDataDic["BillingPostalCode"] as? String
             self.saveBtn.hidden = true
-            self.cancleBtn.hidden = true
+            //self.cancleBtn.hidden = true
             title = "Edit Account"
             self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
         }

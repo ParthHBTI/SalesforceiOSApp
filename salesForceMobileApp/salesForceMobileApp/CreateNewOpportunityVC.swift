@@ -51,6 +51,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
             self.dateVal2 = self.closeDate.text!
         })
         //print(dateVal)
+        self.cancleBtn.hidden = true
         opportunityName.delegate = self
         //closeDate.delegate = self
         amount.delegate = self
@@ -97,7 +98,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
             self.amount.text = String(opportunityAmount)
             self.stage.text = opportunityDataDic["StageName"] as? String
             self.saveBtn.hidden = true
-            self.cancleBtn.hidden = true
+            //self.cancleBtn.hidden = true
             title = "Edit Opportunity"
             self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
         }

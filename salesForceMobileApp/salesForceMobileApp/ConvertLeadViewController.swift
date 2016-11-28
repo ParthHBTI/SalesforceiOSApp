@@ -41,7 +41,7 @@ class ConvertLeadViewController: UIViewController, SFRestDelegate, AccountListDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        accountNameText.enabled = false
         accountDelegate.delegate = self
         self.title = "Convert Lead"
          self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)

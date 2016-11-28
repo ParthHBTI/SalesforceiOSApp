@@ -8,7 +8,7 @@
 
 import UIKit
 import SalesforceRestAPI
-class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate  {
+class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate  {
     var leadDetailInfo:AnyObject = []
     var leadId = ""
     var checkButton = false
@@ -32,6 +32,7 @@ let imagePicker = UIImagePickerController()
         self.title = "New Post"
         checkUncheckBtn.layer.cornerRadius = 5
         checkUncheckBtn.layer.borderWidth = 1
+        attachTextView.delegate = self
         checkUncheckBtn.layer.borderColor = UIColor.blackColor().CGColor
         imagePicker.delegate = self
         let borderColor = UIColor(red: 204.0 / 255.0, green: 204.0 / 255.0, blue: 204.0 / 255.0, alpha: 1.0)
@@ -58,7 +59,10 @@ let imagePicker = UIImagePickerController()
             checkUncheckBtn.setImage(nil, forState: UIControlState.Normal)
         }
     }
-
+    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+        self.attachTextView.text = nil
+        return true
+    }
        override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

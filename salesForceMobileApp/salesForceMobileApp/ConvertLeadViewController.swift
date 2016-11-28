@@ -11,28 +11,24 @@ import MBProgressHUD
 import ZKSforce
 import SalesforceRestAPI
 
-class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, SFRestDelegate {
+
+
+
+class ConvertLeadViewController: UIViewController, SFRestDelegate, AccountListDelegate {
 
     @IBOutlet weak var checkAction: UIButton!
-    @IBOutlet weak var height: NSLayoutConstraint!
-     @IBOutlet weak var heighConstraints: NSLayoutConstraint!
-    @IBOutlet weak var tableView: UITableView!
-    //@IBOutlet weak var accountNameText: NoCopyPasteUITextField!
     @IBOutlet weak var accountNameText: UITextField!
     @IBOutlet weak var opporchunityText: UITextField!
+    var accountDelegate: AccountListViewController = AccountListViewController()
     var checkButton = false
     var convertLeadDataArr: AnyObject = []
     var  client:ZKSforceClient?
     var  results:ZKQueryResult?
     var accountNameArr: AnyObject = []
     let cellReuseIdentifier = "cell"
+    var selectAccountText = String()
     
-    
-   
-    @IBAction func textFieldChanged(sender: AnyObject) {
-        tableView.hidden = true
-    }
-    
+       
     @IBAction func convertLeadAction(sender: AnyObject) {
         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
@@ -45,9 +41,11 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        accountDelegate.delegate = self
         self.title = "Convert Lead"
          self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
-        let query = "SELECT Id, Name FROM RecentlyViewed WHERE Type IN ('Account')  Limit 5"
+        let query = "SELECT Id, Name FROM RecentlyViewed WHERE Type IN ('Account')  "
         let request = SFRestAPI.sharedInstance().requestForQuery(query)
         SFRestAPI.sharedInstance().send(request, delegate: self)
         checkAction.layer.cornerRadius = 5
@@ -64,15 +62,10 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
         
         let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
         client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
-        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        accountNameText.delegate = self
-        tableView.hidden = true
-        accountNameText.addTarget(self, action: #selector(textFieldActive), forControlEvents: UIControlEvents.TouchDown)
-        
-
+    }
+    
+    func getAccountDel(accointDetail:String) {
+        self.accountNameText.text = accointDetail
     }
     
     func leftBarButtonWithImage(buttonImage: UIImage) {
@@ -84,105 +77,26 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
         self.navigationController?.popViewControllerAnimated(true)
     }
     
-    func textFieldActive() {
-       // tableView.hidden = !tableView.hidden
-    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-   
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?)
-    {
-//        guard let touch:UITouch = touches.first else
-//        {
-//            return;
-//        }
-//        if touch.view != tableView
-//        {
-//            accountNameText.endEditing(true)
-//            tableView.hidden = true
-//        }
-    }
     
-    // Toggle the tableView visibility when click on textField
-    
-    // MARK: UITextFieldDelegate
-    func textFieldDidEndEditing(textField: UITextField) {
-        // TODO: Your app can do something when textField finishes editing
-        print("The textField ended editing. Do something based on app requirements.")
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        //textField.resignFirstResponder()
-        return true
-    }
-    
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
-        let presentVC = storyboard.instantiateViewControllerWithIdentifier( "AccountListViewController") as? AccountListViewController
-        self.presentViewController(presentVC!, animated: true, completion:nil)
-        return true
-    }
     
     @IBAction func doNotCreateOpportunity(sender: AnyObject) {
         if !checkButton {
         checkButton = true
         checkAction.setImage(UIImage(named: "checkUncheck"), forState: UIControlState.Normal)
         } else {
-           
             checkButton = false
             checkAction.setImage(nil, forState: UIControlState.Normal)
         }
     }
     
-    override func viewDidLayoutSubviews()
-    {
-        // Assumption is we're supporting a small maximum number of entries
-        // so will set height constraint to content size
-        // Alternatively can set to another size, such as using row heights and setting frame
-        //height.constant = tableView.contentSize.height
-        heighConstraints.constant = tableView.contentSize.height
-    }
-    
-    // MARK: UITableViewDataSource
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return accountNameArr.count;
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell!
-        // Set text from the data model
-        cell.textLabel?.text = accountNameArr.objectAtIndex(indexPath.row)["Name"] as? String
-        if indexPath.row == 5{
-            cell.textLabel?.text = convertLeadDataArr.valueForKey("Company") as? String        }
-        //cell.textLabel?.font = accountNameText.font
-        return cell
-    }
-    
-    // MARK: UITableViewDelegate
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        // Row selected, so set textField to relevant value, hide tableView
-        // endEditing can trigger some other action according to requirements
-        accountNameText.text = accountNameArr.objectAtIndex(indexPath.row)["Name"] as? String
-
-        tableView.hidden = true
-        accountNameText.endEditing(true)
-    }
-    
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0.0
-    }
-    
-
-    func convertLeadWithLeadId(leadId:String)  {
+     func convertLeadWithLeadId(leadId:String)  {
         //  client?.loginFromOAuthCallbackUrl(OAuthRedirectURI, oAuthConsumerKey: RemoteAccessConsumerKey)
-        
         let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
         print("accessToken",authoCordinater.accessToken ,"activationCode", authoCordinater.activationCode ,"=additionalOAuthFields=", authoCordinater.additionalOAuthFields ,"=apiUrl=",authoCordinater.apiUrl,"=apiUrl=" , authoCordinater.clientId,"=apiUrl=" , authoCordinater.communityId,"=communityUrl=" ,authoCordinater.communityUrl,"=domain=",authoCordinater.domain,"=identifier=",authoCordinater.identifier,"=identityUrl=",authoCordinater.identityUrl,"=instanceUrl=",authoCordinater.instanceUrl,"=refreshToken=",authoCordinater.refreshToken,"=redirectUri=",authoCordinater.redirectUri)
         print("\n\n\n=description=", authoCordinater.description)
@@ -211,6 +125,15 @@ class ConvertLeadViewController: UIViewController, UITableViewDataSource, UITabl
     func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
         self.accountNameArr = dataResponse["records"]
         print(dataResponse)
+    }
+    
+    @IBAction func searchAccount(sender: AnyObject) {
+        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+        let presentVC = storyboard.instantiateViewControllerWithIdentifier( "AccountListViewController") as? AccountListViewController
+        presentVC!.accountListArr = self.accountNameArr
+        presentVC?.delegate = self;
+        self.presentViewController(presentVC!, animated: true, completion:nil)
+        
     }
     
     func request(request: SFRestRequest, didFailLoadWithError error: NSError)

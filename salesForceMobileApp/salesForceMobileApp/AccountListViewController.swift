@@ -7,13 +7,20 @@
 //
 
 import UIKit
+import SystemConfiguration
+
+@objc public protocol AccountListDelegate {
+    optional func getAccountDel(accointDetail:String)
+}
 
 class AccountListViewController: UIViewController {
-
+    internal weak var delegate : AccountListDelegate?
     @IBOutlet weak var tableView: UITableView!
+    
+    var accountListArr: AnyObject = []
+    var acName = String()
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
     }
 
@@ -27,15 +34,24 @@ class AccountListViewController: UIViewController {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return accountListArr.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("Identifire") as UITableViewCell!
+        cell.textLabel?.text = accountListArr.objectAtIndex(indexPath.row)["Name"] as? String
                return cell
     }
     
-
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.acName = (self.accountListArr.objectAtIndex(indexPath.row)["Name"] as? String)!
+        self.delegate?.getAccountDel!(self.acName )
+        self.dismissViewControllerAnimated(true, completion: {
+            
+        })
+        }
+    
+    
     /*
     // MARK: - Navigation
 

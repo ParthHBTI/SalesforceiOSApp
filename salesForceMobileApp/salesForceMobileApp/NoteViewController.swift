@@ -16,6 +16,17 @@ class NoteViewController: UIViewController, SFRestDelegate {
     @IBOutlet weak var noteTitleText: UITextField!
     @IBOutlet weak var noteBodyTextView: UITextView!
     var leadId = String()
+    var checkButton = false
+    
+    @IBAction func checkUncheckBtn(sender: AnyObject) {
+        if !checkButton {
+            checkButton = true
+            checkNoteIsPrivate.setImage(UIImage(named: "checkUncheck"), forState: UIControlState.Normal)
+        } else {
+            checkButton = false
+            checkNoteIsPrivate.setImage(nil, forState: UIControlState.Normal)
+        }
+    }
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -31,8 +42,10 @@ class NoteViewController: UIViewController, SFRestDelegate {
         noteBodyTextView.layer.borderColor = borderColor.CGColor
         noteBodyTextView.layer.borderWidth = 1.0
         noteBodyTextView.layer.cornerRadius = 5.0
+        checkNoteIsPrivate.layer.cornerRadius = 5
+        checkNoteIsPrivate.layer.borderWidth = 1
+        checkNoteIsPrivate.layer.borderColor = UIColor.blackColor().CGColor
         let shareBarButton = UIBarButtonItem(title: "Share", style: .Plain, target: self, action: #selector(NoteViewController.shareAction))
-        
         self.navigationItem.setRightBarButtonItem(shareBarButton, animated: true)
         
         
@@ -70,27 +83,24 @@ class NoteViewController: UIViewController, SFRestDelegate {
     }
 }
     @IBAction func saveNoteAction(sender: AnyObject) {
-        dispatch_async(dispatch_get_main_queue(), {
-
         let noteFields = [
             
-            "Title":self.noteTitleText.text,
+            "Title":noteTitleText.text,
             
-            "Body": self.noteBodyTextView.text,
+            "Body": noteBodyTextView.text,
             
-            "ParentId":self.leadId
+            "ParentId":leadId
             
         ]
-                   let request1 = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Note", fields: noteFields)
-            SFRestAPI.sharedInstance().sendRESTRequest(request1, failBlock: { error in
-                print(error)
-                })
-            { response in
-                self.noteTitleText.text = nil
-                self.noteBodyTextView.text = nil
-                print(response)
-            }
-        })
-    }
-   
+        
+        print(noteFields)
+        
+        let request1 = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Note", fields: noteFields)
+        SFRestAPI.sharedInstance().sendRESTRequest(request1, failBlock: { error in
+            print(error)
+            })
+        { response in
+            print(response)
+        }
+}
 }

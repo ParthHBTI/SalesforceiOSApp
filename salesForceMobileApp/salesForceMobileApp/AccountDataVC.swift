@@ -179,16 +179,16 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             print("Cancel")
         case 1:
             let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-            let nv = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
-            nv.leadDetailInfo = getResponseArr;
-            navigationController?.pushViewController(nv, animated: true)
+            let attachmentVC = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
+            attachmentVC.leadDetailInfo = getResponseArr;
+            self.navigationController?.pushViewController(attachmentVC, animated: true)
             print("Save")
+            
         case 2:
             let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
-            let nv = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
-            //nv.leadDetailInfo = getResponseArr;
-            nv.leadId = leadID
-            navigationController?.pushViewController(nv, animated: true)
+            let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
+            notesVC.leadId = leadID
+            self.navigationController?.pushViewController(notesVC, animated: true)
             
             print("Delete")
         default:
@@ -197,6 +197,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             
         }
     }
+
 
     
     override func didReceiveMemoryWarning() {

@@ -10,7 +10,7 @@ import UIKit
 import SystemConfiguration
 
 @objc public protocol AccountListDelegate {
-    optional func getAccountDel(accointDetail:String)
+    optional func getSelectedAccountInfo(accointDetail:NSDictionary)
 }
 
 class AccountListViewController: UIViewController {
@@ -22,6 +22,13 @@ class AccountListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+    }
+    
+    @IBAction func closePresentController () {
+    
+     self.dismissViewControllerAnimated(true) { 
+        
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -45,7 +52,7 @@ class AccountListViewController: UIViewController {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         self.acName = (self.accountListArr.objectAtIndex(indexPath.row)["Name"] as? String)!
-        self.delegate?.getAccountDel!(self.acName )
+        self.delegate?.getSelectedAccountInfo!((self.accountListArr.objectAtIndex(indexPath.row) as? NSDictionary)!)
         self.dismissViewControllerAnimated(true, completion: {
             
         })

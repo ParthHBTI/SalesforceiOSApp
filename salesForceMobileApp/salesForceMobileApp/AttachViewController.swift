@@ -8,14 +8,17 @@
 
 import UIKit
 import SalesforceRestAPI
-class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate  {
+import MBProgressHUD
+
+
+class AttachViewController: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate  {
     var leadDetailInfo:AnyObject = []
     var leadId = ""
     var checkButton = false
     @IBOutlet weak var attachTextView: UITextView!
     
     @IBOutlet weak var checkUncheckBtn: UIButton!
-@IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageView: UIImageView!
 let imagePicker = UIImagePickerController()
     
     
@@ -63,181 +66,70 @@ let imagePicker = UIImagePickerController()
         self.attachTextView.text = nil
         return true
     }
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }
+
+    
        override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
+    @IBAction func textFieldDoneClicked(sender: AnyObject) {
+        self.view.endEditing(true)
+    }
     
-    func saherAction2()  {
-        let imageData = UIImagePNGRepresentation(imageView.image!)
+ 
+    func shareAction() {
+        
+        self.view.endEditing(true)
 
-        if imageData != nil{
-            let request = NSMutableURLRequest(URL: NSURL(string:"https://ap1.salesforce.com/services/data/v35.0/chatter/feeds/news/me/feed-items")!)
+        if imageView.image == nil {
             
-            var messgeDic = ["body":["messageSegments":[["text":"Mesaage","type":"Text"]],"feedElementType":"FeedItem","subjectId":"00Q2800000Q751L"]]
-            
-          //  {"body":{"messageSegments":[{"text":"this is the body ","type":"text"},{"type":"mention","id":"005U0000000GIQkIAO"}]},"attachment":{"title":"this is the file name","desc":"this is the file description","fileName":"Screen shot 2012-05-19 at 4.11.12 PM.png"}}
-
-            
-            
-            request.HTTPMethod = "POST"
-            
-            let boundary = NSString(format: "---------------------------14737809831466499882746641449")
-            let contentType = NSString(format: "multipart/form-data; boundary=%@",boundary)
-            //  println("Content Type \(contentType)")
-            request.addValue(contentType as String, forHTTPHeaderField: "Content-Type")
-            
-            var body = NSMutableData()
-            
-            // Title
-            body.appendData(NSString(format: "\r\n--%@\r\n",boundary).dataUsingEncoding(NSUTF8StringEncoding)!)
-            body.appendData(NSString(format:"Content-Disposition: form-data; name=\"title\"\r\n\r\n").dataUsingEncoding(NSUTF8StringEncoding)!)
-            body.appendData("Hello World".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!)
-            
-            // Image
-            body.appendData(NSString(format: "\r\n--%@\r\n", boundary).dataUsingEncoding(NSUTF8StringEncoding)!)
-            body.appendData(NSString(format:"Content-Disposition: form-data; name=\"feedItemFileUpload\"; filename=\"img.jpg\"\\r\n").dataUsingEncoding(NSUTF8StringEncoding)!)
-            body.appendData(NSString(format: "Content-Type: application/octet-stream\r\n\r\n").dataUsingEncoding(NSUTF8StringEncoding)!)
-            body.appendData(imageData!)
-            body.appendData(NSString(format: "\r\n--%@\r\n", boundary).dataUsingEncoding(NSUTF8StringEncoding)!)
-            request.HTTPBody = body
-            
-            var response: NSURLResponse?
-            let urlData = try? NSURLConnection.sendSynchronousRequest(request, returningResponse: &response)
-
-            //            [formData appendPartWithFileData:attachData name:@"feedItemFileUpload" fileName:@"photo.jpg" mimeType:@"image/jpeg"];
+            let alert = UIAlertView.init(title: "Error", message: "Please attach image first." , delegate: self, cancelButtonTitle: "OK")
+            alert.show()
 
             
-            
-            let results = NSString(data:urlData!, encoding:NSUTF8StringEncoding)
-            print("API Response: \(results)")
-            
-            
+            return;
         }
         
         
-    }
-    
-   
-    func saherAction1()  {
-       
+
         
-        /*
-        AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer new];
-        
-        NSMutableURLRequest *req = [serializer multipartFormRequestWithMethod:@"POST" URLString:@"フルURL" parameters:nil constructingBodyWithBlock:^(AFMultipartFormData *data) {
-            // このブロック内でmultipart/form-dataに追加したいpartを必要数分追加する
-            
-            
-            // NSData *attachData = // 添付するファイルのバイナリデータ
-            [formData appendPartWithFileData:attachData name:@"feedItemFileUpload" fileName:@"photo.jpg" mimeType:@"image/jpeg"];
-            
-            // 投稿の情報はJSONで別のpartとして追加
-            NSMutableDictionary *segments = @{}.mutableCopy;
-            NSMutableDictionary *body = @{@"body":@{@"messageSegments":segments}}.mutableCopy;
-            [segments addObject:@{
-                @"type":@"Text",
-                @"text":@"投稿したいテキスト"
-            }];
-            
-            body[@"attachment"] = @{
-                @"attachmentType":@"NewFile",
-                @"title":@"Photo"
-            };
-            
-            NSData *json = [NSJSONSerialization dataWithJSONObject:body options: NSJSONWritingPrettyPrinted error: nil];
-            [data appendPartWithHeaders:@{@"Content-Disposition":@"form-data; name=\"json\"", @"Content-Type":@"application/json; charset=UTF-8"} body:json];
-        } error:nil];
-        
-        // 実際の呼び出し部分
-        AFHTTPRequestOperationManager *http = [AFHTTPRequestOperationManager new];
-        http.requestSerializer = serializer;
-        [serializer setValue:[NSString stringWithFormat:@"Bearer %@", accessToken] forHTTPHeaderField:@"Authorization"]; // 自前でAccessTokenを指定してやる
-        http.responseSerializer = [AFJSONResponseSerializer new];
-        
-        AFHTTPRequestOperation *ope = [http HTTPRequestOperationWithRequest:req success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        // 成功時の処理
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        // 失敗時の処理
-        }];
-        
-        // 忘れがち。別スレッドで実行開始！
-        [ope start];*/
-    }
-    
-    func shareAction() {
-        
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
         
         let imageData: NSData = UIImageJPEGRepresentation(imageView.image!, 0.1)!
         let b64 = imageData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.EncodingEndLineWithLineFeed)
-            
-            //[imageData base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithLineFeed];
+
+
         
         let fields = [
             "Name": "background.png",
             "Body": b64,
             "ParentId":leadId
         ]
-//        //"00Q2800000RyOjpEAF"
-//        let request = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Attachment", fields: fields)
-//
-//        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
-//            print(error)
-//
-//        }) { response in
-//print(response)
-//        }
-        
-        let noteFields = [
-            
-            "Title":"Welcome to Not",
-            
-            "Body": "Hello Salesforce, This is note File",
-            
-            "ParentId":leadId
-            
-        ]
-        
-        print(noteFields)
-        
-        let request1 = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Note", fields: noteFields)
-        
-        
-        
-        SFRestAPI.sharedInstance().sendRESTRequest(request1, failBlock: { error in
-            
+        //"00Q2800000RyOjpEAF"
+        let request = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Attachment", fields: fields)
+
+        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
             print(error)
-            
-            
-            
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+
         }) { response in
-            
-            print(response)
-            
+       //  print(response)
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+
+
+            self.navigationController?.popViewControllerAnimated(true)
         }
-        return;
         
-             let paramDict:AnyObject = ["feedElementType":"FeedItem","subjectId":"me","parentId":"00Q2800000Q751L"]
-
-        
-      //  let paramDict:AnyObject = ["body":"{\"feedElementType\" = \"FeedItem\",\"subjectId\" = \"00Q2800000Q751L\"}"]
-            //["body":["messageSegments":[["text":"Mesaage","type":"Text"]],"feedElementType":"FeedItem","subjectId":"00Q2800000Q751L"]]
-        let method: SFRestMethod = SFRestMethod.POST
-        let reqs = SFRestRequest.init(method: method, path: "", queryParams: paramDict as? [String : String])
-        reqs.endpoint = "/services/data/v35.0/chatter/feed-elements"
-        
-       // let fileStr = NSBundle.mainBundle().pathForResource("swift_iOS_app_developers", ofType: "jpg")
-        reqs.addPostFileData(imageData , paramName: "feedElementFileUpload", fileName: "Feed File", mimeType: "image/jpg")
-        reqs.customHeaders =  [ "Content-Type" : "multipart/form-data;" ]
-       // reqs.customHeaders =  [ "Accept" : "application/json" ]
-        
-
-        SFRestAPI.sharedInstance().send(reqs, delegate: self)
-        
-       // [[SFRestAPI sharedInstance] sendRew]
-//        let entID = SFUserAccountManager.sharedInstance().currentUser?.idData.orgId
-//        let req = SFRestAPI.sharedInstance().requestForAddFileShare(entID!, entityId: entID!, shareType: "V")
-//         SFRestAPI.sharedInstance().send(req, delegate: self)
     }
     
     
@@ -283,12 +175,12 @@ let imagePicker = UIImagePickerController()
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
             imageView.image = pickedImage
-          let imageData: NSData = UIImageJPEGRepresentation(pickedImage, 0.1)!
-            let req = SFRestAPI.sharedInstance().requestForUploadFile(imageData, name: "swift_iOS_app_developers.jpg", description: "Share Image", mimeType: "image/jpeg")
-//            req.setHeaderValue(leadId, forHeaderName: "ParentId")
-//           req.setCustomRequestBodyData( leadId.dataUsingEncoding(NSUTF8StringEncoding)!, contentType: "ParentId")
-//            req.addPostFileData(imageData, paramName: "fileData", fileName: "swift_iOS_app_developers.jpg", mimeType: "image/jpg/png")
-            SFRestAPI.sharedInstance().send(req, delegate: self)
+            
+            
+//          let imageData: NSData = UIImageJPEGRepresentation(pickedImage, 0.1)!
+//            let req = SFRestAPI.sharedInstance().requestForUploadFile(imageData, name: "swift_iOS_app_developers.jpg", description: "Share Image", mimeType: "image/jpeg")
+//
+//            SFRestAPI.sharedInstance().send(req, delegate: self)
       
         }
         dismissViewControllerAnimated(true, completion: nil)
@@ -302,6 +194,7 @@ let imagePicker = UIImagePickerController()
     func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
        
         print(dataResponse);
+        /*
         if request.method == SFRestMethod.POST {
             let range = (request.path as NSString).rangeOfString("/feed-items")
             if range.location == NSNotFound {
@@ -312,7 +205,7 @@ let imagePicker = UIImagePickerController()
                 })
 
             }
-        }
+        }*/
 //        let attachmentId = (dataResponse["id"] as! String)
 //        createFeedForAttachmentId(attachmentId)
     }
@@ -370,3 +263,104 @@ let imagePicker = UIImagePickerController()
         // Add your failed error handling here
     }
     }
+/*
+ 
+ 
+ func saherAction2()  {
+ let imageData = UIImagePNGRepresentation(imageView.image!)
+ 
+ if imageData != nil{
+ let request = NSMutableURLRequest(URL: NSURL(string:"https://ap1.salesforce.com/services/data/v35.0/chatter/feeds/news/me/feed-items")!)
+ 
+ var messgeDic = ["body":["messageSegments":[["text":"Mesaage","type":"Text"]],"feedElementType":"FeedItem","subjectId":"00Q2800000Q751L"]]
+ 
+ //  {"body":{"messageSegments":[{"text":"this is the body ","type":"text"},{"type":"mention","id":"005U0000000GIQkIAO"}]},"attachment":{"title":"this is the file name","desc":"this is the file description","fileName":"Screen shot 2012-05-19 at 4.11.12 PM.png"}}
+ 
+ 
+ 
+ request.HTTPMethod = "POST"
+ 
+ let boundary = NSString(format: "---------------------------14737809831466499882746641449")
+ let contentType = NSString(format: "multipart/form-data; boundary=%@",boundary)
+ //  println("Content Type \(contentType)")
+ request.addValue(contentType as String, forHTTPHeaderField: "Content-Type")
+ 
+ var body = NSMutableData()
+ 
+ // Title
+ body.appendData(NSString(format: "\r\n--%@\r\n",boundary).dataUsingEncoding(NSUTF8StringEncoding)!)
+ body.appendData(NSString(format:"Content-Disposition: form-data; name=\"title\"\r\n\r\n").dataUsingEncoding(NSUTF8StringEncoding)!)
+ body.appendData("Hello World".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!)
+ 
+ // Image
+ body.appendData(NSString(format: "\r\n--%@\r\n", boundary).dataUsingEncoding(NSUTF8StringEncoding)!)
+ body.appendData(NSString(format:"Content-Disposition: form-data; name=\"feedItemFileUpload\"; filename=\"img.jpg\"\\r\n").dataUsingEncoding(NSUTF8StringEncoding)!)
+ body.appendData(NSString(format: "Content-Type: application/octet-stream\r\n\r\n").dataUsingEncoding(NSUTF8StringEncoding)!)
+ body.appendData(imageData!)
+ body.appendData(NSString(format: "\r\n--%@\r\n", boundary).dataUsingEncoding(NSUTF8StringEncoding)!)
+ request.HTTPBody = body
+ 
+ var response: NSURLResponse?
+ let urlData = try? NSURLConnection.sendSynchronousRequest(request, returningResponse: &response)
+ 
+ //            [formData appendPartWithFileData:attachData name:@"feedItemFileUpload" fileName:@"photo.jpg" mimeType:@"image/jpeg"];
+ 
+ 
+ 
+ let results = NSString(data:urlData!, encoding:NSUTF8StringEncoding)
+ print("API Response: \(results)")
+ 
+ 
+ }
+ 
+ 
+ }
+ 
+ 
+ func saherAction1()  {
+ 
+ 
+ /*
+ AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer new];
+ 
+ NSMutableURLRequest *req = [serializer multipartFormRequestWithMethod:@"POST" URLString:@"フルURL" parameters:nil constructingBodyWithBlock:^(AFMultipartFormData *data) {
+ // このブロック内でmultipart/form-dataに追加したいpartを必要数分追加する
+ 
+ 
+ // NSData *attachData = // 添付するファイルのバイナリデータ
+ [formData appendPartWithFileData:attachData name:@"feedItemFileUpload" fileName:@"photo.jpg" mimeType:@"image/jpeg"];
+ 
+ // 投稿の情報はJSONで別のpartとして追加
+ NSMutableDictionary *segments = @{}.mutableCopy;
+ NSMutableDictionary *body = @{@"body":@{@"messageSegments":segments}}.mutableCopy;
+ [segments addObject:@{
+ @"type":@"Text",
+ @"text":@"投稿したいテキスト"
+ }];
+ 
+ body[@"attachment"] = @{
+ @"attachmentType":@"NewFile",
+ @"title":@"Photo"
+ };
+ 
+ NSData *json = [NSJSONSerialization dataWithJSONObject:body options: NSJSONWritingPrettyPrinted error: nil];
+ [data appendPartWithHeaders:@{@"Content-Disposition":@"form-data; name=\"json\"", @"Content-Type":@"application/json; charset=UTF-8"} body:json];
+ } error:nil];
+ 
+ // 実際の呼び出し部分
+ AFHTTPRequestOperationManager *http = [AFHTTPRequestOperationManager new];
+ http.requestSerializer = serializer;
+ [serializer setValue:[NSString stringWithFormat:@"Bearer %@", accessToken] forHTTPHeaderField:@"Authorization"]; // 自前でAccessTokenを指定してやる
+ http.responseSerializer = [AFJSONResponseSerializer new];
+ 
+ AFHTTPRequestOperation *ope = [http HTTPRequestOperationWithRequest:req success:^(AFHTTPRequestOperation *operation, id responseObject) {
+ // 成功時の処理
+ } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+ // 失敗時の処理
+ }];
+ 
+ // 忘れがち。別スレッドで実行開始！
+ [ope start];*/
+ }
+ 
+ */

@@ -38,7 +38,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
        client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
         
         
-    //ZKOAuthInfo.oauthInfoWithRefreshToken(authoCordinater.refreshToken, authHost: authoCordinater.identityUrl, sessionId: authoCordinater.accessToken, instanceUrl: authoCordinater.instanceUrl, clientId: RemoteAccessConsumerKey)
+    
     }
     
     func convertLeadWithLeadId(leadId:String)  {
@@ -85,7 +85,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
-        navigationController?.pushViewController(nv, animated: true)
+       self.navigationController?.pushViewController(nv, animated: true)
     }
     
     

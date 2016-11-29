@@ -9,22 +9,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "salesForceMobileApp/CreateNewContactVC.swift"
-            timestampString = "500195260.40017"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
-            landmarkName = "viewDidLoad()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "salesForceMobileApp/RootViewController.swift"
             timestampString = "499948581.487933"
             startingColumnNumber = "9223372036854775807"
@@ -41,29 +25,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "salesForceMobileApp/AttachViewController.swift"
-            timestampString = "500880592.992989"
+            filePath = "salesForceMobileApp/LeadViewController.swift"
+            timestampString = "502107108.805086"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
-            landmarkName = "saherAction2()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "salesForceMobileApp/AppDelegate.swift"
-            timestampString = "501407842.050702"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "196"
-            endingLineNumber = "196"
-            landmarkName = "handleSdkManagerLogout()"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "rightWillOpen()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

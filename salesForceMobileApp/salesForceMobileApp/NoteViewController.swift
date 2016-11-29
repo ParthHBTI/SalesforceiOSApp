@@ -8,6 +8,9 @@
 
 import UIKit
 import SalesforceRestAPI
+import MBProgressHUD
+
+
 class NoteViewController: UIViewController, SFRestDelegate {
 
     @IBOutlet weak var noteOwnerName: UILabel!
@@ -72,35 +75,33 @@ class NoteViewController: UIViewController, SFRestDelegate {
         
     ]
     
+    self.view.endEditing(true)
+    
     print(noteFields)
     
+    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+    loading.mode = MBProgressHUDMode.Indeterminate
+
     let request1 = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Note", fields: noteFields)
     SFRestAPI.sharedInstance().sendRESTRequest(request1, failBlock: { error in
-    print(error)
-    })
+        print(error)
+        loading.hide(true, afterDelay: 2)
+        loading.removeFromSuperViewOnHide = true
+        
+
+        })
     { response in
-    print(response)
+        print(response)
+        loading.hide(true, afterDelay: 2)
+        loading.removeFromSuperViewOnHide = true
+        
+
+        self.navigationController?.popViewControllerAnimated(true)
     }
-}
+    }
+    
+    
     @IBAction func saveNoteAction(sender: AnyObject) {
-        let noteFields = [
-            
-            "Title":noteTitleText.text,
-            
-            "Body": noteBodyTextView.text,
-            
-            "ParentId":leadId
-            
-        ]
-        
-        print(noteFields)
-        
-        let request1 = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Note", fields: noteFields)
-        SFRestAPI.sharedInstance().sendRESTRequest(request1, failBlock: { error in
-            print(error)
-            })
-        { response in
-            print(response)
-        }
+        shareAction()
 }
 }

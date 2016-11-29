@@ -33,6 +33,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
         lastName.delegate = self
         companyName.delegate = self
         leadStatus.delegate = self
+        cancleBtn.hidden = true
         setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
@@ -50,7 +51,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
             lastName.text = leadDataDict["LastName"] as? String
             leadStatus.text = leadDataDict["Status"] as? String
             saveBtn.hidden = true
-            cancleBtn.hidden = true
+            //cancleBtn.hidden = true
             title = "Edit Lead"
             self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
         }

@@ -37,6 +37,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
         email.delegate = self
         phone.delegate = self
         fax.delegate = self
+        self.cancleBtn.hidden = true
         phoneWarnigLbl.hidden = true
         self.setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
@@ -57,7 +58,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
             self.phone.text = contactDataDic["Phone"] as? String
             self.fax.text = contactDataDic["Fax"] as? String
             self.saveBtn.hidden = true
-            self.cancleBtn.hidden = true
+            //self.cancleBtn.hidden = true
             title = "Edit Account"
             self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
         }

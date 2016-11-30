@@ -213,7 +213,8 @@ let imagePicker = UIImagePickerController()
         }) { response in
             
             print(response)
-            
+            self.navigationController!.popToViewController(self.navigationController!.viewControllers[1], animated: true)!
+
         }
         return;
         

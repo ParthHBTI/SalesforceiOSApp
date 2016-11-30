@@ -8,6 +8,7 @@
 
 import UIKit
 import SalesforceRestAPI
+import MBProgressHUD
 class NoteViewController: UIViewController, SFRestDelegate {
 
     @IBOutlet weak var noteOwnerName: UILabel!
@@ -83,6 +84,14 @@ class NoteViewController: UIViewController, SFRestDelegate {
     }
 }
     @IBAction func saveNoteAction(sender: AnyObject) {
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+       
+        if noteTitleText.text!.isEmpty == true || noteBodyTextView.text!.isEmpty == true {
+            loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "please give all values"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+        } else {
         let noteFields = [
             
             "Title":noteTitleText.text,
@@ -100,7 +109,18 @@ class NoteViewController: UIViewController, SFRestDelegate {
             print(error)
             })
         { response in
-            print(response)
+            dispatch_async(dispatch_get_main_queue(), {
+                let loading1 = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading1.mode = MBProgressHUDMode.Indeterminate
+                loading1.mode = MBProgressHUDMode.Text
+                loading1.hide(true, afterDelay: 2)
+                loading1.detailsLabelText = "Your Note Created Successfully"
+                loading1.removeFromSuperViewOnHide = true
+                self.navigationController!.popToViewController(self.navigationController!.viewControllers[1], animated: true)!
+            })
+                        print(response)
+            
+            }
         }
-}
+    }
 }

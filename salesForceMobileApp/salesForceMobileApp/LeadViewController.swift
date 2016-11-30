@@ -17,6 +17,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     @IBOutlet weak var tableView: UITableView!
     var resArr1:AnyObject = []
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    var isFirstLoaded: Bool = false
     
     
     var  client:ZKSforceClient?
@@ -26,46 +27,47 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         super.viewDidLoad()
         exDelegate.delegate = self
         self.title = "Leads View"
+        isFirstLoaded = true
         self.setNavigationBarItem()
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
         loadLead()
         client = ZKSforceClient()
-
+        
         
         let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
-       client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
+        client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
         
         
-    //ZKOAuthInfo.oauthInfoWithRefreshToken(authoCordinater.refreshToken, authHost: authoCordinater.identityUrl, sessionId: authoCordinater.accessToken, instanceUrl: authoCordinater.instanceUrl, clientId: RemoteAccessConsumerKey)
+        //ZKOAuthInfo.oauthInfoWithRefreshToken(authoCordinater.refreshToken, authHost: authoCordinater.identityUrl, sessionId: authoCordinater.accessToken, instanceUrl: authoCordinater.instanceUrl, clientId: RemoteAccessConsumerKey)
     }
     
     func convertLeadWithLeadId(leadId:String)  {
-      //  client?.loginFromOAuthCallbackUrl(OAuthRedirectURI, oAuthConsumerKey: RemoteAccessConsumerKey)
+        //  client?.loginFromOAuthCallbackUrl(OAuthRedirectURI, oAuthConsumerKey: RemoteAccessConsumerKey)
         
         let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
         print("accessToken",authoCordinater.accessToken ,"activationCode", authoCordinater.activationCode ,"=additionalOAuthFields=", authoCordinater.additionalOAuthFields ,"=apiUrl=",authoCordinater.apiUrl,"=apiUrl=" , authoCordinater.clientId,"=apiUrl=" , authoCordinater.communityId,"=communityUrl=" ,authoCordinater.communityUrl,"=domain=",authoCordinater.domain,"=identifier=",authoCordinater.identifier,"=identityUrl=",authoCordinater.identityUrl,"=instanceUrl=",authoCordinater.instanceUrl,"=refreshToken=",authoCordinater.refreshToken,"=redirectUri=",authoCordinater.redirectUri)
         
         print("\n\n\n=description=", authoCordinater.description)
-
+        
         
         let leadConvertObj = ZKLeadConvert()
         leadConvertObj.leadId = leadId;
         leadConvertObj.convertedStatus = "Closed - Converted";
-
         
-    
+        
+        
         client?.performConvertLead([leadConvertObj], failBlock: { exp in
             print(exp)
-
+            
             }, completeBlock: { success in
                 print(success)
-
+                
         })
         
-
-
+        
+        
     }
     
     func executeQuery()  {
@@ -97,6 +99,14 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         super.viewWillAppear(animated)
         exDelegate.leadQueryDe("lead")
         self.setNavigationBarItem()
+        if !isFirstLoaded {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "Created Successfully!"
+            loading.removeFromSuperViewOnHide = true
+            loading.hide(true, afterDelay:2)
+        }
+        self.isFirstLoaded = false
     }
     
     override func didReceiveMemoryWarning() {
@@ -148,9 +158,9 @@ extension LeadViewController : UITableViewDataSource {
         cell.convertButton.addTarget(self, action: #selector(self.btnClicked), forControlEvents: .TouchUpInside)
         
         /*let img = UIImage(named: "lead")
-        let tintedImage = img?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-        cell.dataImage.image = tintedImage
-        cell.dataImage.tintColor = UIColor.redColor()*/
+         let tintedImage = img?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+         cell.dataImage.image = tintedImage
+         cell.dataImage.tintColor = UIColor.redColor()*/
         return cell
     }
     
@@ -158,10 +168,10 @@ extension LeadViewController : UITableViewDataSource {
         print(sender.tag)
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ConvertLeadViewController") as! ConvertLeadViewController
-        subContentsVC.convertLeadDataArr = self.resArr1.objectAtIndex(sender.tag) 
+        subContentsVC.convertLeadDataArr = self.resArr1.objectAtIndex(sender.tag)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
         //convertLeadWithLeadId(self.resArr1.objectAtIndex(sender.tag)["Id"] as! String)
-            }
+    }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         

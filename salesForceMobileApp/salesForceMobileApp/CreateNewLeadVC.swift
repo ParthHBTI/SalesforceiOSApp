@@ -78,8 +78,6 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
             if self.isSubmittedCorrectVal() {
                 let fields = [
@@ -95,17 +93,22 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
                     print( (err))
                 }) { succes in
                     dispatch_async(dispatch_get_main_queue(), {
-                        loading.mode = MBProgressHUDMode.Text
-                        loading.detailsLabelText = "Successfully Created Lead Record"
+                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        loading.mode = MBProgressHUDMode.Indeterminate
+                        loading.detailsLabelText = "Lead is creating!"
                         loading.removeFromSuperViewOnHide = true
-                        loading.hide(true, afterDelay: 2)
-                        self.lastName.text = nil
+                        loading.hide(true, afterDelay:2)
+                        /*self.lastName.text = nil
                         self.companyName.text = nil
-                        self.leadStatus.text = nil
-                        })
-               
-               
-                                    }
+                        self.leadStatus.text = nil*/
+                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                        dispatch_after(delayTime, dispatch_get_main_queue()) {
+                            self.navigationController?.popViewControllerAnimated(true)
+                            //let storyboard = UIStoryboard(name: "Main" , bundle: nil)
+                            //let nav = storyboard.instantiateViewControllerWithIdentifier("LeadViewController") as! LeadViewController
+                          }
+                     })
+                }
             }
         } else {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)

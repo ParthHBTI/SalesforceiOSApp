@@ -8,6 +8,8 @@
 
 import UIKit
 import SalesforceRestAPI
+import MBProgressHUD
+
 class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate  {
     var leadDetailInfo:AnyObject = []
     var leadId = ""
@@ -167,8 +169,16 @@ let imagePicker = UIImagePickerController()
     
     func shareAction() {
         
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         
-        let imageData: NSData = UIImageJPEGRepresentation(imageView.image!, 0.1)!
+        if attachTextView.text!.isEmpty == true  {
+            loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "please give all values"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+        } else {
+        
+        let imageData: NSData = (UIImageJPEGRepresentation(imageView.image!, 0.1))!
         let b64 = imageData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.EncodingEndLineWithLineFeed)
             
             //[imageData base64EncodedStringWithOptions:NSDataBase64EncodingEndLineWithLineFeed];
@@ -178,69 +188,69 @@ let imagePicker = UIImagePickerController()
             "Body": b64,
             "ParentId":leadId
         ]
-//        //"00Q2800000RyOjpEAF"
-//        let request = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Attachment", fields: fields)
-//
-//        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
+        let request = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Attachment", fields: fields)
+        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
+            print(error)
+
+        }) { response in
+print(response)
+            dispatch_async(dispatch_get_main_queue(), {
+                loading.mode = MBProgressHUDMode.Indeterminate
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                print(response)
+                self.navigationController!.popToViewController(self.navigationController!.viewControllers[1], animated: true)!
+            })
+           
+        }
+        
+//        let noteFields = [
+//            
+//            "Title":"Welcome to Not",
+//            
+//            "Body": "Hello Salesforce, This is note File",
+//            
+//            "ParentId":leadId
+//            
+//        ]
+//        
+//        print(noteFields)
+//        let request1 = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Note", fields: noteFields)
+//        SFRestAPI.sharedInstance().sendRESTRequest(request1, failBlock: { error in
 //            print(error)
-//
 //        }) { response in
-//print(response)
+//            loading.mode = MBProgressHUDMode.Indeterminate
+//            loading.hide(true, afterDelay: 2)
+//            loading.removeFromSuperViewOnHide = true
+//            print(response)
+//            self.navigationController!.popToViewController(self.navigationController!.viewControllers[1], animated: true)!
 //        }
         
-        let noteFields = [
-            
-            "Title":"Welcome to Not",
-            
-            "Body": "Hello Salesforce, This is note File",
-            
-            "ParentId":leadId
-            
-        ]
         
-        print(noteFields)
-        
-        let request1 = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Note", fields: noteFields)
-        
-        
-        
-        SFRestAPI.sharedInstance().sendRESTRequest(request1, failBlock: { error in
-            
-            print(error)
-            
-            
-            
-        }) { response in
-            
-            print(response)
-            self.navigationController!.popToViewController(self.navigationController!.viewControllers[1], animated: true)!
-
-        }
-        return;
-        
-             let paramDict:AnyObject = ["feedElementType":"FeedItem","subjectId":"me","parentId":"00Q2800000Q751L"]
-
-        
-      //  let paramDict:AnyObject = ["body":"{\"feedElementType\" = \"FeedItem\",\"subjectId\" = \"00Q2800000Q751L\"}"]
-            //["body":["messageSegments":[["text":"Mesaage","type":"Text"]],"feedElementType":"FeedItem","subjectId":"00Q2800000Q751L"]]
-        let method: SFRestMethod = SFRestMethod.POST
-        let reqs = SFRestRequest.init(method: method, path: "", queryParams: paramDict as? [String : String])
-        reqs.endpoint = "/services/data/v35.0/chatter/feed-elements"
-        
-       // let fileStr = NSBundle.mainBundle().pathForResource("swift_iOS_app_developers", ofType: "jpg")
-        reqs.addPostFileData(imageData , paramName: "feedElementFileUpload", fileName: "Feed File", mimeType: "image/jpg")
-        reqs.customHeaders =  [ "Content-Type" : "multipart/form-data;" ]
-       // reqs.customHeaders =  [ "Accept" : "application/json" ]
-        
-
-        SFRestAPI.sharedInstance().send(reqs, delegate: self)
-        
-       // [[SFRestAPI sharedInstance] sendRew]
-//        let entID = SFUserAccountManager.sharedInstance().currentUser?.idData.orgId
-//        let req = SFRestAPI.sharedInstance().requestForAddFileShare(entID!, entityId: entID!, shareType: "V")
-//         SFRestAPI.sharedInstance().send(req, delegate: self)
+//             let paramDict:AnyObject = ["feedElementType":"FeedItem","subjectId":"me","parentId":"00Q2800000Q751L"]
+//
+//        
+//      //  let paramDict:AnyObject = ["body":"{\"feedElementType\" = \"FeedItem\",\"subjectId\" = \"00Q2800000Q751L\"}"]
+//            //["body":["messageSegments":[["text":"Mesaage","type":"Text"]],"feedElementType":"FeedItem","subjectId":"00Q2800000Q751L"]]
+//        let method: SFRestMethod = SFRestMethod.POST
+//        let reqs = SFRestRequest.init(method: method, path: "", queryParams: paramDict as? [String : String])
+//        reqs.endpoint = "/services/data/v35.0/chatter/feed-elements"
+//        
+//       // let fileStr = NSBundle.mainBundle().pathForResource("swift_iOS_app_developers", ofType: "jpg")
+//        reqs.addPostFileData(imageData , paramName: "feedElementFileUpload", fileName: "Feed File", mimeType: "image/jpg")
+//        reqs.customHeaders =  [ "Content-Type" : "multipart/form-data;" ]
+//       // reqs.customHeaders =  [ "Accept" : "application/json" ]
+//        
+//
+//        SFRestAPI.sharedInstance().send(reqs, delegate: self)
+//        
+//       // [[SFRestAPI sharedInstance] sendRew]
+////        let entID = SFUserAccountManager.sharedInstance().currentUser?.idData.orgId
+////        let req = SFRestAPI.sharedInstance().requestForAddFileShare(entID!, entityId: entID!, shareType: "V")
+////         SFRestAPI.sharedInstance().send(req, delegate: self)
     }
     
+    }
     
     func createFeedForAttachment(field: String) {
     let entID = SFUserAccountManager.sharedInstance().currentUser?.idData.userId

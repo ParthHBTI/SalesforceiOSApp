@@ -15,6 +15,10 @@ import SmartSync
 import SmartStore
 import MBProgressHUD
 
+protocol CreateNewLeadDelegate {
+    func getValFromLeadVC(params:Bool)
+}
+
 class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     
     @IBOutlet weak var lastName: UITextField!
@@ -27,6 +31,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     var leadDataDict:AnyObject = []
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    var delegate: CreateNewLeadDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         print(leadDataDict)
@@ -37,8 +42,8 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
         setNavigationBarItem()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
-//        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewLeadVC.backAction))
-//        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
+        //        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewLeadVC.backAction))
+        //        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
         let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateLeadAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
@@ -78,6 +83,8 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     }
     
     @IBAction func saveAction(sender: AnyObject) {
+        //let storyboard = UIStoryboard(name: "Main" , bundle: nil)
+        //let nav = storyboard.instantiateViewControllerWithIdentifier("LeadViewController") as! LeadViewController
         if exDelegate.isConnectedToNetwork() {
             if self.isSubmittedCorrectVal() {
                 let fields = [
@@ -92,22 +99,18 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
                     })
                     print( (err))
                 }) { succes in
+                    self.delegate!.getValFromLeadVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
                         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                         loading.mode = MBProgressHUDMode.Indeterminate
                         loading.detailsLabelText = "Lead is creating!"
                         loading.removeFromSuperViewOnHide = true
                         loading.hide(true, afterDelay:2)
-                        /*self.lastName.text = nil
-                        self.companyName.text = nil
-                        self.leadStatus.text = nil*/
                         let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
                         dispatch_after(delayTime, dispatch_get_main_queue()) {
                             self.navigationController?.popViewControllerAnimated(true)
-                            //let storyboard = UIStoryboard(name: "Main" , bundle: nil)
-                            //let nav = storyboard.instantiateViewControllerWithIdentifier("LeadViewController") as! LeadViewController
-                          }
-                     })
+                         }
+                    })
                 }
             }
         } else {

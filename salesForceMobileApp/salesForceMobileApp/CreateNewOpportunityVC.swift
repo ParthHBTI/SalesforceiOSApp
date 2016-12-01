@@ -15,6 +15,10 @@ import SmartSync
 import SmartStore
 import MBProgressHUD
 
+protocol CreateNewOppDelegate {
+    func getValFromOppVC(params:Bool)
+}
+
 
 class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQueryDelegate {
     
@@ -35,6 +39,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     var opportunityDataDic:AnyObject = []
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    var delegate:CreateNewOppDelegate?
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -80,7 +85,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewOpportunityVC.backAction))
          self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
         // Do any additional setup after loading the view.
-        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateOpportunityAction))
+        let navBarUpdateBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateOpportunityAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
@@ -100,7 +105,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
             self.saveBtn.hidden = true
             //self.cancleBtn.hidden = true
             title = "Edit Opportunity"
-            self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
+            self.navigationItem.setRightBarButtonItem(navBarUpdateBtn, animated: true)
         }
     }
     
@@ -140,20 +145,22 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
                     })
                     print( (err))
                 }) { succes in
+                    self.delegate!.getValFromOppVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
                         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                         loading.mode = MBProgressHUDMode.Indeterminate
-                        loading.mode = MBProgressHUDMode.Text
-                        loading.detailsLabelText = "Successfully Created Opporcunity Record"
+                        loading.detailsLabelText = "Opportunity is creating!"
                         loading.removeFromSuperViewOnHide = true
                         loading.hide(true, afterDelay: 2)
-                        self.opportunityName.text = nil
-                        self.closeDate.text = nil
-                        self.amount.text = nil
-                        self.stage.text = nil
+                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                        dispatch_after(delayTime, dispatch_get_main_queue()) {
+                            self.navigationController?.popViewControllerAnimated(true)
+                        }
+                        /*self.opportunityName.text = nil
+                         self.closeDate.text = nil
+                         self.amount.text = nil
+                         self.stage.text = nil*/
                     })
-                    
-                    
                 }
             }
         }
@@ -227,13 +234,17 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
                     })
                     print( (err))
                 }){ succes in
+                    self.delegate!.getValFromOppVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
                         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                         loading.mode = MBProgressHUDMode.Indeterminate
-                        //loading.mode = MBProgressHUDMode.Text
-                        loading.detailsLabelText = "Updated Successfully!"
+                        loading.detailsLabelText = "Updating!"
                         loading.hide(true, afterDelay: 2)
                         loading.removeFromSuperViewOnHide = true
+                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                        dispatch_after(delayTime, dispatch_get_main_queue()) {
+                            self.navigationController?.popViewControllerAnimated(true)
+                        }
                     })
                 }
             }

@@ -10,12 +10,13 @@ import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
 
-class ContactViewController: UIViewController , ExecuteQueryDelegate {
+class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewContactDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     var resArr1:AnyObject = []
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var isFirstLoad: Bool = false
+    var isCreatedSuccessfully:Bool = false
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +48,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
         navigationController?.pushViewController(nv, animated: true)
+        nv.delegate = self
     }
 
     
@@ -59,9 +61,23 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         if !isFirstLoad {
             exDelegate.leadQueryDe("contact")
         }
+        if isCreatedSuccessfully {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "Created Successfully!"
+            loading.removeFromSuperViewOnHide = true
+            loading.hide(true, afterDelay:2)
+        }
+        isCreatedSuccessfully = false
         isFirstLoad = false
         self.setNavigationBarItem()
     }
+    
+    
+    func getValFromContactVC(params:Bool) {
+        isCreatedSuccessfully = params
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

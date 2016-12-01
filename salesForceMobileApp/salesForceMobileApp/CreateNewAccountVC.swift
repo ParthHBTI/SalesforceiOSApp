@@ -15,6 +15,10 @@ import SmartSync
 import SmartStore
 import MBProgressHUD
 
+protocol CreateNewAccDelegate {
+    func getValFromAccVC(params:Bool)
+}
+
 class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, ExecuteQueryDelegate {
     
     @IBOutlet weak var accountName: UITextField!
@@ -31,6 +35,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     var accountDataDic:AnyObject = []
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    var delegate: CreateNewAccDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,7 +52,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
         scrollView.setNeedsDisplay()
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewAccountVC.backAction))
          self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
-        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateAccountAction))
+        let navBarUpdateBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateAccountAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
@@ -64,7 +69,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
             self.saveBtn.hidden = true
             //self.cancleBtn.hidden = true
             title = "Edit Account"
-            self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
+            self.navigationItem.setRightBarButtonItem(navBarUpdateBtn, animated: true)
         }
     }
     
@@ -87,36 +92,8 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        let charSet = NSCharacterSet.whitespaceCharacterSet()
-        let accNameWhiteSpaceSet = self.accountName.text!.stringByTrimmingCharactersInSet(charSet)
-        let billStreetWhiteSpaceSet = self.billingStreet.text!.stringByTrimmingCharactersInSet(charSet)
-        let billCityWhiteSpaceSet = self.billingCity.text!.stringByTrimmingCharactersInSet(charSet)
-        let billStateWhiteSpaceSet = self.billingState.text!.stringByTrimmingCharactersInSet(charSet)
-        let billCntryWhiteSpaceSet = self.billingCountry.text!.stringByTrimmingCharactersInSet(charSet)
-        let billPostalCodeWhiteSpaceSet = self.postalCode.text!.stringByTrimmingCharactersInSet(charSet)
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-            if accountName.text!.isEmpty == true || billingStreet.text!.isEmpty == true || billingCity.text!.isEmpty == true || billingState.text!.isEmpty == true ||  postalCode.text!.isEmpty == true {
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "please give all values"
-                self.animateSubmitBtnOnWrongSubmit()
-            } else if billPostalCodeWhiteSpaceSet == "" || accNameWhiteSpaceSet == "" || billStreetWhiteSpaceSet == ""  || billCntryWhiteSpaceSet == ""  || billCityWhiteSpaceSet == ""  || billStateWhiteSpaceSet == ""  {
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "You entered white spaces only"
-                self.animateSubmitBtnOnWrongSubmit()
-                
-            } else if postalCode.text!.characters.count != 6 {
-                loading.mode = MBProgressHUDMode.Text
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                loading.detailsLabelText = "Please enter a valid postal code"
-                self.animateSubmitBtnOnWrongSubmit()
-            } else {
+            if self.isSubmitCorrectVal() {
                 let fields = [
                     "Name" : accountName.text!,
                     "BillingStreet" : billingStreet.text!,
@@ -132,20 +109,24 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                     })
                     print( (err))
                 }) { succes in
+                    self.delegate!.getValFromAccVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
-                        loading.mode = MBProgressHUDMode.Text
-                        loading.detailsLabelText = "Successfully Created Accont Record"
+                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        loading.mode = MBProgressHUDMode.Indeterminate
+                        loading.detailsLabelText = "Account is creating!"
                         loading.removeFromSuperViewOnHide = true
                         loading.hide(true, afterDelay: 2)
-                        self.accountName.text = nil
+                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                        dispatch_after(delayTime, dispatch_get_main_queue()) {
+                            self.navigationController?.popViewControllerAnimated(true)
+                        }
+                        /*self.accountName.text = nil
                         self.billingStreet.text = nil
                         self.billingCity.text = nil
                         self.billingState.text = nil
                         self.billingCountry.text = nil
-                        self.billingCountry.text = nil
+                        self.billingCountry.text = nil*/
                     })
-                    
-                    
                 }
             }
         }
@@ -185,12 +166,17 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                     })
                     print( (err))
                 }){ succes in
+                    self.delegate!.getValFromAccVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
                         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                         loading.mode = MBProgressHUDMode.Indeterminate
-                        loading.detailsLabelText = "Updated Successfully!"
+                        loading.detailsLabelText = "Updating!"
                         loading.hide(true, afterDelay: 2)
                         loading.removeFromSuperViewOnHide = true
+                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                        dispatch_after(delayTime, dispatch_get_main_queue()) {
+                            self.navigationController?.popViewControllerAnimated(true)
+                        }
                     })
                 }
             }
@@ -212,7 +198,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
         let billStateWhiteSpaceSet = self.billingState.text!.stringByTrimmingCharactersInSet(charSet)
         let billCntryWhiteSpaceSet = self.billingCountry.text!.stringByTrimmingCharactersInSet(charSet)
         let billPostalCodeWhiteSpaceSet = self.postalCode.text!.stringByTrimmingCharactersInSet(charSet)
-        if accountName.text!.isEmpty == true || billingStreet.text!.isEmpty == true || billingCity.text!.isEmpty == true || billingState.text!.isEmpty == true ||  postalCode.text!.isEmpty == true {
+        if accountName.text!.isEmpty == true || billingStreet.text!.isEmpty == true || billingCity.text!.isEmpty == true || billingState.text!.isEmpty == true ||  postalCode.text!.isEmpty == true || billingCountry.text!.isEmpty == true {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
             loading.hide(true, afterDelay: 2)

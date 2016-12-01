@@ -8,8 +8,9 @@
 
 import UIKit
 import SalesforceRestAPI
+import MBProgressHUD
 
-class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate {
+class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate,CreateNewAccDelegate {
     
     var feedData: AnyObject = []
     var getResponseArr:AnyObject = []
@@ -21,6 +22,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     var accountDataArr = []
     var attachmentArr: AnyObject = []
     var noteArr: AnyObject = []
+    var isUpdatedSuccessfully:Bool = false
     @IBOutlet weak var feedSegment: UISegmentedControl!
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -44,7 +46,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                 self.tableView.reloadData()
             })
         }
-
+        
         
     }
     override func viewDidLoad() {
@@ -70,16 +72,26 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             self.tableView.reloadData()
         })
     }
- 
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        if !isFirstLoad {
+        if isUpdatedSuccessfully {
             exDelegate.leadQueryDe("account")
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "Updated Successfully!"
+            loading.removeFromSuperViewOnHide = true
+            loading.hide(true, afterDelay:2)
         }
-        self.isFirstLoad = false
+        isUpdatedSuccessfully = false
         self.setNavigationBarItem()
         dowloadAttachment()
-
+    }
+    
+    
+    
+    func getValFromAccVC(params: Bool) {
+        isUpdatedSuccessfully = params
     }
     
     
@@ -131,9 +143,9 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                           fax,
                           lastModifiedDate
         ]
-    
+        
     }
-   
+    
     
     func dowloadAttachment() {
         let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
@@ -162,7 +174,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         })
         
     }
-
+    
     
     func shareAction() {
         let actionSheet = UIActionSheet(title: "Choose Option", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Add Attachment", "Add Note")
@@ -198,8 +210,8 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             
         }
     }
-
-
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -340,6 +352,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         vc.accountDataDic = self.getResponseArr
         vc.flag = true
         self.navigationController?.pushViewController(vc, animated: true)
+        vc.delegate = self
         
     }
     
@@ -362,7 +375,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         self.log(.Debug, msg: "requestDidTimeout: \(request)")
         // Add your failed error handling here
     }
-
-
+    
+    
     
 }

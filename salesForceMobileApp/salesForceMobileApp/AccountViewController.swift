@@ -12,18 +12,20 @@ import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
 
-class AccountViewController:UIViewController, ExecuteQueryDelegate {
+class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     var resArr1:AnyObject = []
     var exDelegate: ExecuteQuery = ExecuteQuery()
-    var isFirstLoad:Bool = false
+    //var createConDelegate: CreateNewLeadDelegate?
+    var isCreatedSuccessfully: Bool = false
+    var isFirstLoaded:Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        isFirstLoad = true
         exDelegate.delegate = self
         self.title = "Account View"
+        isFirstLoaded = true
         self.setNavigationBarItem()
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
@@ -49,6 +51,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewAccountVC") as! CreateNewAccountVC
         navigationController?.pushViewController(nv, animated: true)
+        nv.delegate = self
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -57,11 +60,24 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        if !isFirstLoad {
+        if !isFirstLoaded {
             exDelegate.leadQueryDe("account")
         }
-        self.isFirstLoad = false
+        if isCreatedSuccessfully {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "Created Successfully!"
+            loading.removeFromSuperViewOnHide = true
+            loading.hide(true, afterDelay:2)
+        }
+        isFirstLoaded = false
+        isCreatedSuccessfully = false
         self.setNavigationBarItem()
+    }
+    
+    
+    func getValFromAccVC(params:Bool) {
+        isCreatedSuccessfully = params
     }
     
     override func didReceiveMemoryWarning() {

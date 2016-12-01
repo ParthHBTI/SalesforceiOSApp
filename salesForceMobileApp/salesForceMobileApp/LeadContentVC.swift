@@ -2,8 +2,9 @@ import UIKit
 import SalesforceRestAPI
 import SalesforceNetwork
 import SystemConfiguration
+import MBProgressHUD
 
-class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate, UIActionSheetDelegate {
+class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate, UIActionSheetDelegate,CreateNewLeadDelegate {
     
     @IBOutlet weak var leadSegment: UISegmentedControl!
     var getResponseArr:AnyObject = []
@@ -18,7 +19,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     var tempCell = LeadContentCell()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var parentIndex:Int = 0
-    var isFirstLoaded: Bool = false
+    var isUpdatedSuccessfully:Bool = false
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -47,7 +48,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         super.viewDidLoad()
         title = "Lead Detail"
         self.setNavigationBarItem()
-        isFirstLoaded = true
         exDelegate.delegate = self
         leadSegment.selectedSegmentIndex = 1
         tableView.rowHeight = 70
@@ -73,12 +73,24 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        if !self.isFirstLoaded {
+        if isUpdatedSuccessfully {
             exDelegate.leadQueryDe("lead")
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "Updated Successfully!"
+            loading.removeFromSuperViewOnHide = true
+            loading.hide(true, afterDelay:2)
         }
-        self.isFirstLoaded = false
+        isUpdatedSuccessfully = false
         dowloadAttachment()
     }
+    
+    
+    func getValFromLeadVC(params: Bool ) {
+        self.isUpdatedSuccessfully = params
+    }
+
+    
     
     func dowloadAttachment() {
         let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
@@ -351,6 +363,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         vc.leadDataDict = self.getResponseArr
         vc.flag = true
         self.navigationController?.pushViewController(vc, animated: true)
+        vc.delegate = self
     }
     
     func makeLeadDataArr(getLeadArr: NSDictionary) {

@@ -18,6 +18,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     var resArr1:AnyObject = []
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var isCreatedSuccessfully: Bool = false
+    var isFirstLoaded:Bool = false
     var createLeadDelegate: CreateNewLeadDelegate?
     
     
@@ -27,6 +28,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     override func viewDidLoad() {
         super.viewDidLoad()
         exDelegate.delegate = self
+        isFirstLoaded = true
         self.title = "Leads View"
         self.setNavigationBarItem()
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
@@ -98,7 +100,9 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        exDelegate.leadQueryDe("lead")
+        if !isFirstLoaded {
+            exDelegate.leadQueryDe("lead")
+        }
         self.setNavigationBarItem()
         if isCreatedSuccessfully {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
@@ -107,6 +111,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
             loading.removeFromSuperViewOnHide = true
             loading.hide(true, afterDelay:2)
         }
+        isFirstLoaded = false
         isCreatedSuccessfully = false
     }
     

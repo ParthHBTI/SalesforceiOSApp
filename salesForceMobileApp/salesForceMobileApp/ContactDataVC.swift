@@ -8,8 +8,9 @@
 
 import UIKit
 import SalesforceRestAPI
+import MBProgressHUD
 
-class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate {
+class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate,CreateNewContactDelegate {
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var feedData: AnyObject = []
@@ -20,7 +21,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     var noteArr: AnyObject = []
     var leadID = String()
     var parentIndex:Int = 0
-    var isFirstLoad: Bool = false
+    var isUpdatedSuccessfully:Bool = false
     @IBOutlet weak var feedSegment: UISegmentedControl!
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -52,7 +53,6 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         super.viewDidLoad()
         title = "Contact Detail"
         self.setNavigationBarItem()
-        isFirstLoad = true
         exDelegate.delegate = self
         tableView.rowHeight = 70
         feedSegment.selectedSegmentIndex = 1
@@ -73,16 +73,26 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     }
     
     
-  
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        if !isFirstLoad {
+        if isUpdatedSuccessfully {
             exDelegate.leadQueryDe("contact")
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "Updated Successfully!"
+            loading.removeFromSuperViewOnHide = true
+            loading.hide(true, afterDelay:2)
         }
-        self.isFirstLoad = false
+        isUpdatedSuccessfully = false
         dowloadAttachment()
-
+        
     }
+    
+    
+    func getValFromContactVC(params: Bool) {
+        isUpdatedSuccessfully = params
+    }
+    
     
     func isContactDataNil() {
         var birthdate = ""
@@ -157,8 +167,8 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             
         }
     }
-
-
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -166,7 +176,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     }
     
     // MARK: - Table view data source
- 
+    
     
     func dowloadAttachment() {
         let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
@@ -195,7 +205,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         })
         
     }
-
+    
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         if feedSegment.selectedSegmentIndex == 1 {
@@ -226,7 +236,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             return feedData.count
         }
     }
-
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if feedSegment.selectedSegmentIndex == 1 {
             if indexPath.section == 0 {
@@ -322,7 +332,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         vc.contactDataDic = self.getResponseArr
         vc.flag = true
         self.navigationController?.pushViewController(vc, animated: true)
-        
+        vc.delegate = self
     }
     
     /*

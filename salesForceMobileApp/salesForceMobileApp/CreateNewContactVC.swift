@@ -14,6 +14,10 @@ import SmartSync
 import SmartStore
 import MBProgressHUD
 
+protocol CreateNewContactDelegate {
+    func getValFromContactVC(params:Bool)
+}
+
 class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryDelegate {
     
     @IBOutlet weak var firstName: UITextField!
@@ -29,6 +33,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     var contactDataDic:AnyObject = []
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    var delegate: CreateNewContactDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +49,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
         scrollView.setNeedsDisplay()
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewContactVC.backAction))
          self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
-        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateAccountAction))
+        let navBarUpdateBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateContactAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
@@ -60,7 +65,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
             self.saveBtn.hidden = true
             //self.cancleBtn.hidden = true
             title = "Edit Contact"
-            self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
+            self.navigationItem.setRightBarButtonItem(navBarUpdateBtn, animated: true)
         }
         // Do any additional setup after loading the view.
     }
@@ -99,24 +104,22 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
                     })
                     print( (err))
                 }) { succes in
-                    dispatch_async(dispatch_get_main_queue(), {
-                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                        loading.mode = MBProgressHUDMode.Text
-                        loading.detailsLabelText = "Successfully Created Contact Record"
-                        loading.removeFromSuperViewOnHide = true
-                        loading.hide(true, afterDelay: 2)
-                        self.firstName.text = nil
-                        self.lastName.text = nil
-                        self.email.text = nil
-                        self.phone.text = nil
-                        self.fax.text = nil
-                    })
+                    self.delegate!.getValFromContactVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
                         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                         loading.mode = MBProgressHUDMode.Indeterminate
-                        loading.detailsLabelText = "Saving Successfully!"
-                        loading.hide(true, afterDelay: 2)
+                        loading.detailsLabelText = "Contact is creating!"
                         loading.removeFromSuperViewOnHide = true
+                        loading.hide(true, afterDelay: 2)
+                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                        dispatch_after(delayTime, dispatch_get_main_queue()) {
+                            self.navigationController?.popViewControllerAnimated(true)
+                        }
+                        /*self.firstName.text = nil
+                        self.lastName.text = nil
+                        self.email.text = nil
+                        self.phone.text = nil
+                        self.fax.text = nil*/
                     })
                 }
             }
@@ -135,7 +138,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     }
     
     //Update contact record
-    func updateAccountAction() {
+    func updateContactAction() {
         if exDelegate.isConnectedToNetwork() {
             if self.isSubmitCorrectVal() {
                 let params = [
@@ -152,13 +155,17 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
                     })
                     print( (err))
                 }){ succes in
+                    self.delegate!.getValFromContactVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
                         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                         loading.mode = MBProgressHUDMode.Indeterminate
-                        //loading.mode = MBProgressHUDMode.Text
-                        loading.detailsLabelText = "Updated Successfully!"
+                        loading.detailsLabelText = "Updating!"
                         loading.hide(true, afterDelay: 2)
                         loading.removeFromSuperViewOnHide = true
+                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                        dispatch_after(delayTime, dispatch_get_main_queue()) {
+                            self.navigationController?.popViewControllerAnimated(true)
+                        }
                     })
                 }
             } 

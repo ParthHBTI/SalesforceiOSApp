@@ -44,7 +44,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
         scrollView.setNeedsDisplay()
         //        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewLeadVC.backAction))
         //        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
-        let navBarSaveBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateLeadAction))
+        let navBarUpdateBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateLeadAction))
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
@@ -58,7 +58,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
             saveBtn.hidden = true
             //cancleBtn.hidden = true
             title = "Edit Lead"
-            self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
+            self.navigationItem.setRightBarButtonItem(navBarUpdateBtn, animated: true)
         }
         
         // Do any additional setup after loading the view.
@@ -144,13 +144,18 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
                     })
                     print( (err))
                 }){ succes in
+                    self.delegate!.getValFromLeadVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
                         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                         loading.mode = MBProgressHUDMode.Indeterminate
                         //loading.mode = MBProgressHUDMode.Text
-                        loading.detailsLabelText = "Updated Successfully!"
+                        loading.detailsLabelText = "Updating!"
                         loading.hide(true, afterDelay: 2)
                         loading.removeFromSuperViewOnHide = true
+                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                        dispatch_after(delayTime, dispatch_get_main_queue()) {
+                            self.navigationController?.popViewControllerAnimated(true)
+                        }
                     })
                 }
             }

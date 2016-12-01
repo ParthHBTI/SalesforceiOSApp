@@ -8,7 +8,10 @@
 
 import UIKit
 import SalesforceRestAPI
-class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate {
+import MBProgressHUD
+
+class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate,CreateNewOppDelegate {
+    
     var feedData: AnyObject = []
     var getResponseArr:AnyObject = []
     var opportunityDataArr = []
@@ -17,9 +20,10 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     var noteArr: AnyObject = []
     var cellTitleArr: NSArray = ["Opportunity Owner:","Opportunity Name:","Account Name:","Lead Source:","Stage Name:","Type:","Ammount:","Probability:","Is Private:","Created Date:","Close Date:","Is Closed:","Is Deleted:","Last Modified Date:"]
     var leadID = String()
-    var isFirstLoad: Bool = false
+    var isUpdatedSuccessfully:Bool = false
     var parentIndex:Int = 0
     @IBOutlet weak var feedSegment: UISegmentedControl!
+    
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil
@@ -43,11 +47,11 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         }
         
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Opportunity Detail"
         self.setNavigationBarItem()
-        isFirstLoad = true
         exDelegate.delegate = self
         tableView.rowHeight = 70
         feedSegment.selectedSegmentIndex = 1
@@ -70,14 +74,23 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
-        if !isFirstLoad {
+        if isUpdatedSuccessfully {
             exDelegate.leadQueryDe("opporchunity")
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "Updated Successfully!"
+            loading.removeFromSuperViewOnHide = true
+            loading.hide(true, afterDelay:2)
         }
-        self.isFirstLoad = false
+        isUpdatedSuccessfully = false
         dowloadAttachment()
 
     }
     
+    
+    func getValFromOppVC(params:Bool) {
+        isUpdatedSuccessfully = params
+    }
     
     func editAction() {
         let storyboard = UIStoryboard(name: "Main" , bundle: nil)
@@ -85,6 +98,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         vc.opportunityDataDic = self.getResponseArr
         vc.flag = true
         self.navigationController?.pushViewController(vc, animated: true)
+        vc.delegate = self
     }
     
     

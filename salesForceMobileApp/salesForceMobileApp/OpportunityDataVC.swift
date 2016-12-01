@@ -45,6 +45,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Opportunity Detail"
         self.setNavigationBarItem()
         isFirstLoad = true
         exDelegate.delegate = self

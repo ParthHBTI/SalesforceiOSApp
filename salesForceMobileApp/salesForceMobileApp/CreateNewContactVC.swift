@@ -59,7 +59,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
             self.fax.text = contactDataDic["Fax"] as? String
             self.saveBtn.hidden = true
             //self.cancleBtn.hidden = true
-            title = "Edit Account"
+            title = "Edit Contact"
             self.navigationItem.setRightBarButtonItem(navBarSaveBtn, animated: true)
         }
         // Do any additional setup after loading the view.

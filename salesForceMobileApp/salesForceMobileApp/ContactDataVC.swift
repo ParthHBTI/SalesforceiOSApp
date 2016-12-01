@@ -50,6 +50,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Contact Detail"
         self.setNavigationBarItem()
         isFirstLoad = true
         exDelegate.delegate = self

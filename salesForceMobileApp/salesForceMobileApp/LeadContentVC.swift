@@ -45,6 +45,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Lead Detail"
         self.setNavigationBarItem()
         isFirstLoaded = true
         exDelegate.delegate = self

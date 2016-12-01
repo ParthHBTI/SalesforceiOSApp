@@ -49,6 +49,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Account Detail"
         self.setNavigationBarItem()
         isFirstLoad = true
         exDelegate.delegate = self

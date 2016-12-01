@@ -107,6 +107,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
             loading.removeFromSuperViewOnHide = true
             loading.hide(true, afterDelay:2)
         }
+        isCreatedSuccessfully = false
     }
     
     

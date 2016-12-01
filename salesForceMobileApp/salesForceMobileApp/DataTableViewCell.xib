@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -36,6 +36,16 @@
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2af-K2-awZ">
+                        <rect key="frame" x="0.0" y="78" width="320" height="1"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="AXJ-Jg-493"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b6u-4L-H5f">
@@ -83,7 +93,10 @@
                     <constraint firstItem="ppM-43-tik" firstAttribute="leading" secondItem="eWK-b2-p7R" secondAttribute="leading" id="c9f-ya-sBc">
                         <variation key="heightClass=regular-widthClass=compact" constant="10"/>
                     </constraint>
+                    <constraint firstAttribute="bottom" secondItem="2af-K2-awZ" secondAttribute="bottom" id="cTK-ZH-LP4"/>
                     <constraint firstItem="b6u-4L-H5f" firstAttribute="leading" secondItem="I30-9I-EnW" secondAttribute="trailing" constant="31" id="kIp-AF-9Ae"/>
+                    <constraint firstItem="2af-K2-awZ" firstAttribute="width" secondItem="eWK-b2-p7R" secondAttribute="width" id="vF7-nU-HST"/>
+                    <constraint firstItem="2af-K2-awZ" firstAttribute="centerX" secondItem="eWK-b2-p7R" secondAttribute="centerX" id="ztE-n1-6lX"/>
                 </constraints>
                 <variation key="default">
                     <mask key="subviews">

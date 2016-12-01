@@ -12,12 +12,13 @@ import MBProgressHUD
 import ZKSforce
 
 // class for Lead's data
-class LeadViewController: UIViewController, ExecuteQueryDelegate {
+class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     var resArr1:AnyObject = []
     var exDelegate: ExecuteQuery = ExecuteQuery()
-    var isFirstLoaded: Bool = false
+    var isCreatedSuccessfully: Bool = false
+    var createLeadDelegate: CreateNewLeadDelegate?
     
     
     var  client:ZKSforceClient?
@@ -27,7 +28,6 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         super.viewDidLoad()
         exDelegate.delegate = self
         self.title = "Leads View"
-        isFirstLoaded = true
         self.setNavigationBarItem()
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
@@ -88,6 +88,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
         navigationController?.pushViewController(nv, animated: true)
+        nv.delegate = self
     }
     
     
@@ -99,14 +100,19 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         super.viewWillAppear(animated)
         exDelegate.leadQueryDe("lead")
         self.setNavigationBarItem()
-        if !isFirstLoaded {
+        if isCreatedSuccessfully {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Created Successfully!"
             loading.removeFromSuperViewOnHide = true
             loading.hide(true, afterDelay:2)
         }
-        self.isFirstLoaded = false
+        isCreatedSuccessfully = false
+    }
+    
+    
+    func getValFromLeadVC(params: Bool ) {
+        self.isCreatedSuccessfully = params
     }
     
     override func didReceiveMemoryWarning() {

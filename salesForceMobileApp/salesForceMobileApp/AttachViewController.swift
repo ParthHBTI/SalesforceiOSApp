@@ -10,8 +10,7 @@ import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
 
-
-class AttachViewController: UIViewController,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate  {
+class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate  {
     var leadDetailInfo:AnyObject = []
     var leadId = ""
     var checkButton = false
@@ -132,6 +131,7 @@ let imagePicker = UIImagePickerController()
         
     }
     
+    }
     
     func createFeedForAttachment(field: String) {
     let entID = SFUserAccountManager.sharedInstance().currentUser?.idData.userId

@@ -9,8 +9,6 @@
 import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
-
-
 class NoteViewController: UIViewController, SFRestDelegate {
 
     @IBOutlet weak var noteOwnerName: UILabel!

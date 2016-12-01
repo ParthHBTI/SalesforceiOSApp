@@ -131,7 +131,7 @@ let imagePicker = UIImagePickerController()
         
     }
     
-    }
+    
     
     func createFeedForAttachment(field: String) {
     let entID = SFUserAccountManager.sharedInstance().currentUser?.idData.userId
@@ -244,8 +244,7 @@ let imagePicker = UIImagePickerController()
 //        }
 //    }
     
-    func request(request: SFRestRequest, didFailLoadWithError error: NSError)
-    {
+    func request(request: SFRestRequest, didFailLoadWithError error: NSError){
         self.log(.Debug, msg: "didFailLoadWithError: \(error)")
         
         // Add your failed error handling here
@@ -262,7 +261,8 @@ let imagePicker = UIImagePickerController()
         self.log(.Debug, msg: "requestDidTimeout: \(request)")
         // Add your failed error handling here
     }
-    }
+
+}
 /*
  
  

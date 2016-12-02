@@ -187,6 +187,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = leadID
+            notesVC.noteDetailArr = leadDataArr
             self.navigationController?.pushViewController(notesVC, animated: true)
             
             print("Delete")
@@ -236,6 +237,14 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         
     }
     
+    func getTimeFromString(index: Int) -> String {
+        let str = attachmentArr.objectAtIndex(index)["CreatedDate"] as? String
+        let arrayWithTwoStrings = str!.componentsSeparatedByString("T")
+        let StringsAfter = arrayWithTwoStrings[1]
+        let timeStr = StringsAfter.componentsSeparatedByString(".")
+        let timeSt = timeStr[0]
+        return timeSt
+    }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if leadSegment.selectedSegmentIndex == 1 {
@@ -255,14 +264,19 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             } else if indexPath.section == 1 {
                 tableView.rowHeight = 70
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
+                
+               textFeedCell.attachNoteTime.text = getTimeFromString(indexPath.row)
                 textFeedCell.attachAndNoteFileName.text = attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
                 let typeArr: AnyObject = attachmentArr.objectAtIndex(indexPath.row)["attributes"]
                     textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
+                textFeedCell.attachPhoto.backgroundColor = UIColor(hex: "FFD434" )
+                textFeedCell.attachPhoto.layer.cornerRadius = 1.0
                 return textFeedCell
             } else {
                 tableView.rowHeight = 70
                 
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
+                textFeedCell.attachNoteTime.text = getTimeFromString(indexPath.row)
                 textFeedCell.attachAndNoteFileName.text = noteArr.objectAtIndex(indexPath.row)["Name"] as? String
                 let typeArr: AnyObject = noteArr.objectAtIndex(indexPath.row)["attributes"]
                 textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String

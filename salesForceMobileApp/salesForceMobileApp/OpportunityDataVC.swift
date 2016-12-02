@@ -159,6 +159,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
             let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = leadID
+            notesVC.noteDetailArr = opportunityDataArr
             self.navigationController?.pushViewController(notesVC, animated: true)
             
             print("Delete")
@@ -259,6 +260,8 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
                 textFeedCell.attachAndNoteFileName.text = attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
                 let typeArr: AnyObject = attachmentArr.objectAtIndex(indexPath.row)["attributes"]
                 textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
+                textFeedCell.attachPhoto.backgroundColor = UIColor(hex: "FFD434" )
+                textFeedCell.attachPhoto.layer.cornerRadius = 1.0
                 return textFeedCell
             } else {
                 tableView.rowHeight = 70

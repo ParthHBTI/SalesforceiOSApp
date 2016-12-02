@@ -125,8 +125,8 @@ extension AccountViewController : UITableViewDataSource {
         
         //cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Website"] as? String
         cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
-        cell.dataImage.backgroundColor = UIColor.init(hex: "7D8AD9")
-        cell.dataImage.layer.cornerRadius = 2.0
+        cell.dataImage.backgroundColor = UIColor.init(hex: "FFD434")
+        cell.dataImage.layer.cornerRadius = 1.0
         cell.dataImage.image = UIImage.init(named: "accImg")
         return cell
     }
@@ -136,6 +136,7 @@ extension AccountViewController : UITableViewDataSource {
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("AccountDataVC") as! AccountDataVC
         subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)
         subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
+        subContentsVC.objectTypeStr = "Account"
         subContentsVC.parentIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
         

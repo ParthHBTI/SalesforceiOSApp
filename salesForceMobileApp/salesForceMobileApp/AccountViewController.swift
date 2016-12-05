@@ -15,7 +15,9 @@ import MBProgressHUD
 class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    var resArr1:AnyObject = []
+    var resArr1 = NSMutableArray()
+    var delAccAtIndexPath:NSIndexPath? = nil
+    var delObjAtId: String = " "
     var exDelegate: ExecuteQuery = ExecuteQuery()
     //var createConDelegate: CreateNewLeadDelegate?
     var isCreatedSuccessfully: Bool = false
@@ -35,7 +37,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
     }
     
     func executeQuery()  {
-        resArr1 = exDelegate.resArr
+        resArr1 = exDelegate.resArr.mutableCopy() as! NSMutableArray
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
         })
@@ -98,7 +100,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
             loading.detailsLabelText = "Uploading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
@@ -139,5 +141,63 @@ extension AccountViewController : UITableViewDataSource {
         subContentsVC.parentIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
         
+    }
+    
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            delAccAtIndexPath = indexPath
+            delObjAtId = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
+            let accToDelete = self.resArr1.objectAtIndex(indexPath.row)["Name"] as! String
+            confirmDelete(accToDelete)
+        }
+    }
+    
+    
+    func confirmDelete(accName: String) {
+        let alert = UIAlertController(title: "Delete file", message: "Are you sure to permanently delete \(accName)?", preferredStyle: .Alert )
+        let DeleteAction = UIAlertAction(title: "Delete", style: .Destructive, handler: accDelAction)
+        let CancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler:cancle)
+        
+        alert.addAction(DeleteAction)
+        alert.addAction(CancelAction)
+        
+        // Support display in iPad
+        alert.popoverPresentationController?.sourceView = self.view
+        alert.popoverPresentationController?.sourceRect = CGRectMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0, 1.0, 1.0)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    
+    func cancle(alertAction: UIAlertAction!) -> Void {
+        
+    }
+    
+    func accDelAction(alertAction: UIAlertAction) -> Void {
+        if exDelegate.isConnectedToNetwork() {
+            SFRestAPI.sharedInstance().performDeleteWithObjectType("Account", objectId: delObjAtId,failBlock: { err in
+                dispatch_async(dispatch_get_main_queue(), {
+                    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                    alert.show()
+                })
+                print( (err))
+            }){ succes in
+                dispatch_async(dispatch_get_main_queue(), {
+                    if let indexPath = self.delAccAtIndexPath {
+                        self.resArr1.removeObjectAtIndex(indexPath.row)
+                        self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                        ///self.tableView.reloadData()
+                        self.delAccAtIndexPath = nil
+                    }
+                })
+            }
+        }
+        else {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            loading.detailsLabelText = "Please check your Internet connection!"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+        }
     }
 }

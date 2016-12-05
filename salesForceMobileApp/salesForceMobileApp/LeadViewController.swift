@@ -15,11 +15,14 @@ import ZKSforce
 class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    var resArr1:AnyObject = []
+    //var resArr1:AnyObject = []
+    var resArr1 = NSMutableArray()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var isCreatedSuccessfully: Bool = false
     var isFirstLoaded:Bool = false
     var createLeadDelegate: CreateNewLeadDelegate?
+    var deleteLeadAtIndexPath: NSIndexPath? = nil
+    var delObjAtId: String = " "
     
     
     var  client:ZKSforceClient?
@@ -73,7 +76,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     }
     
     func executeQuery()  {
-        resArr1 = exDelegate.resArr
+        resArr1 = exDelegate.resArr.mutableCopy() as! NSMutableArray
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
         })
@@ -138,7 +141,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
             loading.detailsLabelText = "Uploading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
@@ -174,6 +177,67 @@ extension LeadViewController : UITableViewDataSource {
          cell.dataImage.tintColor = UIColor.redColor()*/
         return cell
     }
+    
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            deleteLeadAtIndexPath = indexPath
+            delObjAtId = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
+            let leadToDelete = self.resArr1.objectAtIndex(indexPath.row)["Name"] as! String
+            confirmDelete(leadToDelete)
+        }
+    }
+    
+    
+    func confirmDelete(leadName: String) {
+        let alert = UIAlertController(title: "Delete file", message: "Are you sure to permanently delete \(leadName)?", preferredStyle: .Alert )
+        let DeleteAction = UIAlertAction(title: "Delete", style: .Destructive, handler: leadDelAction)
+        let CancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler:cancle)
+        
+        alert.addAction(DeleteAction)
+        alert.addAction(CancelAction)
+        
+        // Support display in iPad
+        alert.popoverPresentationController?.sourceView = self.view
+        alert.popoverPresentationController?.sourceRect = CGRectMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0, 1.0, 1.0)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    
+    func cancle(alertAction: UIAlertAction!) -> Void {
+        
+    }
+    
+    ///
+    func leadDelAction(alertAction: UIAlertAction) -> Void {
+        if exDelegate.isConnectedToNetwork() {
+            SFRestAPI.sharedInstance().performDeleteWithObjectType("Lead", objectId: delObjAtId,failBlock: { err in
+                dispatch_async(dispatch_get_main_queue(), {
+                    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                    alert.show()
+                })
+                print( (err))
+            }){ succes in
+                dispatch_async(dispatch_get_main_queue(), {
+                    if let indexPath = self.deleteLeadAtIndexPath {
+                        self.resArr1.removeObjectAtIndex(indexPath.row)
+                        self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                        ///self.tableView.reloadData()
+                        self.deleteLeadAtIndexPath = nil
+                    }
+                })
+            }
+        }
+        else {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            loading.detailsLabelText = "Please check your Internet connection!"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+        }
+    }
+    
+    ///
     
     func btnClicked(sender: UIButton) {
         print(sender.tag)

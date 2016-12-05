@@ -169,7 +169,8 @@ extension LeadViewController : UITableViewDataSource {
         cell.dataImage.layer.cornerRadius = 2.0
         cell.dataImage.image = UIImage.init(named: "leadImg")
         cell.dataImage.image = UIImage.init(named: "lead")
-        cell.convertButton.addTarget(self, action: #selector(self.btnClicked), forControlEvents: .TouchUpInside)
+        cell.convertButton.tag = indexPath.row
+        cell.convertButton.addTarget(self, action: #selector(LeadViewController.btnClicked(_:)), forControlEvents: .TouchUpInside)
         
         /*let img = UIImage(named: "lead")
          let tintedImage = img?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
@@ -237,10 +238,10 @@ extension LeadViewController : UITableViewDataSource {
     ///
     
     func btnClicked(sender: UIButton) {
-        print(sender.tag)
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ConvertLeadViewController") as! ConvertLeadViewController
         subContentsVC.convertLeadDataArr = self.resArr1.objectAtIndex(sender.tag)
+        subContentsVC.leadID = self.resArr1.objectAtIndex(sender.tag)["Id"] as! String
         self.navigationController?.pushViewController(subContentsVC, animated: true)
         //convertLeadWithLeadId(self.resArr1.objectAtIndex(sender.tag)["Id"] as! String)
     }

@@ -21,6 +21,8 @@ class ConvertLeadViewController: UIViewController, SFRestDelegate, AccountListDe
     @IBOutlet weak var opporchunityText: UITextField!
     var checkButton = false
     var convertLeadDataArr: AnyObject = []
+    var leadID = String()
+    var leadStatus = String()
     var  client:ZKSforceClient?
     var  results:ZKQueryResult?
     var accountNameArr: AnyObject = []
@@ -30,23 +32,26 @@ class ConvertLeadViewController: UIViewController, SFRestDelegate, AccountListDe
     
        
     @IBAction func convertLeadAction(sender: AnyObject) {
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Lead is Converting..."
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
-           convertLeadWithLeadId(self.convertLeadDataArr["Id"] as! String)
-        }
+                NSOperationQueue.mainQueue().addOperationWithBlock({
+                    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                    loading.mode = MBProgressHUDMode.Indeterminate
+                    loading.detailsLabelText = "Lead is Converting..."
+                    loading.hide(true, afterDelay: 2)
+                    loading.removeFromSuperViewOnHide = true
+                    self.convertLeadWithLeadId(self.convertLeadDataArr["Id"] as! String)
+        })
+    }
  
 
     override func viewDidLoad() {
         super.viewDidLoad()
         accountNameText.enabled = false
         self.title = "Convert Lead"
-         self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
+        self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
         let query = "SELECT Id, Name FROM RecentlyViewed WHERE Type IN ('Account')  "
         let request = SFRestAPI.sharedInstance().requestForQuery(query)
         SFRestAPI.sharedInstance().send(request, delegate: self)
+        
         checkAction.layer.cornerRadius = 5
         checkAction.layer.borderWidth = 1
         checkAction.layer.borderColor = UIColor.blackColor().CGColor

@@ -65,6 +65,7 @@ let imagePicker = UIImagePickerController()
         self.attachTextView.text = nil
         return true
     }
+    
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         if text == "\n" {
             textView.resignFirstResponder()

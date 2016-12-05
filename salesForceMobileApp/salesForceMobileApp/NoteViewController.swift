@@ -9,7 +9,7 @@
 import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
-class NoteViewController: UIViewController, SFRestDelegate {
+class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var noteOwnerName: UILabel!
     @IBOutlet weak var ownerCompanyName: UILabel!
@@ -18,7 +18,7 @@ class NoteViewController: UIViewController, SFRestDelegate {
     @IBOutlet weak var noteBodyTextView: UITextView!
     var leadId = String()
     var checkButton = false
-    
+    var noteDetailArr: AnyObject = []
     @IBAction func checkUncheckBtn(sender: AnyObject) {
         if !checkButton {
             checkButton = true
@@ -40,6 +40,8 @@ class NoteViewController: UIViewController, SFRestDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         let borderColor = UIColor(red: 204.0 / 255.0, green: 204.0 / 255.0, blue: 204.0 / 255.0, alpha: 1.0)
+        noteBodyTextView.delegate = self
+        noteTitleText.delegate = self
         noteBodyTextView.layer.borderColor = borderColor.CGColor
         noteBodyTextView.layer.borderWidth = 1.0
         noteBodyTextView.layer.cornerRadius = 5.0
@@ -47,6 +49,9 @@ class NoteViewController: UIViewController, SFRestDelegate {
         checkNoteIsPrivate.layer.borderWidth = 1
         checkNoteIsPrivate.layer.borderColor = UIColor.blackColor().CGColor
         let shareBarButton = UIBarButtonItem(title: "Share", style: .Plain, target: self, action: #selector(NoteViewController.shareAction))
+        print(noteDetailArr)
+        noteOwnerName.text = noteDetailArr.objectAtIndex(1) as? String
+        //ownerCompanyName.text = noteDetailArr.objectAtIndex(2) as? String
         self.navigationItem.setRightBarButtonItem(shareBarButton, animated: true)
         
         
@@ -98,7 +103,18 @@ class NoteViewController: UIViewController, SFRestDelegate {
     }
     }
     
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }
     
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        noteTitleText.resignFirstResponder()
+        return true
+    }
     @IBAction func saveNoteAction(sender: AnyObject) {
         shareAction()
 }

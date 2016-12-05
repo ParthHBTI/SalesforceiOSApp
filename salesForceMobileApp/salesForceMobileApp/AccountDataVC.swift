@@ -22,6 +22,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     var accountDataArr = []
     var attachmentArr: AnyObject = []
     var noteArr: AnyObject = []
+    var objectTypeStr = String()
     var isUpdatedSuccessfully:Bool = false
     @IBOutlet weak var feedSegment: UISegmentedControl!
     
@@ -201,6 +202,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = leadID
+            notesVC.noteDetailArr = accountDataArr
             self.navigationController?.pushViewController(notesVC, animated: true)
             
             print("Delete")
@@ -272,6 +274,9 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                 textFeedCell.attachAndNoteFileName.text = attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
                 let typeArr: AnyObject = attachmentArr.objectAtIndex(indexPath.row)["attributes"]
                 textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
+                textFeedCell.attachPhoto.backgroundColor = UIColor(hex: "FFD434" )
+                textFeedCell.attachPhoto.layer.cornerRadius = 1.0
+
                 return textFeedCell
             } else {
                 tableView.rowHeight = 70

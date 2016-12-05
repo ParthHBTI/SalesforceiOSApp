@@ -44,6 +44,9 @@ class AccountListViewController: UIViewController {
     
     override func toggleLeft() {
         self.navigationController?.popViewControllerAnimated(true)
+        self.dismissViewControllerAnimated(true){
+            
+        }
     }
 
     

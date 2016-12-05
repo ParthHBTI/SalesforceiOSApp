@@ -21,7 +21,9 @@ class AccountListViewController: UIViewController {
     var acName = String()
     override func viewDidLoad() {
         super.viewDidLoad()
-        //self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
+        if flag {
+            title = "Choose Status"
+        }
     }
     
     @IBAction func closePresentController () {

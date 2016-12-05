@@ -14,7 +14,7 @@ import SalesforceRestAPI
 
 
 
-class ConvertLeadViewController: UIViewController, SFRestDelegate, AccountListDelegate {
+class ConvertLeadViewController: UIViewController, SFRestDelegate, AccountListDelegate, UIAlertViewDelegate {
 
     @IBOutlet weak var checkAction: UIButton!
     @IBOutlet weak var accountNameText: UITextField!
@@ -32,6 +32,12 @@ class ConvertLeadViewController: UIViewController, SFRestDelegate, AccountListDe
     
        
     @IBAction func convertLeadAction(sender: AnyObject) {
+        let req = SFRestAPI.sharedInstance().requestForQuery("SELECT Status FROM Lead Where Id = '\(leadID)'")
+        SFRestAPI.sharedInstance().sendRESTRequest(req, failBlock: {_ in
+            
+            }, completeBlock: {response in
+                let leadStatusArr: AnyObject = response!["records"]
+                self.leadStatus = (leadStatusArr.objectAtIndex(0)["Status"] as? String)!
                 NSOperationQueue.mainQueue().addOperationWithBlock({
                     let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                     loading.mode = MBProgressHUDMode.Indeterminate
@@ -39,6 +45,7 @@ class ConvertLeadViewController: UIViewController, SFRestDelegate, AccountListDe
                     loading.hide(true, afterDelay: 2)
                     loading.removeFromSuperViewOnHide = true
                     self.convertLeadWithLeadId(self.convertLeadDataArr["Id"] as! String)
+                })
         })
     }
  
@@ -112,7 +119,7 @@ class ConvertLeadViewController: UIViewController, SFRestDelegate, AccountListDe
         
         let leadConvertObj = ZKLeadConvert()
         leadConvertObj.leadId = leadId;
-        leadConvertObj.convertedStatus = "Closed - Converted";
+        leadConvertObj.convertedStatus = leadStatus;
         leadConvertObj.doNotCreateOpportunity = checkButton
         if !checkButton {
             leadConvertObj.opportunityName = self.opporchunityText.text
@@ -123,9 +130,10 @@ class ConvertLeadViewController: UIViewController, SFRestDelegate, AccountListDe
         
         
         client?.performConvertLead([leadConvertObj], failBlock: { exp in
-            print(exp)
-            
-            }, completeBlock: { success in
+            let button2Alert: UIAlertView = UIAlertView(title: "Error", message: "Lead Status Picklist Values is not Converted",
+                delegate: self, cancelButtonTitle: "Ok")
+            button2Alert.show()
+                        }, completeBlock: { success in
                 print(success)
                 
                 let result = success.last as? ZKLeadConvertResult

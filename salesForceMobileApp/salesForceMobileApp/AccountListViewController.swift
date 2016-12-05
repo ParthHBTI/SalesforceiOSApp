@@ -16,7 +16,7 @@ import SystemConfiguration
 class AccountListViewController: UIViewController {
     internal weak var delegate : AccountListDelegate?
     @IBOutlet weak var tableView: UITableView!
-    
+    var flag: Bool = false
     var accountListArr: AnyObject = []
     var acName = String()
     override func viewDidLoad() {
@@ -60,12 +60,24 @@ class AccountListViewController: UIViewController {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("Identifire") as UITableViewCell!
-        cell.textLabel?.text = accountListArr.objectAtIndex(indexPath.row)["Name"] as? String
-               return cell
-    }
+        if flag {
+            cell.textLabel?.text = accountListArr.objectAtIndex(indexPath.row)["ApiName"] as? String
+            return cell
+
+        } else {
+            cell.textLabel?.text = accountListArr.objectAtIndex(indexPath.row)["Name"] as? String
+            return cell
+
+        }
+            }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.acName = (self.accountListArr.objectAtIndex(indexPath.row)["Name"] as? String)!
+        if flag {
+            self.acName = (self.accountListArr.objectAtIndex(indexPath.row)["ApiName"] as? String)!
+        } else {
+            self.acName = (self.accountListArr.objectAtIndex(indexPath.row)["Name"] as? String)!
+        }
+        
         self.delegate?.getSelectedAccountInfo!((self.accountListArr.objectAtIndex(indexPath.row) as? NSDictionary)!)
         self.dismissViewControllerAnimated(true, completion: {
             

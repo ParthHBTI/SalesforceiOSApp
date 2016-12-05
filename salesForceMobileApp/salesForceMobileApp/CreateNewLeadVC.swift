@@ -19,7 +19,7 @@ protocol CreateNewLeadDelegate {
     func getValFromLeadVC(params:Bool)
 }
 
-class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
+class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDelegate, AccountListDelegate {
     
     @IBOutlet weak var lastName: UITextField!
     @IBOutlet weak var companyName: UITextField!
@@ -29,11 +29,13 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     @IBOutlet weak var cancleBtn: UIButton!
     var flag: Bool = false
     var leadDataDict:AnyObject = []
-    
+    var leadStatusValues: AnyObject = []
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var delegate: CreateNewLeadDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
+        let reqq = SFRestAPI.sharedInstance().requestForQuery("SELECT ApiName FROM LeadStatus")
+        SFRestAPI.sharedInstance().send(reqq, delegate: self)
         print(leadDataDict)
         lastName.delegate = self
         companyName.delegate = self
@@ -85,6 +87,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
     @IBAction func saveAction(sender: AnyObject) {
         //let storyboard = UIStoryboard(name: "Main" , bundle: nil)
         //let nav = storyboard.instantiateViewControllerWithIdentifier("LeadViewController") as! LeadViewController
+        
         if exDelegate.isConnectedToNetwork() {
             if self.isSubmittedCorrectVal() {
                 let fields = [
@@ -168,6 +171,16 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
         }
     }
     
+    @IBAction func leadStatusPickListValues(sender: AnyObject) {
+        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+        let presentVC = storyboard.instantiateViewControllerWithIdentifier( "AccountListViewController") as? AccountListViewController
+        presentVC!.accountListArr = self.leadStatusValues
+        presentVC?.flag = true
+        presentVC?.delegate = self;
+        let nvc: UINavigationController = UINavigationController(rootViewController: presentVC!)
+        
+        self.presentViewController(nvc, animated: true, completion:nil)
+    }
     
     func isSubmittedCorrectVal() -> Bool {
         let charSet = NSCharacterSet.whitespaceCharacterSet()
@@ -249,4 +262,34 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate {
             return true
         }
     }
+    
+    func getSelectedAccountInfo(accointDetail:NSDictionary) {
+        self.leadStatus.text = accointDetail["ApiName"] as? String
+        leadStatusValues = accointDetail;
+        print(accointDetail)
+    }
+    
+    func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
+        //let attachmentID = dataResponse["id"] as! String
+        leadStatusValues = dataResponse["records"]
+            }
+    
+    func request(request: SFRestRequest, didFailLoadWithError error: NSError)
+    {
+        self.log(.Debug, msg: "didFailLoadWithError: \(error)")
+        // Add your failed error handling here
+    }
+    
+    func requestDidCancelLoad(request: SFRestRequest)
+    {
+        self.log(.Debug, msg: "requestDidCancelLoad: \(request)")
+        // Add your failed error handling here
+    }
+    
+    func requestDidTimeout(request: SFRestRequest)
+    {
+        self.log(.Debug, msg: "requestDidTimeout: \(request)")
+        // Add your failed error handling here
+    }
+
 }

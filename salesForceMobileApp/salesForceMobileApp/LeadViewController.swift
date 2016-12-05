@@ -193,11 +193,8 @@ extension LeadViewController : UITableViewDataSource {
         let alert = UIAlertController(title: "Delete file", message: "Are you sure to permanently delete \(leadName)?", preferredStyle: .Alert )
         let DeleteAction = UIAlertAction(title: "Delete", style: .Destructive, handler: leadDelAction)
         let CancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler:cancle)
-        
         alert.addAction(DeleteAction)
         alert.addAction(CancelAction)
-        
-        // Support display in iPad
         alert.popoverPresentationController?.sourceView = self.view
         alert.popoverPresentationController?.sourceRect = CGRectMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0, 1.0, 1.0)
         self.presentViewController(alert, animated: true, completion: nil)

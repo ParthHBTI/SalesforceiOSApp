@@ -21,7 +21,7 @@ class AccountListViewController: UIViewController {
     var acName = String()
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
+        //self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
     }
     
     @IBAction func closePresentController () {
@@ -36,20 +36,6 @@ class AccountListViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
    
-    
-    func leftBarButtonWithImage(buttonImage: UIImage) {
-        let leftButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleLeft))
-        navigationItem.leftBarButtonItem = leftButton;
-    }
-    
-    override func toggleLeft() {
-        self.navigationController?.popViewControllerAnimated(true)
-        self.dismissViewControllerAnimated(true){
-            
-        }
-    }
-
-    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }

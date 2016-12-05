@@ -154,7 +154,6 @@ class ConvertLeadViewController: UIViewController, SFRestDelegate, AccountListDe
         let presentVC = storyboard.instantiateViewControllerWithIdentifier( "AccountListViewController") as? AccountListViewController
         presentVC!.accountListArr = self.accountNameArr
         presentVC?.delegate = self;
-        
         let nvc: UINavigationController = UINavigationController(rootViewController: presentVC!)
 
         self.presentViewController(nvc, animated: true, completion:nil)

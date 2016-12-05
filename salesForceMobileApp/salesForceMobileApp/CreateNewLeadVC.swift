@@ -34,8 +34,6 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     var delegate: CreateNewLeadDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
-        let reqq = SFRestAPI.sharedInstance().requestForQuery("SELECT ApiName FROM LeadStatus")
-        SFRestAPI.sharedInstance().send(reqq, delegate: self)
         print(leadDataDict)
         lastName.delegate = self
         companyName.delegate = self
@@ -172,14 +170,20 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     }
     
     @IBAction func leadStatusPickListValues(sender: AnyObject) {
-        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
-        let presentVC = storyboard.instantiateViewControllerWithIdentifier( "AccountListViewController") as? AccountListViewController
-        presentVC!.accountListArr = self.leadStatusValues
-        presentVC?.flag = true
-        presentVC?.delegate = self;
-        let nvc: UINavigationController = UINavigationController(rootViewController: presentVC!)
-        
-        self.presentViewController(nvc, animated: true, completion:nil)
+            let reqq = SFRestAPI.sharedInstance().requestForQuery("SELECT ApiName FROM LeadStatus")
+            SFRestAPI.sharedInstance().sendRESTRequest(reqq, failBlock: {_ in
+                print("Error")
+                }, completeBlock: {response in
+                    print(response)
+                    self.leadStatusValues = response!["records"]
+                    let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+                    let presentVC = storyboard.instantiateViewControllerWithIdentifier( "AccountListViewController") as? AccountListViewController
+                    presentVC!.accountListArr = self.leadStatusValues
+                    presentVC?.flag = true
+                    presentVC?.delegate = self;
+                    let nvc: UINavigationController = UINavigationController(rootViewController: presentVC!)
+                    self.presentViewController(nvc, animated: true, completion:nil)
+        })
     }
     
     func isSubmittedCorrectVal() -> Bool {
@@ -271,7 +275,6 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     
     func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
         //let attachmentID = dataResponse["id"] as! String
-        leadStatusValues = dataResponse["records"]
             }
     
     func request(request: SFRestRequest, didFailLoadWithError error: NSError)

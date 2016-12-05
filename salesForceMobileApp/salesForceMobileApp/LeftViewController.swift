@@ -49,11 +49,11 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         //remove all blank rows from table view
-//        NSLog(@"userData= %@",[SFAuthenticationManager sharedManager].idCoordinator.idData);
-//        
-//        NSLog(@"first name = %@",[SFAuthenticationManager sharedManager].idCoordinator.idData.firstName);
-//        NSLog(@"last name = %@",[SFAuthenticationManager sharedManager].idCoordinator.idData.lastName);
-//        NSLog(@"email name = %@",[SFAuthenticationManager sharedManager].idCoordinator.idData.email);
+        //        NSLog(@"userData= %@",[SFAuthenticationManager sharedManager].idCoordinator.idData);
+        //
+        //        NSLog(@"first name = %@",[SFAuthenticationManager sharedManager].idCoordinator.idData.firstName);
+        //        NSLog(@"last name = %@",[SFAuthenticationManager sharedManager].idCoordinator.idData.lastName);
+        //        NSLog(@"email name = %@",[SFAuthenticationManager sharedManager].idCoordinator.idData.email);
         
         
         
@@ -77,11 +77,11 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
         self.imageHeaderView = ImageHeaderView.loadNib()
         self.view.addSubview(self.imageHeaderView)
         
-     let sfIdentityData =    SFAuthenticationManager.sharedManager().idCoordinator.idData
-
+        let sfIdentityData =    SFAuthenticationManager.sharedManager().idCoordinator.idData
         
         
-       var userName = ""
+        
+        var userName = ""
         if  let _  = nullToNil(sfIdentityData.displayName) {
             userName = sfIdentityData.displayName
         }
@@ -93,12 +93,10 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
         
         self.imageHeaderView.userNameLbl.text = userName + " (" + userCompanyName + ")"
         self.imageHeaderView.userEmailLbl.text = sfIdentityData.email
-        let url = sfIdentityData.pictureUrl
-            
-            //NSURL(string: (userInfoDic["FullPhotoUrl"] as? String!)! + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
-      
         
-        self.imageHeaderView.profileImage?.sd_setImageWithURL(url,placeholderImage: UIImage(named: "User"))
+        let profileImgURL = NSURL(string: String(sfIdentityData.pictureUrl) + "?oauth_token=" + SFUserAccountManager.sharedInstance().currentUser!.credentials.accessToken! )
+        
+        self.imageHeaderView.profileImage?.sd_setImageWithURL(profileImgURL,placeholderImage: UIImage(named: "User"))
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -115,7 +113,7 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     
     func logoutFromApp()  {
         SFAuthenticationManager.sharedManager().logout()
-     //   UIAppDelegate.handleSdkManagerLogout()
+        //   UIAppDelegate.handleSdkManagerLogout()
     }
     
     func changeViewController(menu: LeftMenu) {

@@ -47,6 +47,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Lead Detail"
+        self.tableView.separatorColor = UIColor.clearColor()
         self.setNavigationBarItem()
         exDelegate.delegate = self
         leadSegment.selectedSegmentIndex = 1
@@ -256,7 +257,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                     detailCell.titleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
                 }
                 if detailCell.titleNameLbl.text == "" {
-                    tableView.rowHeight = 40
+                    tableView.rowHeight = 70
                 } else {
                     tableView.rowHeight = 70
                 }

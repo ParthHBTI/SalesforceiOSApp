@@ -170,6 +170,8 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     }
     
     @IBAction func leadStatusPickListValues(sender: AnyObject) {
+        
+        NSOperationQueue.mainQueue().addOperationWithBlock {
             let reqq = SFRestAPI.sharedInstance().requestForQuery("SELECT ApiName FROM LeadStatus")
             SFRestAPI.sharedInstance().sendRESTRequest(reqq, failBlock: {_ in
                 print("Error")
@@ -183,7 +185,8 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
                     presentVC?.delegate = self;
                     let nvc: UINavigationController = UINavigationController(rootViewController: presentVC!)
                     self.presentViewController(nvc, animated: true, completion:nil)
-        })
+            })
+        }
     }
     
     func isSubmittedCorrectVal() -> Bool {

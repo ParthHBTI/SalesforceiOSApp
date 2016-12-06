@@ -5,7 +5,7 @@
 //  Created by mac on 17/10/16.
 //  Copyright © 2016 Salesforce. All rights reserved.
 //
-
+let arrayOfObjectsKey = "offlineAccData"
 import UIKit
 import SalesforceNetwork
 import SalesforceRestAPI
@@ -31,6 +31,8 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
     @IBOutlet weak var postalWarningLbl: UILabel!
+    var accDataArr:NSMutableArray? = NSMutableArray()
+    var accDataArr2 = NSMutableArray()
     var flag: Bool = false
     var accountDataDic:AnyObject = []
     
@@ -48,7 +50,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
         postalWarningLbl.hidden = true
         self.cancleBtn.hidden = true
         setNavigationBarItem()
-        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height);
         scrollView.setNeedsDisplay()
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewAccountVC.backAction))
          self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
@@ -83,7 +85,8 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     
     override func viewDidLayoutSubviews()  {
         super.viewDidLayoutSubviews()
-        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height + 100);
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: self.view.frame.size.height + 100);
+        self.scrollView.backgroundColor = UIColor.greenColor()
     }
     
     override func didReceiveMemoryWarning() {
@@ -121,19 +124,35 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                             self.navigationController?.popViewControllerAnimated(true)
                         }
                         /*self.accountName.text = nil
-                        self.billingStreet.text = nil
-                        self.billingCity.text = nil
-                        self.billingState.text = nil
-                        self.billingCountry.text = nil
-                        self.billingCountry.text = nil*/
+                         self.billingStreet.text = nil
+                         self.billingCity.text = nil
+                         self.billingState.text = nil
+                         self.billingCountry.text = nil
+                         self.billingCountry.text = nil*/
                     })
                 }
             }
         }
         else {
+            let accDataDic = [
+                "AccName" : accountName.text!,
+                "BillingStreet" : billingStreet.text!,
+                "BillingCity" : billingCity.text!,
+                "BillingState" : billingState.text!,
+                "BillingCountry" : billingCountry.text!,
+                "BillingPostalCode" : postalCode.text!
+            ]
+            self.accDataArr!.addObject(accDataDic)
+            //print(accDataArr)
+            let defaults = NSUserDefaults.standardUserDefaults()
+            defaults.objectForKey(arrayOfObjectsKey) as? NSData
+            defaults.setObject(self.accDataArr, forKey: arrayOfObjectsKey)
+            if let arrayOfObjectsData = defaults.objectForKey(arrayOfObjectsKey) as? NSData {
+                accDataArr2 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
+                print(accDataArr2)
+            }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
-            //loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Please check your Internet connection!"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -262,8 +281,6 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
         switch textField {
         case  postalCode:
             if prospectiveText.characters.count > 6 {
-                // phone.layer.borderWidth = 2.0
-                //phone.layer.borderColor = UIColor.redColor().CGColor
                 postalWarningLbl.hidden = false
                 postalWarningLbl.text = "*Please enter a valid postal code"
                 postalWarningLbl.textColor = UIColor.redColor()

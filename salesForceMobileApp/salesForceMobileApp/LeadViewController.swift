@@ -169,6 +169,8 @@ extension LeadViewController : UITableViewDataSource {
         cell.dataImage.layer.cornerRadius = 2.0
         cell.dataImage.image = UIImage.init(named: "leadImg")
         cell.dataImage.image = UIImage.init(named: "lead")
+        cell.convertButton.titleLabel?.textColor = self.navigationController?.navigationBar.barTintColor
+        cell.convertButton.layer.borderColor = self.navigationController?.navigationBar.barTintColor?.CGColor
         cell.convertButton.tag = indexPath.row
         cell.convertButton.addTarget(self, action: #selector(LeadViewController.btnClicked(_:)), forControlEvents: .TouchUpInside)
         

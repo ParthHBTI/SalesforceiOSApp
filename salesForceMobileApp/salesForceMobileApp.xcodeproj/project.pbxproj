@@ -15,6 +15,11 @@
 		04B776391DEBF69E009A7213 /* AccountListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B776381DEBF69E009A7213 /* AccountListViewController.swift */; };
 		04CB1DE41DAF807400D2621C /* SlideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB1DE31DAF807400D2621C /* SlideMenuController.swift */; };
 		04CE8B331DC087AE0057B0A9 /* ExecuteQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE8B321DC087AE0057B0A9 /* ExecuteQuery.swift */; };
+		04D2551C1DF6EB1900CB1A9B /* LeadContentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04D2551B1DF6EB1900CB1A9B /* LeadContentCell.xib */; };
+		04D2551E1DF6EB3400CB1A9B /* AccountDataImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04D2551D1DF6EB3400CB1A9B /* AccountDataImageCell.xib */; };
+		04D255201DF6EC1400CB1A9B /* AttachFileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04D2551F1DF6EC1400CB1A9B /* AttachFileCell.xib */; };
+		04D255221DF6EC2000CB1A9B /* AccountDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04D255211DF6EC2000CB1A9B /* AccountDataCell.xib */; };
+		04D255241DF6EC2F00CB1A9B /* NoteFileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04D255231DF6EC2F00CB1A9B /* NoteFileCell.xib */; };
 		04DB2FA31DB4ED2100C4519F /* CreateNewLeadVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA21DB4ED2100C4519F /* CreateNewLeadVC.swift */; };
 		04DB2FA51DB4ED3E00C4519F /* CreateNewAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA41DB4ED3E00C4519F /* CreateNewAccountVC.swift */; };
 		04DB2FA71DB4ED5300C4519F /* CreateNewOpportunityVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DB2FA61DB4ED5300C4519F /* CreateNewOpportunityVC.swift */; };
@@ -75,6 +80,11 @@
 		04CB1DE21DAF807400D2621C /* SlideMenuControllerSwift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideMenuControllerSwift.h; sourceTree = "<group>"; };
 		04CB1DE31DAF807400D2621C /* SlideMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideMenuController.swift; sourceTree = "<group>"; };
 		04CE8B321DC087AE0057B0A9 /* ExecuteQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExecuteQuery.swift; path = salesForceMobileApp/ExecuteQuery.swift; sourceTree = "<group>"; };
+		04D2551B1DF6EB1900CB1A9B /* LeadContentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeadContentCell.xib; sourceTree = "<group>"; };
+		04D2551D1DF6EB3400CB1A9B /* AccountDataImageCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AccountDataImageCell.xib; sourceTree = "<group>"; };
+		04D2551F1DF6EC1400CB1A9B /* AttachFileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AttachFileCell.xib; sourceTree = "<group>"; };
+		04D255211DF6EC2000CB1A9B /* AccountDataCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AccountDataCell.xib; sourceTree = "<group>"; };
+		04D255231DF6EC2F00CB1A9B /* NoteFileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NoteFileCell.xib; sourceTree = "<group>"; };
 		04DB2FA21DB4ED2100C4519F /* CreateNewLeadVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewLeadVC.swift; sourceTree = "<group>"; };
 		04DB2FA41DB4ED3E00C4519F /* CreateNewAccountVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewAccountVC.swift; sourceTree = "<group>"; };
 		04DB2FA61DB4ED5300C4519F /* CreateNewOpportunityVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateNewOpportunityVC.swift; sourceTree = "<group>"; };
@@ -163,6 +173,7 @@
 			children = (
 				04F96F261DAF74FF000D715A /* TableViewCell */,
 				04F96F221DAF74F8000D715A /* ImageHeaderView.swift */,
+				04D2551D1DF6EB3400CB1A9B /* AccountDataImageCell.xib */,
 				04F96F231DAF74F8000D715A /* ImageHeaderView.xib */,
 				04F96F271DAF7517000D715A /* BaseTableViewCell.swift */,
 				04F96F281DAF7517000D715A /* DataTableViewCell.swift */,
@@ -175,9 +186,13 @@
 		04F96F261DAF74FF000D715A /* TableViewCell */ = {
 			isa = PBXGroup;
 			children = (
+				04D2551B1DF6EB1900CB1A9B /* LeadContentCell.xib */,
+				04D255211DF6EC2000CB1A9B /* AccountDataCell.xib */,
 				732D9DB91DB88EC7002AEDBA /* LeadContentCell.swift */,
 				73BAB84E1DB8DA4100586320 /* AccountDataCell.swift */,
 				73BAB8501DB8DB7F00586320 /* ContactDataCell.swift */,
+				04D2551F1DF6EC1400CB1A9B /* AttachFileCell.xib */,
+				04D255231DF6EC2F00CB1A9B /* NoteFileCell.xib */,
 				73BAB8521DB8DBA200586320 /* OpportunityDataCell.swift */,
 			);
 			name = TableViewCell;
@@ -360,8 +375,13 @@
 				04F96F2C1DAF7517000D715A /* DataTableViewCell.xib in Resources */,
 				04F96ED01DAF6E01000D715A /* Main.storyboard in Resources */,
 				04F96F351DAF75E0000D715A /* SubContentsViewController.storyboard in Resources */,
+				04D2551E1DF6EB3400CB1A9B /* AccountDataImageCell.xib in Resources */,
 				731BC9E01DB4F86600B3C6C7 /* Images.xcassets in Resources */,
+				04D255221DF6EC2000CB1A9B /* AccountDataCell.xib in Resources */,
 				4FD6C49E1B755242002F9F90 /* InitialViewController.xib in Resources */,
+				04D255241DF6EC2F00CB1A9B /* NoteFileCell.xib in Resources */,
+				04D255201DF6EC1400CB1A9B /* AttachFileCell.xib in Resources */,
+				04D2551C1DF6EB1900CB1A9B /* LeadContentCell.xib in Resources */,
 				04F96F251DAF74F8000D715A /* ImageHeaderView.xib in Resources */,
 				049EAE171DD1BCED00C178DA /* feedTemplate.json in Resources */,
 			);

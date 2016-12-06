@@ -129,12 +129,18 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
                 leadOfLineArr.addObject(leadData)
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
                 defaults.setObject(arrOfLeadData, forKey: LeadOfLineDataKey)
-               
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
+                self.delegate!.getValFromLeadVC(true)
+                dispatch_async(dispatch_get_main_queue(), {
+                    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                    loading.mode = MBProgressHUDMode.Indeterminate
+                    loading.detailsLabelText = "Lead is creating!"
+                    loading.removeFromSuperViewOnHide = true
+                    loading.hide(true, afterDelay:2)
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                    dispatch_after(delayTime, dispatch_get_main_queue()) {
+                        self.navigationController?.popViewControllerAnimated(true)
+                    }
+                })
         }
     }
     

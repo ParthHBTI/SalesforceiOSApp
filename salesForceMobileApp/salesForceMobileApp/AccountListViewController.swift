@@ -16,12 +16,14 @@ import SystemConfiguration
 class AccountListViewController: UIViewController {
     internal weak var delegate : AccountListDelegate?
     @IBOutlet weak var tableView: UITableView!
-    
+    var flag: Bool = false
     var accountListArr: AnyObject = []
     var acName = String()
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
+        if flag {
+            title = "Choose Status"
+        }
     }
     
     @IBAction func closePresentController () {
@@ -36,20 +38,6 @@ class AccountListViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
    
-    
-    func leftBarButtonWithImage(buttonImage: UIImage) {
-        let leftButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleLeft))
-        navigationItem.leftBarButtonItem = leftButton;
-    }
-    
-    override func toggleLeft() {
-        self.navigationController?.popViewControllerAnimated(true)
-        self.dismissViewControllerAnimated(true){
-            
-        }
-    }
-
-    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -60,12 +48,24 @@ class AccountListViewController: UIViewController {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("Identifire") as UITableViewCell!
-        cell.textLabel?.text = accountListArr.objectAtIndex(indexPath.row)["Name"] as? String
-               return cell
-    }
+        if flag {
+            cell.textLabel?.text = accountListArr.objectAtIndex(indexPath.row)["ApiName"] as? String
+            return cell
+
+        } else {
+            cell.textLabel?.text = accountListArr.objectAtIndex(indexPath.row)["Name"] as? String
+            return cell
+
+        }
+            }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.acName = (self.accountListArr.objectAtIndex(indexPath.row)["Name"] as? String)!
+        if flag {
+            self.acName = (self.accountListArr.objectAtIndex(indexPath.row)["ApiName"] as? String)!
+        } else {
+            self.acName = (self.accountListArr.objectAtIndex(indexPath.row)["Name"] as? String)!
+        }
+        
         self.delegate?.getSelectedAccountInfo!((self.accountListArr.objectAtIndex(indexPath.row) as? NSDictionary)!)
         self.dismissViewControllerAnimated(true, completion: {
             

@@ -169,7 +169,10 @@ extension LeadViewController : UITableViewDataSource {
         cell.dataImage.layer.cornerRadius = 2.0
         cell.dataImage.image = UIImage.init(named: "leadImg")
         cell.dataImage.image = UIImage.init(named: "lead")
-        cell.convertButton.addTarget(self, action: #selector(self.btnClicked), forControlEvents: .TouchUpInside)
+        cell.convertButton.titleLabel?.textColor = self.navigationController?.navigationBar.barTintColor
+        cell.convertButton.layer.borderColor = self.navigationController?.navigationBar.barTintColor?.CGColor
+        cell.convertButton.tag = indexPath.row
+        cell.convertButton.addTarget(self, action: #selector(LeadViewController.btnClicked(_:)), forControlEvents: .TouchUpInside)
         
         /*let img = UIImage(named: "lead")
          let tintedImage = img?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
@@ -193,11 +196,8 @@ extension LeadViewController : UITableViewDataSource {
         let alert = UIAlertController(title: "Delete file", message: "Are you sure to permanently delete \(leadName)?", preferredStyle: .Alert )
         let DeleteAction = UIAlertAction(title: "Delete", style: .Destructive, handler: leadDelAction)
         let CancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler:cancle)
-        
         alert.addAction(DeleteAction)
         alert.addAction(CancelAction)
-        
-        // Support display in iPad
         alert.popoverPresentationController?.sourceView = self.view
         alert.popoverPresentationController?.sourceRect = CGRectMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0, 1.0, 1.0)
         self.presentViewController(alert, animated: true, completion: nil)
@@ -240,10 +240,10 @@ extension LeadViewController : UITableViewDataSource {
     ///
     
     func btnClicked(sender: UIButton) {
-        print(sender.tag)
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ConvertLeadViewController") as! ConvertLeadViewController
         subContentsVC.convertLeadDataArr = self.resArr1.objectAtIndex(sender.tag)
+        subContentsVC.leadID = self.resArr1.objectAtIndex(sender.tag)["Id"] as! String
         self.navigationController?.pushViewController(subContentsVC, animated: true)
         //convertLeadWithLeadId(self.resArr1.objectAtIndex(sender.tag)["Id"] as! String)
     }

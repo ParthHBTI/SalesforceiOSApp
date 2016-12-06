@@ -44,9 +44,36 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         }
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        configureTableView()
+        if isUpdatedSuccessfully {
+            exDelegate.leadQueryDe("lead")
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "Updated Successfully!"
+            loading.removeFromSuperViewOnHide = true
+            loading.hide(true, afterDelay:2)
+        }
+        isUpdatedSuccessfully = false
+        dowloadAttachment()
+    }
+    
+    func configureTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.tableFooterView = UIView(frame: CGRectZero)
+        tableView.registerNib(UINib(nibName: "LeadContentCell", bundle: nil), forCellReuseIdentifier: "leadContentCellID")
+        tableView.registerNib(UINib(nibName: "AccountDataCell", bundle: nil), forCellReuseIdentifier: "textFeedCellID")
+        tableView.registerNib(UINib(nibName: "AccountDataImageCell", bundle: nil), forCellReuseIdentifier: "feedCellID")
+        tableView.registerNib(UINib(nibName: "NoteFileCell", bundle: nil), forCellReuseIdentifier: "AttachCellID")
+        tableView.registerNib(UINib(nibName: "AttachFileCell", bundle: nil), forCellReuseIdentifier: "NoteCellID")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Lead Detail"
+        self.tableView.separatorColor = UIColor.clearColor()
         self.setNavigationBarItem()
         exDelegate.delegate = self
         leadSegment.selectedSegmentIndex = 1
@@ -71,20 +98,8 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         })
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        if isUpdatedSuccessfully {
-            exDelegate.leadQueryDe("lead")
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Text
-            loading.detailsLabelText = "Updated Successfully!"
-            loading.removeFromSuperViewOnHide = true
-            loading.hide(true, afterDelay:2)
-        }
-        isUpdatedSuccessfully = false
-        dowloadAttachment()
-    }
     
+
     
     func getValFromLeadVC(params: Bool ) {
         self.isUpdatedSuccessfully = params
@@ -256,7 +271,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                     detailCell.titleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
                 }
                 if detailCell.titleNameLbl.text == "" {
-                    tableView.rowHeight = 40
+                    tableView.rowHeight = 70
                 } else {
                     tableView.rowHeight = 70
                 }

@@ -23,10 +23,10 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     
     @IBOutlet weak var lastName: UITextField!
     @IBOutlet weak var companyName: UITextField!
-    @IBOutlet weak var leadStatus: UITextField!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
+    @IBOutlet weak var leadStatus: UITextField!
     var flag: Bool = false
     var leadDataDict:AnyObject = []
     var leadStatusValues: AnyObject = []
@@ -37,9 +37,9 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
         print(leadDataDict)
         lastName.delegate = self
         companyName.delegate = self
-        leadStatus.delegate = self
         cancleBtn.hidden = true
         setNavigationBarItem()
+       leadStatus.delegate = self
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
         //        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewLeadVC.backAction))
@@ -85,8 +85,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     @IBAction func saveAction(sender: AnyObject) {
         //let storyboard = UIStoryboard(name: "Main" , bundle: nil)
         //let nav = storyboard.instantiateViewControllerWithIdentifier("LeadViewController") as! LeadViewController
-        
-        if exDelegate.isConnectedToNetwork() {
+            if exDelegate.isConnectedToNetwork() {
             if self.isSubmittedCorrectVal() {
                 let fields = [
                     "LastName" : lastName.text!,
@@ -169,15 +168,22 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
         }
     }
     
-    @IBAction func leadStatusPickListValues(sender: AnyObject) {
+    
+    override func textFieldDidBeginEditing(textField: UITextField) {
+        if textField.isEqual(leadStatus){
+        leadStatusPickListValues()
+        }
+    }
+    
+    @IBAction func leadStatusPickListValues() {
         
-        NSOperationQueue.mainQueue().addOperationWithBlock {
             let reqq = SFRestAPI.sharedInstance().requestForQuery("SELECT ApiName FROM LeadStatus")
             SFRestAPI.sharedInstance().sendRESTRequest(reqq, failBlock: {_ in
                 print("Error")
                 }, completeBlock: {response in
                     print(response)
                     self.leadStatusValues = response!["records"]
+                    dispatch_async(dispatch_get_main_queue(), {
                     let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
                     let presentVC = storyboard.instantiateViewControllerWithIdentifier( "AccountListViewController") as? AccountListViewController
                     presentVC!.accountListArr = self.leadStatusValues
@@ -186,14 +192,14 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
                     let nvc: UINavigationController = UINavigationController(rootViewController: presentVC!)
                     self.presentViewController(nvc, animated: true, completion:nil)
             })
-        }
+        })
     }
     
     func isSubmittedCorrectVal() -> Bool {
         let charSet = NSCharacterSet.whitespaceCharacterSet()
         let lastNameWhiteSpaceSet = self.lastName.text!.stringByTrimmingCharactersInSet(charSet)
         let companyNameWhiteSpaceSet = self.companyName.text!.stringByTrimmingCharactersInSet(charSet)
-        let leadStatusWhiteSpaceSet = self.leadStatus.text!.stringByTrimmingCharactersInSet(charSet)
+        let leadStatusWhiteSpaceSet = leadStatus.text!.stringByTrimmingCharactersInSet(charSet)
         if lastName.text!.isEmpty == true || companyName.text!.isEmpty == true || leadStatus.text!.isEmpty == true {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
@@ -271,7 +277,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     }
     
     func getSelectedAccountInfo(accointDetail:NSDictionary) {
-        self.leadStatus.text = accointDetail["ApiName"] as? String
+        leadStatus.text = accointDetail["ApiName"] as? String
         leadStatusValues = accointDetail;
         print(accointDetail)
     }

@@ -32,7 +32,6 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     var leadStatusValues: AnyObject = []
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var delegate: CreateNewLeadDelegate?
-    var offlineLeadArr: AnyObject = NSMutableArray()
     var leadOfLineArr: AnyObject = NSMutableArray()
 
     

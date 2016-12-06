@@ -20,7 +20,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     
     @IBOutlet weak var tableView: UITableView!
     //var resArr1:AnyObject = []
-    var resArr1: AnyObject = NSMutableArray()
+    var leadOnLineArr: AnyObject = NSMutableArray()
     var leadOfLineArr: AnyObject = NSMutableArray()
 
     
@@ -102,7 +102,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     }
     
     func executeQuery()  {
-        resArr1 = exDelegate.resArr.mutableCopy() as! NSMutableArray
+        leadOnLineArr = exDelegate.resArr.mutableCopy() as! NSMutableArray
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
         })
@@ -152,9 +152,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            let leadOfflineData = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
-            resArr1 = leadOfflineData
-            
+            leadOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
@@ -178,7 +176,7 @@ extension LeadViewController : UITableViewDataSource {
         return 2;
     }
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (section == 0) ? leadOfLineArr.count : resArr1.count
+        return (section == 0) ? leadOfLineArr.count : leadOnLineArr.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -194,7 +192,7 @@ extension LeadViewController : UITableViewDataSource {
         if indexPath.section == 0 {
             cell.dataText.text = leadOfLineArr.objectAtIndex(indexPath.row)["LastName"] as? String
         } else {
-            cell.dataText.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.dataText.text = leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String
         }
         
       
@@ -205,8 +203,8 @@ extension LeadViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             deleteLeadAtIndexPath = indexPath
-            delObjAtId = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
-            let leadToDelete = self.resArr1.objectAtIndex(indexPath.row)["Name"] as! String
+            delObjAtId = self.leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            let leadToDelete = self.leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
             confirmDelete(leadToDelete)
         }
     }
@@ -240,7 +238,7 @@ extension LeadViewController : UITableViewDataSource {
             }){ succes in
                 dispatch_async(dispatch_get_main_queue(), {
                     if let indexPath = self.deleteLeadAtIndexPath {
-                        self.resArr1.removeObjectAtIndex(indexPath.row)
+                        self.leadOnLineArr.removeObjectAtIndex(indexPath.row)
                         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                         ///self.tableView.reloadData()
                         self.deleteLeadAtIndexPath = nil
@@ -262,8 +260,8 @@ extension LeadViewController : UITableViewDataSource {
     func btnClicked(sender: UIButton) {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ConvertLeadViewController") as! ConvertLeadViewController
-        subContentsVC.convertLeadDataArr = self.resArr1.objectAtIndex(sender.tag)
-        subContentsVC.leadID = self.resArr1.objectAtIndex(sender.tag)["Id"] as! String
+        subContentsVC.convertLeadDataArr = self.leadOnLineArr.objectAtIndex(sender.tag)
+        subContentsVC.leadID = self.leadOnLineArr.objectAtIndex(sender.tag)["Id"] as! String
         self.navigationController?.pushViewController(subContentsVC, animated: true)
         //convertLeadWithLeadId(self.resArr1.objectAtIndex(sender.tag)["Id"] as! String)
     }
@@ -273,8 +271,8 @@ extension LeadViewController : UITableViewDataSource {
         //convertLeadWithLeadId(self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String)
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("LeadContentVC") as! LeadContentVC
-        subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)
-        subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
+        subContentsVC.getResponseArr = self.leadOnLineArr.objectAtIndex(indexPath.row)
+        subContentsVC.leadID = self.leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
         subContentsVC.parentIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }

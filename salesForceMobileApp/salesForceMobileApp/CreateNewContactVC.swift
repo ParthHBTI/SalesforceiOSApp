@@ -31,12 +31,15 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     @IBOutlet weak var phoneWarnigLbl: UILabel!
     var flag: Bool = false
     var contactDataDic:AnyObject = []
-    
+    var leadOfLineArr: AnyObject = NSMutableArray()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var delegate: CreateNewContactDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
+            leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+        }
         firstName.delegate = self
         lastName.delegate = self
         email.delegate = self
@@ -125,11 +128,26 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
             }
         }
         else {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
+            let leadData : NSMutableDictionary = [:]
+            leadData.setObject(firstName.text!, forKey: "FirstName")
+            leadData.setObject(lastName.text!, forKey: "LastName")
+            leadData.setObject(email.text!, forKey: "Email")
+            leadData.setObject(phone.text!, forKey: "Phone")
+            leadData.setObject(fax.text!, forKey: "Fax")
+            leadOfLineArr.addObject(leadData)
+            let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
+            defaults.setObject(arrOfLeadData, forKey: ContactOfLineDataKey)
+            dispatch_async(dispatch_get_main_queue(), {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Indeterminate
+                loading.detailsLabelText = "Account is creating!"
+                loading.removeFromSuperViewOnHide = true
+                loading.hide(true, afterDelay:2)
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                    self.navigationController?.popViewControllerAnimated(true)
+                }
+            })
         }
     }
     

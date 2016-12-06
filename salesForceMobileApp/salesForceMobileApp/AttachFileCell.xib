@@ -8,7 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="NoteCellID" rowHeight="69" id="7cY-kJ-s9g" customClass="NoteAndAttachFileCell" customModule="salesForceMobileApp" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="667" width="600" height="69"/>
+            <rect key="frame" x="0.0" y="0.0" width="600" height="69"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7cY-kJ-s9g" id="QpL-Wb-i1F">
                 <rect key="frame" x="0.0" y="0.0" width="600" height="68"/>
@@ -27,14 +27,14 @@
                         <nil key="highlightedColor"/>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="wSf-wm-IG5"/>
                                 <exclude reference="X9f-Bf-psr"/>
+                                <exclude reference="wSf-wm-IG5"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="constraints">
-                                <include reference="wSf-wm-IG5"/>
                                 <include reference="X9f-Bf-psr"/>
+                                <include reference="wSf-wm-IG5"/>
                             </mask>
                         </variation>
                     </label>
@@ -56,14 +56,14 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="uMA-2W-6rW"/>
                                 <exclude reference="pbJ-iJ-FHe"/>
+                                <exclude reference="uMA-2W-6rW"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="constraints">
-                                <include reference="uMA-2W-6rW"/>
                                 <include reference="pbJ-iJ-FHe"/>
+                                <include reference="uMA-2W-6rW"/>
                             </mask>
                         </variation>
                     </imageView>
@@ -101,14 +101,14 @@
                         <nil key="highlightedColor"/>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="ru8-Je-U7q"/>
                                 <exclude reference="YOA-dl-L7W"/>
+                                <exclude reference="ru8-Je-U7q"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="constraints">
-                                <include reference="ru8-Je-U7q"/>
                                 <include reference="YOA-dl-L7W"/>
+                                <include reference="ru8-Je-U7q"/>
                             </mask>
                         </variation>
                     </label>
@@ -150,17 +150,17 @@
                         <exclude reference="Ou7-n8-rub"/>
                     </mask>
                     <mask key="constraints">
-                        <exclude reference="kOh-z4-bJj"/>
-                        <exclude reference="9D6-yA-pB7"/>
-                        <exclude reference="oKd-EM-LUh"/>
-                        <exclude reference="LyH-nE-7BX"/>
-                        <exclude reference="jZl-I1-XJL"/>
-                        <exclude reference="j2A-0A-g5L"/>
+                        <exclude reference="35s-71-Sg4"/>
+                        <exclude reference="SMa-NV-9tJ"/>
+                        <exclude reference="9Fm-3C-jZT"/>
                         <exclude reference="A0V-Yv-P0B"/>
                         <exclude reference="DIB-wF-4r3"/>
-                        <exclude reference="9Fm-3C-jZT"/>
-                        <exclude reference="SMa-NV-9tJ"/>
-                        <exclude reference="35s-71-Sg4"/>
+                        <exclude reference="LyH-nE-7BX"/>
+                        <exclude reference="j2A-0A-g5L"/>
+                        <exclude reference="jZl-I1-XJL"/>
+                        <exclude reference="9D6-yA-pB7"/>
+                        <exclude reference="kOh-z4-bJj"/>
+                        <exclude reference="oKd-EM-LUh"/>
                         <exclude reference="BGH-Sm-PG2"/>
                         <exclude reference="cQf-oP-Pur"/>
                         <exclude reference="cT9-Ar-q5Y"/>
@@ -175,17 +175,17 @@
                         <include reference="Ou7-n8-rub"/>
                     </mask>
                     <mask key="constraints">
-                        <include reference="kOh-z4-bJj"/>
-                        <include reference="9D6-yA-pB7"/>
-                        <include reference="oKd-EM-LUh"/>
-                        <include reference="LyH-nE-7BX"/>
-                        <include reference="jZl-I1-XJL"/>
-                        <include reference="j2A-0A-g5L"/>
+                        <include reference="35s-71-Sg4"/>
+                        <include reference="SMa-NV-9tJ"/>
+                        <include reference="9Fm-3C-jZT"/>
                         <include reference="A0V-Yv-P0B"/>
                         <include reference="DIB-wF-4r3"/>
-                        <include reference="9Fm-3C-jZT"/>
-                        <include reference="SMa-NV-9tJ"/>
-                        <include reference="35s-71-Sg4"/>
+                        <include reference="LyH-nE-7BX"/>
+                        <include reference="j2A-0A-g5L"/>
+                        <include reference="jZl-I1-XJL"/>
+                        <include reference="9D6-yA-pB7"/>
+                        <include reference="kOh-z4-bJj"/>
+                        <include reference="oKd-EM-LUh"/>
                         <include reference="BGH-Sm-PG2"/>
                         <include reference="cQf-oP-Pur"/>
                         <include reference="cT9-Ar-q5Y"/>

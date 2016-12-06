@@ -33,7 +33,7 @@ class DataTableViewCell : BaseTableViewCell {
         self.dataText?.textColor = UIColor(hex: "9E9E9E")
         convertButton.layer.cornerRadius = 4.0
     }
- 
+    
     override class func height() -> CGFloat {
         return 80
     }
@@ -42,6 +42,6 @@ class DataTableViewCell : BaseTableViewCell {
         if let data = data as? DataTableViewCellData {
             self.dataImage.setRandomDownloadImage(80, height: 80)
             self.dataText.text = data.text
-                    }
+        }
     }
 }

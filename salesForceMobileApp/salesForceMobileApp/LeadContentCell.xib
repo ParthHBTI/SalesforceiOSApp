@@ -14,7 +14,7 @@
             <rect key="frame" x="0.0" y="0.0" width="400" height="74"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="B5S-Ll-nlQ" id="TdP-K4-jXm">
-                <rect key="frame" x="0.0" y="0.0" width="600" height="73"/>
+                <rect key="frame" x="0.0" y="0.0" width="400" height="73"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Udc-d5-GQy">
@@ -71,11 +71,11 @@
                     </mask>
                     <mask key="constraints">
                         <exclude reference="7Lq-nc-thK"/>
-                        <exclude reference="xuB-9h-ifb"/>
                         <exclude reference="xE5-5G-3IQ"/>
+                        <exclude reference="xuB-9h-ifb"/>
+                        <exclude reference="2Hh-QO-F0d"/>
                         <exclude reference="3PV-wn-R2x"/>
                         <exclude reference="p6D-AK-81u"/>
-                        <exclude reference="2Hh-QO-F0d"/>
                     </mask>
                 </variation>
                 <variation key="heightClass=regular-widthClass=compact">
@@ -85,11 +85,11 @@
                     </mask>
                     <mask key="constraints">
                         <include reference="7Lq-nc-thK"/>
-                        <include reference="xuB-9h-ifb"/>
                         <include reference="xE5-5G-3IQ"/>
+                        <include reference="xuB-9h-ifb"/>
+                        <include reference="2Hh-QO-F0d"/>
                         <include reference="3PV-wn-R2x"/>
                         <include reference="p6D-AK-81u"/>
-                        <include reference="2Hh-QO-F0d"/>
                     </mask>
                 </variation>
             </tableViewCellContentView>

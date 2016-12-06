@@ -46,14 +46,8 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         self.tableView.registerCellNib(DataTableViewCell.self)
         loadLead()
         client = ZKSforceClient()
-        
-        
         let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
         client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
-        
-        
-        
-        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -61,12 +55,10 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         
         if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
             leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
-            
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
         }
-
         if !isFirstLoaded {
             exDelegate.leadQueryDe("lead")
         }

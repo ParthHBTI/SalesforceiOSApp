@@ -5,6 +5,10 @@
 //  Created by Yuji Hato on 12/3/14.
 //
 
+let LeadOnLineDataKey = "LeadOnLineDataKey"
+let LeadOfLineDataKey = "LeadOfLineDataKey"
+
+
 import UIKit
 import SalesforceRestAPI
 import SystemConfiguration
@@ -16,7 +20,10 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     
     @IBOutlet weak var tableView: UITableView!
     //var resArr1:AnyObject = []
-    var resArr1 = NSMutableArray()
+    var resArr1: AnyObject = NSMutableArray()
+    var leadOfLineArr: AnyObject = NSMutableArray()
+
+    
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var isCreatedSuccessfully: Bool = false
     var isFirstLoaded:Bool = false
@@ -45,7 +52,34 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
         
         
-        //ZKOAuthInfo.oauthInfoWithRefreshToken(authoCordinater.refreshToken, authHost: authoCordinater.identityUrl, sessionId: authoCordinater.accessToken, instanceUrl: authoCordinater.instanceUrl, clientId: RemoteAccessConsumerKey)
+        
+        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
+            leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
+        }
+
+        if !isFirstLoaded {
+            exDelegate.leadQueryDe("lead")
+        }
+        self.setNavigationBarItem()
+        if isCreatedSuccessfully {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "Created Successfully!"
+            loading.removeFromSuperViewOnHide = true
+            loading.hide(true, afterDelay:2)
+        }
+        isFirstLoaded = false
+        isCreatedSuccessfully = false
     }
     
     func convertLeadWithLeadId(leadId:String)  {
@@ -101,22 +135,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        if !isFirstLoaded {
-            exDelegate.leadQueryDe("lead")
-        }
-        self.setNavigationBarItem()
-        if isCreatedSuccessfully {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Text
-            loading.detailsLabelText = "Created Successfully!"
-            loading.removeFromSuperViewOnHide = true
-            loading.hide(true, afterDelay:2)
-        }
-        isFirstLoaded = false
-        isCreatedSuccessfully = false
-    }
+   
     
     
     func getValFromLeadVC(params: Bool ) {
@@ -129,19 +148,21 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     
     func loadLead() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        let arrayOfObjectsKey = "leadListData"
+        
         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-            loading.detailsLabelText = "Uploading Data from Server"
+            loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("lead")
-        } else if let arrayOfObjectsData = defaults.objectForKey(arrayOfObjectsKey) as? NSData {
-            loading.detailsLabelText = "Uploading Data from Local"
+        } else if let arrayOfObjectsData = defaults.objectForKey(LeadOnLineDataKey) as? NSData {
+            loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
+            let leadOfflineData = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            resArr1 = leadOfflineData
+            
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
@@ -159,13 +180,17 @@ extension LeadViewController : UITableViewDelegate {
 }
 
 extension LeadViewController : UITableViewDataSource {
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int // Default is 1 if not implemented
+    {
+        return 2;
+    }
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return resArr1.count
+        return (section == 0) ? leadOfLineArr.count : resArr1.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
-        cell.dataText.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         cell.dataImage.layer.cornerRadius = 2.0
         cell.dataImage.image = UIImage.init(named: "leadImg")
         cell.dataImage.image = UIImage.init(named: "lead")
@@ -174,10 +199,13 @@ extension LeadViewController : UITableViewDataSource {
         cell.convertButton.tag = indexPath.row
         cell.convertButton.addTarget(self, action: #selector(LeadViewController.btnClicked(_:)), forControlEvents: .TouchUpInside)
         
-        /*let img = UIImage(named: "lead")
-         let tintedImage = img?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-         cell.dataImage.image = tintedImage
-         cell.dataImage.tintColor = UIColor.redColor()*/
+        if indexPath.section == 0 {
+            cell.dataText.text = leadOfLineArr.objectAtIndex(indexPath.row)["LastName"] as? String
+        } else {
+            cell.dataText.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
+        }
+        
+      
         return cell
     }
     

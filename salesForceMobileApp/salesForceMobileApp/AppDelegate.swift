@@ -27,9 +27,10 @@ import UIKit
 import SalesforceSDKCore
 import SalesforceRestAPI
 
- let UIAppDelegate = UIApplication.sharedApplication().delegate! as! AppDelegate
-
-
+    let UIAppDelegate = UIApplication.sharedApplication().delegate! as! AppDelegate
+let defaults = NSUserDefaults.standardUserDefaults()
+    var code = 0
+    let dictionary: NSMutableDictionary = [:]
 
 // Fill these in when creating a new Connected Application on Force.com
 let RemoteAccessConsumerKey = "3MVG9Iu66FKeHhINkB1l7xt7kR8czFcCTUhgoA8Ol2Ltf1eYHOU4SqQRSEitYFDUpqRWcoQ2.dBv_a1Dyu5xa";

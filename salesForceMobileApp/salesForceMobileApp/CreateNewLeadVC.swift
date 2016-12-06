@@ -32,8 +32,16 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     var leadStatusValues: AnyObject = []
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var delegate: CreateNewLeadDelegate?
+    var offlineLeadArr: AnyObject = NSMutableArray()
+    var leadOfLineArr: AnyObject = NSMutableArray()
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
+            leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+        }
+        
         print(leadDataDict)
         lastName.delegate = self
         companyName.delegate = self
@@ -42,7 +50,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
        leadStatus.delegate = self
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
         scrollView.setNeedsDisplay()
-        //        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewLeadVC.backAction))
+        //        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, varion: #selector(CreateNewLeadVC.backAction))
         //        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
         let navBarUpdateBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateLeadAction))
         let navColor = navigationController?.navigationBar.barTintColor
@@ -114,6 +122,14 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
                 }
             }
         } else {
+                let leadData : NSMutableDictionary = [:]
+                leadData.setObject(lastName.text!, forKey: "LastName")
+                leadData.setObject(companyName.text!, forKey: "Company")
+                leadData.setObject(leadStatus.text!, forKey: "Status")
+                leadOfLineArr.addObject(leadData)
+                let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
+                defaults.setObject(arrOfLeadData, forKey: LeadOfLineDataKey)
+               
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
             loading.detailsLabelText = "Please check your Internet connection!"

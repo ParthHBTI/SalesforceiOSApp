@@ -24,7 +24,7 @@ import MBProgressHUD
 class ExecuteQuery: UIViewController, SFRestDelegate {
     
     internal weak var delegate : ExecuteQueryDelegate?
-    var resArr:AnyObject = []
+    var resArr:AnyObject = NSMutableArray()
     var leadRequest = "SELECT Owner.Name,Salutation,Company,Email,Name,Phone,Title,Address,Id,Status,LastName FROM Lead Where IsConverted = False"
    var accountRequest = "SELECT Owner.Name,AccountNumber,Fax,LastModifiedDate,Name,Ownership,Phone,Type,Website,Id,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet FROM Account Limit 10"
     var contactRequest = "SELECT  Salutation,Owner.Name,Birthdate,Email,Fax,Name,Phone,Id,FirstName,LastName FROM Contact"
@@ -36,9 +36,8 @@ class ExecuteQuery: UIViewController, SFRestDelegate {
         self.log(.Debug, msg: "request:didLoadResponse: #records: \(resArr.count)")
         dispatch_async(dispatch_get_main_queue(), {
             let defaults = NSUserDefaults.standardUserDefaults()
-            let leadDataKey = "leadListData"
             let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
-            defaults.setObject(arrOfLeadData, forKey: leadDataKey)
+            defaults.setObject(arrOfLeadData, forKey: LeadOnLineDataKey)
         })
         delegate?.executeQuery!()
     }

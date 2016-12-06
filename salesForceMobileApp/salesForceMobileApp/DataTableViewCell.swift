@@ -32,6 +32,7 @@ class DataTableViewCell : BaseTableViewCell {
         self.dataText?.font = UIFont.italicSystemFontOfSize(16)
         self.dataText?.textColor = UIColor(hex: "9E9E9E")
         convertButton.layer.cornerRadius = 4.0
+        convertButton.layer.borderWidth = 0.8
     }
     
     override class func height() -> CGFloat {

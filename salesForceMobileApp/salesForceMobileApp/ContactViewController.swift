@@ -23,6 +23,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
     var isCreatedSuccessfully:Bool = false
     var contactOnLineArr: AnyObject = NSMutableArray()
     var contactOfLineArr: AnyObject = NSMutableArray()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         isFirstLoad = true
@@ -69,9 +70,6 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
                 self.tableView.reloadData()
             })
         }
-//        if !isFirstLoad {
-//            exDelegate.leadQueryDe("contact")
-//        }
         loadContact()
         if isCreatedSuccessfully {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
@@ -100,8 +98,9 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-            
-           
+                    if !isFirstLoad {
+                        exDelegate.leadQueryDe("contact")
+                    }
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true

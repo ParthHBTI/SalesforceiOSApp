@@ -44,7 +44,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
-        loadLead()
+       
         client = ZKSforceClient()
         let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
         client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
@@ -59,10 +59,8 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
                 self.tableView.reloadData()
             })
         }
-//        if !isFirstLoaded {
-//            exDelegate.leadQueryDe("lead")
-//        }
         self.setNavigationBarItem()
+         loadLead()
         if isCreatedSuccessfully {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text

@@ -32,8 +32,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNe
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
-        loadOpporchunity()
-    }
+           }
     
     func executeQuery()  {
         resArr1 = exDelegate.resArr.mutableCopy() as! NSMutableArray
@@ -70,9 +69,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNe
                 self.tableView.reloadData()
             })
         }
-//        if !isFirstLoad {
-//            exDelegate.leadQueryDe("opporchunity")
-//        }
+        loadOpporchunity()
         if isCreatedSuccessfully {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text

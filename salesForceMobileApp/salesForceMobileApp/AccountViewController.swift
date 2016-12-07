@@ -31,7 +31,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
         self.title = "Account View"
         isFirstLoaded = true
         self.setNavigationBarItem()
-         loadAccount()
+        
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
@@ -70,10 +70,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
                 self.tableView.reloadData()
             })
         }
-       
-//        if !isFirstLoaded {
-//            exDelegate.leadQueryDe("account")
-//        }
+        loadAccount()
         if isCreatedSuccessfully {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text

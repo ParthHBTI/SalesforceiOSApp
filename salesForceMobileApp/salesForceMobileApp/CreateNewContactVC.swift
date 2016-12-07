@@ -31,14 +31,14 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     @IBOutlet weak var phoneWarnigLbl: UILabel!
     var flag: Bool = false
     var contactDataDic:AnyObject = []
-    var leadOfLineArr: AnyObject = NSMutableArray()
+    var contactOfLineArr: AnyObject = NSMutableArray()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var delegate: CreateNewContactDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
-            leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            contactOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
         }
         firstName.delegate = self
         lastName.delegate = self
@@ -134,8 +134,8 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
             leadData.setObject(email.text!, forKey: "Email")
             leadData.setObject(phone.text!, forKey: "Phone")
             leadData.setObject(fax.text!, forKey: "Fax")
-            leadOfLineArr.addObject(leadData)
-            let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
+            contactOfLineArr.addObject(leadData)
+            let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(contactOfLineArr)
             defaults.setObject(arrOfLeadData, forKey: ContactOfLineDataKey)
             dispatch_async(dispatch_get_main_queue(), {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)

@@ -21,8 +21,8 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
     var delContactAtIndexPath:NSIndexPath? = nil
     var delObjAtId:String = " "
     var isCreatedSuccessfully:Bool = false
-    var leadOnLineArr: AnyObject = NSMutableArray()
-    var leadOfLineArr: AnyObject = NSMutableArray()
+    var contactOnLineArr: AnyObject = NSMutableArray()
+    var contactOfLineArr: AnyObject = NSMutableArray()
     override func viewDidLoad() {
         super.viewDidLoad()
         isFirstLoad = true
@@ -32,11 +32,11 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
-        loadContact()
+        
     }
     
     func executeQuery()  {
-        leadOnLineArr = exDelegate.resArr.mutableCopy() as!NSMutableArray
+        contactOnLineArr = exDelegate.resArr.mutableCopy() as!NSMutableArray
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
         })
@@ -63,16 +63,16 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
-            leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+        if let arrayOfObjectsData = defaults.objectForKey(ContactOfLineDataKey) as? NSData {
+            contactOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
         }
-        if !isFirstLoad {
-            exDelegate.leadQueryDe("contact")
-        }
+//        if !isFirstLoad {
+//            exDelegate.leadQueryDe("contact")
+//        }
+        loadContact()
         if isCreatedSuccessfully {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
@@ -100,6 +100,8 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
+            
+           
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -108,7 +110,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            leadOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
+            contactOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
@@ -131,7 +133,7 @@ extension ContactViewController : UITableViewDataSource {
         return 2;
     }
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (section == 0) ? leadOfLineArr.count : leadOnLineArr.count
+        return (section == 0) ? contactOfLineArr.count : contactOnLineArr.count
     }
 
     
@@ -141,9 +143,9 @@ extension ContactViewController : UITableViewDataSource {
 //        cell.textLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
 //        cell.detailTextLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         if indexPath.section == 0 {
-            cell.dataText.text = leadOfLineArr.objectAtIndex(indexPath.row)["LastName"] as? String
+            cell.dataText.text = contactOfLineArr.objectAtIndex(indexPath.row)["LastName"] as? String
         } else {
-            cell.dataText.text = leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.dataText.text = contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String
         }
         cell.dataImage.backgroundColor = UIColor.init(hex: "9996D2")
         cell.dataImage.layer.cornerRadius = 2.0
@@ -156,8 +158,8 @@ extension ContactViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ContactDataVC") as! ContactDataVC
-        subContentsVC.getResponseArr = self.leadOnLineArr.objectAtIndex(indexPath.row)
-        subContentsVC.leadID = self.leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+        subContentsVC.getResponseArr = self.contactOnLineArr.objectAtIndex(indexPath.row)
+        subContentsVC.leadID = self.contactOfLineArr.objectAtIndex(indexPath.row)["Id"] as! String
         subContentsVC.parentIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
@@ -166,8 +168,8 @@ extension ContactViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             delContactAtIndexPath = indexPath
-            delObjAtId = self.leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
-            let contactToDelete = self.leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
+            delObjAtId = self.contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            let contactToDelete = self.contactOfLineArr.objectAtIndex(indexPath.row)["Name"] as! String
             confirmDelete(contactToDelete)
         }
     }
@@ -203,7 +205,7 @@ extension ContactViewController : UITableViewDataSource {
             }){ succes in
                 dispatch_async(dispatch_get_main_queue(), {
                     if let indexPath = self.delContactAtIndexPath {
-                        self.leadOnLineArr.removeObjectAtIndex(indexPath.row)
+                        self.contactOnLineArr.removeObjectAtIndex(indexPath.row)
                         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                         self.delContactAtIndexPath = nil
                     }

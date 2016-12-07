@@ -1,36 +1,36 @@
 /*
-Copyright (c) 2015, salesforce.com, inc. All rights reserved.
-
-Redistribution and use of this software in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
-* Redistributions of source code must retain the above copyright notice, this list of conditions
-and the following disclaimer.
-* Redistributions in binary form must reproduce the above copyright notice, this list of
-conditions and the following disclaimer in the documentation and/or other materials provided
-with the distribution.
-* Neither the name of salesforce.com, inc. nor the names of its contributors may be used to
-endorse or promote products derived from this software without specific prior written
-permission of salesforce.com, inc.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
-IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
-WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ Copyright (c) 2015, salesforce.com, inc. All rights reserved.
+ 
+ Redistribution and use of this software in source and binary forms, with or without modification,
+ are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright notice, this list of conditions
+ and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of
+ conditions and the following disclaimer in the documentation and/or other materials provided
+ with the distribution.
+ * Neither the name of salesforce.com, inc. nor the names of its contributors may be used to
+ endorse or promote products derived from this software without specific prior written
+ permission of salesforce.com, inc.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+ WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 import Foundation
 import UIKit
 import SalesforceSDKCore
 import SalesforceRestAPI
 
-    let UIAppDelegate = UIApplication.sharedApplication().delegate! as! AppDelegate
+let UIAppDelegate = UIApplication.sharedApplication().delegate! as! AppDelegate
 let defaults = NSUserDefaults.standardUserDefaults()
-    var code = 0
-    let dictionary: NSMutableDictionary = [:]
+var code = 0
+let dictionary: NSMutableDictionary = [:]
 
 // Fill these in when creating a new Connected Application on Force.com
 let RemoteAccessConsumerKey = "3MVG9Iu66FKeHhINkB1l7xt7kR8czFcCTUhgoA8Ol2Ltf1eYHOU4SqQRSEitYFDUpqRWcoQ2.dBv_a1Dyu5xa";
@@ -49,8 +49,8 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
         SalesforceSDKManager.sharedManager().connectedAppId = RemoteAccessConsumerKey
         SalesforceSDKManager.sharedManager().connectedAppCallbackUri = OAuthRedirectURI
         SalesforceSDKManager.sharedManager().authScopes = ["web", "api"];
-//        let userId = SFAuthenticationManager.sharedManager().idCoordinator.idData.userId
-//        let isAdminRequest = SFRestAPI.sharedInstance().requestForQuery("select MyApp_UserType__c from User where Id = '\(userId)'")
+        //        let userId = SFAuthenticationManager.sharedManager().idCoordinator.idData.userId
+        //        let isAdminRequest = SFRestAPI.sharedInstance().requestForQuery("select MyApp_UserType__c from User where Id = '\(userId)'")
         SalesforceSDKManager.sharedManager().postLaunchAction = {
             [unowned self] (launchActionList: SFSDKLaunchAction) in
             let launchActionString = SalesforceSDKManager.launchActionsStringRepresentation(launchActionList)
@@ -134,41 +134,41 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
             }
             return
         }
-
+        
         self.window!.rootViewController = InitialViewController(nibName: nil, bundle: nil)
         self.window!.makeKeyAndVisible()
     }
     
     func setupRootViewController() {
-       /* let rootVC = RootViewController(nibName: nil, bundle: nil)
-        let navVC = UINavigationController(rootViewController: rootVC)
-        self.window!.rootViewController = navVC*/
-//    }
-//    
-//    func createMenuView(indexPath: NSIndexPath) {
+        /* let rootVC = RootViewController(nibName: nil, bundle: nil)
+         let navVC = UINavigationController(rootViewController: rootVC)
+         self.window!.rootViewController = navVC*/
+        //    }
+        //
+        //    func createMenuView(indexPath: NSIndexPath) {
         
         // create viewController code...
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
         let mainViewController = storyboard.instantiateViewControllerWithIdentifier("LeadViewController") as! LeadViewController
         let leftViewController = storyboard.instantiateViewControllerWithIdentifier("LeftViewController") as! LeftViewController
-      //  let rightViewController = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
+        //  let rightViewController = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
         
         let nvc: UINavigationController = UINavigationController(rootViewController: mainViewController)
         
         UINavigationBar.appearance().tintColor = UIColor(hex: "689F38")
         
         leftViewController.mainViewController = nvc
-    //    leftViewController.userInfoDic = dataRows[indexPath.row]
+        //    leftViewController.userInfoDic = dataRows[indexPath.row]
         
         let slideMenuController = ExSlideMenuController(mainViewController:nvc, leftMenuViewController: leftViewController)
-     //   slideMenuController.automaticallyAdjustsScrollViewInsets = true
+        //   slideMenuController.automaticallyAdjustsScrollViewInsets = true
         slideMenuController.delegate = mainViewController
         slideMenuController.rightViewController = nil;
         //slideMenuController.rightContainerView = nil;
         self.window!.rootViewController = slideMenuController;
         
-       self.window?.makeKeyAndVisible()
+        self.window?.makeKeyAndVisible()
     }
     
     

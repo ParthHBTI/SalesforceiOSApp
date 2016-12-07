@@ -7,6 +7,8 @@
 //
 
 
+let AccOnlineDataKey = "AccOnlineDataKey"
+let AccOfflineDataKey = "AccOfflineDataKey"
 
 import UIKit
 import SalesforceRestAPI
@@ -20,6 +22,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
     var delObjAtId: String = " "
     var exDelegate: ExecuteQuery = ExecuteQuery()
     //var createConDelegate: CreateNewLeadDelegate?
+    var accOfflineArr: AnyObject = NSMutableArray()
     var isCreatedSuccessfully: Bool = false
     var isFirstLoaded:Bool = false
     
@@ -62,6 +65,14 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if let arrayOfObjectsData = defaults.objectForKey(AccOfflineDataKey) as? NSData {
+            accOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
+        }
+        
         if !isFirstLoaded {
             exDelegate.leadQueryDe("account")
         }
@@ -88,16 +99,16 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
     
     func loadAccount() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        let accountDataKey = "accountListData"
+        //let accountDataKey = "accountListData"
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-            loading.detailsLabelText = "Uploading Data from Server"
+            loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("account")
-        } else if let arrayOfObjectsData = defaults.objectForKey(accountDataKey) as? NSData {
-            loading.detailsLabelText = "Uploading Data from Local"
+        } else if let arrayOfObjectsData = defaults.objectForKey(AccOnlineDataKey) as? NSData {
+            loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
@@ -116,8 +127,14 @@ extension AccountViewController : UITableViewDelegate {
 }
 
 extension AccountViewController : UITableViewDataSource {
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int // Default is 1 if not implemented
+    {
+        return 2;
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.resArr1.count
+        return (section == 0) ? accOfflineArr.count : resArr1.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -126,7 +143,11 @@ extension AccountViewController : UITableViewDataSource {
         //Name
         
         //cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Website"] as? String
-        cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
+        if indexPath.section == 0 {
+            cell.dataText?.text = accOfflineArr.objectAtIndex(indexPath.row)["AccName"] as? String
+        } else {
+            cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
+        }
         cell.dataImage.backgroundColor = UIColor.init(hex: "FFD434")
         cell.dataImage.layer.cornerRadius = 1.0
         cell.dataImage.image = UIImage.init(named: "accImg")
@@ -136,8 +157,13 @@ extension AccountViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("AccountDataVC") as! AccountDataVC
-        subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)
-        subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
+        if indexPath.section == 0 {
+            subContentsVC.getResponseArr = self.accOfflineArr.objectAtIndex(indexPath.row)
+            //subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
+        } else {
+            subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)
+            subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
+        }
         subContentsVC.objectTypeStr = "Account"
         subContentsVC.parentIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)

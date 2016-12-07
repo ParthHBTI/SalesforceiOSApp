@@ -5,7 +5,6 @@
 //  Created by mac on 17/10/16.
 //  Copyright © 2016 Salesforce. All rights reserved.
 //
-let arrayOfObjectsKey = "offlineAccData"
 import UIKit
 import SalesforceNetwork
 import SalesforceRestAPI
@@ -32,7 +31,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     @IBOutlet weak var cancleBtn: UIButton!
     @IBOutlet weak var postalWarningLbl: UILabel!
     var accDataArr:NSMutableArray? = NSMutableArray()
-    var accDataArr2 = NSMutableArray()
+    var accOfflineArr: AnyObject = NSMutableArray()
     var flag: Bool = false
     var accountDataDic:AnyObject = []
     
@@ -41,6 +40,10 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let arrayOfObjectsData = defaults.objectForKey(AccOfflineDataKey) as? NSData {
+            accOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+        }
         accountName.delegate = self
         billingStreet.delegate = self
         billingCity.delegate = self
@@ -86,7 +89,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     override func viewDidLayoutSubviews()  {
         super.viewDidLayoutSubviews()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: self.view.frame.size.height + 100);
-        self.scrollView.backgroundColor = UIColor.greenColor()
+        //self.scrollView.backgroundColor = UIColor.greenColor()
     }
     
     override func didReceiveMemoryWarning() {
@@ -142,15 +145,9 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                 "BillingCountry" : billingCountry.text!,
                 "BillingPostalCode" : postalCode.text!
             ]
-            self.accDataArr!.addObject(accDataDic)
-            //print(accDataArr)
-            let defaults = NSUserDefaults.standardUserDefaults()
-            defaults.objectForKey(arrayOfObjectsKey) as? NSData
-            defaults.setObject(self.accDataArr, forKey: arrayOfObjectsKey)
-            if let arrayOfObjectsData = defaults.objectForKey(arrayOfObjectsKey) as? NSData {
-                accDataArr2 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
-                print(accDataArr2)
-            }
+            accOfflineArr.addObject(accDataDic)
+            let arrOfAccData = NSKeyedArchiver.archivedDataWithRootObject(accOfflineArr)
+            defaults.setObject(arrOfAccData, forKey: AccOfflineDataKey)
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
             loading.detailsLabelText = "Please check your Internet connection!"
@@ -171,7 +168,6 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
             if self.isSubmitCorrectVal() {
                 let params = [
                     "Name" : accountName.text!,
-                    //"BillingAddress" : ["city": accountAddress.text!]
                     "BillingStreet" : billingStreet.text!,
                     "BillingCity" : billingCity.text!,
                     "BillingState" : billingState.text!,

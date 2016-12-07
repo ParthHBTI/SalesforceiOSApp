@@ -37,7 +37,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     var doneFlag:Bool = false
     var cancelFlag:Bool = false
     var opportunityDataDic:AnyObject = []
-    
+    var OppOfflineArr:AnyObject = NSMutableArray()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var delegate:CreateNewOppDelegate?
     
@@ -51,6 +51,10 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let arrayOfObjectsData = defaults.objectForKey(OppOfflineDataKey) as? NSData {
+            OppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+        }
         dispatch_async(dispatch_get_main_queue(), {
             self.dateVal = self.closeDate.text!
             self.dateVal2 = self.closeDate.text!
@@ -165,6 +169,15 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
             }
         }
         else {
+            let OppDataDic = [
+                "Name" : opportunityName.text!,
+                "CloseDate" : closeDate.text!,
+                "Amount" : amount.text!,
+                "StageName" : stage.text!,
+                ]
+            OppOfflineArr.addObject(OppDataDic)
+            let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
+            defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
             //loading.mode = MBProgressHUDMode.Text

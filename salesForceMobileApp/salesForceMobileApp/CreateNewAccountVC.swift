@@ -5,7 +5,6 @@
 //  Created by mac on 17/10/16.
 //  Copyright © 2016 Salesforce. All rights reserved.
 //
-
 import UIKit
 import SalesforceNetwork
 import SalesforceRestAPI
@@ -31,6 +30,8 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
     @IBOutlet weak var postalWarningLbl: UILabel!
+    var accDataArr:NSMutableArray? = NSMutableArray()
+    var accOfflineArr: AnyObject = NSMutableArray()
     var flag: Bool = false
     var accountDataDic:AnyObject = []
     
@@ -39,6 +40,10 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let arrayOfObjectsData = defaults.objectForKey(AccOfflineDataKey) as? NSData {
+            accOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+        }
         accountName.delegate = self
         billingStreet.delegate = self
         billingCity.delegate = self
@@ -48,7 +53,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
         postalWarningLbl.hidden = true
         self.cancleBtn.hidden = true
         setNavigationBarItem()
-        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height );
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height);
         scrollView.setNeedsDisplay()
         /*let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, action: #selector(CreateNewAccountVC.backAction))
          self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)*/
@@ -83,7 +88,8 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     
     override func viewDidLayoutSubviews()  {
         super.viewDidLayoutSubviews()
-        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: view.frame.size.height + 100);
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: self.view.frame.size.height + 100);
+        //self.scrollView.backgroundColor = UIColor.greenColor()
     }
     
     override func didReceiveMemoryWarning() {
@@ -121,19 +127,29 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                             self.navigationController?.popViewControllerAnimated(true)
                         }
                         /*self.accountName.text = nil
-                        self.billingStreet.text = nil
-                        self.billingCity.text = nil
-                        self.billingState.text = nil
-                        self.billingCountry.text = nil
-                        self.billingCountry.text = nil*/
+                         self.billingStreet.text = nil
+                         self.billingCity.text = nil
+                         self.billingState.text = nil
+                         self.billingCountry.text = nil
+                         self.billingCountry.text = nil*/
                     })
                 }
             }
         }
         else {
+            let accDataDic = [
+                "AccName" : accountName.text!,
+                "BillingStreet" : billingStreet.text!,
+                "BillingCity" : billingCity.text!,
+                "BillingState" : billingState.text!,
+                "BillingCountry" : billingCountry.text!,
+                "BillingPostalCode" : postalCode.text!
+            ]
+            accOfflineArr.addObject(accDataDic)
+            let arrOfAccData = NSKeyedArchiver.archivedDataWithRootObject(accOfflineArr)
+            defaults.setObject(arrOfAccData, forKey: AccOfflineDataKey)
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
-            //loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Please check your Internet connection!"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -152,7 +168,6 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
             if self.isSubmitCorrectVal() {
                 let params = [
                     "Name" : accountName.text!,
-                    //"BillingAddress" : ["city": accountAddress.text!]
                     "BillingStreet" : billingStreet.text!,
                     "BillingCity" : billingCity.text!,
                     "BillingState" : billingState.text!,
@@ -262,8 +277,6 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
         switch textField {
         case  postalCode:
             if prospectiveText.characters.count > 6 {
-                // phone.layer.borderWidth = 2.0
-                //phone.layer.borderColor = UIColor.redColor().CGColor
                 postalWarningLbl.hidden = false
                 postalWarningLbl.text = "*Please enter a valid postal code"
                 postalWarningLbl.textColor = UIColor.redColor()

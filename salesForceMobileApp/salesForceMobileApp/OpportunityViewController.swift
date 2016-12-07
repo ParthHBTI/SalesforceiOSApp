@@ -5,6 +5,8 @@
 //  Created by Yuji Hato on 1/19/15.
 //  Copyright (c) 2015 Yuji Hato. All rights reserved.
 //
+let OppOnlineDataKey = "OpportunityOnlineDataKey"
+let OppOfflineDataKey = "OpportunityOfflineDataKey"
 
 import UIKit
 import SalesforceRestAPI
@@ -19,6 +21,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNe
     var delObjAtId:String = " "
     var delOppAtIndexPath:NSIndexPath? = nil
     var isCreatedSuccessfully:Bool = false
+    var OppOfflineArr:AnyObject = NSMutableArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,6 +63,13 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNe
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if let arrayOfObjectsData = defaults.objectForKey(OppOfflineDataKey) as? NSData {
+            OppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
+        }
         if !isFirstLoad {
             exDelegate.leadQueryDe("opporchunity")
         }
@@ -86,16 +96,16 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNe
     
     func loadOpporchunity() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        let opportunityDataKey = "opportunityDataKey"
+        //let opportunityDataKey = "opportunityDataKey"
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-            loading.detailsLabelText = "Uploading Data from Server"
+            loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("opporchunity")
-        } else if let arrayOfObjectsData = defaults.objectForKey(opportunityDataKey) as? NSData {
-            loading.detailsLabelText = "Uploading Data from Local"
+        } else if let arrayOfObjectsData = defaults.objectForKey(OppOnlineDataKey) as? NSData {
+            loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
@@ -114,14 +124,25 @@ extension OpportunityViewController : UITableViewDelegate {
 }
 
 extension OpportunityViewController : UITableViewDataSource {
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    {
+        return 2;
+    }
+    
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.resArr1.count
+        return (section == 0) ? OppOfflineArr.count : resArr1.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
-         cell.convertButton.hidden = true
-        cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
+        cell.convertButton.hidden = true
+        if indexPath.section == 0 {
+            cell.dataText?.text = OppOfflineArr.objectAtIndex(indexPath.row)["Name"] as? String
+        } else {
+            cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
+        }
         cell.dataImage.backgroundColor = UIColor.init(hex: "FFB642")
         cell.dataImage.layer.cornerRadius = 2.0
         cell.dataImage.image = UIImage.init(named: "opportunity")

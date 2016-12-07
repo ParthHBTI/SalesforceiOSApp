@@ -59,16 +59,16 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
                 self.tableView.reloadData()
             })
         }
-        if !isFirstLoaded {
-            exDelegate.leadQueryDe("lead")
-        }
+//        if !isFirstLoaded {
+//            exDelegate.leadQueryDe("lead")
+//        }
         self.setNavigationBarItem()
         if isCreatedSuccessfully {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Created Successfully!"
-            loading.removeFromSuperViewOnHide = true
             loading.hide(true, afterDelay:2)
+             loading.removeFromSuperViewOnHide = true
         }
         isFirstLoaded = false
         isCreatedSuccessfully = false

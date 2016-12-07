@@ -106,7 +106,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("contact")
-        } else if let arrayOfObjectsData = defaults.objectForKey(LeadOnLineDataKey) as? NSData {
+        } else if let arrayOfObjectsData = defaults.objectForKey(ContactOnLineDataKey) as? NSData {
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true

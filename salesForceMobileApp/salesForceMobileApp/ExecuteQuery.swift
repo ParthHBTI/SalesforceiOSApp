@@ -35,11 +35,30 @@ class ExecuteQuery: UIViewController, SFRestDelegate {
         resArr = jsonResponse["records"] as! [NSDictionary]
         self.log(.Debug, msg: "request:didLoadResponse: #records: \(resArr.count)")
         dispatch_async(dispatch_get_main_queue(), {
-            let defaults = NSUserDefaults.standardUserDefaults()
-            let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
-            defaults.setObject(arrOfLeadData, forKey: LeadOnLineDataKey)
+        let str = self.removeSpecialCharsFromString(request.queryParams!.debugDescription)
+           let newStr = String(str.substringFromIndex(str.startIndex.advancedBy(2)))
+            if newStr == self.leadRequest  {
+                let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
+                defaults.setObject(arrOfLeadData, forKey: LeadOnLineDataKey)
+            } else if newStr == self.accountRequest {
+                let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
+                defaults.setObject(arrOfLeadData, forKey: AccOnlineDataKey)
+            } else if newStr == self.contactRequest {
+                let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
+                defaults.setObject(arrOfLeadData, forKey: ContactOnLineDataKey)
+            } else {
+                let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
+                defaults.setObject(arrOfLeadData, forKey: OppOnlineDataKey)
+            }
+            
         })
         delegate?.executeQuery!()
+    }
+    
+    func removeSpecialCharsFromString(text: String) -> String {
+        let okayChars : Set<Character> =
+            Set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ, =.0123456789".characters)
+        return String(text.characters.filter {okayChars.contains($0) })
     }
     
     func request(request: SFRestRequest, didFailLoadWithError error: NSError)

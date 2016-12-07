@@ -70,15 +70,15 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNe
                 self.tableView.reloadData()
             })
         }
-        if !isFirstLoad {
-            exDelegate.leadQueryDe("opporchunity")
-        }
+//        if !isFirstLoad {
+//            exDelegate.leadQueryDe("opporchunity")
+//        }
         if isCreatedSuccessfully {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Created Successfully!"
-            loading.removeFromSuperViewOnHide = true
             loading.hide(true, afterDelay:2)
+            loading.removeFromSuperViewOnHide = true
         }
         isCreatedSuccessfully = false
         isFirstLoad = false
@@ -108,7 +108,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNe
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
+            resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })

@@ -22,7 +22,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     //var resArr1:AnyObject = []
     var leadOnLineArr: AnyObject = NSMutableArray()
     var leadOfLineArr: AnyObject = NSMutableArray()
-
+    
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var isCreatedSuccessfully: Bool = false
@@ -41,7 +41,6 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         isFirstLoaded = true
         self.title = "Leads View"
         self.setNavigationBarItem()
-        //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
        
@@ -62,11 +61,25 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         self.setNavigationBarItem()
          loadLead()
         if isCreatedSuccessfully {
+            //            if !isFirstLoaded {
+            //                exDelegate.leadQueryDe("lead")
+            //            }
+            
+            let defaults = NSUserDefaults.standardUserDefaults()
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            if exDelegate.isConnectedToNetwork() {
+                exDelegate.leadQueryDe("lead")
+            } else if let arrayOfObjectsData = defaults.objectForKey(LeadOnLineDataKey) as? NSData {
+                leadOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.tableView.reloadData()
+                })
+            }
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Created Successfully!"
             loading.hide(true, afterDelay:2)
-             loading.removeFromSuperViewOnHide = true
+            loading.removeFromSuperViewOnHide = true
         }
         isFirstLoaded = false
         isCreatedSuccessfully = false
@@ -125,7 +138,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
     }
     
-   
+    
     
     
     func getValFromLeadVC(params: Bool ) {
@@ -138,7 +151,6 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     
     func loadLead() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        
         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
@@ -193,7 +205,7 @@ extension LeadViewController : UITableViewDataSource {
             cell.dataText.text = leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String
         }
         
-      
+        
         return cell
     }
     

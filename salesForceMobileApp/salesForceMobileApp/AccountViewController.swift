@@ -138,7 +138,7 @@ extension AccountViewController : UITableViewDataSource {
         
         //cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Website"] as? String
         if indexPath.section == 0 {
-            cell.dataText?.text = accOfflineArr.objectAtIndex(indexPath.row)["AccName"] as? String
+            cell.dataText?.text = accOfflineArr.objectAtIndex(indexPath.row)["Name"] as? String
         } else {
             cell.dataText?.text = accOnlineArr.objectAtIndex(indexPath.row)["Name"] as? String
         }
@@ -152,6 +152,8 @@ extension AccountViewController : UITableViewDataSource {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("AccountDataVC") as! AccountDataVC
         if indexPath.section == 0 {
+            
+            subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.accOfflineArr.objectAtIndex(indexPath.row)
             //subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
         } else {

@@ -24,6 +24,8 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     var noteArr: AnyObject = []
     var objectTypeStr = String()
     var isUpdatedSuccessfully:Bool = false
+    var isOfflineData:Bool = false
+    
     @IBOutlet weak var feedSegment: UISegmentedControl!
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -100,7 +102,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         tableView.registerNib(UINib(nibName: "NoteFileCell", bundle: nil), forCellReuseIdentifier: "AttachCellID")
         tableView.registerNib(UINib(nibName: "AttachFileCell", bundle: nil), forCellReuseIdentifier: "NoteCellID")
     }
-
+    
     
     func getValFromAccVC(params: Bool) {
         isUpdatedSuccessfully = params
@@ -108,54 +110,70 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     
     
     func isAccDataNil() {
-        
-        var lastModifiedDate = ""
-        if  let _  = nullToNil( getResponseArr["LastModifiedDate"]) {
-            lastModifiedDate =  (getResponseArr["LastModifiedDate"] as? String)!
+        if !isOfflineData {
+            var lastModifiedDate = ""
+            if  let _  = nullToNil( getResponseArr["LastModifiedDate"]) {
+                lastModifiedDate =  (getResponseArr["LastModifiedDate"] as? String)!
+            }
+            
+            var accountNumber = ""
+            if  let _  = nullToNil( getResponseArr["AccountNumber"]) {
+                accountNumber =   getResponseArr["AccountNumber"] as! String
+            }
+            
+            
+            var type = ""
+            if  let _  = nullToNil( getResponseArr["Type"]) {
+                type =   getResponseArr["Type"] as! String
+            }
+            
+            var ownership = ""
+            if  let _  = nullToNil( getResponseArr["Ownership"]) {
+                ownership =   getResponseArr["Ownership"] as! String
+            }
+            
+            var website = ""
+            if  let _  = nullToNil( getResponseArr["Website"]) {
+                website =   getResponseArr["Website"] as! String
+            }
+            
+            var phone = ""
+            if  let _  = nullToNil( getResponseArr["Phone"]) {
+                phone =   getResponseArr["Phone"] as! String
+            }
+            
+            var fax = ""
+            if  let _  = nullToNil( getResponseArr["Fax"]) {
+                fax =   getResponseArr["Fax"] as! String
+            }
+            
+            accountDataArr = [getResponseArr["Owner"]!!["Name"] as! String,
+                              getResponseArr["Name"] as! String,
+                              accountNumber,
+                              type,
+                              ownership,
+                              website,
+                              phone,
+                              fax,
+                              lastModifiedDate
+            ]
+        } else {
+            accountDataArr = [getResponseArr["Name"] as! String,
+                              getResponseArr["BillingStreet"] as! String,
+                              getResponseArr["BillingCity"] as! String,
+                              getResponseArr["BillingState"] as! String,
+                              getResponseArr["BillingCountry"] as! String,
+                              getResponseArr["BillingPostalCode"] as! String,
+            ]
+            accountCellTitleArr = [
+                "Account Name",
+                "Billing Street",
+                "Billing City",
+                "Billing State",
+                "Billing Country",
+                "Billing Postal Code"
+            ]
         }
-        
-        var accountNumber = ""
-        if  let _  = nullToNil( getResponseArr["AccountNumber"]) {
-            accountNumber =   getResponseArr["AccountNumber"] as! String
-        }
-        
-        
-        var type = ""
-        if  let _  = nullToNil( getResponseArr["Type"]) {
-            type =   getResponseArr["Type"] as! String
-        }
-        
-        var ownership = ""
-        if  let _  = nullToNil( getResponseArr["Ownership"]) {
-            ownership =   getResponseArr["Ownership"] as! String
-        }
-        
-        var website = ""
-        if  let _  = nullToNil( getResponseArr["Website"]) {
-            website =   getResponseArr["Website"] as! String
-        }
-        
-        var phone = ""
-        if  let _  = nullToNil( getResponseArr["Phone"]) {
-            phone =   getResponseArr["Phone"] as! String
-        }
-        
-        var fax = ""
-        if  let _  = nullToNil( getResponseArr["Fax"]) {
-            fax =   getResponseArr["Fax"] as! String
-        }
-        
-        accountDataArr = [getResponseArr["Owner"]!!["Name"] as! String,
-                          getResponseArr["Name"] as! String,
-                          accountNumber,
-                          type,
-                          ownership,
-                          website,
-                          phone,
-                          fax,
-                          lastModifiedDate
-        ]
-        
     }
     
     
@@ -287,7 +305,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                 textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 textFeedCell.attachPhoto.backgroundColor = UIColor(hex: "FFD434" )
                 textFeedCell.attachPhoto.layer.cornerRadius = 1.0
-
+                
                 return textFeedCell
             } else {
                 tableView.rowHeight = 70

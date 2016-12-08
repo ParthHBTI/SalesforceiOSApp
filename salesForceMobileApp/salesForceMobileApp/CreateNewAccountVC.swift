@@ -138,7 +138,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
         }
         else {
             let accDataDic = [
-                "AccName" : accountName.text!,
+                "Name" : accountName.text!,
                 "BillingStreet" : billingStreet.text!,
                 "BillingCity" : billingCity.text!,
                 "BillingState" : billingState.text!,

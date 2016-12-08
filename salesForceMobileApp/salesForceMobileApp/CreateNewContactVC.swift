@@ -30,6 +30,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     @IBOutlet weak var cancleBtn: UIButton!
     @IBOutlet weak var phoneWarnigLbl: UILabel!
     var flag: Bool = false
+    var indexForOflineUpdate = Int()
     var contactDataDic:AnyObject = []
     var contactOfLineArr: AnyObject = NSMutableArray()
     var exDelegate: ExecuteQuery = ExecuteQuery()
@@ -37,7 +38,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey(ContactOfLineDataKey) as? NSData {
             contactOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
         }
         firstName.delegate = self
@@ -188,14 +189,29 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
                 }
             } 
         } else {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
-        }
+            if contactOfLineArr.count > indexForOflineUpdate   {
+                let params = [
+                    "FirstName" : firstName.text!,
+                    "LastName" : lastName.text!,
+                    "Email" : email.text!,
+                    "Phone" : phone.text!,
+                    "Fax" : fax.text!
+                    ]
+                contactOfLineArr.setObject(params, atIndex: indexForOflineUpdate )
+                let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(contactOfLineArr)
+                defaults.setObject(arrOfOppData, forKey: ContactOfLineDataKey)
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Indeterminate
+                loading.detailsLabelText = "Updating!"
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                    self.navigationController?.popViewControllerAnimated(true)
+                }
+            }
     }
-    
+}
     
     override func setNavigationBarItem() {
         self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)

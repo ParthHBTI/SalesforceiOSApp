@@ -157,8 +157,13 @@ extension ContactViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ContactDataVC") as! ContactDataVC
-        subContentsVC.getResponseArr = self.contactOnLineArr.objectAtIndex(indexPath.row)
-        subContentsVC.leadID = self.contactOfLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+        if indexPath.section == 0 {
+            subContentsVC.isOfflineData = true
+            subContentsVC.getResponseArr = self.contactOfLineArr.objectAtIndex(indexPath.row)
+        } else {
+            subContentsVC.getResponseArr = self.contactOnLineArr.objectAtIndex(indexPath.row)
+            subContentsVC.leadID = self.contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+        }
         subContentsVC.parentIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }

@@ -15,6 +15,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var feedData: AnyObject = []
     var getResponseArr:AnyObject = []
+    var isOfflineData = false
     var cellTitleArr: NSArray = ["Contact Owner:","Name:","Email:","Birthdate:","Phone:","Fax:","Title:"]
     var contactDataArr = []
     var attachmentArr: AnyObject = []
@@ -107,6 +108,8 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     
     
     func isContactDataNil() {
+        
+        if !isOfflineData {
         var birthdate = ""
         if  let _  = nullToNil( getResponseArr["Birthdate"]) {
             birthdate =  (getResponseArr["Birthdate"] as? String)!
@@ -144,6 +147,24 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                           phone,
                           fax
         ]
+        }else {
+            contactDataArr = [
+                getResponseArr["FirstName"] as! String,
+                getResponseArr["LastName"] as! String,
+                getResponseArr["Email"] as! String,
+                getResponseArr["Phone"] as! String,
+                getResponseArr["Fax"] as! String
+            ]
+            
+            cellTitleArr = [
+                "First Name",
+                "Last Name",
+                "Phone",
+                "Email",
+                "Fax"
+            ]
+
+        }
     }
     
     func shareAction() {
@@ -346,6 +367,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
         vc.contactDataDic = self.getResponseArr
         vc.flag = true
+        vc.indexForOflineUpdate = parentIndex
         self.navigationController?.pushViewController(vc, animated: true)
         vc.delegate = self
     }

@@ -169,13 +169,13 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
             }
         }
         else {
-            let OppDataDic = [
+            let OppDataArr = [
                 "Name" : opportunityName.text!,
                 "CloseDate" : closeDate.text!,
                 "Amount" : amount.text!,
                 "StageName" : stage.text!,
                 ]
-            OppOfflineArr.addObject(OppDataDic)
+            OppOfflineArr.addObject(OppDataArr)
             let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
             defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)

@@ -11,6 +11,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     var leadID = String()
     var cellTitleArr: NSArray = ["Lead Owner:","Name:","Company:","Email:","Phone:","Title:","Fax:"]
     var leadDataArr = []
+    //var archivedDataArr = []
     var feedData: AnyObject = []
     var attachmentArr: AnyObject = []
     var noteArr: AnyObject = []
@@ -49,12 +50,30 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         super.viewWillAppear(animated)
         configureTableView()
         if isUpdatedSuccessfully {
-            exDelegate.leadQueryDe("lead")
+            
+            //if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
+                //archivedDataArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSArray
+                //leadDataArr = archivedDataArr.objectAtIndex(1) as! NSArray
+                //dispatch_async(dispatch_get_main_queue(), {
+                   // self.tableView.reloadData()
+                //})
+            //}
+            
+            if exDelegate.isConnectedToNetwork() {
+                exDelegate.leadQueryDe("lead")
+            }
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Text
+            loading.detailsLabelText = "Updated Successfully!"
+            loading.hide(true, afterDelay:2)
+            loading.removeFromSuperViewOnHide = true
+            
+            /*exDelegate.leadQueryDe("lead")
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Updated Successfully!"
             loading.removeFromSuperViewOnHide = true
-            loading.hide(true, afterDelay:2)
+            loading.hide(true, afterDelay:2)*/
         }
         isUpdatedSuccessfully = false
         dowloadAttachment()
@@ -402,6 +421,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
         vc.leadDataDict = self.getResponseArr
         vc.flag = true
+        vc.updateOfflineLeadAtIndex = self.parentIndex
         self.navigationController?.pushViewController(vc, animated: true)
         vc.delegate = self
     }

@@ -168,7 +168,7 @@ extension ContactViewController : UITableViewDataSource {
             subContentsVC.getResponseArr = self.contactOfLineArr.objectAtIndex(indexPath.row)
         } else {
             subContentsVC.getResponseArr = self.contactOnLineArr.objectAtIndex(indexPath.row)
-            subContentsVC.leadID = self.contactOfLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            subContentsVC.leadID = self.contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
         }
         subContentsVC.parentIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)

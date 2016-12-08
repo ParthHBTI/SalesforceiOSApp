@@ -33,6 +33,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var delegate: CreateNewLeadDelegate?
     var leadOfLineArr: AnyObject = NSMutableArray()
+    var updateOfflineLeadAtIndex: Int = 0
 
     
     override func viewDidLoad() {
@@ -181,11 +182,28 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
                 }
             }
         } else {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
+            
+            if leadOfLineArr.count > updateOfflineLeadAtIndex {
+                let leadData : NSMutableDictionary = [:]
+                leadData.setObject(lastName.text!, forKey: "LastName")
+                leadData.setObject(companyName.text!, forKey: "Company")
+                leadData.setObject(leadStatus.text!, forKey: "Status")
+                leadOfLineArr.setObject(leadData, atIndex: updateOfflineLeadAtIndex )
+                let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
+                defaults.setObject(arrOfLeadData, forKey: LeadOfLineDataKey)
+                //self.delegate!.getValFromLeadVC(true)
+                dispatch_async(dispatch_get_main_queue(), {
+                    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                    loading.mode = MBProgressHUDMode.Indeterminate
+                    loading.detailsLabelText = "Updating!"
+                    loading.removeFromSuperViewOnHide = true
+                    loading.hide(true, afterDelay:2)
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                    dispatch_after(delayTime, dispatch_get_main_queue()) {
+                        self.navigationController?.popViewControllerAnimated(true)
+                    }
+                })
+            }
         }
     }
     

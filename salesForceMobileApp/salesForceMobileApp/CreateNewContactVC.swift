@@ -128,15 +128,16 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
             }
         }
         else {
-            let leadData : NSMutableDictionary = [:]
-            leadData.setObject(firstName.text!, forKey: "FirstName")
-            leadData.setObject(lastName.text!, forKey: "LastName")
-            leadData.setObject(email.text!, forKey: "Email")
-            leadData.setObject(phone.text!, forKey: "Phone")
-            leadData.setObject(fax.text!, forKey: "Fax")
-            contactOfLineArr.addObject(leadData)
-            let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(contactOfLineArr)
-            defaults.setObject(arrOfLeadData, forKey: ContactOfLineDataKey)
+            let contactData : NSMutableDictionary = [:]
+            contactData.setObject(firstName.text!, forKey: "FirstName")
+            contactData.setObject(lastName.text!, forKey: "LastName")
+            contactData.setObject(email.text!, forKey: "Email")
+            contactData.setObject(phone.text!, forKey: "Phone")
+            contactData.setObject(fax.text!, forKey: "Fax")
+            contactOfLineArr.addObject(contactData)
+            let arrOfContactData = NSKeyedArchiver.archivedDataWithRootObject(contactOfLineArr)
+            defaults.setObject(arrOfContactData, forKey: ContactOfLineDataKey)
+            self.delegate!.getValFromContactVC(true)
             dispatch_async(dispatch_get_main_queue(), {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Indeterminate

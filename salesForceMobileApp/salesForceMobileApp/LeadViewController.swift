@@ -23,7 +23,6 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     var leadOnLineArr: AnyObject = NSMutableArray()
     var leadOfLineArr: AnyObject = NSMutableArray()
     
-    
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var isCreatedSuccessfully: Bool = false
     var createLeadDelegate: CreateNewLeadDelegate?
@@ -53,6 +52,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
             leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
+                //print(self.leadOfLineArr)
                 self.tableView.reloadData()
             })
         }
@@ -278,8 +278,9 @@ extension LeadViewController : UITableViewDataSource {
         } else {
             subContentsVC.getResponseArr = self.leadOnLineArr.objectAtIndex(indexPath.row)
             subContentsVC.leadID = self.leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
-            subContentsVC.parentIndex = (indexPath.row)
+            
         }
+        subContentsVC.parentIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
     

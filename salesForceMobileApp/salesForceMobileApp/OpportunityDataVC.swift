@@ -20,6 +20,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     var noteArr: AnyObject = []
     var cellTitleArr: NSArray = ["Opportunity Owner:","Opportunity Name:","Account Name:","Lead Source:","Stage Name:","Type:","Ammount:","Probability:","Is Private:","Created Date:","Close Date:","Is Closed:","Is Deleted:","Last Modified Date:"]
     var leadID = String()
+    var isOfflineData = false
     var isUpdatedSuccessfully:Bool = false
     var parentIndex:Int = 0
     @IBOutlet weak var feedSegment: UISegmentedControl!
@@ -110,12 +111,16 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
         vc.opportunityDataDic = self.getResponseArr
         vc.flag = true
+        vc.indexForOflineUpdate = parentIndex
         self.navigationController?.pushViewController(vc, animated: true)
         vc.delegate = self
     }
     
     
     func isOpportunityDataNil() {
+        if !isOfflineData {
+            
+        
         var leadSource = "Not available"
         if  let _  = nullToNil( getResponseArr["LeadSource"]) {
             leadSource =  (getResponseArr["LeadSource"] as? String)!
@@ -145,8 +150,22 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
                               getResponseArr["IsDeleted"] as! Bool,
                               getResponseArr["LastModifiedDate"] as! String
         ]
+        } else {
+            opportunityDataArr = [
+                getResponseArr["Name"] as! String,
+                getResponseArr["CloseDate"] as! String,
+                getResponseArr["Amount"] as! String,
+                getResponseArr["StageName"] as! String
+            ]
+            
+            cellTitleArr = [
+                "Name",
+                "Close Date",
+                "Amount",
+                "Stage Name",
+             ]
+        }
     }
-    
     
     func shareAction() {
         let actionSheet = UIActionSheet(title: "Choose Option", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Add Attachment", "Add Note")

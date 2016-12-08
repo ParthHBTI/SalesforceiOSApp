@@ -34,10 +34,12 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     var dateVal: String = " "
     var dateVal2: String = " "
     var flag:Bool = false
+    var indexForOflineUpdate = Int()
     var doneFlag:Bool = false
     var cancelFlag:Bool = false
     var opportunityDataDic:AnyObject = []
     var OppOfflineArr:AnyObject = NSMutableArray()
+    var OppOnlineUpdateArr:AnyObject = NSMutableArray()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var delegate:CreateNewOppDelegate?
     
@@ -98,9 +100,10 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
         title = "New Opportunity"
         if flag == true {
             var opportunityAmount:NSNumber = NSInteger()
-            if  let _  = nullToNil( opportunityDataDic["Amount"]) {
-                opportunityAmount =  (opportunityDataDic["Amount"] as? NSNumber)!
-            }
+//            if  let _  = nullToNil( opportunityDataDic["Amount"]) {
+//                let s = String(format:"%f", (opportunityDataDic["Amount"]! as? NSNumber!)!)
+//                opportunityAmount =  s
+//            }
             //let amount:NSNumber = (opportunityDataDic["Amount"] as? NSNumber)!
             self.opportunityName.text = opportunityDataDic["Name"] as? String
             self.closeDate.text = opportunityDataDic["CloseDate"] as? String
@@ -263,11 +266,38 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
             }
         }
         else {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
+            if OppOfflineArr.count > indexForOflineUpdate   {
+            let OppDataDic = [
+                "Name" : opportunityName.text!,
+                "CloseDate" : closeDate.text!,
+                "Amount" : amount.text!,
+                "StageName" : stage.text!,
+                ]
+            OppOfflineArr.setObject(OppDataDic, atIndex: indexForOflineUpdate )
+            let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
+            defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
+            }
+//            else {
+//                let OppDataDic = [
+//                    "Name" : opportunityName.text!,
+//                    "CloseDate" : closeDate.text!,
+//                    "Amount" : amount.text!,
+//                    "StageName" : stage.text!,
+//                    ]
+//                OppOnlineUpdateArr.setObject(OppDataDic, atIndex: indexForOflineUpdate - OppOfflineArr.count)
+//                let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
+//                defaults.setObject(arrOfOppData, forKey: OppOnlineDataKey)
+//            }
+//            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+//            loading.mode = MBProgressHUDMode.Indeterminate
+//            loading.detailsLabelText = "Updating!"
+//            loading.hide(true, afterDelay: 2)
+//            loading.removeFromSuperViewOnHide = true
+//            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+//            dispatch_after(delayTime, dispatch_get_main_queue()) {
+//                self.navigationController?.popViewControllerAnimated(true)
+//            }
+
         }
     }
     

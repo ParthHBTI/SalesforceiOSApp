@@ -92,7 +92,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     @IBAction func saveAction(sender: AnyObject) {
         //let storyboard = UIStoryboard(name: "Main" , bundle: nil)
         //let nav = storyboard.instantiateViewControllerWithIdentifier("LeadViewController") as! LeadViewController
-            if exDelegate.isConnectedToNetwork() {
+        if exDelegate.isConnectedToNetwork() {
             if self.isSubmittedCorrectVal() {
                 let fields = [
                     "LastName" : lastName.text!,
@@ -121,25 +121,25 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
                 }
             }
         } else {
-                let leadData : NSMutableDictionary = [:]
-                leadData.setObject(lastName.text!, forKey: "LastName")
-                leadData.setObject(companyName.text!, forKey: "Company")
-                leadData.setObject(leadStatus.text!, forKey: "Status")
-                leadOfLineArr.addObject(leadData)
-                let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
-                defaults.setObject(arrOfLeadData, forKey: LeadOfLineDataKey)
-                self.delegate!.getValFromLeadVC(true)
-                dispatch_async(dispatch_get_main_queue(), {
-                    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                    loading.mode = MBProgressHUDMode.Indeterminate
-                    loading.detailsLabelText = "Lead is creating!"
-                    loading.removeFromSuperViewOnHide = true
-                    loading.hide(true, afterDelay:2)
-                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
-                    dispatch_after(delayTime, dispatch_get_main_queue()) {
-                        self.navigationController?.popViewControllerAnimated(true)
-                    }
-                })
+            let leadData : NSMutableDictionary = [:]
+            leadData.setObject(lastName.text!, forKey: "LastName")
+            leadData.setObject(companyName.text!, forKey: "Company")
+            leadData.setObject(leadStatus.text!, forKey: "Status")
+            leadOfLineArr.addObject(leadData)
+            let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
+            defaults.setObject(arrOfLeadData, forKey: LeadOfLineDataKey)
+            self.delegate!.getValFromLeadVC(true)
+            dispatch_async(dispatch_get_main_queue(), {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Indeterminate
+                loading.detailsLabelText = "Lead is creating!"
+                loading.removeFromSuperViewOnHide = true
+                loading.hide(true, afterDelay:2)
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                    self.navigationController?.popViewControllerAnimated(true)
+                }
+            })
         }
     }
     

@@ -22,6 +22,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     var leadID = String()
     var parentIndex:Int = 0
     var isUpdatedSuccessfully:Bool = false
+    var isOfflineData:Bool = false
     @IBOutlet weak var feedSegment: UISegmentedControl!
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -107,43 +108,60 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     
     
     func isContactDataNil() {
-        var birthdate = ""
-        if  let _  = nullToNil( getResponseArr["Birthdate"]) {
-            birthdate =  (getResponseArr["Birthdate"] as? String)!
+        if !isOfflineData {
+            var birthdate = ""
+            if  let _  = nullToNil( getResponseArr["Birthdate"]) {
+                birthdate =  (getResponseArr["Birthdate"] as? String)!
+            }
+            
+            var email = ""
+            if  let _  = nullToNil( getResponseArr["Email"]) {
+                email =  (getResponseArr["Email"] as? String)!
+            }
+            
+            var phone = ""
+            if  let _  = nullToNil( getResponseArr["Phone"]) {
+                phone =  (getResponseArr["Phone"] as? String)!
+            }
+            
+            var fax = ""
+            if  let _  = nullToNil( getResponseArr["Fax"]) {
+                fax =  (getResponseArr["Fax"] as? String)!
+            }
+            
+            var salutation = ""
+            if let _ = nullToNil(getResponseArr["Salutation"]) {
+                salutation = (getResponseArr["Salutation"] as? String)!
+            }
+            
+            var contactName = getResponseArr["Name"] as! String
+            if salutation != "" {
+                contactName = salutation + " " + (getResponseArr["Name"] as! String)
+            }
+            
+            contactDataArr = [getResponseArr["Owner"]!!["Name"] as! String,
+                              contactName,
+                              email,
+                              birthdate ,
+                              phone,
+                              fax
+            ]
+        } else {
+            contactDataArr = [
+                getResponseArr["FirstName"] as! String,
+                getResponseArr["LastName"] as! String,
+                getResponseArr["Email"] as! String,
+                getResponseArr["Phone"] as! String,
+                getResponseArr["Fax"] as! String,
+            ]
+            cellTitleArr = [
+                "First Name",
+                "Last Name",
+                "Email",
+                "Phone",
+                "Fax"
+            ]
         }
-        
-        var email = ""
-        if  let _  = nullToNil( getResponseArr["Email"]) {
-            email =  (getResponseArr["Email"] as? String)!
-        }
-        
-        var phone = ""
-        if  let _  = nullToNil( getResponseArr["Phone"]) {
-            phone =  (getResponseArr["Phone"] as? String)!
-        }
-        
-        var fax = ""
-        if  let _  = nullToNil( getResponseArr["Fax"]) {
-            fax =  (getResponseArr["Fax"] as? String)!
-        }
-        
-        var salutation = ""
-        if let _ = nullToNil(getResponseArr["Salutation"]) {
-            salutation = (getResponseArr["Salutation"] as? String)!
-        }
-        
-        var contactName = getResponseArr["Name"] as! String
-        if salutation != "" {
-            contactName = salutation + " " + (getResponseArr["Name"] as! String)
-        }
-        
-        contactDataArr = [getResponseArr["Owner"]!!["Name"] as! String,
-                          contactName,
-                          email,
-                          birthdate ,
-                          phone,
-                          fax
-        ]
     }
     
     func shareAction() {

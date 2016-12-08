@@ -19,6 +19,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     var tempCell = LeadContentCell()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var parentIndex:Int = 0
+    var isOfflineData:Bool = false
     var isUpdatedSuccessfully:Bool = false
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -139,42 +140,54 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     
     
     func isLeadDataNil() {
-        var email = ""
-        if  let _  = nullToNil( getResponseArr["Email"]) {
-            email =  (getResponseArr["Email"] as? String)!
+        if !isOfflineData {
+            var email = ""
+            if  let _  = nullToNil( getResponseArr["Email"]) {
+                email =  (getResponseArr["Email"] as? String)!
+            }
+            
+            var phone = ""
+            if  let _  = nullToNil( getResponseArr["Phone"]) {
+                phone =  (getResponseArr["Phone"] as? String)!
+            }
+            
+            var title = ""
+            if  let _  = nullToNil( getResponseArr["Title"]) {
+                title =  (getResponseArr["Title"] as? String)!
+            }
+            
+            /*var salutation = ""
+             if let _ = nullToNil(getResponseArr["Salutation"]) {
+             salutation = (getResponseArr["Salutation"] as? String)!
+             }*/
+            
+            /* var leadName = getResponseArr["Name"] as! String
+             if salutation != "" {
+             leadName = salutation + " " + (getResponseArr["Name"] as! String)
+             }*/
+            var leadName = ""
+            if let _ = nullToNil(getResponseArr["Name"]) {
+                leadName = (getResponseArr["Name"] as! String)
+            }
+            
+            leadDataArr = [getResponseArr["Owner"]!["Name"] as! String,
+                           leadName,
+                           getResponseArr["Company"] as! String,
+                           email,
+                           phone,
+                           title
+            ]
+        } else {
+            leadDataArr = [getResponseArr["LastName"] as! String,
+                           getResponseArr["Company"] as! String,
+                           getResponseArr["Status"] as! String
+            ]
+            cellTitleArr = [
+                "Last Name",
+                "Company",
+                "Status"
+            ]
         }
-        
-        var phone = ""
-        if  let _  = nullToNil( getResponseArr["Phone"]) {
-            phone =  (getResponseArr["Phone"] as? String)!
-        }
-        
-        var title = ""
-        if  let _  = nullToNil( getResponseArr["Title"]) {
-            title =  (getResponseArr["Title"] as? String)!
-        }
-        
-        /*var salutation = ""
-         if let _ = nullToNil(getResponseArr["Salutation"]) {
-         salutation = (getResponseArr["Salutation"] as? String)!
-         }*/
-        
-        /* var leadName = getResponseArr["Name"] as! String
-         if salutation != "" {
-         leadName = salutation + " " + (getResponseArr["Name"] as! String)
-         }*/
-        var leadName = ""
-        if let _ = nullToNil(getResponseArr["Name"]) {
-            leadName = (getResponseArr["Name"] as! String)
-        }
-        
-        leadDataArr = [getResponseArr["Owner"]!["Name"] as! String,
-                       leadName,
-                       getResponseArr["Company"] as! String,
-                       email,
-                       phone,
-                       title
-        ]
     }
     
     
@@ -208,8 +221,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             print("Delete")
         default:
             print("Default")
-            //Some code here..
-            
         }
     }
 

@@ -15,7 +15,6 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var feedData: AnyObject = []
     var getResponseArr:AnyObject = []
-    var isOfflineData = false
     var cellTitleArr: NSArray = ["Contact Owner:","Name:","Email:","Birthdate:","Phone:","Fax:","Title:"]
     var contactDataArr = []
     var attachmentArr: AnyObject = []

@@ -69,9 +69,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
                 self.tableView.reloadData()
             })
         }
-        //        if !isFirstLoad {
-        //            exDelegate.leadQueryDe("contact")
-        //        }
+        loadContact()
         if isCreatedSuccessfully {
             let defaults = NSUserDefaults.standardUserDefaults()
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)

@@ -29,7 +29,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
         exDelegate.delegate = self
         self.title = "Account View"
         self.setNavigationBarItem()
-         loadAccount()
+        
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
@@ -69,10 +69,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
                 self.tableView.reloadData()
             })
         }
-        
-        //        if !isFirstLoaded {
-        //            exDelegate.leadQueryDe("account")
-        //        }
+        loadAccount()
         if isCreatedSuccessfully {
             let defaults = NSUserDefaults.standardUserDefaults()
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
@@ -164,6 +161,7 @@ extension AccountViewController : UITableViewDataSource {
         if indexPath.section == 0 {
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.accOfflineArr.objectAtIndex(indexPath.row)
+            //subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
         } else {
             subContentsVC.getResponseArr = self.accOnlineArr.objectAtIndex(indexPath.row)
             subContentsVC.leadID = self.accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String

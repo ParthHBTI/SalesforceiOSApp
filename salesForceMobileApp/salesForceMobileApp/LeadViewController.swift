@@ -274,9 +274,10 @@ extension LeadViewController : UITableViewDataSource {
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("LeadContentVC") as! LeadContentVC
         if indexPath.section == 0 {
             subContentsVC.isOfflineData  = true
-            subContentsVC.getResponseArr = self.leadOfLineArr.objectAtIndex(indexPath.row)
+            //subContentsVC.getResponseArr = self.leadOfLineArr.objectAtIndex(indexPath.row)
+            subContentsVC.getResponseArr = self.leadOfLineArr.objectAtIndex(indexPath.row) as! NSDictionary
         } else {
-            subContentsVC.getResponseArr = self.leadOnLineArr.objectAtIndex(indexPath.row)
+            subContentsVC.getResponseArr = self.leadOnLineArr.objectAtIndex(indexPath.row) as! NSDictionary
             subContentsVC.leadID = self.leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
             
         }

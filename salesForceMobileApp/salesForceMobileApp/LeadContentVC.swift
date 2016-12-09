@@ -4,14 +4,18 @@ import SalesforceNetwork
 import SystemConfiguration
 import MBProgressHUD
 
+let KeyValue = "KeyValue"
+let KeyName  = "KeyName"
+
 class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate, UIActionSheetDelegate,CreateNewLeadDelegate {
     
     @IBOutlet weak var leadSegment: UISegmentedControl!
-    var getResponseArr:AnyObject = []
+    //var getResponseArr:AnyObject = []
+    var getResponseArr = [:]
     var leadID = String()
-    var cellTitleArr: NSArray = ["Lead Owner:","Name:","Company:","Email:","Phone:","Title:","Fax:"]
-    var leadDataArr = []
-    //var archivedDataArr = []
+    //var cellTitleArr: NSArray = ["Lead Owner:","Name:","Company:","Email:","Phone:","Title:","Fax:"]
+    //var leadDataArr = []
+    var leadArr = NSMutableArray()
     var feedData: AnyObject = []
     var attachmentArr: AnyObject = []
     var noteArr: AnyObject = []
@@ -50,7 +54,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         super.viewWillAppear(animated)
         configureTableView()
         if isUpdatedSuccessfully {
-            
+            leadArr = []
             //if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
                 //archivedDataArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSArray
                 //leadDataArr = archivedDataArr.objectAtIndex(1) as! NSArray
@@ -106,26 +110,26 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         //let navEditBtn = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action:#selector(self.editAction))
         let navBarActionBtn: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(LeadContentVC.shareAction))
         self.navigationItem.setRightBarButtonItems([navBarActionBtn,navEditBtn], animated: true)
-        self.isLeadDataNil()
+        //self.isLeadDataNil()
+       // print(getResponseArr)
+        manageLeadData()
     }
     
     
     func executeQuery() {
-        getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex)
-        self.isLeadDataNil()
+        //getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex)
+        getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex) as! NSDictionary
+        self.manageLeadData()
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
         })
     }
     
     
-
-    
     func getValFromLeadVC(params: Bool ) {
         self.isUpdatedSuccessfully = params
     }
 
-    
     
     func dowloadAttachment() {
         let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
@@ -157,8 +161,28 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         
     }
     
+    func manageLeadData() {
+        for (key,val) in getResponseArr {
+            if let _ = nullToNil(val) {
+                let objectDic = NSMutableDictionary()
+                if val is String {
+                    objectDic.setObject(key, forKey: KeyName)
+                    objectDic.setObject(val, forKey: KeyValue)
+                } else if key as! String == "Owner" {
+                    objectDic.setObject(key, forKey: KeyName)
+                    objectDic.setObject(val["Name"], forKey: KeyValue)
+                } else if key as! String == "attributes" {
+                    objectDic.setObject(key, forKey: KeyName)
+                    objectDic.setObject(val["type"], forKey: KeyValue)
+                }
+                leadArr.addObject(objectDic)
+            }
+        }
+    }
     
-    func isLeadDataNil() {
+    
+    
+    /*func isLeadDataNil() {
         if !isOfflineData {
             var email = ""
             if  let _  = nullToNil( getResponseArr["Email"]) {
@@ -207,7 +231,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 "Status"
             ]
         }
-    }
+    }*/
     
     
     func shareAction() {
@@ -234,7 +258,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = leadID
-            notesVC.noteDetailArr = leadDataArr
+            notesVC.noteDetailArr = leadArr //leadDataArr
             self.navigationController?.pushViewController(notesVC, animated: true)
             
             print("Delete")
@@ -266,7 +290,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 
             case 0:
                 
-                return leadDataArr.count
+                return  leadArr.count //leadDataArr.count
             case 1:
                 
                 return attachmentArr.count
@@ -295,8 +319,10 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         if leadSegment.selectedSegmentIndex == 1 {
             if indexPath.section == 0 {
                 let detailCell = tableView.dequeueReusableCellWithIdentifier("leadContentCellID", forIndexPath: indexPath) as! LeadContentCell
-                detailCell.titleLbl.text = self.cellTitleArr.objectAtIndex(indexPath.row) as? String
-                detailCell.titleNameLbl.text = self.leadDataArr.objectAtIndex(indexPath.row) as? String
+                
+                let objectDic = leadArr.objectAtIndex(indexPath.row)
+                detailCell.titleLbl.text = objectDic[KeyName] as? String
+                detailCell.titleNameLbl.text = objectDic[KeyValue] as? String
                 if indexPath.row == 0 {
                     detailCell.titleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
                 }
@@ -426,7 +452,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         vc.delegate = self
     }
     
-    func makeLeadDataArr(getLeadArr: NSDictionary) {
+    /*func makeLeadDataArr(getLeadArr: NSDictionary) {
         
         var email = ""
         if  let _  = nullToNil( getLeadArr["Email"]) {
@@ -464,7 +490,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                             phone,
                             title
         ]
-    }
+    }*/
     
     
     func convertLead() {

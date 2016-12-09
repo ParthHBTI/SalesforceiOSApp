@@ -12,7 +12,8 @@ import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
 import SalesforceRestAPI
-class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNewOppDelegate, SFRestDelegate {
+
+class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     var resArr1 = NSMutableArray()
@@ -53,7 +54,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNe
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
         navigationController?.pushViewController(nv, animated: true)
-        nv.delegate = self
+        //nv.delegate = self
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -183,9 +184,9 @@ extension OpportunityViewController : UITableViewDataSource {
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("OpportunityDataVC") as! OpportunityDataVC
         if indexPath.section == 0 {
             subContentsVC.isOfflineData = true
-            subContentsVC.getResponseArr = self.OppOfflineArr.objectAtIndex(indexPath.row)
+            subContentsVC.getResponseArr = self.OppOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
         } else {
-             subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)
+             subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
         }
         

@@ -13,8 +13,8 @@ import MBProgressHUD
 class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate,CreateNewOppDelegate {
     
     var feedData: AnyObject = []
-    var getResponseArr:AnyObject = []
-    var opportunityDataArr = []
+    var getResponseArr = NSMutableDictionary()
+    var opportunityDataArr = NSMutableArray()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var attachmentArr: AnyObject = []
     var noteArr: AnyObject = []
@@ -66,7 +66,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     }
     
     func executeQuery()  {
-        getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex)
+        getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex) as! NSMutableDictionary
         self.isOpportunityDataNil()
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
@@ -77,12 +77,15 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         super.viewWillAppear(true)
         configureTableView()
         if isUpdatedSuccessfully {
-            exDelegate.leadQueryDe("opporchunity")
+            //exDelegate.leadQueryDe("opporchunity")
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Updated Successfully!"
             loading.removeFromSuperViewOnHide = true
             loading.hide(true, afterDelay:2)
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+                })
         }
         isUpdatedSuccessfully = false
         dowloadAttachment()
@@ -106,6 +109,10 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         isUpdatedSuccessfully = params
     }
     
+     func oppOfflineUpdateData(dataArr: NSMutableArray) {
+        opportunityDataArr = dataArr
+    }
+    
     func editAction() {
         let storyboard = UIStoryboard(name: "Main" , bundle: nil)
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
@@ -118,52 +125,20 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     
     
     func isOpportunityDataNil() {
-        if !isOfflineData {
-            
-        
-        var leadSource = "Not available"
-        if  let _  = nullToNil( getResponseArr["LeadSource"]) {
-            leadSource =  (getResponseArr["LeadSource"] as? String)!
-        }
-        
-        var type = ""
-        if  let _  = nullToNil( getResponseArr["Type"]) {
-            type =  (getResponseArr["Type"] as? String)!
-        }
-        
-        var amount = 0
-        if  let _  = nullToNil( getResponseArr["Amount"]) {
-            amount =   getResponseArr["Amount"] as! Int
-        }
-        
-        opportunityDataArr = [getResponseArr["Owner"]!!["Name"] as! String,
-                              getResponseArr["Name"] as! String,
-                              leadSource,
-                              getResponseArr["StageName"] as! String,
-                              type,
-                              amount,
-                              getResponseArr["Probability"] as! Int,
-                              getResponseArr["IsPrivate"] as! Bool,
-                              getResponseArr["CreatedDate"] as! String,
-                              getResponseArr["CloseDate"] as! String,
-                              getResponseArr["IsClosed"] as! Bool,
-                              getResponseArr["IsDeleted"] as! Bool,
-                              getResponseArr["LastModifiedDate"] as! String
-        ]
+        if isOfflineData {
+            for (key, value) in getResponseArr{
+                let objectDic = NSMutableDictionary()
+                objectDic.setObject(key, forKey: KeyName)
+                objectDic.setObject(value, forKey: KeyValue)
+                opportunityDataArr.addObject(objectDic)
+            }
         } else {
-            opportunityDataArr = [
-                getResponseArr["Name"] as! String,
-                getResponseArr["CloseDate"] as! String,
-                getResponseArr["Amount"] as! String,
-                getResponseArr["StageName"] as! String
-            ]
-            
-            cellTitleArr = [
-                "Name",
-                "Close Date",
-                "Amount",
-                "Stage Name",
-             ]
+            for (key, value) in getResponseArr{
+                let objectDic = NSMutableDictionary()
+                objectDic.setObject(key, forKey: KeyName)
+                objectDic.setObject(value, forKey: KeyValue)
+                opportunityDataArr.addObject(objectDic)
+            }
         }
     }
     
@@ -275,8 +250,8 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         if feedSegment.selectedSegmentIndex == 1 {
             if indexPath.section == 0 {
                 let detailCell = tableView.dequeueReusableCellWithIdentifier("leadContentCellID", forIndexPath: indexPath) as! LeadContentCell
-                detailCell.titleLbl.text = self.cellTitleArr.objectAtIndex(indexPath.row) as? String
-                detailCell.titleNameLbl.text = self.opportunityDataArr.objectAtIndex(indexPath.row) as? String
+                detailCell.titleLbl.text = self.opportunityDataArr.objectAtIndex(indexPath.row)["KeyName"] as? String
+                detailCell.titleNameLbl.text = self.opportunityDataArr.objectAtIndex(indexPath.row)["KeyValue"] as? String
                 if indexPath.row == 0 {
                     detailCell.titleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
                 }

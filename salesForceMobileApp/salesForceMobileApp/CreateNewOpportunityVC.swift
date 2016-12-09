@@ -15,8 +15,11 @@ import SmartSync
 import SmartStore
 import MBProgressHUD
 
+let KeyName = "KeyName"
+let KeyValue = "KeyValue"
 protocol CreateNewOppDelegate {
     func getValFromOppVC(params:Bool)
+    func oppOfflineUpdateData(dataArr: NSMutableArray)
 }
 
 
@@ -273,7 +276,22 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
                 "Amount" : amount.text!,
                 "StageName" : stage.text!,
                 ]
+                let offlineUpdatedArr = NSMutableArray()
+                
+//                for (Name, Value) in OppDataDic{
+//                    let arr = NSArray()
+//                    
+//                }
+                for (key, value) in OppDataDic { // loop through data items
+                    let objectDic = NSMutableDictionary()
+                    objectDic.setObject(key, forKey: KeyName)
+                    objectDic.setObject(value, forKey: KeyValue)
+                    offlineUpdatedArr.addObject(objectDic)
+                }
+                
             OppOfflineArr.setObject(OppDataDic, atIndex: indexForOflineUpdate )
+                self.delegate!.getValFromOppVC(true)
+                self.delegate!.oppOfflineUpdateData(offlineUpdatedArr as NSMutableArray)
             let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
             defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
             }
@@ -288,15 +306,15 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
 //                let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
 //                defaults.setObject(arrOfOppData, forKey: OppOnlineDataKey)
 //            }
-//            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-//            loading.mode = MBProgressHUDMode.Indeterminate
-//            loading.detailsLabelText = "Updating!"
-//            loading.hide(true, afterDelay: 2)
-//            loading.removeFromSuperViewOnHide = true
-//            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
-//            dispatch_after(delayTime, dispatch_get_main_queue()) {
-//                self.navigationController?.popViewControllerAnimated(true)
-//            }
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            loading.detailsLabelText = "Updating!"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                self.navigationController?.popViewControllerAnimated(true)
+            }
 
         }
     }

@@ -135,9 +135,8 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                     })
                 }
             }
-        }
-        else {
-            let accDataDic = [
+        } else {
+            let accDataArr = [
                 "Name" : accountName.text!,
                 "BillingStreet" : billingStreet.text!,
                 "BillingCity" : billingCity.text!,
@@ -145,14 +144,21 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                 "BillingCountry" : billingCountry.text!,
                 "BillingPostalCode" : postalCode.text!
             ]
-            accOfflineArr.addObject(accDataDic)
+            accOfflineArr.addObject(accDataArr)
             let arrOfAccData = NSKeyedArchiver.archivedDataWithRootObject(accOfflineArr)
             defaults.setObject(arrOfAccData, forKey: AccOfflineDataKey)
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
+            self.delegate!.getValFromAccVC(true)
+            dispatch_async(dispatch_get_main_queue(), {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Indeterminate
+                loading.detailsLabelText = "Account is creating!"
+                loading.removeFromSuperViewOnHide = true
+                loading.hide(true, afterDelay:2)
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                    self.navigationController?.popViewControllerAnimated(true)
+                }
+            })
         }
     }
     

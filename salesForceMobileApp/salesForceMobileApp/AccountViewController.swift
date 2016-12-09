@@ -23,13 +23,11 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
     var accOnlineArr: AnyObject = NSMutableArray()
     var accOfflineArr: AnyObject = NSMutableArray()
     var isCreatedSuccessfully: Bool = false
-    var isFirstLoaded:Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         exDelegate.delegate = self
         self.title = "Account View"
-        isFirstLoaded = true
         self.setNavigationBarItem()
         
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
@@ -64,6 +62,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
         if let arrayOfObjectsData = defaults.objectForKey(AccOfflineDataKey) as? NSData {
             accOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
@@ -72,13 +71,21 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
         }
         loadAccount()
         if isCreatedSuccessfully {
+            let defaults = NSUserDefaults.standardUserDefaults()
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            if exDelegate.isConnectedToNetwork() {
+                exDelegate.leadQueryDe("account")
+            } else if let arrayOfObjectsData = defaults.objectForKey(AccOnlineDataKey) as? NSData {
+                accOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.tableView.reloadData()
+                })
+            }
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Created Successfully!"
             loading.hide(true, afterDelay:2)
             loading.removeFromSuperViewOnHide = true
         }
-        isFirstLoaded = false
         isCreatedSuccessfully = false
         self.setNavigationBarItem()
     }
@@ -152,7 +159,6 @@ extension AccountViewController : UITableViewDataSource {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("AccountDataVC") as! AccountDataVC
         if indexPath.section == 0 {
-            
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.accOfflineArr.objectAtIndex(indexPath.row)
             //subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String

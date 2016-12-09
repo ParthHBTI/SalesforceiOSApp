@@ -17,7 +17,6 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
     
     @IBOutlet weak var tableView: UITableView!
     var exDelegate: ExecuteQuery = ExecuteQuery()
-    var isFirstLoad: Bool = false
     var delContactAtIndexPath:NSIndexPath? = nil
     var delObjAtId:String = " "
     var isCreatedSuccessfully:Bool = false
@@ -26,14 +25,13 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        isFirstLoad = true
         exDelegate.delegate = self
          self.title = "Contacts View"
         self.setNavigationBarItem()
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
-        
+        loadContact()
     }
     
     func executeQuery()  {
@@ -64,6 +62,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
         if let arrayOfObjectsData = defaults.objectForKey(ContactOfLineDataKey) as? NSData {
             contactOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
@@ -72,14 +71,22 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
         }
         loadContact()
         if isCreatedSuccessfully {
+            let defaults = NSUserDefaults.standardUserDefaults()
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            if exDelegate.isConnectedToNetwork() {
+                exDelegate.leadQueryDe("contact")
+            } else if let arrayOfObjectsData = defaults.objectForKey(ContactOnLineDataKey) as? NSData {
+                contactOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.tableView.reloadData()
+                })
+            }
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Created Successfully!"
             loading.removeFromSuperViewOnHide = true
             loading.hide(true, afterDelay:2)
         }
         isCreatedSuccessfully = false
-        isFirstLoad = false
         self.setNavigationBarItem()
     }
     
@@ -98,9 +105,6 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-                    if !isFirstLoad {
-                        exDelegate.leadQueryDe("contact")
-                    }
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -114,7 +118,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
                 self.tableView.reloadData()
             })
         }
-
+        
     }
 }
 

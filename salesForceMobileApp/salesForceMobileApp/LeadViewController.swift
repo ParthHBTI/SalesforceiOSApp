@@ -23,10 +23,8 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     var leadOnLineArr: AnyObject = NSMutableArray()
     var leadOfLineArr: AnyObject = NSMutableArray()
     
-    
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var isCreatedSuccessfully: Bool = false
-    var isFirstLoaded:Bool = false
     var createLeadDelegate: CreateNewLeadDelegate?
     var deleteLeadAtIndexPath: NSIndexPath? = nil
     var delObjAtId: String = " "
@@ -38,7 +36,6 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     override func viewDidLoad() {
         super.viewDidLoad()
         exDelegate.delegate = self
-        isFirstLoaded = true
         self.title = "Leads View"
         self.setNavigationBarItem()
         self.addRightBarButtonWithImage1()
@@ -55,6 +52,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
             leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
+                //print(self.leadOfLineArr)
                 self.tableView.reloadData()
             })
         }
@@ -64,7 +62,6 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
             //            if !isFirstLoaded {
             //                exDelegate.leadQueryDe("lead")
             //            }
-            
             let defaults = NSUserDefaults.standardUserDefaults()
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
@@ -81,7 +78,6 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
             loading.hide(true, afterDelay:2)
             loading.removeFromSuperViewOnHide = true
         }
-        isFirstLoaded = false
         isCreatedSuccessfully = false
     }
     
@@ -105,11 +101,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
             
             }, completeBlock: { success in
                 print(success)
-                
         })
-        
-        
-        
     }
     
     func executeQuery()  {
@@ -281,8 +273,15 @@ extension LeadViewController : UITableViewDataSource {
         //convertLeadWithLeadId(self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String)
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("LeadContentVC") as! LeadContentVC
-        subContentsVC.getResponseArr = self.leadOnLineArr.objectAtIndex(indexPath.row)
-        subContentsVC.leadID = self.leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+        if indexPath.section == 0 {
+            subContentsVC.isOfflineData  = true
+            //subContentsVC.getResponseArr = self.leadOfLineArr.objectAtIndex(indexPath.row)
+            subContentsVC.getResponseArr = self.leadOfLineArr.objectAtIndex(indexPath.row) as! NSDictionary
+        } else {
+            subContentsVC.getResponseArr = self.leadOnLineArr.objectAtIndex(indexPath.row) as! NSDictionary
+            subContentsVC.leadID = self.leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            
+        }
         subContentsVC.parentIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }

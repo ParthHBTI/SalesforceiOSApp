@@ -93,7 +93,6 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         }
         isUpdatedSuccessfully = false
         dowloadAttachment()
-        
     }
     
     func configureTableView() {

@@ -102,7 +102,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
         cancleBtn.layer.cornerRadius = 5.0
         title = "New Opportunity"
         if flag == true {
-            let amount = (opportunityDataDic["Amount"] as? Double)!
+            let amount = (opportunityDataDic["Amount"] as? String)!
             self.opportunityName.text = opportunityDataDic["Name"] as? String
             self.closeDate.text = opportunityDataDic["CloseDate"] as? String
             self.amount.text = String(amount)

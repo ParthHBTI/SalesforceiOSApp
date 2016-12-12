@@ -193,8 +193,10 @@ extension LeadViewController : UITableViewDataSource {
         
         if indexPath.section == 0 {
             cell.dataText.text = leadOfLineArr.objectAtIndex(indexPath.row)["LastName"] as? String
+            cell.notConnectedImage.hidden = false
         } else {
             cell.dataText.text = leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.notConnectedImage.hidden = true
         }
         
         

@@ -14,7 +14,7 @@ import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
 
-class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccDelegate {
+class AccountViewController:UIViewController, ExecuteQueryDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     var delAccAtIndexPath:NSIndexPath? = nil
@@ -29,11 +29,8 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
         exDelegate.delegate = self
         self.title = "Account View"
         self.setNavigationBarItem()
-        
-        //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
-        print(accOnlineArr)
     }
     
     func executeQuery()  {
@@ -53,7 +50,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewAccountVC") as! CreateNewAccountVC
         navigationController?.pushViewController(nv, animated: true)
-        nv.delegate = self
+        //nv.delegate = self
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -71,16 +68,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
         }
         loadAccount()
         if isCreatedSuccessfully {
-            let defaults = NSUserDefaults.standardUserDefaults()
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            if exDelegate.isConnectedToNetwork() {
-                exDelegate.leadQueryDe("account")
-            } else if let arrayOfObjectsData = defaults.objectForKey(AccOnlineDataKey) as? NSData {
-                accOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.tableView.reloadData()
-                })
-            }
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Created Successfully!"
             loading.hide(true, afterDelay:2)
@@ -94,6 +82,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate,CreateNewAccD
     func getValFromAccVC(params:Bool) {
         isCreatedSuccessfully = params
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -160,13 +149,12 @@ extension AccountViewController : UITableViewDataSource {
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("AccountDataVC") as! AccountDataVC
         if indexPath.section == 0 {
             subContentsVC.isOfflineData = true
-            subContentsVC.getResponseArr = self.accOfflineArr.objectAtIndex(indexPath.row)
-            //subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
+            subContentsVC.getResponseArr = self.accOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+
         } else {
-            subContentsVC.getResponseArr = self.accOnlineArr.objectAtIndex(indexPath.row)
+            subContentsVC.getResponseArr = self.accOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.leadID = self.accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
         }
-        subContentsVC.objectTypeStr = "Account"
         subContentsVC.parentIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
         

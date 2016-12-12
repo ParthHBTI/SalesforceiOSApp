@@ -14,9 +14,9 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var feedData: AnyObject = []
-    var getResponseArr:AnyObject = []
+    var getResponseArr = NSMutableDictionary()
     var cellTitleArr: NSArray = ["Contact Owner:","Name:","Email:","Birthdate:","Phone:","Fax:","Title:"]
-    var contactDataArr = []
+    var contactDataArr = NSMutableArray()
     var attachmentArr: AnyObject = []
     var noteArr: AnyObject = []
     var leadID = String()
@@ -66,7 +66,8 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     
     
     func executeQuery()  {
-        getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex)
+        getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex) as! NSMutableDictionary
+        contactDataArr.removeAllObjects()
         self.isContactDataNil()
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
@@ -78,12 +79,17 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         super.viewWillAppear(true)
         configureTableView()
         if isUpdatedSuccessfully {
-            exDelegate.leadQueryDe("contact")
+            if exDelegate.isConnectedToNetwork(){
+                self.exDelegate.leadQueryDe("contact")
+            }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Updated Successfully!"
             loading.removeFromSuperViewOnHide = true
             loading.hide(true, afterDelay:2)
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
         }
         isUpdatedSuccessfully = false
         dowloadAttachment()
@@ -106,61 +112,25 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         isUpdatedSuccessfully = params
     }
     
+    func contactOfflineUpdateData(dataArr: NSMutableArray) {
+        contactDataArr = dataArr
+    }
     
     func isContactDataNil() {
-        if !isOfflineData {
-            var birthdate = ""
-            if  let _  = nullToNil( getResponseArr["Birthdate"]) {
-                birthdate =  (getResponseArr["Birthdate"] as? String)!
+        if isOfflineData {
+            for (key, value) in getResponseArr{
+                let objectDic = NSMutableDictionary()
+                objectDic.setObject(key, forKey: KeyName)
+                objectDic.setObject(value, forKey: KeyValue)
+                contactDataArr.addObject(objectDic)
             }
-            
-            var email = ""
-            if  let _  = nullToNil( getResponseArr["Email"]) {
-                email =  (getResponseArr["Email"] as? String)!
-            }
-            
-            var phone = ""
-            if  let _  = nullToNil( getResponseArr["Phone"]) {
-                phone =  (getResponseArr["Phone"] as? String)!
-            }
-            
-            var fax = ""
-            if  let _  = nullToNil( getResponseArr["Fax"]) {
-                fax =  (getResponseArr["Fax"] as? String)!
-            }
-            
-            var salutation = ""
-            if let _ = nullToNil(getResponseArr["Salutation"]) {
-                salutation = (getResponseArr["Salutation"] as? String)!
-            }
-            
-            var contactName = getResponseArr["Name"] as! String
-            if salutation != "" {
-                contactName = salutation + " " + (getResponseArr["Name"] as! String)
-            }
-            
-            contactDataArr = [getResponseArr["Owner"]!!["Name"] as! String,
-                              contactName,
-                              email,
-                              birthdate ,
-                              phone,
-                              fax
-            ]
         } else {
-            contactDataArr = [
-                getResponseArr["FirstName"] as! String,
-                getResponseArr["LastName"] as! String,
-                getResponseArr["Email"] as! String,
-                getResponseArr["Phone"] as! String,
-                getResponseArr["Fax"] as! String,
-            ]
-            cellTitleArr = [
-                "First Name",
-                "Last Name",
-                "Email",
-                "Phone",
-                "Fax"
-            ]
+            for (key, value) in getResponseArr{
+                let objectDic = NSMutableDictionary()
+                objectDic.setObject(key, forKey: KeyName)
+                objectDic.setObject(value, forKey: KeyValue)
+                contactDataArr.addObject(objectDic)
+            }
         }
     }
     
@@ -272,8 +242,8 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         if feedSegment.selectedSegmentIndex == 1 {
             if indexPath.section == 0 {
                 let detailCell = tableView.dequeueReusableCellWithIdentifier("leadContentCellID", forIndexPath: indexPath) as! LeadContentCell
-                detailCell.titleLbl.text = self.cellTitleArr.objectAtIndex(indexPath.row) as? String
-                detailCell.titleNameLbl.text = self.contactDataArr.objectAtIndex(indexPath.row) as? String
+                detailCell.titleLbl.text = self.contactDataArr.objectAtIndex(indexPath.row)["KeyName"] as? String
+                detailCell.titleNameLbl.text = self.contactDataArr.objectAtIndex(indexPath.row)["KeyValue"] as? String
                 if indexPath.row == 0 {
                     detailCell.titleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
                 }

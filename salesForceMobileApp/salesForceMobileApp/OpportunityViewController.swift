@@ -11,17 +11,18 @@ let OppOfflineDataKey = "OpportunityOfflineDataKey"
 import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
+import SalesforceRestAPI
 
-class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNewOppDelegate {
+class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    var resArr1 = NSMutableArray()
+    var oppOnlineArr = NSMutableArray()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var isFirstLoad : Bool = false
     var delObjAtId:String = " "
     var delOppAtIndexPath:NSIndexPath? = nil
     var isCreatedSuccessfully:Bool = false
-    var OppOfflineArr:AnyObject = NSMutableArray()
+    var oppOfflineArr:AnyObject = NSMutableArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,22 +30,18 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNe
         exDelegate.delegate = self
         self.title = "Opportunity View"
         self.setNavigationBarItem()
-        //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
-        loadOpporchunity()
-    }
+           }
     
     func executeQuery()  {
-        resArr1 = exDelegate.resArr.mutableCopy() as! NSMutableArray
+        oppOnlineArr = exDelegate.resArr.mutableCopy() as! NSMutableArray
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
         })
     }
     
-    //func addRightBarButtonWithImage1(buttonImage: UIImage) {
-    //let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
-    func addRightBarButtonWithImage1() {
+        func addRightBarButtonWithImage1() {
         //let navBarAddBtn: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "addImg"), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
         let navBarAddBtn: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(self.toggleRight1))
         navigationItem.rightBarButtonItem = navBarAddBtn;
@@ -54,7 +51,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNe
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
         navigationController?.pushViewController(nv, animated: true)
-        nv.delegate = self
+        //nv.delegate = self
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -65,14 +62,12 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNe
         super.viewWillAppear(animated)
         
         if let arrayOfObjectsData = defaults.objectForKey(OppOfflineDataKey) as? NSData {
-            OppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            oppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
         }
-//        if !isFirstLoad {
-//            exDelegate.leadQueryDe("opporchunity")
-//        }
+        loadOpporchunity()
         if isCreatedSuccessfully {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
@@ -100,15 +95,46 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,CreateNe
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
+//            if OppOfflineArr.count > 1 {
+//            for  index in 0..<OppOfflineArr.count  {
+//                let fields = [
+//                    "Name" : OppOfflineArr.objectAtIndex(index)["Name"]  ,
+//                    "CloseDate" : OppOfflineArr.objectAtIndex(index)["CloseDate"] as? String,
+//                    "Amount" : OppOfflineArr.objectAtIndex(index)["Amount"] as? String,
+//                    "StageName" :OppOfflineArr.objectAtIndex(index)["StageName"] as? String,
+//                    ]
+//                SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: { err in
+//                    dispatch_async(dispatch_get_main_queue(), {
+//                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+//                        alert.show()
+//                        print(err?.localizedDescription)
+//                    })
+//                    print( (err))
+//                }) { succes in
+//                    //self.delegate!.getValFromOppVC(true)
+//                    dispatch_async(dispatch_get_main_queue(), {
+//                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+//                        loading.mode = MBProgressHUDMode.Indeterminate
+//                        loading.detailsLabelText = "Offline Opportunity is Uploading!"
+//                        loading.removeFromSuperViewOnHide = true
+//                        loading.hide(true, afterDelay: 2)
+//                        //self.OppOfflineArr.removeObjectAtIndex(index)
+//                    })
+//                }
+//               print("\(index) and arrValue is \(OppOfflineArr[index])")
+//            }
+//            } else {}
+            
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("opporchunity")
+           
         } else if let arrayOfObjectsData = defaults.objectForKey(OppOnlineDataKey) as? NSData {
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
+            oppOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
@@ -132,16 +158,16 @@ extension OpportunityViewController : UITableViewDataSource {
     
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (section == 0) ? OppOfflineArr.count : resArr1.count
+        return (section == 0) ? oppOfflineArr.count : oppOnlineArr.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
         cell.convertButton.hidden = true
         if indexPath.section == 0 {
-            cell.dataText?.text = OppOfflineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.dataText?.text = oppOfflineArr.objectAtIndex(indexPath.row)["Name"] as? String
         } else {
-            cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.dataText?.text = oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as? String
         }
         cell.dataImage.backgroundColor = UIColor.init(hex: "FFB642")
         cell.dataImage.layer.cornerRadius = 2.0
@@ -153,8 +179,14 @@ extension OpportunityViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("OpportunityDataVC") as! OpportunityDataVC
-        subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row)
-        subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
+        if indexPath.section == 0 {
+            subContentsVC.isOfflineData = true
+            subContentsVC.getResponseArr = self.oppOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+        } else {
+             subContentsVC.getResponseArr = self.oppOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+            subContentsVC.leadID = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+        }
+        
         subContentsVC.parentIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
@@ -163,8 +195,8 @@ extension OpportunityViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             delOppAtIndexPath = indexPath
-            delObjAtId = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
-            let oppToDelete = self.resArr1.objectAtIndex(indexPath.row)["Name"] as! String
+            delObjAtId = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            let oppToDelete = self.oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
             confirmDelete(oppToDelete)
         }
     }
@@ -200,7 +232,7 @@ extension OpportunityViewController : UITableViewDataSource {
             }){ succes in
                 dispatch_async(dispatch_get_main_queue(), {
                     if let indexPath = self.delOppAtIndexPath {
-                        self.resArr1.removeObjectAtIndex(indexPath.row)
+                        self.oppOnlineArr.removeObjectAtIndex(indexPath.row)
                         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                         self.delOppAtIndexPath = nil
                     }

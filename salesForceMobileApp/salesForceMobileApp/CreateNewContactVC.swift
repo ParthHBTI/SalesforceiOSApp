@@ -16,6 +16,7 @@ import MBProgressHUD
 
 protocol CreateNewContactDelegate {
     func getValFromContactVC(params:Bool)
+    func contactOfflineUpdateData(dataArr: NSMutableArray)
 }
 
 class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryDelegate {
@@ -30,6 +31,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     @IBOutlet weak var cancleBtn: UIButton!
     @IBOutlet weak var phoneWarnigLbl: UILabel!
     var flag: Bool = false
+    var indexForOflineUpdate = Int()
     var contactDataDic:AnyObject = []
     var contactOfLineArr: AnyObject = NSMutableArray()
     var exDelegate: ExecuteQuery = ExecuteQuery()
@@ -37,7 +39,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey(ContactOfLineDataKey) as? NSData {
             contactOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
         }
         firstName.delegate = self
@@ -73,13 +75,6 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
         // Do any additional setup after loading the view.
     }
     
-    /*func backAction() {
-     for controller: UIViewController in self.navigationController!.viewControllers {
-     if (controller is ContactViewController) {
-     self.navigationController!.popToViewController(controller, animated: true)
-     }
-     }
-     }*/
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -107,7 +102,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
                     })
                     print( (err))
                 }) { succes in
-                    self.delegate!.getValFromContactVC(true)
+//                    self.delegate!.getValFromContactVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
                         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                         loading.mode = MBProgressHUDMode.Indeterminate
@@ -128,22 +123,23 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
             }
         }
         else {
-            let contactData : NSMutableDictionary = [:]
-            contactData.setObject(firstName.text!, forKey: "FirstName")
-            contactData.setObject(lastName.text!, forKey: "LastName")
-            contactData.setObject(email.text!, forKey: "Email")
-            contactData.setObject(phone.text!, forKey: "Phone")
-            contactData.setObject(fax.text!, forKey: "Fax")
+            let contactData = [
+                "FirstName" : firstName.text!,
+                "LastName" : lastName.text!,
+                "Email" : phone.text!,
+                "Phone" : fax.text!,
+                ]
             contactOfLineArr.addObject(contactData)
+            let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(contactOfLineArr)
+            defaults.setObject(arrOfOppData, forKey: ContactOfLineDataKey)
             let arrOfContactData = NSKeyedArchiver.archivedDataWithRootObject(contactOfLineArr)
             defaults.setObject(arrOfContactData, forKey: ContactOfLineDataKey)
-            self.delegate!.getValFromContactVC(true)
             dispatch_async(dispatch_get_main_queue(), {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Indeterminate
                 loading.detailsLabelText = "Account is creating!"
-                loading.removeFromSuperViewOnHide = true
                 loading.hide(true, afterDelay:2)
+                loading.removeFromSuperViewOnHide = true
                 let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
                 dispatch_after(delayTime, dispatch_get_main_queue()) {
                     self.navigationController?.popViewControllerAnimated(true)
@@ -189,14 +185,39 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
                 }
             } 
         } else {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
-        }
+            if contactOfLineArr.count > indexForOflineUpdate   {
+                let contactDataDic = [
+                    "FirstName" : firstName.text!,
+                    "LastName" : lastName.text!,
+                    "Email" : email.text!,
+                    "Phone" : phone.text!,
+                    "Fax" : fax.text!
+                    ]
+                
+                 let offlineUpdatedArr = NSMutableArray()
+                for (key, value) in contactDataDic {
+                    let objectDic = NSMutableDictionary()
+                    objectDic.setObject(key, forKey: KeyName)
+                    objectDic.setObject(value, forKey: KeyValue)
+                    offlineUpdatedArr.addObject(objectDic)
+                }
+                contactOfLineArr.setObject(contactDataDic, atIndex: indexForOflineUpdate )
+                self.delegate!.getValFromContactVC(true)
+                self.delegate!.contactOfflineUpdateData(offlineUpdatedArr as NSMutableArray)
+                let arrOfContactData = NSKeyedArchiver.archivedDataWithRootObject(contactOfLineArr)
+                defaults.setObject(arrOfContactData, forKey: ContactOfLineDataKey)
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Indeterminate
+                loading.detailsLabelText = "Updating!"
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                    self.navigationController?.popViewControllerAnimated(true)
+                }
+            }
     }
-    
+}
     
     override func setNavigationBarItem() {
         self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)

@@ -13,16 +13,15 @@ import MBProgressHUD
 class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate,CreateNewAccDelegate {
     
     var feedData: AnyObject = []
-    var getResponseArr:AnyObject = []
+    var getResponseArr = NSMutableDictionary()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var leadID = String()
     var isFirstLoad: Bool = false
     var parentIndex : Int = 0
     var accountCellTitleArr: NSArray = ["Account Owner:","Account Name:","Account Number:","Type:","Ownership:","Website:","Phone:","Fax:","Last Modified Date:"]
-    var accountDataArr = []
+    var accountDataArr = NSMutableArray()
     var attachmentArr: AnyObject = []
     var noteArr: AnyObject = []
-    var objectTypeStr = String()
     var isUpdatedSuccessfully:Bool = false
     var isOfflineData:Bool = false
     
@@ -69,7 +68,8 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     
     
     func executeQuery()  {
-        getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex)
+        getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex) as! NSMutableDictionary
+        accountDataArr.removeAllObjects()
         self.isAccDataNil()
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
@@ -80,12 +80,17 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         super.viewWillAppear(animated)
         configureTableView()
         if isUpdatedSuccessfully {
-            exDelegate.leadQueryDe("account")
+            if exDelegate.isConnectedToNetwork(){
+                self.exDelegate.leadQueryDe("account")
+            }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Updated Successfully!"
             loading.removeFromSuperViewOnHide = true
             loading.hide(true, afterDelay:2)
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
         }
         isUpdatedSuccessfully = false
         self.setNavigationBarItem()
@@ -108,71 +113,25 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         isUpdatedSuccessfully = params
     }
     
+    func accOfflineUpdateData(dataArr: NSMutableArray) {
+        accountDataArr = dataArr
+    }
     
     func isAccDataNil() {
-        if !isOfflineData {
-            var lastModifiedDate = ""
-            if  let _  = nullToNil( getResponseArr["LastModifiedDate"]) {
-                lastModifiedDate =  (getResponseArr["LastModifiedDate"] as? String)!
+        if isOfflineData {
+            for (key, value) in getResponseArr{
+                let objectDic = NSMutableDictionary()
+                objectDic.setObject(key, forKey: KeyName)
+                objectDic.setObject(value, forKey: KeyValue)
+                accountDataArr.addObject(objectDic)
             }
-            
-            var accountNumber = ""
-            if  let _  = nullToNil( getResponseArr["AccountNumber"]) {
-                accountNumber =   getResponseArr["AccountNumber"] as! String
-            }
-            
-            
-            var type = ""
-            if  let _  = nullToNil( getResponseArr["Type"]) {
-                type =   getResponseArr["Type"] as! String
-            }
-            
-            var ownership = ""
-            if  let _  = nullToNil( getResponseArr["Ownership"]) {
-                ownership =   getResponseArr["Ownership"] as! String
-            }
-            
-            var website = ""
-            if  let _  = nullToNil( getResponseArr["Website"]) {
-                website =   getResponseArr["Website"] as! String
-            }
-            
-            var phone = ""
-            if  let _  = nullToNil( getResponseArr["Phone"]) {
-                phone =   getResponseArr["Phone"] as! String
-            }
-            
-            var fax = ""
-            if  let _  = nullToNil( getResponseArr["Fax"]) {
-                fax =   getResponseArr["Fax"] as! String
-            }
-            
-            accountDataArr = [getResponseArr["Owner"]!!["Name"] as! String,
-                              getResponseArr["Name"] as! String,
-                              accountNumber,
-                              type,
-                              ownership,
-                              website,
-                              phone,
-                              fax,
-                              lastModifiedDate
-            ]
         } else {
-            accountDataArr = [getResponseArr["Name"] as! String,
-                              getResponseArr["BillingStreet"] as! String,
-                              getResponseArr["BillingCity"] as! String,
-                              getResponseArr["BillingState"] as! String,
-                              getResponseArr["BillingCountry"] as! String,
-                              getResponseArr["BillingPostalCode"] as! String,
-            ]
-            accountCellTitleArr = [
-                "Account Name",
-                "Billing Street",
-                "Billing City",
-                "Billing State",
-                "Billing Country",
-                "Billing Postal Code"
-            ]
+            for (key, value) in getResponseArr{
+                let objectDic = NSMutableDictionary()
+                objectDic.setObject(key, forKey: KeyName)
+                objectDic.setObject(value, forKey: KeyValue)
+                accountDataArr.addObject(objectDic)
+            }
         }
     }
     
@@ -190,6 +149,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                 
                 
         })
+        
         let attachQuery = "SELECT ContentType,IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
         let attachReq = SFRestAPI.sharedInstance().requestForQuery(attachQuery)
         SFRestAPI.sharedInstance().sendRESTRequest(attachReq, failBlock: {
@@ -286,8 +246,8 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         if feedSegment.selectedSegmentIndex == 1 {
             if indexPath.section == 0 {
                 let detailCell = tableView.dequeueReusableCellWithIdentifier("leadContentCellID", forIndexPath: indexPath) as! LeadContentCell
-                detailCell.titleLbl.text = self.accountCellTitleArr.objectAtIndex(indexPath.row) as? String
-                detailCell.titleNameLbl.text = self.accountDataArr.objectAtIndex(indexPath.row) as? String
+                detailCell.titleLbl.text = self.accountDataArr.objectAtIndex(indexPath.row)["KeyName"] as? String
+                detailCell.titleNameLbl.text = self.accountDataArr.objectAtIndex(indexPath.row)["KeyValue"] as? String
                 if indexPath.row == 0 {
                     detailCell.titleNameLbl.textColor = self.navigationController?.navigationBar.barTintColor
                 }
@@ -380,6 +340,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         self.log(.Debug, msg: "didFailLoadWithError: \(error)")
         // Add your failed error handling here
     }
+    
     func editAction() {
         let storyboard = UIStoryboard(name: "Main" , bundle: nil)
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewAccountVC") as! CreateNewAccountVC

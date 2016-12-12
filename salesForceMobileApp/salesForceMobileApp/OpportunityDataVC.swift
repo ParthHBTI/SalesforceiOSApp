@@ -22,6 +22,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     var cellTitleArr: NSArray = ["Opportunity Owner:","Opportunity Name:","Account Name:","Lead Source:","Stage Name:","Type:","Ammount:","Probability:","Is Private:","Created Date:","Close Date:","Is Closed:","Is Deleted:","Last Modified Date:"]
     var leadID = String()
     var isOfflineData = false
+    var section = Int()
     var isUpdatedSuccessfully:Bool = false
     var parentIndex:Int = 0
     @IBOutlet weak var feedSegment: UISegmentedControl!
@@ -126,6 +127,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
         vc.opportunityDataDic = self.getResponseArr
         vc.flag = true
+        vc.section = section
         vc.indexForOflineUpdate = parentIndex
         self.navigationController?.pushViewController(vc, animated: true)
         vc.delegate = self

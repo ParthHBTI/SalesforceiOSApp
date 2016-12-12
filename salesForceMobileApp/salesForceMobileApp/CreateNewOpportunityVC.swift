@@ -36,6 +36,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     var dateVal: String = " "
     var dateVal2: String = " "
     var flag:Bool = false
+    var section = Int()
     var indexForOflineUpdate = Int()
     var doneFlag:Bool = false
     var cancelFlag:Bool = false

@@ -13,7 +13,7 @@ import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
 
-class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewContactDelegate {
+class ContactViewController: UIViewController , ExecuteQueryDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     var exDelegate: ExecuteQuery = ExecuteQuery()
@@ -31,7 +31,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
-        loadContact()
+        
     }
     
     func executeQuery()  {
@@ -52,7 +52,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate,CreateNewCo
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
         navigationController?.pushViewController(nv, animated: true)
-        nv.delegate = self
+        //nv.delegate = self
     }
 
     
@@ -163,9 +163,9 @@ extension ContactViewController : UITableViewDataSource {
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ContactDataVC") as! ContactDataVC
         if indexPath.section == 0 {
             subContentsVC.isOfflineData = true
-            subContentsVC.getResponseArr = self.contactOfLineArr.objectAtIndex(indexPath.row)
+            subContentsVC.getResponseArr = self.contactOfLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
         } else {
-            subContentsVC.getResponseArr = self.contactOnLineArr.objectAtIndex(indexPath.row)
+            subContentsVC.getResponseArr = self.contactOnLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.leadID = self.contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
         }
         subContentsVC.parentIndex = (indexPath.row)

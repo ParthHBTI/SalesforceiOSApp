@@ -9,9 +9,10 @@
 import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
+typealias UserSelectionType = (Bool, Bool) -> Void
 
 class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate,CreateNewOppDelegate {
-    
+    var onSuccess: UserSelectionType?
     var feedData: AnyObject = []
     var getResponseArr = NSMutableDictionary()
     var opportunityDataArr = NSMutableArray()
@@ -77,14 +78,18 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         super.viewWillAppear(true)
         configureTableView()
         if isUpdatedSuccessfully {
-            //exDelegate.leadQueryDe("opporchunity")
+            if exDelegate.isConnectedToNetwork(){
+            self.exDelegate.leadQueryDe("opporchunity")
+            }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Updated Successfully!"
             loading.removeFromSuperViewOnHide = true
             loading.hide(true, afterDelay:2)
-            dispatch_async(dispatch_get_main_queue(), {
-                self.tableView.reloadData()
+            
+               //self.exDelegate.leadQueryDe("opporchunity")
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.tableView.reloadData()
                 })
         }
         isUpdatedSuccessfully = false
@@ -92,6 +97,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
 
     }
     
+  
     func configureTableView() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -107,6 +113,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     
     func getValFromOppVC(params:Bool) {
         isUpdatedSuccessfully = params
+        
     }
     
      func oppOfflineUpdateData(dataArr: NSMutableArray) {

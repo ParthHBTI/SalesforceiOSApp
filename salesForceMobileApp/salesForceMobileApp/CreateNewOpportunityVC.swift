@@ -15,8 +15,7 @@ import SmartSync
 import SmartStore
 import MBProgressHUD
 
-let KeyName = "KeyName"
-let KeyValue = "KeyValue"
+
 protocol CreateNewOppDelegate {
     func getValFromOppVC(params:Bool)
     func oppOfflineUpdateData(dataArr: NSMutableArray)
@@ -119,13 +118,6 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
         }
     }
     
-    /*func backAction() {
-     for controller: UIViewController in self.navigationController!.viewControllers {
-     if (controller is OpportunityViewController) {
-     self.navigationController!.popToViewController(controller, animated: true)
-     }
-     }
-     }*/
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -184,12 +176,18 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
             OppOfflineArr.addObject(OppDataArr)
             let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
             defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
+            dispatch_async(dispatch_get_main_queue(), {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
             //loading.mode = MBProgressHUDMode.Text
-            loading.detailsLabelText = "Please check your Internet connection!"
+            loading.detailsLabelText = "Opporcunity is creating!"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                self.navigationController?.popViewControllerAnimated(true)
+            }
+            })
         }
     }
     

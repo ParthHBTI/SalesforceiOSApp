@@ -16,13 +16,13 @@ import SalesforceRestAPI
 class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    var resArr1 = NSMutableArray()
+    var oppOnlineArr = NSMutableArray()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var isFirstLoad : Bool = false
     var delObjAtId:String = " "
     var delOppAtIndexPath:NSIndexPath? = nil
     var isCreatedSuccessfully:Bool = false
-    var OppOfflineArr:AnyObject = NSMutableArray()
+    var oppOfflineArr:AnyObject = NSMutableArray()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +36,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
            }
     
     func executeQuery()  {
-        resArr1 = exDelegate.resArr.mutableCopy() as! NSMutableArray
+        oppOnlineArr = exDelegate.resArr.mutableCopy() as! NSMutableArray
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
         })
@@ -65,7 +65,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
         super.viewWillAppear(animated)
         
         if let arrayOfObjectsData = defaults.objectForKey(OppOfflineDataKey) as? NSData {
-            OppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            oppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
@@ -137,7 +137,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            resArr1 = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
+            oppOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })
@@ -161,16 +161,16 @@ extension OpportunityViewController : UITableViewDataSource {
     
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (section == 0) ? OppOfflineArr.count : resArr1.count
+        return (section == 0) ? oppOfflineArr.count : oppOnlineArr.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
         cell.convertButton.hidden = true
         if indexPath.section == 0 {
-            cell.dataText?.text = OppOfflineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.dataText?.text = oppOfflineArr.objectAtIndex(indexPath.row)["Name"] as? String
         } else {
-            cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.dataText?.text = oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as? String
         }
         cell.dataImage.backgroundColor = UIColor.init(hex: "FFB642")
         cell.dataImage.layer.cornerRadius = 2.0
@@ -184,10 +184,10 @@ extension OpportunityViewController : UITableViewDataSource {
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("OpportunityDataVC") as! OpportunityDataVC
         if indexPath.section == 0 {
             subContentsVC.isOfflineData = true
-            subContentsVC.getResponseArr = self.OppOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+            subContentsVC.getResponseArr = self.oppOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
         } else {
-             subContentsVC.getResponseArr = self.resArr1.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-            subContentsVC.leadID = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
+             subContentsVC.getResponseArr = self.oppOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+            subContentsVC.leadID = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
         }
         
         subContentsVC.parentIndex = (indexPath.row)
@@ -198,8 +198,8 @@ extension OpportunityViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             delOppAtIndexPath = indexPath
-            delObjAtId = self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String
-            let oppToDelete = self.resArr1.objectAtIndex(indexPath.row)["Name"] as! String
+            delObjAtId = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            let oppToDelete = self.oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
             confirmDelete(oppToDelete)
         }
     }
@@ -235,7 +235,7 @@ extension OpportunityViewController : UITableViewDataSource {
             }){ succes in
                 dispatch_async(dispatch_get_main_queue(), {
                     if let indexPath = self.delOppAtIndexPath {
-                        self.resArr1.removeObjectAtIndex(indexPath.row)
+                        self.oppOnlineArr.removeObjectAtIndex(indexPath.row)
                         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                         self.delOppAtIndexPath = nil
                     }

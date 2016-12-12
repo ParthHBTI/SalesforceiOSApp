@@ -22,7 +22,6 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     var accountDataArr = NSMutableArray()
     var attachmentArr: AnyObject = []
     var noteArr: AnyObject = []
-    var objectTypeStr = String()
     var isUpdatedSuccessfully:Bool = false
     var isOfflineData:Bool = false
     
@@ -150,6 +149,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                 
                 
         })
+        
         let attachQuery = "SELECT ContentType,IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
         let attachReq = SFRestAPI.sharedInstance().requestForQuery(attachQuery)
         SFRestAPI.sharedInstance().sendRESTRequest(attachReq, failBlock: {

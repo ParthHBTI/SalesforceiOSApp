@@ -187,51 +187,50 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                 }
             }
         } else {
-            if accOfflineArr.count > indexForOflineUpdate   {
-                let OppDataDic = [
-                    "Name" : accountName.text!,
-                    "BillingStreet" : billingStreet.text!,
-                    "BillingCity" : billingCity.text!,
-                    "BillingState" : billingState.text!,
-                    "BillingCountry" : billingCountry.text!,
-                    "BillingPostalCode" : postalCode.text!
-                    ]
-                let offlineUpdatedArr = NSMutableArray()
-                for (key, value) in OppDataDic {                     let objectDic = NSMutableDictionary()
-                    objectDic.setObject(key, forKey: KeyName)
-                    objectDic.setObject(value, forKey: KeyValue)
-                    offlineUpdatedArr.addObject(objectDic)
+                if self.accOfflineArr.count > self.indexForOflineUpdate   {
+                    let OppDataDic = [
+                        "Name" : self.accountName.text!,
+                        "BillingStreet" : billingStreet.text!,
+                        "BillingCity" : billingCity.text!,
+                        "BillingState" : billingState.text!,
+                        "BillingCountry" : billingCountry.text!,
+                        "BillingPostalCode" : postalCode.text!
+                        ]
+                    let offlineUpdatedArr = NSMutableArray()
+                    for (key, value) in OppDataDic {                         let objectDic = NSMutableDictionary()
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(value, forKey: KeyValue)
+                        offlineUpdatedArr.addObject(objectDic)
+                    }
+                    
+                    accOfflineArr.setObject(OppDataDic, atIndex: indexForOflineUpdate )
+                    self.delegate!.getValFromAccVC(true)
+                    self.delegate!.accOfflineUpdateData(offlineUpdatedArr as NSMutableArray)
+                    let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(accOfflineArr)
+                    defaults.setObject(arrOfOppData, forKey: AccOfflineDataKey)
                 }
-                
-                accOfflineArr.setObject(OppDataDic, atIndex: indexForOflineUpdate )
-                self.delegate!.getValFromAccVC(true)
-                self.delegate!.accOfflineUpdateData(offlineUpdatedArr as NSMutableArray)
-                let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(accOfflineArr)
-                defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
+                //            else {
+                //                let OppDataDic = [
+                //                    "Name" : opportunityName.text!,
+                //                    "CloseDate" : closeDate.text!,
+                //                    "Amount" : amount.text!,
+                //                    "StageName" : stage.text!,
+                //                    ]
+                //                OppOnlineUpdateArr.setObject(OppDataDic, atIndex: indexForOflineUpdate - OppOfflineArr.count)
+                //                let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
+                //                defaults.setObject(arrOfOppData, forKey: OppOnlineDataKey)
+                //            }
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Indeterminate
+                loading.detailsLabelText = "Updating!"
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                    self.navigationController?.popViewControllerAnimated(true)
+                }
             }
-            //            else {
-            //                let OppDataDic = [
-            //                    "Name" : opportunityName.text!,
-            //                    "CloseDate" : closeDate.text!,
-            //                    "Amount" : amount.text!,
-            //                    "StageName" : stage.text!,
-            //                    ]
-            //                OppOnlineUpdateArr.setObject(OppDataDic, atIndex: indexForOflineUpdate - OppOfflineArr.count)
-            //                let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
-            //                defaults.setObject(arrOfOppData, forKey: OppOnlineDataKey)
-            //            }
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Updating!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTime, dispatch_get_main_queue()) {
-                self.navigationController?.popViewControllerAnimated(true)
-            }
-            
-        }
-    }
+       }
     
     
     func isSubmitCorrectVal() -> Bool {

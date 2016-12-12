@@ -334,7 +334,6 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
         vc.contactDataDic = self.getResponseArr
         vc.flag = true
-        vc.indexForOflineUpdate = parentIndex
         self.navigationController?.pushViewController(vc, animated: true)
         vc.delegate = self
     }

@@ -16,7 +16,7 @@ import MBProgressHUD
 import ZKSforce
 
 // class for Lead's data
-class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadDelegate {
+class LeadViewController: UIViewController, ExecuteQueryDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     //var resArr1:AnyObject = []
@@ -28,7 +28,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     var createLeadDelegate: CreateNewLeadDelegate?
     var deleteLeadAtIndexPath: NSIndexPath? = nil
     var delObjAtId: String = " "
-    
+    var isFirstLoaded:Bool = false
     
     var  client:ZKSforceClient?
     var  results:ZKQueryResult?
@@ -37,10 +37,11 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         super.viewDidLoad()
         exDelegate.delegate = self
         self.title = "Leads View"
+        isFirstLoaded = true
         self.setNavigationBarItem()
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
-       
+        loadLead()
         client = ZKSforceClient()
         let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
         client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
@@ -48,36 +49,27 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+        /*if !isFirstLoaded {
+            if exDelegate.isConnectedToNetwork() {
+            exDelegate.leadQueryDe("lead")
+            }
+        }*/
         if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
             leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
-                //print(self.leadOfLineArr)
                 self.tableView.reloadData()
             })
         }
+        loadLead()
         self.setNavigationBarItem()
-         loadLead()
         if isCreatedSuccessfully {
-            //            if !isFirstLoaded {
-            //                exDelegate.leadQueryDe("lead")
-            //            }
-            let defaults = NSUserDefaults.standardUserDefaults()
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            if exDelegate.isConnectedToNetwork() {
-                exDelegate.leadQueryDe("lead")
-            } else if let arrayOfObjectsData = defaults.objectForKey(LeadOnLineDataKey) as? NSData {
-                leadOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.tableView.reloadData()
-                })
-            }
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Created Successfully!"
             loading.hide(true, afterDelay:2)
             loading.removeFromSuperViewOnHide = true
         }
+        isFirstLoaded = false
         isCreatedSuccessfully = false
     }
     
@@ -122,15 +114,13 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
         self.navigationController?.pushViewController(nv, animated: true)
-        nv.delegate = self
+        //nv.delegate = self
     }
     
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
     }
-    
-    
     
     
     func getValFromLeadVC(params: Bool ) {
@@ -154,7 +144,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            leadOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            leadOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
             })

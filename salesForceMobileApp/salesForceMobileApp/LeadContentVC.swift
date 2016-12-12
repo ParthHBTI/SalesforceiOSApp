@@ -13,8 +13,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     //var getResponseArr:AnyObject = []
     var getResponseArr = [:]
     var leadID = String()
-    //var cellTitleArr: NSArray = ["Lead Owner:","Name:","Company:","Email:","Phone:","Title:","Fax:"]
-    //var leadDataArr = []
     var leadArr = NSMutableArray()
     var feedData: AnyObject = []
     var attachmentArr: AnyObject = []
@@ -54,15 +52,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         super.viewWillAppear(animated)
         configureTableView()
         if isUpdatedSuccessfully {
-            leadArr = []
-            //if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
-                //archivedDataArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSArray
-                //leadDataArr = archivedDataArr.objectAtIndex(1) as! NSArray
-                //dispatch_async(dispatch_get_main_queue(), {
-                   // self.tableView.reloadData()
-                //})
-            //}
-            
             if exDelegate.isConnectedToNetwork() {
                 exDelegate.leadQueryDe("lead")
             }
@@ -71,7 +60,9 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             loading.detailsLabelText = "Updated Successfully!"
             loading.hide(true, afterDelay:2)
             loading.removeFromSuperViewOnHide = true
-            
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
             /*exDelegate.leadQueryDe("lead")
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
@@ -81,6 +72,11 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         }
         isUpdatedSuccessfully = false
         dowloadAttachment()
+    }
+    
+    
+    func updateOfflineLead(getOfflineLeadArr: NSMutableArray) {
+        leadArr = getOfflineLeadArr
     }
     
     func configureTableView() {
@@ -110,16 +106,14 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         //let navEditBtn = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action:#selector(self.editAction))
         let navBarActionBtn: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(LeadContentVC.shareAction))
         self.navigationItem.setRightBarButtonItems([navBarActionBtn,navEditBtn], animated: true)
-        //self.isLeadDataNil()
-       // print(getResponseArr)
-        manageLeadData()
+        isLeadDataNil()
     }
     
     
     func executeQuery() {
-        //getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex)
         getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex) as! NSDictionary
-        self.manageLeadData()
+        leadArr.removeAllObjects()
+        self.isLeadDataNil()
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()
         })
@@ -161,25 +155,33 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         
     }
     
-    func manageLeadData() {
-        for (key,val) in getResponseArr {
-            if let _ = nullToNil(val) {
+    func isLeadDataNil() {
+        if isOfflineData {
+            for (key, value) in getResponseArr{
                 let objectDic = NSMutableDictionary()
-                if val is String {
-                    objectDic.setObject(key, forKey: KeyName)
-                    objectDic.setObject(val, forKey: KeyValue)
-                } else if key as! String == "Owner" {
-                    objectDic.setObject(key, forKey: KeyName)
-                    objectDic.setObject(val["Name"], forKey: KeyValue)
-                } else if key as! String == "attributes" {
-                    objectDic.setObject(key, forKey: KeyName)
-                    objectDic.setObject(val["type"], forKey: KeyValue)
-                }
+                objectDic.setObject(key, forKey: KeyName)
+                objectDic.setObject(value, forKey: KeyValue)
                 leadArr.addObject(objectDic)
+            }
+        } else {
+            for (key,val) in getResponseArr {
+                if let _ = nullToNil(val) {
+                    let objectDic = NSMutableDictionary()
+                    if val is String {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val, forKey: KeyValue)
+                    } else if key as! String == "Owner" {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val["Name"], forKey: KeyValue)
+                    } else if key as! String == "attributes" {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val["type"], forKey: KeyValue)
+                    }
+                    leadArr.addObject(objectDic)
+                }
             }
         }
     }
-    
     
     
     /*func isLeadDataNil() {

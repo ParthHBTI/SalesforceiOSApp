@@ -166,8 +166,10 @@ extension OpportunityViewController : UITableViewDataSource {
         cell.convertButton.hidden = true
         if indexPath.section == 0 {
             cell.dataText?.text = oppOfflineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.notConnectedImage.hidden = false
         } else {
             cell.dataText?.text = oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.notConnectedImage.hidden = true
         }
         cell.dataImage.backgroundColor = UIColor.init(hex: "FFB642")
         cell.dataImage.layer.cornerRadius = 2.0
@@ -182,22 +184,33 @@ extension OpportunityViewController : UITableViewDataSource {
         if indexPath.section == 0 {
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.oppOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+            subContentsVC.parentIndex = (indexPath.row)
+            self.navigationController?.pushViewController(subContentsVC, animated: true)
         } else {
-             subContentsVC.getResponseArr = self.oppOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-            subContentsVC.leadID = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            if self.exDelegate.isConnectedToNetwork() {
+                subContentsVC.getResponseArr = self.oppOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+                subContentsVC.leadID = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                subContentsVC.parentIndex = (indexPath.row)
+                self.navigationController?.pushViewController(subContentsVC, animated: true)
+            }
         }
         
-        subContentsVC.parentIndex = (indexPath.row)
-        self.navigationController?.pushViewController(subContentsVC, animated: true)
+      
     }
     
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             delOppAtIndexPath = indexPath
-            delObjAtId = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
-            let oppToDelete = self.oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
-            confirmDelete(oppToDelete)
+            if indexPath.section != 0 {
+                delObjAtId = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                let oppToDelete = self.oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
+                confirmDelete(oppToDelete)
+            } else {
+                let oppToDelete = self.oppOfflineArr.objectAtIndex(indexPath.row)["Name"] as! String
+                confirmDelete(oppToDelete)
+            }
+            
         }
     }
     
@@ -222,7 +235,23 @@ extension OpportunityViewController : UITableViewDataSource {
     
     
     func oppDelAction(alertAction: UIAlertAction) -> Void {
-        if exDelegate.isConnectedToNetwork() {
+         if delOppAtIndexPath!.section == 0  {
+            dispatch_async(dispatch_get_main_queue(), {
+                if let indexPath = self.delOppAtIndexPath {
+                    self.oppOfflineArr.removeObjectAtIndex(indexPath.row)
+                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.oppOfflineArr)
+                    defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
+                    self.delOppAtIndexPath = nil
+                }
+            })
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            loading.detailsLabelText = "Please check your Internet connection!"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+         } else {
+            if exDelegate.isConnectedToNetwork() {
             SFRestAPI.sharedInstance().performDeleteWithObjectType("Opportunity", objectId: delObjAtId,failBlock: { err in
                 dispatch_async(dispatch_get_main_queue(), {
                     let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
@@ -239,12 +268,6 @@ extension OpportunityViewController : UITableViewDataSource {
                 })
             }
         }
-        else {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
         }
     }
 }

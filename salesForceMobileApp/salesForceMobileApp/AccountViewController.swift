@@ -135,8 +135,10 @@ extension AccountViewController : UITableViewDataSource {
         //cell.dataText?.text = resArr1.objectAtIndex(indexPath.row)["Website"] as? String
         if indexPath.section == 0 {
             cell.dataText?.text = accOfflineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.notConnectedImage.hidden = false
         } else {
             cell.dataText?.text = accOnlineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.notConnectedImage.hidden = true
         }
         cell.dataImage.backgroundColor = UIColor.init(hex: "FFD434")
         cell.dataImage.layer.cornerRadius = 1.0
@@ -150,14 +152,17 @@ extension AccountViewController : UITableViewDataSource {
         if indexPath.section == 0 {
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.accOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+            subContentsVC.parentIndex = (indexPath.row)
+            self.navigationController?.pushViewController(subContentsVC, animated: true)
 
         } else {
-            subContentsVC.getResponseArr = self.accOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-            subContentsVC.leadID = self.accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            if self.exDelegate.isConnectedToNetwork() {
+                subContentsVC.getResponseArr = self.accOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+                subContentsVC.leadID = self.accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                subContentsVC.parentIndex = (indexPath.row)
+                self.navigationController?.pushViewController(subContentsVC, animated: true)
+            }
         }
-        subContentsVC.parentIndex = (indexPath.row)
-        self.navigationController?.pushViewController(subContentsVC, animated: true)
-        
     }
     
     
@@ -191,6 +196,17 @@ extension AccountViewController : UITableViewDataSource {
     }
     
     func accDelAction(alertAction: UIAlertAction) -> Void {
+        if delAccAtIndexPath!.section == 0  {
+            dispatch_async(dispatch_get_main_queue(), {
+                if let indexPath = self.delAccAtIndexPath {
+                    self.accOfflineArr.removeObjectAtIndex(indexPath.row)
+                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.accOfflineArr)
+                    defaults.setObject(arrOfOppData, forKey: AccOfflineDataKey)
+                    self.delAccAtIndexPath = nil
+                }
+            })
+        } else {
         if exDelegate.isConnectedToNetwork() {
             SFRestAPI.sharedInstance().performDeleteWithObjectType("Account", objectId: delObjAtId,failBlock: { err in
                 dispatch_async(dispatch_get_main_queue(), {
@@ -209,12 +225,5 @@ extension AccountViewController : UITableViewDataSource {
                 })
             }
         }
-        else {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
-        }
-    }
+    }    }
 }

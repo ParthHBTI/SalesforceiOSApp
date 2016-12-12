@@ -147,8 +147,10 @@ extension ContactViewController : UITableViewDataSource {
 //        cell.detailTextLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         if indexPath.section == 0 {
             cell.dataText.text = contactOfLineArr.objectAtIndex(indexPath.row)["LastName"] as? String
+            cell.notConnectedImage.hidden = false
         } else {
             cell.dataText.text = contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.notConnectedImage.hidden = true
         }
         cell.dataImage.backgroundColor = UIColor.init(hex: "9996D2")
         cell.dataImage.layer.cornerRadius = 2.0
@@ -164,12 +166,16 @@ extension ContactViewController : UITableViewDataSource {
         if indexPath.section == 0 {
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.contactOfLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+            subContentsVC.parentIndex = (indexPath.row)
+            self.navigationController?.pushViewController(subContentsVC, animated: true)
         } else {
-            subContentsVC.getResponseArr = self.contactOnLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-            subContentsVC.leadID = self.contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            if self.exDelegate.isConnectedToNetwork() {
+                subContentsVC.getResponseArr = self.contactOnLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+                subContentsVC.leadID = self.contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                subContentsVC.parentIndex = (indexPath.row)
+                self.navigationController?.pushViewController(subContentsVC, animated: true)
+            }
         }
-        subContentsVC.parentIndex = (indexPath.row)
-        self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
     
     
@@ -177,7 +183,7 @@ extension ContactViewController : UITableViewDataSource {
         if editingStyle == .Delete {
             delContactAtIndexPath = indexPath
             delObjAtId = self.contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
-            let contactToDelete = self.contactOfLineArr.objectAtIndex(indexPath.row)["Name"] as! String
+            let contactToDelete = self.contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
             confirmDelete(contactToDelete)
         }
     }
@@ -203,6 +209,17 @@ extension ContactViewController : UITableViewDataSource {
     
     
     func conDelAction(alertAction: UIAlertAction) -> Void {
+        if delContactAtIndexPath!.section == 0  {
+            dispatch_async(dispatch_get_main_queue(), {
+                if let indexPath = self.delContactAtIndexPath {
+                    self.contactOfLineArr.removeObjectAtIndex(indexPath.row)
+                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.contactOfLineArr)
+                    defaults.setObject(arrOfOppData, forKey: ContactOfLineDataKey)
+                    self.delContactAtIndexPath = nil
+                }
+            })
+        } else {
         if exDelegate.isConnectedToNetwork() {
             SFRestAPI.sharedInstance().performDeleteWithObjectType("Contact", objectId: delObjAtId,failBlock: { err in
                 dispatch_async(dispatch_get_main_queue(), {
@@ -226,6 +243,7 @@ extension ContactViewController : UITableViewDataSource {
             loading.detailsLabelText = "Please check your Internet connection!"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
+            }
         }
     }
 }

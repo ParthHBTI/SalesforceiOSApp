@@ -109,7 +109,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                     })
                     print( (err))
                 }) { succes in
-                    self.delegate!.getValFromAccVC(true)
+                    //self.delegate!.getValFromAccVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
                         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                         loading.mode = MBProgressHUDMode.Indeterminate

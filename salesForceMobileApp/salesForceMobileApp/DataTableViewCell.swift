@@ -25,6 +25,7 @@ class DataTableViewCell : BaseTableViewCell {
     }
     @IBOutlet weak var dataImage: UIImageView!
     @IBOutlet weak var dataText: UILabel!
+    @IBOutlet weak var notConnectedImage: UIImageView!
     
     @IBOutlet weak var convertButton: UIButton!
     

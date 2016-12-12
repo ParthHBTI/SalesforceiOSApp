@@ -77,6 +77,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     
     func updateOfflineLead(getOfflineLeadArr: NSMutableArray) {
         leadArr = getOfflineLeadArr
+        //getResponseArr = getOfflineLeadArr
     }
     
     func configureTableView() {
@@ -448,6 +449,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         let storyboard = UIStoryboard(name: "Main" , bundle: nil)
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
         vc.leadDataDict = self.getResponseArr
+        //vc.leadDataDict = leadArr
         vc.flag = true
         vc.updateOfflineLeadAtIndex = self.parentIndex
         self.navigationController?.pushViewController(vc, animated: true)

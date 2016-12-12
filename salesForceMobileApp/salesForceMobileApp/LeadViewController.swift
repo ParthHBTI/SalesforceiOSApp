@@ -196,10 +196,17 @@ extension LeadViewController : UITableViewDataSource {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            deleteLeadAtIndexPath = indexPath
-            delObjAtId = self.leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
-            let leadToDelete = self.leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
-            confirmDelete(leadToDelete)
+            if indexPath.section == 0 {
+                //print(leadOfLineArr)
+                deleteLeadAtIndexPath = indexPath
+                let leadToDelete = self.leadOfLineArr.objectAtIndex(indexPath.row)["LastName"] as! String
+                confirmDelete(leadToDelete)
+            } else {
+                deleteLeadAtIndexPath = indexPath
+                delObjAtId = self.leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                let leadToDelete = self.leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
+                confirmDelete(leadToDelete)
+            }
         }
     }
     
@@ -241,6 +248,13 @@ extension LeadViewController : UITableViewDataSource {
             }
         }
         else {
+            if let indexPath = self.deleteLeadAtIndexPath {
+                self.leadOfLineArr.removeObjectAtIndex(indexPath.row)
+                self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                let offlineLeadArr = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
+                defaults.setObject(offlineLeadArr, forKey: LeadOfLineDataKey)
+                self.deleteLeadAtIndexPath = nil
+            }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
             loading.detailsLabelText = "Please check your Internet connection!"

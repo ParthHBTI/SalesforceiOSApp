@@ -16,6 +16,7 @@ import MBProgressHUD
 
 protocol CreateNewAccDelegate {
     func getValFromAccVC(params:Bool)
+    func accOfflineUpdateData(dataArr: NSMutableArray)
 }
 
 class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, ExecuteQueryDelegate {
@@ -30,10 +31,11 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     @IBOutlet weak var saveBtn: UIButton!
     @IBOutlet weak var cancleBtn: UIButton!
     @IBOutlet weak var postalWarningLbl: UILabel!
-    var accDataArr:NSMutableArray? = NSMutableArray()
+    var accDataArr:AnyObject = NSMutableArray()
     var accOfflineArr: AnyObject = NSMutableArray()
     var flag: Bool = false
     var accountDataDic:AnyObject = []
+    var indexForOflineUpdate = Int()
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var delegate: CreateNewAccDelegate?
@@ -78,14 +80,6 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
         }
     }
     
-    /*func backAction() {
-     for controller: UIViewController in self.navigationController!.viewControllers {
-     if (controller is AccountViewController) {
-     self.navigationController!.popToViewController(controller, animated: true)
-     }
-     }
-     }*/
-    
     override func viewDidLayoutSubviews()  {
         super.viewDidLayoutSubviews()
         self.scrollView.contentSize = CGSize(width: self.view.frame.size.width, height: self.view.frame.size.height + 100);
@@ -126,12 +120,6 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                         dispatch_after(delayTime, dispatch_get_main_queue()) {
                             self.navigationController?.popViewControllerAnimated(true)
                         }
-                        /*self.accountName.text = nil
-                         self.billingStreet.text = nil
-                         self.billingCity.text = nil
-                         self.billingState.text = nil
-                         self.billingCountry.text = nil
-                         self.billingCountry.text = nil*/
                     })
                 }
             }
@@ -147,7 +135,6 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
             accOfflineArr.addObject(accDataArr)
             let arrOfAccData = NSKeyedArchiver.archivedDataWithRootObject(accOfflineArr)
             defaults.setObject(arrOfAccData, forKey: AccOfflineDataKey)
-            self.delegate!.getValFromAccVC(true)
             dispatch_async(dispatch_get_main_queue(), {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Indeterminate
@@ -168,7 +155,6 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
         
     }
     
-    //update account record
     func updateAccountAction() {
         if exDelegate.isConnectedToNetwork() {
             if self.isSubmitCorrectVal() {
@@ -185,7 +171,6 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                         let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
                         alert.show()
                     })
-                    print( (err))
                 }){ succes in
                     self.delegate!.getValFromAccVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
@@ -202,11 +187,49 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                 }
             }
         } else {
+            if accOfflineArr.count > indexForOflineUpdate   {
+                let OppDataDic = [
+                    "Name" : accountName.text!,
+                    "BillingStreet" : billingStreet.text!,
+                    "BillingCity" : billingCity.text!,
+                    "BillingState" : billingState.text!,
+                    "BillingCountry" : billingCountry.text!,
+                    "BillingPostalCode" : postalCode.text!
+                    ]
+                let offlineUpdatedArr = NSMutableArray()
+                for (key, value) in OppDataDic {                     let objectDic = NSMutableDictionary()
+                    objectDic.setObject(key, forKey: KeyName)
+                    objectDic.setObject(value, forKey: KeyValue)
+                    offlineUpdatedArr.addObject(objectDic)
+                }
+                
+                accOfflineArr.setObject(OppDataDic, atIndex: indexForOflineUpdate )
+                self.delegate!.getValFromAccVC(true)
+                self.delegate!.accOfflineUpdateData(offlineUpdatedArr as NSMutableArray)
+                let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(accOfflineArr)
+                defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
+            }
+            //            else {
+            //                let OppDataDic = [
+            //                    "Name" : opportunityName.text!,
+            //                    "CloseDate" : closeDate.text!,
+            //                    "Amount" : amount.text!,
+            //                    "StageName" : stage.text!,
+            //                    ]
+            //                OppOnlineUpdateArr.setObject(OppDataDic, atIndex: indexForOflineUpdate - OppOfflineArr.count)
+            //                let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
+            //                defaults.setObject(arrOfOppData, forKey: OppOnlineDataKey)
+            //            }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
+            loading.detailsLabelText = "Updating!"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                self.navigationController?.popViewControllerAnimated(true)
+            }
+            
         }
     }
     

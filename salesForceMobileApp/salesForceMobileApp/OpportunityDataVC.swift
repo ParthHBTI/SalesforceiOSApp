@@ -68,6 +68,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     
     func executeQuery()  {
         getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex) as! NSMutableDictionary
+        opportunityDataArr.removeAllObjects()
         self.isOpportunityDataNil()
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()

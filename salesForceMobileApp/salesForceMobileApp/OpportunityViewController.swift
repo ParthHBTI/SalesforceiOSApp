@@ -30,7 +30,6 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
         exDelegate.delegate = self
         self.title = "Opportunity View"
         self.setNavigationBarItem()
-        //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
            }
@@ -42,9 +41,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
         })
     }
     
-    //func addRightBarButtonWithImage1(buttonImage: UIImage) {
-    //let rightButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
-    func addRightBarButtonWithImage1() {
+        func addRightBarButtonWithImage1() {
         //let navBarAddBtn: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "addImg"), style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.toggleRight1))
         let navBarAddBtn: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(self.toggleRight1))
         navigationItem.rightBarButtonItem = navBarAddBtn;

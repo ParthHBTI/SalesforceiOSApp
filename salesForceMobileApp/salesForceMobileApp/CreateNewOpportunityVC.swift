@@ -147,7 +147,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
                     })
                     print( (err))
                 }) { succes in
-                    self.delegate!.getValFromOppVC(true)
+//                    self.delegate!.getValFromOppVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
                         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                         loading.mode = MBProgressHUDMode.Indeterminate
@@ -158,10 +158,6 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
                         dispatch_after(delayTime, dispatch_get_main_queue()) {
                             self.navigationController?.popViewControllerAnimated(true)
                         }
-                        /*self.opportunityName.text = nil
-                         self.closeDate.text = nil
-                         self.amount.text = nil
-                         self.stage.text = nil*/
                     })
                 }
             }
@@ -179,7 +175,6 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
             dispatch_async(dispatch_get_main_queue(), {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
-            //loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Opporcunity is creating!"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -249,7 +244,6 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
                         let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
                         alert.show()
                     })
-                    print( (err))
                 }){ succes in
                     self.delegate!.getValFromOppVC(true)
                     dispatch_async(dispatch_get_main_queue(), {

@@ -102,7 +102,7 @@ class CreateNewContactVC : TextFieldViewController, SFRestDelegate,ExecuteQueryD
                     })
                     print( (err))
                 }) { succes in
-                    self.delegate!.getValFromContactVC(true)
+//                    self.delegate!.getValFromContactVC(true)
                     dispatch_async(dispatch_get_main_queue(), {
                         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                         loading.mode = MBProgressHUDMode.Indeterminate

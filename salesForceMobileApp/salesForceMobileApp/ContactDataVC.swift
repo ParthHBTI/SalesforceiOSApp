@@ -67,6 +67,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     
     func executeQuery()  {
         getResponseArr = exDelegate.resArr.objectAtIndex(parentIndex) as! NSMutableDictionary
+        contactDataArr.removeAllObjects()
         self.isContactDataNil()
         dispatch_async(dispatch_get_main_queue(), {
             self.tableView.reloadData()

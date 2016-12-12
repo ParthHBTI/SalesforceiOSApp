@@ -62,10 +62,18 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                    // self.tableView.reloadData()
                 //})
             //}
-            
             if exDelegate.isConnectedToNetwork() {
                 exDelegate.leadQueryDe("lead")
             }
+//            else if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
+//                getResponseArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSDictionary
+//                self.manageLeadData()
+//                dispatch_async(dispatch_get_main_queue(), {
+//                    //print(self.leadOfLineArr)
+//                    self.tableView.reloadData()
+//                })
+//            }
+            
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Updated Successfully!"
@@ -81,6 +89,11 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         }
         isUpdatedSuccessfully = false
         dowloadAttachment()
+    }
+    
+    
+    func updateOfflineLead(getOfflineLeadArr: NSMutableArray) {
+        leadArr = getOfflineLeadArr
     }
     
     func configureTableView() {

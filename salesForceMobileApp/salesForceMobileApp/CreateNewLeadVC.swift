@@ -17,7 +17,10 @@ import MBProgressHUD
 
 protocol CreateNewLeadDelegate {
     func getValFromLeadVC(params:Bool)
-}
+    func updateOfflineLead(sendOfflineLeadArr: NSMutableArray)
+    
+    }
+
 
 class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDelegate, AccountListDelegate {
     
@@ -184,14 +187,29 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
         } else {
             
             if leadOfLineArr.count > updateOfflineLeadAtIndex {
-                let leadData : NSMutableDictionary = [:]
+                /*let leadData : NSMutableDictionary = [:]
                 leadData.setObject(lastName.text!, forKey: "LastName")
                 leadData.setObject(companyName.text!, forKey: "Company")
-                leadData.setObject(leadStatus.text!, forKey: "Status")
-                leadOfLineArr.setObject(leadData, atIndex: updateOfflineLeadAtIndex )
+                leadData.setObject(leadStatus.text!, forKey: "Status")*/
+                let leadDataDic = [
+                    "Last Name" : lastName.text!,
+                    "Company" : companyName.text!,
+                    "Status" : leadStatus.text!
+                ]
+                leadOfLineArr.setObject(leadDataDic, atIndex: updateOfflineLeadAtIndex )
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
                 defaults.setObject(arrOfLeadData, forKey: LeadOfLineDataKey)
+                let leadDataArray = NSMutableArray()
+                for (key,val) in leadDataDic {
+                        let objectDic = NSMutableDictionary()
+                        if val is String {
+                            objectDic.setObject(key, forKey: KeyName)
+                            objectDic.setObject(val, forKey: KeyValue)
+                        }
+                        leadDataArray.addObject(objectDic)
+                }
                 //self.delegate!.getValFromLeadVC(true)
+                self.delegate?.updateOfflineLead(leadDataArray)
                 dispatch_async(dispatch_get_main_queue(), {
                     let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                     loading.mode = MBProgressHUDMode.Indeterminate

@@ -28,7 +28,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     var createLeadDelegate: CreateNewLeadDelegate?
     var deleteLeadAtIndexPath: NSIndexPath? = nil
     var delObjAtId: String = " "
-    
+    var isFirstLoaded:Bool = false
     
     var  client:ZKSforceClient?
     var  results:ZKQueryResult?
@@ -37,6 +37,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         super.viewDidLoad()
         exDelegate.delegate = self
         self.title = "Leads View"
+        isFirstLoaded = true
         self.setNavigationBarItem()
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
@@ -48,7 +49,11 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+        if !isFirstLoaded {
+            if exDelegate.isConnectedToNetwork() {
+            exDelegate.leadQueryDe("lead")
+            }
+        }
         if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
             leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
@@ -58,12 +63,8 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
         }
         self.setNavigationBarItem()
         if isCreatedSuccessfully {
-            //            if !isFirstLoaded {
-            //                exDelegate.leadQueryDe("lead")
-            //            }
             let defaults = NSUserDefaults.standardUserDefaults()
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
             if exDelegate.isConnectedToNetwork() {
                 exDelegate.leadQueryDe("lead")
             } else if let arrayOfObjectsData = defaults.objectForKey(LeadOnLineDataKey) as? NSData {
@@ -77,6 +78,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate, CreateNewLeadD
             loading.hide(true, afterDelay:2)
             loading.removeFromSuperViewOnHide = true
         }
+        isFirstLoaded = false
         isCreatedSuccessfully = false
     }
     

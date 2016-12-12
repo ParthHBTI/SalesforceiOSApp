@@ -75,11 +75,28 @@
                             <action selector="convertLead:" destination="c3H-ux-4zZ" eventType="touchUpInside" id="xIk-5j-dve"/>
                         </connections>
                     </button>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="notConnected" translatesAutoresizingMaskIntoConstraints="NO" id="ra0-PW-hsp">
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="30" id="7PP-ww-ae9"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="7PP-ww-ae9"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="constraints">
+                                <include reference="7PP-ww-ae9"/>
+                            </mask>
+                        </variation>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="I30-9I-EnW" firstAttribute="leading" secondItem="ppM-43-tik" secondAttribute="trailing" constant="8" id="0sI-CM-qrq">
                         <variation key="heightClass=regular-widthClass=compact" constant="8"/>
                     </constraint>
+                    <constraint firstItem="ra0-PW-hsp" firstAttribute="leading" secondItem="b6u-4L-H5f" secondAttribute="trailing" constant="14" id="9bR-L0-9J1"/>
                     <constraint firstItem="b6u-4L-H5f" firstAttribute="centerY" secondItem="I30-9I-EnW" secondAttribute="centerY" id="AEp-bI-UPZ">
                         <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                     </constraint>
@@ -90,32 +107,54 @@
                         <variation key="heightClass=regular-widthClass=compact" constant="19"/>
                     </constraint>
                     <constraint firstAttribute="trailingMargin" secondItem="b6u-4L-H5f" secondAttribute="trailing" id="HLH-ln-ZBW"/>
+                    <constraint firstItem="ra0-PW-hsp" firstAttribute="trailing" secondItem="eWK-b2-p7R" secondAttribute="trailingMargin" id="MUR-I7-g3M"/>
+                    <constraint firstItem="ra0-PW-hsp" firstAttribute="centerY" secondItem="b6u-4L-H5f" secondAttribute="centerY" id="Nvj-cx-rTB"/>
+                    <constraint firstItem="ra0-PW-hsp" firstAttribute="leading" secondItem="b6u-4L-H5f" secondAttribute="trailing" constant="14" id="UzO-ln-hMk"/>
+                    <constraint firstItem="ra0-PW-hsp" firstAttribute="height" secondItem="b6u-4L-H5f" secondAttribute="height" id="XMa-2g-85Y"/>
+                    <constraint firstItem="ra0-PW-hsp" firstAttribute="trailing" secondItem="eWK-b2-p7R" secondAttribute="trailingMargin" id="Zgz-xJ-1gq"/>
                     <constraint firstItem="ppM-43-tik" firstAttribute="leading" secondItem="eWK-b2-p7R" secondAttribute="leading" id="c9f-ya-sBc">
                         <variation key="heightClass=regular-widthClass=compact" constant="10"/>
                     </constraint>
                     <constraint firstAttribute="bottom" secondItem="2af-K2-awZ" secondAttribute="bottom" id="cTK-ZH-LP4"/>
                     <constraint firstItem="b6u-4L-H5f" firstAttribute="leading" secondItem="I30-9I-EnW" secondAttribute="trailing" constant="31" id="kIp-AF-9Ae"/>
                     <constraint firstItem="2af-K2-awZ" firstAttribute="width" secondItem="eWK-b2-p7R" secondAttribute="width" id="vF7-nU-HST"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="ra0-PW-hsp" secondAttribute="trailing" id="ys1-9y-1ER"/>
                     <constraint firstItem="2af-K2-awZ" firstAttribute="centerX" secondItem="eWK-b2-p7R" secondAttribute="centerX" id="ztE-n1-6lX"/>
                 </constraints>
                 <variation key="default">
                     <mask key="subviews">
                         <exclude reference="b6u-4L-H5f"/>
+                        <exclude reference="ra0-PW-hsp"/>
                     </mask>
                     <mask key="constraints">
                         <exclude reference="AEp-bI-UPZ"/>
                         <exclude reference="HLH-ln-ZBW"/>
                         <exclude reference="kIp-AF-9Ae"/>
+                        <exclude reference="9bR-L0-9J1"/>
+                        <exclude reference="MUR-I7-g3M"/>
+                        <exclude reference="Nvj-cx-rTB"/>
+                        <exclude reference="UzO-ln-hMk"/>
+                        <exclude reference="XMa-2g-85Y"/>
+                        <exclude reference="Zgz-xJ-1gq"/>
+                        <exclude reference="ys1-9y-1ER"/>
                     </mask>
                 </variation>
                 <variation key="heightClass=regular-widthClass=compact">
                     <mask key="subviews">
                         <include reference="b6u-4L-H5f"/>
+                        <include reference="ra0-PW-hsp"/>
                     </mask>
                     <mask key="constraints">
                         <include reference="AEp-bI-UPZ"/>
-                        <include reference="HLH-ln-ZBW"/>
+                        <exclude reference="HLH-ln-ZBW"/>
                         <include reference="kIp-AF-9Ae"/>
+                        <include reference="9bR-L0-9J1"/>
+                        <exclude reference="MUR-I7-g3M"/>
+                        <include reference="Nvj-cx-rTB"/>
+                        <exclude reference="UzO-ln-hMk"/>
+                        <include reference="XMa-2g-85Y"/>
+                        <include reference="Zgz-xJ-1gq"/>
+                        <exclude reference="ys1-9y-1ER"/>
                     </mask>
                 </variation>
             </tableViewCellContentView>
@@ -124,11 +163,13 @@
                 <outlet property="convertButton" destination="b6u-4L-H5f" id="WC9-bA-xHJ"/>
                 <outlet property="dataImage" destination="ppM-43-tik" id="xdO-QO-GUo"/>
                 <outlet property="dataText" destination="I30-9I-EnW" id="vsj-dK-z9n"/>
+                <outlet property="notConnectedImage" destination="ra0-PW-hsp" id="YVs-2Z-scP"/>
             </connections>
             <point key="canvasLocation" x="249" y="183"/>
         </tableViewCell>
     </objects>
     <resources>
         <image name="ic_menu_black_24dp" width="24" height="24"/>
+        <image name="notConnected" width="391" height="389"/>
     </resources>
 </document>

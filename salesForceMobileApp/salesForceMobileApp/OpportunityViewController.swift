@@ -7,6 +7,7 @@
 //
 let OppOnlineDataKey = "OpportunityOnlineDataKey"
 let OppOfflineDataKey = "OpportunityOfflineDataKey"
+let offlineData = OfflineShrinkData()
 
 import UIKit
 import SalesforceRestAPI
@@ -19,6 +20,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     var oppOnlineArr = NSMutableArray()
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var isFirstLoad : Bool = false
+    
     var delObjAtId:String = " "
     var delOppAtIndexPath:NSIndexPath? = nil
     var isCreatedSuccessfully:Bool = false
@@ -95,36 +97,9 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-//            if OppOfflineArr.count > 1 {
-//            for  index in 0..<OppOfflineArr.count  {
-//                let fields = [
-//                    "Name" : OppOfflineArr.objectAtIndex(index)["Name"]  ,
-//                    "CloseDate" : OppOfflineArr.objectAtIndex(index)["CloseDate"] as? String,
-//                    "Amount" : OppOfflineArr.objectAtIndex(index)["Amount"] as? String,
-//                    "StageName" :OppOfflineArr.objectAtIndex(index)["StageName"] as? String,
-//                    ]
-//                SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: { err in
-//                    dispatch_async(dispatch_get_main_queue(), {
-//                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-//                        alert.show()
-//                        print(err?.localizedDescription)
-//                    })
-//                    print( (err))
-//                }) { succes in
-//                    //self.delegate!.getValFromOppVC(true)
-//                    dispatch_async(dispatch_get_main_queue(), {
-//                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-//                        loading.mode = MBProgressHUDMode.Indeterminate
-//                        loading.detailsLabelText = "Offline Opportunity is Uploading!"
-//                        loading.removeFromSuperViewOnHide = true
-//                        loading.hide(true, afterDelay: 2)
-//                        //self.OppOfflineArr.removeObjectAtIndex(index)
-//                    })
-//                }
-//               print("\(index) and arrValue is \(OppOfflineArr[index])")
-//            }
-//            } else {}
-            
+            if oppOfflineArr.count > 1 {
+                offlineData.oppOflineShrinkData(oppOfflineArr as! NSMutableArray)
+            }
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true

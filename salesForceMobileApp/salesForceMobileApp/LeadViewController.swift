@@ -93,6 +93,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
             
             }, completeBlock: { success in
                 print(success)
+                
         })
     }
     
@@ -136,6 +137,9 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
+            if leadOfLineArr.count > 1 {
+                offlineData.leadOfflineShrinkData(leadOfLineArr as! NSMutableArray)
+            }
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true

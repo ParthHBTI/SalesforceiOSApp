@@ -184,9 +184,9 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
             opportunity1.setFieldValue("1000", field: "Amount")
             opportunity1.setFieldValue("opportunity111", field: "StageName")
             
+            let dataArray1:AnyObject = [opportunity, opportunity1]
 
-
-            client?.performCreate([opportunity,opportunity1], failBlock: { exp in
+            client?.performCreate(dataArray1 as! [AnyObject], failBlock: { exp in
                 print(exp)
 
                 }, completeBlock: { results in

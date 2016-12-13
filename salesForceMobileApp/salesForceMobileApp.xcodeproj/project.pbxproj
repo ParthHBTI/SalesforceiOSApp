@@ -66,7 +66,6 @@
 		73BAB8531DB8DBA200586320 /* OpportunityDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BAB8521DB8DBA200586320 /* OpportunityDataCell.swift */; };
 		73BAB8551DB8DBCA00586320 /* ContactDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BAB8541DB8DBCA00586320 /* ContactDataVC.swift */; };
 		73BAB8571DB8DBE300586320 /* OpportunityDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BAB8561DB8DBE300586320 /* OpportunityDataVC.swift */; };
-		73CD82DA1DBF42D100B7CD40 /* Lead.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CD82D91DBF42D100B7CD40 /* Lead.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -136,7 +135,6 @@
 		73BAB8521DB8DBA200586320 /* OpportunityDataCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpportunityDataCell.swift; sourceTree = "<group>"; };
 		73BAB8541DB8DBCA00586320 /* ContactDataVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactDataVC.swift; sourceTree = "<group>"; };
 		73BAB8561DB8DBE300586320 /* OpportunityDataVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpportunityDataVC.swift; sourceTree = "<group>"; };
-		73CD82D91DBF42D100B7CD40 /* Lead.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lead.swift; sourceTree = "<group>"; };
 		762732C14CFE40A989C3AD70 /* Pods-salesForceMobileApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-salesForceMobileApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-salesForceMobileApp/Pods-salesForceMobileApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -284,7 +282,6 @@
 				73BAB84C1DB8D9F200586320 /* AccountDataVC.swift */,
 				73BAB8541DB8DBCA00586320 /* ContactDataVC.swift */,
 				73BAB8561DB8DBE300586320 /* OpportunityDataVC.swift */,
-				73CD82D91DBF42D100B7CD40 /* Lead.swift */,
 				73B8B9B71DD5AA6A00933451 /* TextFieldViewController.swift */,
 			);
 			name = Classes;
@@ -484,7 +481,6 @@
 				04B776391DEBF69E009A7213 /* AccountListViewController.swift in Sources */,
 				04F96F361DAF75E0000D715A /* ExSlideMenuController.swift in Sources */,
 				044D66BC1DE5AD620071D817 /* ConvertLeadViewController.swift in Sources */,
-				73CD82DA1DBF42D100B7CD40 /* Lead.swift in Sources */,
 				73BAB84D1DB8D9F200586320 /* AccountDataVC.swift in Sources */,
 				73BAB8571DB8DBE300586320 /* OpportunityDataVC.swift in Sources */,
 				044D66BA1DE5AD1B0071D817 /* NoCopyPasteUITextField.swift in Sources */,

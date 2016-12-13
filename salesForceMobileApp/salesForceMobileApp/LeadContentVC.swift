@@ -75,9 +75,13 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     }
     
     
-    func updateOfflineLead(getOfflineLeadArr: NSMutableArray) {
+    func getOfflineUpdatedLeadData(getOfflineLeadArr: NSMutableArray) {
         leadArr = getOfflineLeadArr
-        //getResponseArr = getOfflineLeadArr
+        let offlineUpdatedLeadData : NSMutableDictionary = [:]
+        for var data in getOfflineLeadArr {
+        offlineUpdatedLeadData.setObject(data["KeyValue"] as! String, forKey:data["KeyName"] as! String)
+        }
+        getResponseArr = offlineUpdatedLeadData
     }
     
     func configureTableView() {

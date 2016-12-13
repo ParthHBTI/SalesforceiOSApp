@@ -17,7 +17,7 @@ import MBProgressHUD
 
 protocol CreateNewLeadDelegate {
     func getValFromLeadVC(params:Bool)
-    func updateOfflineLead(sendOfflineLeadArr: NSMutableArray)
+    func getOfflineUpdatedLeadData(sendOfflineLeadArr: NSMutableArray)
     
     }
 
@@ -56,6 +56,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
         //        let backBarButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "back"), style: .Plain, target: self, varion: #selector(CreateNewLeadVC.backAction))
         //        self.navigationItem.setLeftBarButtonItem(backBarButtonItem, animated: true)
         let navBarUpdateBtn: UIBarButtonItem = UIBarButtonItem(title: "Update", style: .Plain, target: self, action: #selector(updateLeadAction))
+        
         let navColor = navigationController?.navigationBar.barTintColor
         saveBtn.backgroundColor = navColor
         saveBtn.layer.cornerRadius = 5.0
@@ -190,24 +191,24 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
                 leadData.setObject(lastName.text!, forKey: "LastName")
                 leadData.setObject(companyName.text!, forKey: "Company")
                 leadData.setObject(leadStatus.text!, forKey: "Status")*/
-                let leadDataDic = [
+                let leadDataArr = [
                     "LastName" : lastName.text!,
                     "Company" : companyName.text!,
                     "Status" : leadStatus.text!
                 ]
                 let leadOfflineArray = NSMutableArray()
-                for (key,val) in leadDataDic {
+                for (key,val) in leadDataArr {
                     let objectDic = NSMutableDictionary()
                     objectDic.setObject(key, forKey: KeyName)
                     objectDic.setObject(val, forKey: KeyValue)
                     leadOfflineArray.addObject(objectDic)
                 }
-                leadOfLineArr.setObject(leadDataDic, atIndex: updateOfflineLeadAtIndex )
+                leadOfLineArr.setObject(leadDataArr, atIndex: updateOfflineLeadAtIndex )
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
                 defaults.setObject(arrOfLeadData, forKey: LeadOfLineDataKey)
                 
                 self.delegate!.getValFromLeadVC(true)
-                self.delegate!.updateOfflineLead(leadOfflineArray as NSMutableArray)
+                self.delegate!.getOfflineUpdatedLeadData(leadOfflineArray as NSMutableArray)
                 dispatch_async(dispatch_get_main_queue(), {
                     let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                     loading.mode = MBProgressHUDMode.Indeterminate
@@ -337,6 +338,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
         print(accointDetail)
     }
     
+    
     func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
         //let attachmentID = dataResponse["id"] as! String
             }
@@ -358,5 +360,6 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
         self.log(.Debug, msg: "requestDidTimeout: \(request)")
         // Add your failed error handling here
     }
+    
 
 }

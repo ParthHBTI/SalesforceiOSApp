@@ -58,6 +58,7 @@
 		731BC9E01DB4F86600B3C6C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 731BC9DF1DB4F86600B3C6C7 /* Images.xcassets */; };
 		732D9DB81DB88A23002AEDBA /* LeadContentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732D9DB71DB88A23002AEDBA /* LeadContentVC.swift */; };
 		732D9DBA1DB88EC7002AEDBA /* LeadContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732D9DB91DB88EC7002AEDBA /* LeadContentCell.swift */; };
+		73311EE01E00153E00DF4EEC /* OfflineSyncData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73311EDF1E00153E00DF4EEC /* OfflineSyncData.swift */; };
 		733CB6301DD1DE920079F7CC /* UITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733CB62F1DD1DE920079F7CC /* UITableViewController.swift */; };
 		73B8B9B81DD5AA6A00933451 /* TextFieldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B8B9B71DD5AA6A00933451 /* TextFieldViewController.swift */; };
 		73BAB84D1DB8D9F200586320 /* AccountDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BAB84C1DB8D9F200586320 /* AccountDataVC.swift */; };
@@ -127,6 +128,7 @@
 		732B386E1DD34ACB00945BCE /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AFNetworking.framework; path = "Pods/../build/Debug-iphoneos/AFNetworking/AFNetworking.framework"; sourceTree = "<group>"; };
 		732D9DB71DB88A23002AEDBA /* LeadContentVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadContentVC.swift; sourceTree = "<group>"; };
 		732D9DB91DB88EC7002AEDBA /* LeadContentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadContentCell.swift; sourceTree = "<group>"; };
+		73311EDF1E00153E00DF4EEC /* OfflineSyncData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSyncData.swift; sourceTree = "<group>"; };
 		733CB62F1DD1DE920079F7CC /* UITableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewController.swift; sourceTree = "<group>"; };
 		73B8B9B71DD5AA6A00933451 /* TextFieldViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldViewController.swift; sourceTree = "<group>"; };
 		73BAB84C1DB8D9F200586320 /* AccountDataVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountDataVC.swift; sourceTree = "<group>"; };
@@ -277,6 +279,7 @@
 				04F96F331DAF75E0000D715A /* ExSlideMenuController.swift */,
 				4FD6C49D1B755242002F9F90 /* InitialViewController.swift */,
 				4FD6C4791B754AF1002F9F90 /* AppDelegate.swift */,
+				73311EDF1E00153E00DF4EEC /* OfflineSyncData.swift */,
 				4F393A281C3C8BCD00B3EA13 /* main.swift */,
 				732D9DB71DB88A23002AEDBA /* LeadContentVC.swift */,
 				73BAB84C1DB8D9F200586320 /* AccountDataVC.swift */,
@@ -452,6 +455,7 @@
 				73BAB8551DB8DBCA00586320 /* ContactDataVC.swift in Sources */,
 				04F96F1D1DAF740C000D715A /* UIImage.swift in Sources */,
 				04F96F1E1DAF740C000D715A /* UIView.swift in Sources */,
+				73311EE01E00153E00DF4EEC /* OfflineSyncData.swift in Sources */,
 				04F96F3A1DAF762E000D715A /* ContactViewController.swift in Sources */,
 				04DB2FA51DB4ED3E00C4519F /* CreateNewAccountVC.swift in Sources */,
 				04F96F1C1DAF740C000D715A /* UIImageView.swift in Sources */,

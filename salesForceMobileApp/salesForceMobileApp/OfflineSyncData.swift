@@ -10,7 +10,7 @@ import UIKit
 import ZKSforce
 import SalesforceSDKCore
 
-class OfflineShrinkData: UIViewController {
+class OfflineSyncData: UIViewController {
 
     var  client:ZKSforceClient?
 

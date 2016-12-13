@@ -14,7 +14,7 @@ import SmartStore.SalesforceSDKManagerWithSmartStore
 import SmartSync
 import SmartStore
 import MBProgressHUD
-
+import ZKSforce
 
 protocol CreateNewOppDelegate {
     func getValFromOppVC(params:Bool)
@@ -46,6 +46,10 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var delegate:CreateNewOppDelegate?
     
+    var  client:ZKSforceClient?
+    var  results:ZKQueryResult?
+    var sObject: ZKSObject?
+    
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil
@@ -56,6 +60,10 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        client = ZKSforceClient()
+        let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
+        client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
         
         if let arrayOfObjectsData = defaults.objectForKey(OppOfflineDataKey) as? NSData {
             OppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
@@ -128,35 +136,130 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
     
     @IBAction func saveAction(sender: AnyObject) {
         if exDelegate.isConnectedToNetwork() {
-            if self.isSubmitCorrectVal() {
-                let fields = [
-                    "Name" : opportunityName.text!,
-                    "CloseDate" : closeDate.text!,
-                    "Amount" : amount.text!,
-                    "StageName" : stage.text!,
+//            if self.isSubmitCorrectVal() {
+            
+                let Object1 = [
+                    "Name" : "oppo multiple test",
+                    "CloseDate" : "2017-05-05",
+                    "Amount" : "1000",
+                    "StageName" : "Test1",
+                ]
+                
+                let Object2 = [
+                    "Name" : "oppo multiple test1",
+                    "CloseDate" : "2017-05-05",
+                    "Amount" : "1000",
+                    "StageName" : "Test1",
                     ]
-                SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: { err in
-                    dispatch_async(dispatch_get_main_queue(), {
-                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                        alert.show()
-                        print(err?.localizedDescription)
-                    })
-                    print( (err))
-                }) { succes in
-//                    self.delegate!.getValFromOppVC(true)
-                    dispatch_async(dispatch_get_main_queue(), {
-                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                        loading.mode = MBProgressHUDMode.Indeterminate
-                        loading.detailsLabelText = "Opportunity is creating!"
-                        loading.removeFromSuperViewOnHide = true
-                        loading.hide(true, afterDelay: 2)
-                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
-                        dispatch_after(delayTime, dispatch_get_main_queue()) {
-                            self.navigationController?.popViewControllerAnimated(true)
-                        }
-                    })
-                }
-            }
+                
+                let Object3 = [
+                    "Name" : "oppo multiple test2",
+                    "CloseDate" : "2017-05-05",
+                    "Amount" : "1000",
+                    "StageName" : "Test1",
+                ]
+            
+
+            let dataArray:AnyObject = [Object1, Object2, Object3]
+//            let dataArr = NSMutableArray()
+//            for values in (dataArray as? NSArray)! {
+//                let opportunity: AnyObject = ZKSObject.withType("Opportunity")
+//                opportunity.setFieldValue(values.valueForKey("Name") as? String, field: "Name")
+//                opportunity.setFieldValue(values.valueForKey("CloseDate") as? String, field: "CloseDate")
+//                opportunity.setFieldValue(values.valueForKey("Amount") as? String, field: "Amount")
+//                opportunity.setFieldValue(values.valueForKey("StageName") as? String, field: "StageName")
+//                dataArr.addObject(opportunity)
+//            }
+            
+            //let opportunity = ZKSObject(type: "Opportunity")
+            let opportunity: AnyObject = ZKSObject.withType("Opportunity")
+            opportunity.setFieldValue("oppo multiple test2", field: "Name")
+            opportunity.setFieldValue("2017-05-05", field: "CloseDate")
+            opportunity.setFieldValue("1000", field: "Amount")
+            opportunity.setFieldValue("Test1", field: "StageName")
+            
+            let opportunity1: AnyObject = ZKSObject.withType("Opportunity")
+            opportunity1.setFieldValue("opportunity1", field: "Name")
+            opportunity1.setFieldValue("2017-05-05", field: "CloseDate")
+            opportunity1.setFieldValue("1000", field: "Amount")
+            opportunity1.setFieldValue("opportunity111", field: "StageName")
+            
+
+
+            client?.performCreate([opportunity,opportunity1], failBlock: { exp in
+                print(exp)
+
+                }, completeBlock: { results in
+                    print(results)
+                    
+                    for var resultV  in results {
+//                        let result = results.last as? ZKSaveResult
+                           let result = resultV as? ZKSaveResult
+                        print(result?.errors )
+                        print(result?.id )
+                        print(result?.success)
+                    }
+                    
+                    
+                    
+                    
+                  
+            })
+            
+                
+//                //client?.create(opportunity as! [AnyObject])
+//            let sr:ZKSaveResult = results![0] as! ZKSaveResult
+//            if sr.success {
+//                print("new contact id \(sr.id)")
+//            }
+//            else {
+//                print("error creating contact \(sr.statusCode) \(sr.message)")
+//            }
+//
+//            client?.create(opportunity as! [AnyObject])
+//            client?.performCreate(opportunity as! [AnyObject], failBlock: {response in
+//                print(response)
+//                
+//                }, completeBlock: { reponse in
+//                    print(reponse)
+//            })
+
+//            let results = client!.create([opportunity])
+//            let sResult: ZKSaveResult = results[0] as! ZKSaveResult
+//            print(sResult)
+//            
+            
+            
+                           //
+//                let fields = [
+//                    "Name" : opportunityName.text!,
+//                    "CloseDate" : closeDate.text!,
+//                    "Amount" : amount.text!,
+//                    "StageName" : stage.text!,
+//                    ]
+//                
+//                SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: { err in
+//                    dispatch_async(dispatch_get_main_queue(), {
+//                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+//                        alert.show()
+//                        print(err?.localizedDescription)
+//                    })
+//                    print( (err))
+//                }) { succes in
+////                    self.delegate!.getValFromOppVC(true)
+//                    dispatch_async(dispatch_get_main_queue(), {
+//                        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+//                        loading.mode = MBProgressHUDMode.Indeterminate
+//                        loading.detailsLabelText = "Opportunity is creating!"
+//                        loading.removeFromSuperViewOnHide = true
+//                        loading.hide(true, afterDelay: 2)
+//                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+//                        dispatch_after(delayTime, dispatch_get_main_queue()) {
+//                            self.navigationController?.popViewControllerAnimated(true)
+//                        }
+//                    })
+//                }
+            //}
         }
         else {
             let OppDataArr = [
@@ -181,6 +284,18 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
             })
         }
     }
+    
+//    func createObjectResult(results: [Any], error: Error?, context: Any) {
+//        if results && !error {
+//            for saveResult in (results as! ZKSaveResult) {
+//                print("saveResult: \(saveResult)")
+//            }
+//        }
+//        else {
+//            print("Error : \(error!.description)")
+//            //take care of error
+//        }
+//    }
     
     @IBAction func cancelAction(sender: AnyObject) {
         

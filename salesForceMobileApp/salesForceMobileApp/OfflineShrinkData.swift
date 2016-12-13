@@ -34,6 +34,7 @@ class OfflineShrinkData: UIViewController {
                     print(result?.errors )
                     print(result?.id )
                     print(result?.success)
+                    defaults.removeObjectForKey(LeadOfLineDataKey)
                 }
         })
 
@@ -62,6 +63,7 @@ class OfflineShrinkData: UIViewController {
                     print(result?.errors )
                     print(result?.id )
                     print(result?.success)
+                    defaults.removeObjectForKey(AccOfflineDataKey)
                 }
         })
 
@@ -88,6 +90,7 @@ class OfflineShrinkData: UIViewController {
                     print(result?.errors )
                     print(result?.id )
                     print(result?.success)
+                    defaults.removeObjectForKey(ContactOfLineDataKey)
                 }
         })
 
@@ -109,11 +112,11 @@ class OfflineShrinkData: UIViewController {
             }, completeBlock: { results in
                 print(results)
                 for var resultV  in results {
-//                  let result = results.last as? ZKSaveResult
                     let result = resultV as? ZKSaveResult
                     print(result?.errors )
                     print(result?.id )
                     print(result?.success)
+                    defaults.removeObjectForKey(OppOfflineDataKey)
                 }
         })
     }

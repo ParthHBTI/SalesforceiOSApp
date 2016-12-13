@@ -93,7 +93,6 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         }
         isUpdatedSuccessfully = false
         dowloadAttachment()
-        
     }
     
     func configureTableView() {
@@ -125,12 +124,27 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                 contactDataArr.addObject(objectDic)
             }
         } else {
-            for (key, value) in getResponseArr{
-                let objectDic = NSMutableDictionary()
-                objectDic.setObject(key, forKey: KeyName)
-                objectDic.setObject(value, forKey: KeyValue)
-                contactDataArr.addObject(objectDic)
+            for (key,val) in getResponseArr {
+                if let _ = nullToNil(val) {
+                    let objectDic = NSMutableDictionary()
+                    if val is Double {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(String(val), forKey: KeyValue)
+                    } else  if val is String {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val, forKey: KeyValue)
+                    } else if key as! String == "Owner" {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val["Name"], forKey: KeyValue)
+                    } else if key as! String == "attributes" {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val["type"], forKey: KeyValue)
+                    }
+                    contactDataArr.addObject(objectDic)
+                }
             }
+            
+            
         }
     }
     

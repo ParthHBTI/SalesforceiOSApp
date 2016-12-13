@@ -22,6 +22,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     var cellTitleArr: NSArray = ["Opportunity Owner:","Opportunity Name:","Account Name:","Lead Source:","Stage Name:","Type:","Ammount:","Probability:","Is Private:","Created Date:","Close Date:","Is Closed:","Is Deleted:","Last Modified Date:"]
     var leadID = String()
     var isOfflineData = false
+    var section = Int()
     var isUpdatedSuccessfully:Bool = false
     var parentIndex:Int = 0
     @IBOutlet weak var feedSegment: UISegmentedControl!
@@ -126,6 +127,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
         vc.opportunityDataDic = self.getResponseArr
         vc.flag = true
+        vc.section = section
         vc.indexForOflineUpdate = parentIndex
         self.navigationController?.pushViewController(vc, animated: true)
         vc.delegate = self
@@ -141,12 +143,27 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
                 opportunityDataArr.addObject(objectDic)
             }
         } else {
-            for (key, value) in getResponseArr{
-                let objectDic = NSMutableDictionary()
-                objectDic.setObject(key, forKey: KeyName)
-                objectDic.setObject(value, forKey: KeyValue)
-                opportunityDataArr.addObject(objectDic)
+            for (key,val) in getResponseArr {
+                if let _ = nullToNil(val) {
+                    let objectDic = NSMutableDictionary()
+                    if val is Double {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(String(val), forKey: KeyValue)
+                    } else  if val is String {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val, forKey: KeyValue)
+                    } else if key as! String == "Owner" {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val["Name"], forKey: KeyValue)
+                    } else if key as! String == "attributes" {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val["type"], forKey: KeyValue)
+                    }
+                    opportunityDataArr.addObject(objectDic)
+                }
             }
+
+            
         }
     }
     

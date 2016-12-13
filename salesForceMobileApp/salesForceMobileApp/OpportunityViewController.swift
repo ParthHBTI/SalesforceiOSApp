@@ -183,6 +183,7 @@ extension OpportunityViewController : UITableViewDataSource {
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("OpportunityDataVC") as! OpportunityDataVC
         if indexPath.section == 0 {
             subContentsVC.isOfflineData = true
+            subContentsVC.section = indexPath.section
             subContentsVC.getResponseArr = self.oppOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.parentIndex = (indexPath.row)
             self.navigationController?.pushViewController(subContentsVC, animated: true)

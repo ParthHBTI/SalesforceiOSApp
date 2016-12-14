@@ -7,7 +7,7 @@
 //
 let OppOnlineDataKey = "OpportunityOnlineDataKey"
 let OppOfflineDataKey = "OpportunityOfflineDataKey"
-let offlineData = OfflineShrinkData()
+let offlineData = OfflineSyncData()
 
 import UIKit
 import SalesforceRestAPI

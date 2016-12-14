@@ -62,7 +62,6 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
         if let arrayOfObjectsData = defaults.objectForKey(OppOfflineDataKey) as? NSData {
             oppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
@@ -71,7 +70,16 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
         }
         loadOpporchunity()
         if isCreatedSuccessfully {
+            let defaults = NSUserDefaults.standardUserDefaults()
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            if exDelegate.isConnectedToNetwork() {
+                exDelegate.leadQueryDe("Opportunity")
+            } else if let arrayOfObjectsData = defaults.objectForKey(ContactOnLineDataKey) as? NSData {
+                oppOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.tableView.reloadData()
+                })
+            }
             loading.mode = MBProgressHUDMode.Text
             loading.detailsLabelText = "Created Successfully!"
             loading.hide(true, afterDelay:2)
@@ -93,11 +101,10 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     
     func loadOpporchunity() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        //let opportunityDataKey = "opportunityDataKey"
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-            if oppOfflineArr.count > 1 {
+            if oppOfflineArr.count > 0 {
                 offlineData.oppOflineShrinkData(oppOfflineArr as! NSMutableArray)
             }
             loading.detailsLabelText = "Loading Data from Server"

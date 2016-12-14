@@ -105,7 +105,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-            if contactOfLineArr.count > 1 {
+            if contactOfLineArr.count > 0 {
                 offlineData.contactOfflineShrinkData(contactOfLineArr as! NSMutableArray)
             }
             loading.detailsLabelText = "Loading Data from Server"

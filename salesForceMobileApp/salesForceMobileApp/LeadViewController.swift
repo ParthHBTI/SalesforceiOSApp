@@ -112,11 +112,10 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     }
     
     func toggleRight1() {
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
-        self.navigationController?.pushViewController(nv, animated: true)
-        //nv.delegate = self
-    }
+        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
+        nv.objectType = "Lead"
+        navigationController?.pushViewController(nv, animated: true)    }
     
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {

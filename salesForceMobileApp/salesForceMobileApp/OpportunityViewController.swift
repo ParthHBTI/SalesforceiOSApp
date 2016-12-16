@@ -50,8 +50,9 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     }
     
     func toggleRight1() {
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
+        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
+        nv.objectType = "Opporcunity"
         navigationController?.pushViewController(nv, animated: true)
         //nv.delegate = self
     }

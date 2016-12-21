@@ -13,9 +13,9 @@ import SalesforceSDKCore
 import SalesforceNetwork
 import SalesforceRestAPI
 import MBProgressHUD
+
 class CreateObjectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SFRestDelegate {
    
-
     @IBOutlet weak var tableView: UITableView!
     var objDataArr = NSMutableArray()
     var objectType = String()
@@ -24,7 +24,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         super.viewDidLoad()
         
         
-        let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c from FieldInfos__r) from Master_Object__c Where name = '\(objectType)'")
+        let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'" )
         SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
             print(error)
             

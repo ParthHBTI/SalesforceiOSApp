@@ -47,8 +47,9 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     }
     
     func toggleRight1() {
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewAccountVC") as! CreateNewAccountVC
+        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
+        nv.objectType = "Account"
         navigationController?.pushViewController(nv, animated: true)
         //nv.delegate = self
     }
@@ -93,9 +94,9 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-            if accOfflineArr.count > 0 {
-                offlineData.accOfflineShrinkData(accOfflineArr as! NSMutableArray)
-            }
+//            if accOfflineArr.count > 0 {
+//                offlineData.accOfflineShrinkData(accOfflineArr as! NSMutableArray)
+//            }
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true

@@ -192,6 +192,9 @@ extension LeadViewController : UITableViewDataSource {
             cell.notConnectedImage.hidden = true
         }
         
+        cell.detailText.text = leadOnLineArr.objectAtIndex(indexPath.row)["Title"] as? String
+
+        
         
         return cell
     }

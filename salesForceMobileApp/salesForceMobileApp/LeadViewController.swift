@@ -189,10 +189,11 @@ extension LeadViewController : UITableViewDataSource {
             cell.notConnectedImage.hidden = false
         } else {
             cell.dataText.text = leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String
+             cell.detailText.text = leadOnLineArr.objectAtIndex(indexPath.row)["Title"] as? String
             cell.notConnectedImage.hidden = true
         }
         
-        cell.detailText.text = leadOnLineArr.objectAtIndex(indexPath.row)["Title"] as? String
+       
 
         
         

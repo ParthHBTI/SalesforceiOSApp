@@ -141,18 +141,18 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         for data in self.objDataArr {
             fields[ (data["Name"] as? String)!] = data[FieldValueKey]
         }
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
+        loading.detailsLabelText = "Account is creating!"
+        loading.removeFromSuperViewOnHide = true
+        
         SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: {error in
             let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
             alert.show()
             
             }, completeBlock: { succes in
                 dispatch_async(dispatch_get_main_queue(), {
-                    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                    loading.mode = MBProgressHUDMode.Indeterminate
-                    loading.detailsLabelText = "Account is creating!"
-                    loading.removeFromSuperViewOnHide = true
-                    loading.hide(true, afterDelay: 2)
-                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
                     dispatch_after(delayTime, dispatch_get_main_queue()) {
                         self.navigationController?.popViewControllerAnimated(true)
                     }
@@ -167,18 +167,17 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         for data in self.objDataArr {
             fields[ (data["Name"] as? String)!] = data[FieldValueKey]
         }
-
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
+        loading.detailsLabelText = "Contact is creating!"
+        loading.removeFromSuperViewOnHide = true
+        
         SFRestAPI.sharedInstance().performCreateWithObjectType("Contact", fields: fields, failBlock: {error in
             let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
             alert.show()
             }, completeBlock: { succes in
                 dispatch_async(dispatch_get_main_queue(), {
-                    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                    loading.mode = MBProgressHUDMode.Indeterminate
-                    loading.detailsLabelText = "Contact is creating!"
-                    loading.removeFromSuperViewOnHide = true
-                    loading.hide(true, afterDelay: 2)
-                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
                     dispatch_after(delayTime, dispatch_get_main_queue()) {
                         self.navigationController?.popViewControllerAnimated(true)
                     }
@@ -193,17 +192,17 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         for data in self.objDataArr {
             fields[ (data["Name"] as? String)!] = data[FieldValueKey]
         }
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
+        loading.detailsLabelText = "Opportunity is creating!"
+        loading.removeFromSuperViewOnHide = true
+        
         SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: {error in
             let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
             alert.show()
             }, completeBlock: { succes in
                 dispatch_async(dispatch_get_main_queue(), {
-                    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                    loading.mode = MBProgressHUDMode.Indeterminate
-                    loading.detailsLabelText = "Opportunity is creating!"
-                    loading.removeFromSuperViewOnHide = true
-                    loading.hide(true, afterDelay: 2)
-                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
                     dispatch_after(delayTime, dispatch_get_main_queue()) {
                         self.navigationController?.popViewControllerAnimated(true)
                     }

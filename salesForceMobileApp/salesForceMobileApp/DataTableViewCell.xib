@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -26,7 +27,7 @@
                             </constraint>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I30-9I-EnW">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I30-9I-EnW">
                         <rect key="frame" x="88" y="19" width="224" height="42"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="42" id="tMX-bK-3QC">
@@ -37,7 +38,7 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3mV-C0-jwI">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ABC" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3mV-C0-jwI">
                         <rect key="frame" x="88" y="19" width="224" height="42"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="42" id="Gie-2z-g2z">
@@ -107,7 +108,7 @@
                             </mask>
                         </variation>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="daC-o3-nWG">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="daC-o3-nWG">
                         <rect key="frame" x="88" y="19" width="224" height="42"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="42" id="4Ou-za-TTb">
@@ -166,20 +167,20 @@
                         <exclude reference="daC-o3-nWG"/>
                     </mask>
                     <mask key="constraints">
-                        <exclude reference="owc-9x-eHN"/>
-                        <exclude reference="gYC-m5-Pxg"/>
-                        <exclude reference="v7s-7v-doT"/>
-                        <exclude reference="yNb-QI-7t3"/>
-                        <exclude reference="PrL-gp-Luc"/>
-                        <exclude reference="Pwg-WK-kME"/>
-                        <exclude reference="SLE-cF-7cx"/>
-                        <exclude reference="UOS-kj-WCZ"/>
-                        <exclude reference="diE-Jv-Jrl"/>
                         <exclude reference="Ubs-a9-A3E"/>
                         <exclude reference="9cK-bV-ujh"/>
                         <exclude reference="AEp-bI-UPZ"/>
                         <exclude reference="eNG-wH-ota"/>
                         <exclude reference="kIp-AF-9Ae"/>
+                        <exclude reference="PrL-gp-Luc"/>
+                        <exclude reference="Pwg-WK-kME"/>
+                        <exclude reference="SLE-cF-7cx"/>
+                        <exclude reference="UOS-kj-WCZ"/>
+                        <exclude reference="diE-Jv-Jrl"/>
+                        <exclude reference="owc-9x-eHN"/>
+                        <exclude reference="gYC-m5-Pxg"/>
+                        <exclude reference="v7s-7v-doT"/>
+                        <exclude reference="yNb-QI-7t3"/>
                         <exclude reference="MdS-q1-U6D"/>
                         <exclude reference="oau-1T-eDq"/>
                         <exclude reference="qEQ-ok-SrG"/>
@@ -193,20 +194,20 @@
                         <include reference="daC-o3-nWG"/>
                     </mask>
                     <mask key="constraints">
-                        <include reference="owc-9x-eHN"/>
-                        <include reference="gYC-m5-Pxg"/>
-                        <include reference="v7s-7v-doT"/>
-                        <include reference="yNb-QI-7t3"/>
-                        <include reference="PrL-gp-Luc"/>
-                        <exclude reference="Pwg-WK-kME"/>
-                        <exclude reference="SLE-cF-7cx"/>
-                        <include reference="UOS-kj-WCZ"/>
-                        <include reference="diE-Jv-Jrl"/>
                         <include reference="Ubs-a9-A3E"/>
                         <include reference="9cK-bV-ujh"/>
                         <exclude reference="AEp-bI-UPZ"/>
                         <include reference="eNG-wH-ota"/>
                         <include reference="kIp-AF-9Ae"/>
+                        <include reference="PrL-gp-Luc"/>
+                        <exclude reference="Pwg-WK-kME"/>
+                        <exclude reference="SLE-cF-7cx"/>
+                        <include reference="UOS-kj-WCZ"/>
+                        <include reference="diE-Jv-Jrl"/>
+                        <include reference="owc-9x-eHN"/>
+                        <include reference="gYC-m5-Pxg"/>
+                        <include reference="v7s-7v-doT"/>
+                        <include reference="yNb-QI-7t3"/>
                         <exclude reference="MdS-q1-U6D"/>
                         <include reference="oau-1T-eDq"/>
                         <exclude reference="qEQ-ok-SrG"/>

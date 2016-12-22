@@ -13,14 +13,17 @@ import SalesforceSDKCore
 import SalesforceNetwork
 import SalesforceRestAPI
 import MBProgressHUD
+var leadStatusValues: AnyObject = []
 
-class CreateObjectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SFRestDelegate {
-   
+class CreateObjectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SFRestDelegate, AccountListDelegate, UITextFieldDelegate {
+    var textFieldIndexPath : NSIndexPath?
     @IBOutlet weak var tableView: UITableView!
     var objDataArr = NSMutableArray()
     var objectType = String()
     
-    
+    var delegate: CreateNewLeadDelegate?
+    var status = String()
+    var presentTextField = UITextField()
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil
@@ -31,7 +34,9 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupPickerView()
+        dateFormatter.dateFormat = "YYYY-MM-dd"
+        setupDatePicker()
         
         let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'" )
         SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
@@ -104,8 +109,6 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         for   data in self.objDataArr {
             let keyExists = data[FieldValueKey] as? String
             fields[ (data["Name"] as? String)!] = data[FieldValueKey]
-
-           
         }
         
         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
@@ -214,9 +217,28 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     
     
      func textFieldDidBeginEditing(textField: UITextField) {
-        if objDataArr.valueForKey("Name") as? String == "Status"{
+        let pointInTable = textField.convertPoint(textField.bounds.origin, toView: self.tableView)
+         textFieldIndexPath = self.tableView.indexPathForRowAtPoint(pointInTable)
+        presentTextField = textField
+        
+    }
+    
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        presentTextField = textField
+        let pointInTable = textField.convertPoint(textField.bounds.origin, toView: self.tableView)
+        textFieldIndexPath = self.tableView.indexPathForRowAtPoint(pointInTable)
+        
+        if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Name"] as? String == "Status"{
             self.leadStatusPickListValues()
+            return false
         }
+        
+        if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Name"] as? String == "CloseDate"{
+             presentTextField.resignFirstResponder()
+            chooseDOB()
+        return false
+        }
+        return true
     }
     
     @IBAction func leadStatusPickListValues() {
@@ -226,23 +248,89 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             print("Error")
             }, completeBlock: {response in
                 print(response)
-//                self.leadStatusValues = response!["records"]
-//                dispatch_async(dispatch_get_main_queue(), {
-//                    let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
-//                    let presentVC = storyboard.instantiateViewControllerWithIdentifier( "AccountListViewController") as? AccountListViewController
-//                    presentVC!.accountListArr = self.leadStatusValues
-//                    presentVC?.flag = true
-//                    presentVC?.delegate = self;
-//                    let nvc: UINavigationController = UINavigationController(rootViewController: presentVC!)
-//                    self.presentViewController(nvc, animated: true, completion:nil)
-//                })
+                leadStatusValues = response!["records"]
+                dispatch_async(dispatch_get_main_queue(), {
+                     self.chooseGender()
+                })
         })
     }
+    
+    var picker = GMPicker()
+    
+    var datePicker = GMDatePicker()
+    var dateFormatter = NSDateFormatter()
+    
+    func chooseGender(){
+        picker.setupGender()
+        picker.show(inVC: self)
+    }
+   
+    
+    func chooseYear(){
+        picker.setupYears()
+        picker.show(inVC: self)
+    }
+    
+    func chooseDOB(){
+        datePicker.show(inVC: self)
+    }
 
-    
-    
     
 }
 
 
+extension CreateObjectViewController: GMDatePickerDelegate {
+    
+    func gmDatePicker(gmDatePicker: GMDatePicker, didSelect date: NSDate){
+        print(date)
+        presentTextField.text = dateFormatter.stringFromDate(date)
+    }
+    func gmDatePickerDidCancelSelection(gmDatePicker: GMDatePicker) {
+        
+    }
+    
+    private func setupDatePicker() {
+        
+        datePicker.delegate = self
+        
+        datePicker.config.startDate = NSDate()
+        
+        datePicker.config.animationDuration = 0.5
+        
+        datePicker.config.cancelButtonTitle = "Cancel"
+        datePicker.config.confirmButtonTitle = "Confirm"
+        
+        datePicker.config.contentBackgroundColor = UIColor(red: 253/255.0, green: 253/255.0, blue: 253/255.0, alpha: 1)
+        datePicker.config.headerBackgroundColor = UIColor(red: 244/255.0, green: 244/255.0, blue: 244/255.0, alpha: 1)
+        datePicker.config.confirmButtonColor = UIColor.blackColor()
+        datePicker.config.cancelButtonColor = UIColor.blackColor()
+        
+    }
+}
 
+extension CreateObjectViewController: GMPickerDelegate {
+    
+    func gmPicker(gmPicker: GMPicker, didSelect string: String) {
+        presentTextField.text = string
+    }
+    
+    func gmPickerDidCancelSelection(gmPicker: GMPicker){
+        
+    }
+    
+    private func setupPickerView(){
+        
+        picker.delegate = self
+        picker.config.animationDuration = 0.5
+        
+        picker.config.cancelButtonTitle = "Cancel"
+        picker.config.confirmButtonTitle = "Confirm"
+        
+        picker.config.contentBackgroundColor = UIColor(red: 253/255.0, green: 253/255.0, blue: 253/255.0, alpha: 1)
+        picker.config.headerBackgroundColor = UIColor(red: 244/255.0, green: 244/255.0, blue: 244/255.0, alpha: 1)
+        picker.config.confirmButtonColor = UIColor.blackColor()
+        picker.config.cancelButtonColor = UIColor.blackColor()
+        
+    }
+    
+}

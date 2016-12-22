@@ -115,6 +115,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
         self.navigationController?.pushViewController(nv, animated: true)
+        
         //nv.delegate = self
     }
     

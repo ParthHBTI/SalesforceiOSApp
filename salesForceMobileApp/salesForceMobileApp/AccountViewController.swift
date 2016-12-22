@@ -48,9 +48,12 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewAccountVC") as! CreateNewAccountVC
-        navigationController?.pushViewController(nv, animated: true)
+        /*let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewAccountVC") as! CreateNewAccountVC
+        navigationController?.pushViewController(nv, animated: true)*/
         //nv.delegate = self
+        let vc = storyboard.instantiateViewControllerWithIdentifier("AddNewObjectVC") as! AddNewObjectVC
+        navigationController?.pushViewController(vc, animated: true)
+        vc.ObjType = "Account"
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {

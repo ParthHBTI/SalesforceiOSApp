@@ -25,15 +25,15 @@ class DataTableViewCell : BaseTableViewCell {
     }
     @IBOutlet weak var dataImage: UIImageView!
     @IBOutlet weak var dataText: UILabel!
+    @IBOutlet weak var detailText: UILabel!
     @IBOutlet weak var notConnectedImage: UIImageView!
     
     @IBOutlet weak var convertButton: UIButton!
     
     override func awakeFromNib() {
-        self.dataText?.font = UIFont.italicSystemFontOfSize(16)
-        self.dataText?.textColor = UIColor(hex: "9E9E9E")
         convertButton.layer.cornerRadius = 4.0
-        convertButton.layer.borderWidth = 0.8
+        convertButton.layer.borderWidth = 1
+        convertButton.clipsToBounds = true
     }
     
     override class func height() -> CGFloat {

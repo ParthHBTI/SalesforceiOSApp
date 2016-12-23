@@ -47,13 +47,11 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     }
     
     func toggleRight1() {
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        /*let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewAccountVC") as! CreateNewAccountVC
-        navigationController?.pushViewController(nv, animated: true)*/
+        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
+        nv.objectType = "Account"
+        navigationController?.pushViewController(nv, animated: true)
         //nv.delegate = self
-        let vc = storyboard.instantiateViewControllerWithIdentifier("AddNewObjectVC") as! AddNewObjectVC
-        navigationController?.pushViewController(vc, animated: true)
-        vc.ObjType = "Account"
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -96,9 +94,9 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-            if accOfflineArr.count > 0 {
-                offlineData.accOfflineShrinkData(accOfflineArr as! NSMutableArray)
-            }
+//            if accOfflineArr.count > 0 {
+//                offlineData.accOfflineShrinkData(accOfflineArr as! NSMutableArray)
+//            }
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true

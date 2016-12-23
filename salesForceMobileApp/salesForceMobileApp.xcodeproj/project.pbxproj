@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0416F9C21E0A888E005F3A54 /* CreateObjectsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0416F9C01E0A888E005F3A54 /* CreateObjectsCell.swift */; };
+		0416F9C31E0A888E005F3A54 /* CreateObjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0416F9C11E0A888E005F3A54 /* CreateObjectViewController.swift */; };
 		04310E901DDF0BF7000DFEC4 /* NoteAndAttachFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04310E8F1DDF0BF7000DFEC4 /* NoteAndAttachFileCell.swift */; };
 		044D66BA1DE5AD1B0071D817 /* NoCopyPasteUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044D66B91DE5AD1B0071D817 /* NoCopyPasteUITextField.swift */; };
 		044D66BC1DE5AD620071D817 /* ConvertLeadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044D66BB1DE5AD620071D817 /* ConvertLeadViewController.swift */; };
@@ -73,6 +75,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0416F9C01E0A888E005F3A54 /* CreateObjectsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateObjectsCell.swift; sourceTree = "<group>"; };
+		0416F9C11E0A888E005F3A54 /* CreateObjectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateObjectViewController.swift; sourceTree = "<group>"; };
 		04310E8F1DDF0BF7000DFEC4 /* NoteAndAttachFileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteAndAttachFileCell.swift; sourceTree = "<group>"; };
 		044D66B91DE5AD1B0071D817 /* NoCopyPasteUITextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NoCopyPasteUITextField.swift; path = salesForceMobileApp/NoCopyPasteUITextField.swift; sourceTree = "<group>"; };
 		044D66BB1DE5AD620071D817 /* ConvertLeadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConvertLeadViewController.swift; path = salesForceMobileApp/ConvertLeadViewController.swift; sourceTree = "<group>"; };
@@ -266,6 +270,8 @@
 		4FD6C4A11B755265002F9F90 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				0416F9C01E0A888E005F3A54 /* CreateObjectsCell.swift */,
+				0416F9C11E0A888E005F3A54 /* CreateObjectViewController.swift */,
 				04310E8F1DDF0BF7000DFEC4 /* NoteAndAttachFileCell.swift */,
 				4FD6C49A1B755242002F9F90 /* Bridging-Header.h */,
 				4FD6C49B1B755242002F9F90 /* InitialViewController.xib */,
@@ -348,7 +354,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 0710;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = Salesforce;
 				TargetAttributes = {
 					4FD6C4731B754AF1002F9F90 = {
@@ -452,6 +458,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0416F9C21E0A888E005F3A54 /* CreateObjectsCell.swift in Sources */,
 				73BAB8511DB8DB7F00586320 /* ContactDataCell.swift in Sources */,
 				732D9DB81DB88A23002AEDBA /* LeadContentVC.swift in Sources */,
 				73B8B9B81DD5AA6A00933451 /* TextFieldViewController.swift in Sources */,
@@ -478,6 +485,7 @@
 				04310E901DDF0BF7000DFEC4 /* NoteAndAttachFileCell.swift in Sources */,
 				04F96F241DAF74F8000D715A /* ImageHeaderView.swift in Sources */,
 				4FD6C49F1B755242002F9F90 /* RootViewController.swift in Sources */,
+				0416F9C31E0A888E005F3A54 /* CreateObjectViewController.swift in Sources */,
 				733CB6301DD1DE920079F7CC /* UITableViewController.swift in Sources */,
 				4F393A291C3C8BCD00B3EA13 /* main.swift in Sources */,
 				04F96F341DAF75E0000D715A /* SubContentsViewController.swift in Sources */,
@@ -605,6 +613,7 @@
 				);
 				INFOPLIST_FILE = salesForceMobileApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kloudrac.com.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "salesForceMobileApp/Bridging-Header.h";
 				SWIFT_VERSION = 2.3;
@@ -625,6 +634,7 @@
 				);
 				INFOPLIST_FILE = salesForceMobileApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.kloudrac.com.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "salesForceMobileApp/Bridging-Header.h";
 				SWIFT_VERSION = 2.3;

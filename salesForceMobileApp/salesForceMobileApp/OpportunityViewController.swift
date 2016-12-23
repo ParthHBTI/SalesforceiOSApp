@@ -7,7 +7,7 @@
 //
 let OppOnlineDataKey = "OpportunityOnlineDataKey"
 let OppOfflineDataKey = "OpportunityOfflineDataKey"
-let offlineData = OfflineSyncData()
+//let offlineData = OfflineShrinkData()
 
 import UIKit
 import SalesforceRestAPI
@@ -50,8 +50,9 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     }
     
     func toggleRight1() {
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
+        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
+        nv.objectType = "Opportunity"
         navigationController?.pushViewController(nv, animated: true)
         //nv.delegate = self
     }
@@ -73,6 +74,9 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
             let defaults = NSUserDefaults.standardUserDefaults()
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             if exDelegate.isConnectedToNetwork() {
+//                if oppOfflineArr.count > 0 {
+//                    offlineData.oppOfflineShrinkData(oppOfflineArr as! NSMutableArray)
+//                }
                 exDelegate.leadQueryDe("Opportunity")
             } else if let arrayOfObjectsData = defaults.objectForKey(ContactOnLineDataKey) as? NSData {
                 oppOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
@@ -104,9 +108,9 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-            if oppOfflineArr.count > 0 {
-                offlineData.oppOflineShrinkData(oppOfflineArr as! NSMutableArray)
-            }
+//            if oppOfflineArr.count > 0 {
+//                offlineData.oppOflineShrinkData(oppOfflineArr as! NSMutableArray)
+//            }
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true

@@ -112,12 +112,10 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     }
     
     func toggleRight1() {
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
-        self.navigationController?.pushViewController(nv, animated: true)
-        
-        //nv.delegate = self
-    }
+        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
+        nv.objectType = "Lead"
+        navigationController?.pushViewController(nv, animated: true)    }
     
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
@@ -138,9 +136,9 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-            if leadOfLineArr.count > 0 {
-                offlineData.leadOfflineShrinkData(leadOfLineArr as! NSMutableArray)
-            }
+//            if leadOfLineArr.count > 0 {
+//                offlineData.leadOfflineShrinkData(leadOfLineArr as! NSMutableArray)
+//            }
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -191,8 +189,12 @@ extension LeadViewController : UITableViewDataSource {
             cell.notConnectedImage.hidden = false
         } else {
             cell.dataText.text = leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String
+             cell.detailText.text = leadOnLineArr.objectAtIndex(indexPath.row)["Title"] as? String
             cell.notConnectedImage.hidden = true
         }
+        
+       
+
         
         
         return cell

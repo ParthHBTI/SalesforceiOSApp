@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -486,103 +486,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cuQ-Rg-TRe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="420" y="89.25"/>
-        </scene>
-        <!--Add New ObjectVC-->
-        <scene sceneID="c7q-cl-Moc">
-            <objects>
-                <tableViewController storyboardIdentifier="AddNewObjectVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="emf-Ip-9Hg" customClass="AddNewObjectVC" customModule="salesForceMobileApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="90" sectionHeaderHeight="28" sectionFooterHeight="28" id="dgH-GS-9oy">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ObjectsCellIdentifier" rowHeight="90" id="TxD-f2-7K4" customClass="ManageObjectTableCell" customModule="salesForceMobileApp" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="600" height="90"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TxD-f2-7K4" id="aQv-P9-tPD">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="89"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IUN-uT-s3k">
-                                            <rect key="frame" x="-25" y="-30" width="97" height="30"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <textInputTraits key="textInputTraits"/>
-                                            <connections>
-                                                <outlet property="delegate" destination="emf-Ip-9Hg" id="SF7-UX-gXF"/>
-                                            </connections>
-                                        </textField>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OD5-9K-LLT">
-                                            <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="21" id="gGC-Kq-sLX"/>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                            <variation key="default">
-                                                <mask key="constraints">
-                                                    <exclude reference="gGC-Kq-sLX"/>
-                                                </mask>
-                                            </variation>
-                                            <variation key="heightClass=regular-widthClass=compact">
-                                                <mask key="constraints">
-                                                    <include reference="gGC-Kq-sLX"/>
-                                                </mask>
-                                            </variation>
-                                        </label>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="IUN-uT-s3k" firstAttribute="top" secondItem="OD5-9K-LLT" secondAttribute="bottom" constant="8" id="LVv-lv-7zf"/>
-                                        <constraint firstItem="OD5-9K-LLT" firstAttribute="leading" secondItem="IUN-uT-s3k" secondAttribute="leading" id="X8l-QY-GQ6"/>
-                                        <constraint firstItem="OD5-9K-LLT" firstAttribute="width" secondItem="aQv-P9-tPD" secondAttribute="width" multiplier="0.71" id="beI-T1-py1"/>
-                                        <constraint firstItem="OD5-9K-LLT" firstAttribute="top" secondItem="aQv-P9-tPD" secondAttribute="topMargin" constant="8" id="dIR-gw-2H0"/>
-                                        <constraint firstItem="IUN-uT-s3k" firstAttribute="centerX" secondItem="aQv-P9-tPD" secondAttribute="centerX" id="eTQ-Gl-iwi"/>
-                                        <constraint firstItem="IUN-uT-s3k" firstAttribute="width" secondItem="aQv-P9-tPD" secondAttribute="width" multiplier="0.85" id="r8R-ZZ-1nP"/>
-                                    </constraints>
-                                    <variation key="default">
-                                        <mask key="subviews">
-                                            <exclude reference="IUN-uT-s3k"/>
-                                            <exclude reference="OD5-9K-LLT"/>
-                                        </mask>
-                                        <mask key="constraints">
-                                            <exclude reference="LVv-lv-7zf"/>
-                                            <exclude reference="eTQ-Gl-iwi"/>
-                                            <exclude reference="r8R-ZZ-1nP"/>
-                                            <exclude reference="X8l-QY-GQ6"/>
-                                            <exclude reference="beI-T1-py1"/>
-                                            <exclude reference="dIR-gw-2H0"/>
-                                        </mask>
-                                    </variation>
-                                    <variation key="heightClass=regular-widthClass=compact">
-                                        <mask key="subviews">
-                                            <include reference="IUN-uT-s3k"/>
-                                            <include reference="OD5-9K-LLT"/>
-                                        </mask>
-                                        <mask key="constraints">
-                                            <include reference="LVv-lv-7zf"/>
-                                            <include reference="eTQ-Gl-iwi"/>
-                                            <include reference="r8R-ZZ-1nP"/>
-                                            <include reference="X8l-QY-GQ6"/>
-                                            <include reference="beI-T1-py1"/>
-                                            <include reference="dIR-gw-2H0"/>
-                                        </mask>
-                                    </variation>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="ObjectName" destination="OD5-9K-LLT" id="W2l-7p-C4R"/>
-                                    <outlet property="ObjectValueTxtField" destination="IUN-uT-s3k" id="7am-yW-8N6"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="emf-Ip-9Hg" id="9Bb-FH-QsJ"/>
-                            <outlet property="delegate" destination="emf-Ip-9Hg" id="IxX-5O-avh"/>
-                        </connections>
-                    </tableView>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mlp-2S-ba0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="124.5" y="848.25"/>
         </scene>
         <!--Opportunity View Controller-->
         <scene sceneID="adq-KJ-u5Z">

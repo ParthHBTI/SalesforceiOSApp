@@ -49,8 +49,9 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     }
     
     func toggleRight1() {
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
+        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
+        nv.objectType = "Contact"
         navigationController?.pushViewController(nv, animated: true)
         //nv.delegate = self
     }
@@ -105,9 +106,9 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         if exDelegate.isConnectedToNetwork() {
-            if contactOfLineArr.count > 0 {
-                offlineData.contactOfflineShrinkData(contactOfLineArr as! NSMutableArray)
-            }
+//            if contactOfLineArr.count > 0 {
+//                offlineData.contactOfflineShrinkData(contactOfLineArr as! NSMutableArray)
+//            }
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -153,6 +154,7 @@ extension ContactViewController : UITableViewDataSource {
             cell.notConnectedImage.hidden = false
         } else {
             cell.dataText.text = contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.detailText.text = contactOnLineArr.objectAtIndex(indexPath.row)["Account"] as? String
             cell.notConnectedImage.hidden = true
         }
         cell.dataImage.backgroundColor = UIColor.init(hex: "9996D2")

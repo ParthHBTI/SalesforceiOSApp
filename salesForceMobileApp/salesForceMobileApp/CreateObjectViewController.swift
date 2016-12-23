@@ -13,7 +13,7 @@ import SalesforceSDKCore
 import SalesforceNetwork
 import SalesforceRestAPI
 import MBProgressHUD
-var leadStatusValues: AnyObject = []
+//var leadStatusValues: AnyObject = []
 
 class CreateObjectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SFRestDelegate, AccountListDelegate, UITextFieldDelegate {
     var textFieldIndexPath : NSIndexPath?
@@ -37,24 +37,25 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         setupPickerView()
         dateFormatter.dateFormat = "YYYY-MM-dd"
         setupDatePicker()
-        
-        let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'" )
+        let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c, Input_Type__c, Picker_Value__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'" )
         SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
             print(error)
-            
             }, completeBlock: { response in
                 print(response)
                 let arr = ((response!["records"]) as? NSArray)!
-                  let midarr = arr.valueForKey("FieldInfos__r") as! NSArray
+                if (response!["records"]!.valueForKey("FieldInfos__r")?.objectAtIndex(0).valueForKey("records")?.count > 0 ) {
+                let midarr = arr.valueForKey("FieldInfos__r") as! NSArray
                 self.objDataArr = (midarr.objectAtIndex(0).valueForKey("records") as! NSArray).mutableCopy() as! NSMutableArray
+                //print(self.objDataArr)
                 dispatch_async(dispatch_get_main_queue(), {
                     self.tableView.reloadData()
                 })
+            }
         })
         self.tableView.separatorColor = UIColor.clearColor()
         // Do any additional setup after loading the view.
     }
-   
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -64,22 +65,22 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
-
-     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return objDataArr.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let Identifier = "cellIdentifier"
-            let cell = tableView.dequeueReusableCellWithIdentifier(Identifier) as? CreateObjectsCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(Identifier) as? CreateObjectsCell
         cell!.fieldLabel.text = self.objDataArr[indexPath.row].valueForKey("Display_Name__c") as? String
         if let valueToShow =  self.objDataArr[indexPath.row].valueForKey(FieldValueKey){
             cell!.objectTextField.text = valueToShow as? String
         } else {
-          cell!.objectTextField.text = ""
+            cell!.objectTextField.text = ""
         }
-             return cell!
-            
+        return cell!
+        
     }
     
     
@@ -102,7 +103,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             saveDataOnOpportunity()
         }
     }
-
+    
     func  saveDataOnLeadObject() {
         self.view.endEditing(true)
         var  fields = [String: AnyObject]()
@@ -115,7 +116,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         loading.mode = MBProgressHUDMode.Indeterminate
         loading.detailsLabelText = "Lead is creating!"
         loading.removeFromSuperViewOnHide = true
-
+        
         
         SFRestAPI.sharedInstance().performCreateWithObjectType("Lead", fields: fields, failBlock: {error in
             
@@ -124,7 +125,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             dispatch_after(delayTime, dispatch_get_main_queue()) {
                 let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
                 alert.show()            }
-           
+            
             }, completeBlock: { succes in
                 
                 print(succes)
@@ -137,7 +138,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                 })
         })
     }
-  
+    
     func saveDataOnAccountObject(){
         self.view.endEditing(true)
         var  fields = [String: AnyObject]()
@@ -161,7 +162,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                     }
                 })
         })
-
+        
     }
     
     func saveDataOnContactObject() {
@@ -186,7 +187,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                     }
                 })
         })
-
+        
     }
     
     func saveDataOnOpportunity() {
@@ -211,14 +212,14 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                     }
                 })
         })
-
+        
     }
     
     
     
-     func textFieldDidBeginEditing(textField: UITextField) {
+    func textFieldDidBeginEditing(textField: UITextField) {
         let pointInTable = textField.convertPoint(textField.bounds.origin, toView: self.tableView)
-         textFieldIndexPath = self.tableView.indexPathForRowAtPoint(pointInTable)
+        textFieldIndexPath = self.tableView.indexPathForRowAtPoint(pointInTable)
         presentTextField = textField
         
     }
@@ -228,15 +229,20 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         let pointInTable = textField.convertPoint(textField.bounds.origin, toView: self.tableView)
         textFieldIndexPath = self.tableView.indexPathForRowAtPoint(pointInTable)
         
-        if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Name"] as? String == "Status"{
-            self.leadStatusPickListValues()
+        if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Input_Type__c"] as? String == TextFieldType {
+            
+            let pickerValue = self.objDataArr[(textFieldIndexPath?.row)!]["Picker_Value__c"] as! String
+            print(pickerValue)
+            let textPickerValueArr = pickerValue.componentsSeparatedByString(",")
+            self.picker.showTextPicker(textPickerValueArr)
+            self.picker.show(inVC: self)
             return false
         }
         
-        if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Name"] as? String == "CloseDate"{
-             presentTextField.resignFirstResponder()
+        if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Input_Type__c"] as? String == DatePicker {
+            presentTextField.resignFirstResponder()
             chooseDOB()
-        return false
+            return false
         }
         return true
     }
@@ -248,9 +254,10 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             print("Error")
             }, completeBlock: {response in
                 print(response)
-                leadStatusValues = response!["records"]
+               let leadStatusValues = response!["records"]
                 dispatch_async(dispatch_get_main_queue(), {
-                     self.chooseGender()
+                    self.picker.showTextPicker(leadStatusValues as! NSArray )
+                    self.picker.show(inVC: self)
                 })
         })
     }
@@ -260,11 +267,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     var datePicker = GMDatePicker()
     var dateFormatter = NSDateFormatter()
     
-    func chooseGender(){
-        picker.setupGender()
-        picker.show(inVC: self)
-    }
-   
+    
     
     func chooseYear(){
         picker.setupYears()
@@ -274,7 +277,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     func chooseDOB(){
         datePicker.show(inVC: self)
     }
-
+    
     
 }
 

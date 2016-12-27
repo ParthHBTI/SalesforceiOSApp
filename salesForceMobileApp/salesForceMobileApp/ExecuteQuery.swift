@@ -42,13 +42,13 @@ class ExecuteQuery: UIViewController, SFRestDelegate {
                 defaults.setObject(arrOfLeadData, forKey: LeadOnLineDataKey)
             } else if newStr == self.accountRequest {
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
-                defaults.setObject(arrOfLeadData, forKey: AccOnlineDataKey)
+                defaults.setObject(arrOfLeadData, forKey: AccOnLineDataKey)
             } else if newStr == self.contactRequest {
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
                 defaults.setObject(arrOfLeadData, forKey: ContactOnLineDataKey)
             } else {
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
-                defaults.setObject(arrOfLeadData, forKey: OppOnlineDataKey)
+                defaults.setObject(arrOfLeadData, forKey: OppOnLineDataKey)
             }
             
         })

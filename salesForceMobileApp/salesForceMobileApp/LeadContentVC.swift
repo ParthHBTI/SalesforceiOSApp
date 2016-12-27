@@ -8,7 +8,7 @@ let KeyValue = "KeyValue"
 let KeyName  = "KeyName"
 
 class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate, UIActionSheetDelegate,CreateNewLeadDelegate {
-    
+
     @IBOutlet weak var leadSegment: UISegmentedControl!
     //var getResponseArr:AnyObject = []
     var getResponseArr = [:]
@@ -450,14 +450,13 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     }
     
     func editAction() {
-        let storyboard = UIStoryboard(name: "Main" , bundle: nil)
-        let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewLeadVC") as! CreateNewLeadVC
-        vc.leadDataDict = self.getResponseArr
-        //vc.leadDataDict = leadArr
-        vc.flag = true
-        vc.updateOfflineLeadAtIndex = self.parentIndex
-        self.navigationController?.pushViewController(vc, animated: true)
-        vc.delegate = self
+        let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+        let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
+        nv.objectType = "Lead"
+        nv.objectInfoDic = self.getResponseArr
+        nv.isOffLine = isOfflineData
+        nv.isEditable = true
+        navigationController?.pushViewController(nv, animated: true)
     }
     
     /*func makeLeadDataArr(getLeadArr: NSDictionary) {

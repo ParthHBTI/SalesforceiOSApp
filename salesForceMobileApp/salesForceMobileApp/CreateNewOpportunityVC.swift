@@ -65,7 +65,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
         let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
         client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
         
-        if let arrayOfObjectsData = defaults.objectForKey(OppOfflineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey(OppOffLineDataKey) as? NSData {
             OppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
         }
         dispatch_async(dispatch_get_main_queue(), {
@@ -176,7 +176,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
                 ]
             OppOfflineArr.addObject(OppDataArr)
             let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
-            defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
+            defaults.setObject(arrOfOppData, forKey: OppOffLineDataKey)
             dispatch_async(dispatch_get_main_queue(), {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
@@ -302,7 +302,7 @@ class CreateNewOpportunityVC: TextFieldViewController, SFRestDelegate,ExecuteQue
                 self.delegate!.getValFromOppVC(true)
                 self.delegate!.oppOfflineUpdateData(offlineUpdatedArr as NSMutableArray)
             let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
-            defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
+            defaults.setObject(arrOfOppData, forKey: OppOffLineDataKey)
             }
 //            else {
 //                let OppDataDic = [

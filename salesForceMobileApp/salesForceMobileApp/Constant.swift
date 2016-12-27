@@ -12,8 +12,17 @@ let TextFieldType = "Textpicker"
 let DatePicker = "Datepicker"
 let AccountPIcker = "AccountPIcker"
 
+let SchemaKeySuffix = "SchemaKey"
+let OffLineKeySuffix = "OfLineDataKey"
 
 
+let LeadOnLineDataKey = "LeadOnLineDataKey"
+let LeadOfLineDataKey = "LeadOfLineDataKey"
+let OppOnLineDataKey = "OpportunityOnlineDataKey"
+let OppOffLineDataKey = "OpportunityOfflineDataKey"
+
+let AccOnLineDataKey = "AccOnlineDataKey"
+let AccOffLineDataKey = "AccOfflineDataKey"
 
 
 let AccountPIckerQuery = "SELECT Id, Name FROM RecentlyViewed WHERE Type IN ('Account')  "

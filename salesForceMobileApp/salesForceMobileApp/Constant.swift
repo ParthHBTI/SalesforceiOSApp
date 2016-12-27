@@ -8,5 +8,5 @@
 
 import Foundation
 
-let TextFieldType = ""
-let DatePicker = ""
+let TextFieldType = "Textpicker"
+let DatePicker = "Datepicker"

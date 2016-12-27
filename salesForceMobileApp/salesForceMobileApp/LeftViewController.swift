@@ -48,15 +48,21 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        ///
+        let menuBackBtn = UIButton()
+        //menuBackBtn.setTitle("Button", forState: .Normal)
+        menuBackBtn.setImage(UIImage(named: "arrow_back"), forState: .Normal)
+        menuBackBtn.setTitleColor(UIColor.blueColor(), forState: .Normal)
+        menuBackBtn.frame = CGRectMake(12, 5, 25, 25)
+        menuBackBtn.addTarget(self, action:#selector(self.toggleLeft), forControlEvents:UIControlEvents.TouchUpInside)
+                ///
+        //self.imageHeaderView.addSubview(menuBackBtn)
         //remove all blank rows from table view
         //        NSLog(@"userData= %@",[SFAuthenticationManager sharedManager].idCoordinator.idData);
         //
         //        NSLog(@"first name = %@",[SFAuthenticationManager sharedManager].idCoordinator.idData.firstName);
         //        NSLog(@"last name = %@",[SFAuthenticationManager sharedManager].idCoordinator.idData.lastName);
         //        NSLog(@"email name = %@",[SFAuthenticationManager sharedManager].idCoordinator.idData.email);
-        
-        
-        
         
         tableView.tableFooterView = UIView()
         //self.tableView.separatorColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
@@ -76,6 +82,8 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
         self.tableView.registerCellClass(BaseTableViewCell.self)
         self.imageHeaderView = ImageHeaderView.loadNib()
         self.view.addSubview(self.imageHeaderView)
+
+        self.imageHeaderView.addSubview(menuBackBtn)
         
         let sfIdentityData =    SFAuthenticationManager.sharedManager().idCoordinator.idData
         
@@ -115,6 +123,7 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
         SFAuthenticationManager.sharedManager().logout()
         //   UIAppDelegate.handleSdkManagerLogout()
     }
+    
     
     func changeViewController(menu: LeftMenu) {
         switch menu {

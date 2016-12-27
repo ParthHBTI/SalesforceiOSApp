@@ -197,7 +197,8 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                         "BillingPostalCode" : postalCode.text!
                         ]
                     let offlineUpdatedArr = NSMutableArray()
-                    for (key, value) in OppDataDic {                         let objectDic = NSMutableDictionary()
+                    for (key, value) in OppDataDic {
+                        let objectDic = NSMutableDictionary()
                         objectDic.setObject(key, forKey: KeyName)
                         objectDic.setObject(value, forKey: KeyValue)
                         offlineUpdatedArr.addObject(objectDic)

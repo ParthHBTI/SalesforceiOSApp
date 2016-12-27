@@ -75,11 +75,11 @@ class GMPicker: UIView {
     
     
     
-    func setupGender(){
+    func showTextPicker(textArr:NSArray){
         
-        for data in (leadStatusValues as? NSArray)! {
+        for data in textArr {
             print(data)
-            Array.append((data["ApiName"] as? String)!)
+            Array.append((data as? String)!)
         }
         gmpicker.reloadAllComponents()
     }

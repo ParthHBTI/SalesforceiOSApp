@@ -15,9 +15,12 @@ class ImageHeaderView : UIView {
     @IBOutlet weak var userNameLbl : UILabel!
     @IBOutlet weak var userEmailLbl : UILabel!
     
-    
     override func awakeFromNib() {
         super.awakeFromNib()
+        ///
+        
+        ///
+        
         self.backgroundColor = UIColor(hex: "E0E0E0")
         self.profileImage.layer.cornerRadius = self.profileImage.frame.size.height/2.0
         self.profileImage.clipsToBounds = true

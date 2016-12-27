@@ -61,7 +61,13 @@
 		732D9DB81DB88A23002AEDBA /* LeadContentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732D9DB71DB88A23002AEDBA /* LeadContentVC.swift */; };
 		732D9DBA1DB88EC7002AEDBA /* LeadContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732D9DB91DB88EC7002AEDBA /* LeadContentCell.swift */; };
 		73311EE01E00153E00DF4EEC /* OfflineSyncData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73311EDF1E00153E00DF4EEC /* OfflineSyncData.swift */; };
+		7331FBD61E0CF5FD00C86DD6 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7331FBD31E0CF5FD00C86DD6 /* Constant.swift */; };
+		7331FBD71E0CF5FD00C86DD6 /* GMDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7331FBD41E0CF5FD00C86DD6 /* GMDatePicker.swift */; };
+		7331FBD81E0CF5FD00C86DD6 /* GMPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7331FBD51E0CF5FD00C86DD6 /* GMPicker.swift */; };
 		733CB6301DD1DE920079F7CC /* UITableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733CB62F1DD1DE920079F7CC /* UITableViewController.swift */; };
+		7350D45A1E02AE9500DCBDBF /* AddNewObjectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7350D4591E02AE9500DCBDBF /* AddNewObjectVC.swift */; };
+		7350D45C1E02B31B00DCBDBF /* ManageObjectTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7350D45B1E02B31B00DCBDBF /* ManageObjectTableCell.swift */; };
+		736B3FCF1E07ED2300612093 /* arrow_left-128.png in Resources */ = {isa = PBXBuildFile; fileRef = 736B3FCE1E07ED2300612093 /* arrow_left-128.png */; };
 		73B8B9B81DD5AA6A00933451 /* TextFieldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B8B9B71DD5AA6A00933451 /* TextFieldViewController.swift */; };
 		73BAB84D1DB8D9F200586320 /* AccountDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BAB84C1DB8D9F200586320 /* AccountDataVC.swift */; };
 		73BAB84F1DB8DA4100586320 /* AccountDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BAB84E1DB8DA4100586320 /* AccountDataCell.swift */; };
@@ -133,7 +139,13 @@
 		732D9DB71DB88A23002AEDBA /* LeadContentVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadContentVC.swift; sourceTree = "<group>"; };
 		732D9DB91DB88EC7002AEDBA /* LeadContentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeadContentCell.swift; sourceTree = "<group>"; };
 		73311EDF1E00153E00DF4EEC /* OfflineSyncData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineSyncData.swift; sourceTree = "<group>"; };
+		7331FBD31E0CF5FD00C86DD6 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		7331FBD41E0CF5FD00C86DD6 /* GMDatePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GMDatePicker.swift; sourceTree = "<group>"; };
+		7331FBD51E0CF5FD00C86DD6 /* GMPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GMPicker.swift; sourceTree = "<group>"; };
 		733CB62F1DD1DE920079F7CC /* UITableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewController.swift; sourceTree = "<group>"; };
+		7350D4591E02AE9500DCBDBF /* AddNewObjectVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddNewObjectVC.swift; path = ../AddNewObjectVC.swift; sourceTree = "<group>"; };
+		7350D45B1E02B31B00DCBDBF /* ManageObjectTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManageObjectTableCell.swift; path = ../ManageObjectTableCell.swift; sourceTree = "<group>"; };
+		736B3FCE1E07ED2300612093 /* arrow_left-128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow_left-128.png"; sourceTree = "<group>"; };
 		73B8B9B71DD5AA6A00933451 /* TextFieldViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldViewController.swift; sourceTree = "<group>"; };
 		73BAB84C1DB8D9F200586320 /* AccountDataVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountDataVC.swift; sourceTree = "<group>"; };
 		73BAB84E1DB8DA4100586320 /* AccountDataCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountDataCell.swift; sourceTree = "<group>"; };
@@ -182,6 +194,7 @@
 				04F96F271DAF7517000D715A /* BaseTableViewCell.swift */,
 				04F96F281DAF7517000D715A /* DataTableViewCell.swift */,
 				04F96F291DAF7517000D715A /* DataTableViewCell.xib */,
+				7350D45B1E02B31B00DCBDBF /* ManageObjectTableCell.swift */,
 			);
 			name = View;
 			path = salesForceMobileApp;
@@ -253,6 +266,7 @@
 			isa = PBXGroup;
 			children = (
 				4FD6C4781B754AF1002F9F90 /* Info.plist */,
+				736B3FCE1E07ED2300612093 /* arrow_left-128.png */,
 				731BC9DF1DB4F86600B3C6C7 /* Images.xcassets */,
 			);
 			name = "Supporting Files";
@@ -262,6 +276,9 @@
 		4FD6C4A11B755265002F9F90 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				7331FBD31E0CF5FD00C86DD6 /* Constant.swift */,
+				7331FBD41E0CF5FD00C86DD6 /* GMDatePicker.swift */,
+				7331FBD51E0CF5FD00C86DD6 /* GMPicker.swift */,
 				0416F9C01E0A888E005F3A54 /* CreateObjectsCell.swift */,
 				0416F9C11E0A888E005F3A54 /* CreateObjectViewController.swift */,
 				04310E8F1DDF0BF7000DFEC4 /* NoteAndAttachFileCell.swift */,
@@ -292,6 +309,7 @@
 				73BAB8541DB8DBCA00586320 /* ContactDataVC.swift */,
 				73BAB8561DB8DBE300586320 /* OpportunityDataVC.swift */,
 				73B8B9B71DD5AA6A00933451 /* TextFieldViewController.swift */,
+				7350D4591E02AE9500DCBDBF /* AddNewObjectVC.swift */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -382,6 +400,7 @@
 				04F96ED01DAF6E01000D715A /* Main.storyboard in Resources */,
 				04F96F351DAF75E0000D715A /* SubContentsViewController.storyboard in Resources */,
 				04D2551E1DF6EB3400CB1A9B /* AccountDataImageCell.xib in Resources */,
+				736B3FCF1E07ED2300612093 /* arrow_left-128.png in Resources */,
 				731BC9E01DB4F86600B3C6C7 /* Images.xcassets in Resources */,
 				04D255221DF6EC2000CB1A9B /* AccountDataCell.xib in Resources */,
 				4FD6C49E1B755242002F9F90 /* InitialViewController.xib in Resources */,
@@ -469,9 +488,11 @@
 				4FD6C47A1B754AF1002F9F90 /* AppDelegate.swift in Sources */,
 				04F96F381DAF761F000D715A /* AccountViewController.swift in Sources */,
 				04EE4B0C1DD06D5E00590A7D /* AttachViewController.swift in Sources */,
+				7350D45A1E02AE9500DCBDBF /* AddNewObjectVC.swift in Sources */,
 				04DB2FA71DB4ED5300C4519F /* CreateNewOpportunityVC.swift in Sources */,
 				04CE8B331DC087AE0057B0A9 /* ExecuteQuery.swift in Sources */,
 				04310E901DDF0BF7000DFEC4 /* NoteAndAttachFileCell.swift in Sources */,
+				7331FBD81E0CF5FD00C86DD6 /* GMPicker.swift in Sources */,
 				04F96F241DAF74F8000D715A /* ImageHeaderView.swift in Sources */,
 				4FD6C49F1B755242002F9F90 /* RootViewController.swift in Sources */,
 				0416F9C31E0A888E005F3A54 /* CreateObjectViewController.swift in Sources */,
@@ -482,8 +503,10 @@
 				04F96F0F1DAF7333000D715A /* LeadViewController.swift in Sources */,
 				04CB1DE41DAF807400D2621C /* SlideMenuController.swift in Sources */,
 				04F96F1B1DAF740C000D715A /* UIViewController.swift in Sources */,
+				7331FBD61E0CF5FD00C86DD6 /* Constant.swift in Sources */,
 				73BAB84F1DB8DA4100586320 /* AccountDataCell.swift in Sources */,
 				04F96F2A1DAF7517000D715A /* BaseTableViewCell.swift in Sources */,
+				7331FBD71E0CF5FD00C86DD6 /* GMDatePicker.swift in Sources */,
 				04F96F3C1DAF763B000D715A /* OpportunityViewController.swift in Sources */,
 				04F96F1A1DAF740C000D715A /* UITableViewExtension.swift in Sources */,
 				04EE4B0E1DD07FE500590A7D /* PopOverViewController.swift in Sources */,
@@ -494,6 +517,7 @@
 				04F96F361DAF75E0000D715A /* ExSlideMenuController.swift in Sources */,
 				044D66BC1DE5AD620071D817 /* ConvertLeadViewController.swift in Sources */,
 				73BAB84D1DB8D9F200586320 /* AccountDataVC.swift in Sources */,
+				7350D45C1E02B31B00DCBDBF /* ManageObjectTableCell.swift in Sources */,
 				73BAB8571DB8DBE300586320 /* OpportunityDataVC.swift in Sources */,
 				044D66BA1DE5AD1B0071D817 /* NoCopyPasteUITextField.swift in Sources */,
 				04F96F3E1DAF769F000D715A /* NonMenuController.swift in Sources */,

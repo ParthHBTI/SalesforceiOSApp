@@ -7,8 +7,7 @@
 //
 
 
-let AccOnlineDataKey = "AccOnlineDataKey"
-let AccOfflineDataKey = "AccOfflineDataKey"
+
 
 import UIKit
 import SalesforceRestAPI
@@ -61,7 +60,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let arrayOfObjectsData = defaults.objectForKey(AccOfflineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey(AccOffLineDataKey) as? NSData {
             accOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -101,7 +100,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("account")
-        } else if let arrayOfObjectsData = defaults.objectForKey(AccOnlineDataKey) as? NSData {
+        } else if let arrayOfObjectsData = defaults.objectForKey(AccOnLineDataKey) as? NSData {
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -206,7 +205,7 @@ extension AccountViewController : UITableViewDataSource {
                     self.accOfflineArr.removeObjectAtIndex(indexPath.row)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                     let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.accOfflineArr)
-                    defaults.setObject(arrOfOppData, forKey: AccOfflineDataKey)
+                    defaults.setObject(arrOfOppData, forKey: AccOffLineDataKey)
                     self.delAccAtIndexPath = nil
                 }
             })

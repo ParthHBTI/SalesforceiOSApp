@@ -5,8 +5,7 @@
 //  Created by Yuji Hato on 12/3/14.
 //
 
-let LeadOnLineDataKey = "LeadOnLineDataKey"
-let LeadOfLineDataKey = "LeadOfLineDataKey"
+
 
 
 import UIKit

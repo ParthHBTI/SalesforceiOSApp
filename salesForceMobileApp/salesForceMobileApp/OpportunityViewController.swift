@@ -5,9 +5,7 @@
 //  Created by Yuji Hato on 1/19/15.
 //  Copyright (c) 2015 Yuji Hato. All rights reserved.
 //
-let OppOnlineDataKey = "OpportunityOnlineDataKey"
-let OppOfflineDataKey = "OpportunityOfflineDataKey"
-let OfflineFormatDataKey = "OfflineFormatDataKey"
+
 //let offlineData = OfflineShrinkData()
 
 import UIKit
@@ -64,7 +62,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        if let arrayOfObjectsData = defaults.objectForKey(OppOfflineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey(OppOffLineDataKey) as? NSData {
             oppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -117,7 +115,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("opporchunity")
            
-        } else if let arrayOfObjectsData = defaults.objectForKey(OppOnlineDataKey) as? NSData {
+        } else if let arrayOfObjectsData = defaults.objectForKey(OppOnLineDataKey) as? NSData {
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -229,7 +227,7 @@ extension OpportunityViewController : UITableViewDataSource {
                     self.oppOfflineArr.removeObjectAtIndex(indexPath.row)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                     let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.oppOfflineArr)
-                    defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
+                    defaults.setObject(arrOfOppData, forKey: OppOffLineDataKey)
                     self.delOppAtIndexPath = nil
                 }
             })

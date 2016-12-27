@@ -100,8 +100,6 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
         if exDelegate.isConnectedToNetwork() {
             if self.isSubmittedCorrectVal() {
                 let fields = [
-                    
-                    
                     "LastName" : lastName.text!,
                     "Company" : companyName.text!,
                     "Status" : leadStatus.text!,

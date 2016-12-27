@@ -43,7 +43,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let arrayOfObjectsData = defaults.objectForKey(AccOfflineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey(AccOffLineDataKey) as? NSData {
             accOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
         }
         accountName.delegate = self
@@ -134,7 +134,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
             ]
             accOfflineArr.addObject(accDataArr)
             let arrOfAccData = NSKeyedArchiver.archivedDataWithRootObject(accOfflineArr)
-            defaults.setObject(arrOfAccData, forKey: AccOfflineDataKey)
+            defaults.setObject(arrOfAccData, forKey: AccOffLineDataKey)
             dispatch_async(dispatch_get_main_queue(), {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Indeterminate
@@ -208,7 +208,7 @@ class CreateNewAccountVC: TextFieldViewController, UIScrollViewDelegate, Execute
                     self.delegate!.getValFromAccVC(true)
                     self.delegate!.accOfflineUpdateData(offlineUpdatedArr as NSMutableArray)
                     let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(accOfflineArr)
-                    defaults.setObject(arrOfOppData, forKey: AccOfflineDataKey)
+                    defaults.setObject(arrOfOppData, forKey: AccOffLineDataKey)
                 }
                 //            else {
                 //                let OppDataDic = [

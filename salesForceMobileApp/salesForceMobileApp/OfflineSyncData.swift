@@ -63,7 +63,7 @@ class OfflineSyncData: UIViewController {
                     print(result?.errors )
                     print(result?.id )
                     print(result?.success)
-                    defaults.removeObjectForKey(AccOfflineDataKey)
+                    defaults.removeObjectForKey(AccOffLineDataKey)
                 }
         })
 
@@ -116,7 +116,7 @@ class OfflineSyncData: UIViewController {
                     print(result?.errors )
                     print(result?.id )
                     print(result?.success)
-                    defaults.removeObjectForKey(OppOfflineDataKey)
+                    defaults.removeObjectForKey(OppOffLineDataKey)
                 }
         })
     }

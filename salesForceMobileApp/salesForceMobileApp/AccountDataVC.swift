@@ -60,7 +60,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         tableView.rowHeight = 70
         feedSegment.selectedSegmentIndex = 1
         //let crossBtnItem: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "plus"), style: .Plain, target: self, action: #selector(AccountDataVC.shareAction))
-        let navBarActionBtn: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(LeadContentVC.shareAction))
+        let navBarActionBtn: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(AccountDataVC.shareAction))
         let navBarEditBtn = UIBarButtonItem(image: UIImage(named: "editImg-1"), style: .Plain, target: self, action:#selector(self.editAction))
         self.navigationItem.setRightBarButtonItems([navBarActionBtn,navBarEditBtn], animated: true)
         self.isAccDataNil()

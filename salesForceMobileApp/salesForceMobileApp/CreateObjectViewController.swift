@@ -43,10 +43,11 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             }, completeBlock: { response in
                 print(response)
                 let arr = ((response!["records"]) as? NSArray)!
+                if  arr.count > 0 {
                 if (response!["records"]!.valueForKey("FieldInfos__r")?.objectAtIndex(0).valueForKey("records")?.count > 0 ) {
                 let midarr = arr.valueForKey("FieldInfos__r") as! NSArray
                 self.objDataArr = (midarr.objectAtIndex(0).valueForKey("records") as! NSArray).mutableCopy() as! NSMutableArray
-                //print(self.objDataArr)
+                    }
                 dispatch_async(dispatch_get_main_queue(), {
                     self.tableView.reloadData()
                 })
@@ -93,38 +94,52 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        if objectType == "Lead" {
-            saveDataOnLeadObject()
-        } else if objectType == "Account"{
-            saveDataOnAccountObject()
-        } else if objectType == "Contact"{
-            saveDataOnContactObject()
-        } else {
-            saveDataOnOpportunity()
-        }
+        
+        postDataObjectInServer()
+        
+//        if objectType == "Lead" {
+//            saveDataOnLeadObject()
+//        } else if objectType == "Account"{
+//            saveDataOnAccountObject()
+//        } else if objectType == "Contact"{
+//            saveDataOnContactObject()
+//        } else {
+//            saveDataOnOpportunity()
+//        }
     }
     
-    func  saveDataOnLeadObject() {
+    func  postDataObjectInServer() {
         self.view.endEditing(true)
         var  fields = [String: AnyObject]()
         for   data in self.objDataArr {
-            let keyExists = data[FieldValueKey] as? String
-            fields[ (data["Name"] as? String)!] = data[FieldValueKey]
+            
+           // let dic = data[FieldValueKey] as? String
+            
+            if let val = data[FieldValueKey] {
+                if let x = val {
+                    print(x)
+                    fields[ (data["Name"] as? String)!] = data[FieldValueKey]
+                } else {
+                    print("value is nil")
+                }
+            } else {
+                print("key is not present in dict")
+            }            
         }
         
         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
-        loading.detailsLabelText = "Lead is creating!"
+        loading.detailsLabelText = "\(objectType) is creating!"
         loading.removeFromSuperViewOnHide = true
         
         
-        SFRestAPI.sharedInstance().performCreateWithObjectType("Lead", fields: fields, failBlock: {error in
-            
-            loading.hide(true, afterDelay: 1)
+        SFRestAPI.sharedInstance().performCreateWithObjectType(objectType, fields: fields, failBlock: {error in
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
             dispatch_after(delayTime, dispatch_get_main_queue()) {
+                loading.hide(true, afterDelay: 1)
                 let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                alert.show()            }
+                alert.show()
+            }
             
             }, completeBlock: { succes in
                 
@@ -139,7 +154,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         })
     }
     
-    func saveDataOnAccountObject(){
+   /* func saveDataOnAccountObject(){
         self.view.endEditing(true)
         var  fields = [String: AnyObject]()
         for data in self.objDataArr {
@@ -150,12 +165,18 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         loading.detailsLabelText = "Account is creating!"
         loading.removeFromSuperViewOnHide = true
         
-        SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: {error in
-            let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-            alert.show()
+        SFRestAPI.sharedInstance().performCreateWithObjectType(objectType, fields: fields, failBlock: {error in
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                loading.hide(true, afterDelay: 1)
+                let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+            }
             
             }, completeBlock: { succes in
                 dispatch_async(dispatch_get_main_queue(), {
+                    loading.hide(true, afterDelay: 1)
+
                     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
                     dispatch_after(delayTime, dispatch_get_main_queue()) {
                         self.navigationController?.popViewControllerAnimated(true)
@@ -177,8 +198,12 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         loading.removeFromSuperViewOnHide = true
         
         SFRestAPI.sharedInstance().performCreateWithObjectType("Contact", fields: fields, failBlock: {error in
-            let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-            alert.show()
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                loading.hide(true, afterDelay: 1)
+                let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+            }
             }, completeBlock: { succes in
                 dispatch_async(dispatch_get_main_queue(), {
                     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
@@ -202,8 +227,12 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         loading.removeFromSuperViewOnHide = true
         
         SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: {error in
-            let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-            alert.show()
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                loading.hide(true, afterDelay: 1)
+                let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+            }
             }, completeBlock: { succes in
                 dispatch_async(dispatch_get_main_queue(), {
                     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
@@ -216,7 +245,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     
-    
+    */
     func textFieldDidBeginEditing(textField: UITextField) {
         let pointInTable = textField.convertPoint(textField.bounds.origin, toView: self.tableView)
         textFieldIndexPath = self.tableView.indexPathForRowAtPoint(pointInTable)

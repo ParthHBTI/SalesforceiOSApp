@@ -32,6 +32,38 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
+    
+    
+    func getSelectedAccountInfo(accointDetail:NSDictionary) {
+     //   self.accountNameText.text = 
+        let accountName = accointDetail["Id"] as? String
+        presentTextField.text = accountName
+      //  accointInfo = accointDetail;
+        
+        let objectDic = objDataArr.objectAtIndex((textFieldIndexPath?.row)!).mutableCopy() as? NSMutableDictionary
+        objectDic?.setObject(accountName!, forKey: FieldValueKey)
+        objDataArr.replaceObjectAtIndex((textFieldIndexPath?.row)!, withObject: objectDic!)
+        
+        print(accointDetail)
+    }
+    @IBAction func chosseAccountPicker() {
+        
+        let reqq = SFRestAPI.sharedInstance().requestForQuery(AccountPIckerQuery)
+        SFRestAPI.sharedInstance().sendRESTRequest(reqq, failBlock: {_ in
+            print("Error")
+            }, completeBlock: {response in
+                print(response)
+                dispatch_async(dispatch_get_main_queue(), {
+                    let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+                    let presentVC = storyboard.instantiateViewControllerWithIdentifier( "AccountListViewController") as? AccountListViewController
+                    presentVC!.accountListArr = response!["records"]
+                    presentVC?.delegate = self;
+                    let nvc: UINavigationController = UINavigationController(rootViewController: presentVC!)
+                    self.presentViewController(nvc, animated: true, completion:nil)
+                })
+        })
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupPickerView()
@@ -97,15 +129,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         
         postDataObjectInServer()
         
-//        if objectType == "Lead" {
-//            saveDataOnLeadObject()
-//        } else if objectType == "Account"{
-//            saveDataOnAccountObject()
-//        } else if objectType == "Contact"{
-//            saveDataOnContactObject()
-//        } else {
-//            saveDataOnOpportunity()
-//        }
+
     }
     
     func  postDataObjectInServer() {
@@ -266,11 +290,13 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             self.picker.showTextPicker(textPickerValueArr)
             self.picker.show(inVC: self)
             return false
-        }
-        
-        if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Input_Type__c"] as? String == DatePicker {
+        }  else if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Input_Type__c"] as? String == DatePicker {
             presentTextField.resignFirstResponder()
             chooseDOB()
+            return false
+        }  else if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Input_Type__c"] as? String == AccountPIcker {
+            presentTextField.resignFirstResponder()
+            chosseAccountPicker()
             return false
         }
         return true
@@ -316,6 +342,13 @@ extension CreateObjectViewController: GMDatePickerDelegate {
     func gmDatePicker(gmDatePicker: GMDatePicker, didSelect date: NSDate){
         print(date)
         presentTextField.text = dateFormatter.stringFromDate(date)
+        
+        
+        let objectDic = objDataArr.objectAtIndex((textFieldIndexPath?.row)!).mutableCopy() as? NSMutableDictionary
+        objectDic?.setObject(presentTextField.text!, forKey: FieldValueKey)
+        objDataArr.replaceObjectAtIndex((textFieldIndexPath?.row)!, withObject: objectDic!)
+        
+
     }
     func gmDatePickerDidCancelSelection(gmDatePicker: GMDatePicker) {
         
@@ -344,6 +377,9 @@ extension CreateObjectViewController: GMPickerDelegate {
     
     func gmPicker(gmPicker: GMPicker, didSelect string: String) {
         presentTextField.text = string
+        let objectDic = objDataArr.objectAtIndex((textFieldIndexPath?.row)!).mutableCopy() as? NSMutableDictionary
+        objectDic?.setObject(presentTextField.text!, forKey: FieldValueKey)
+        objDataArr.replaceObjectAtIndex((textFieldIndexPath?.row)!, withObject: objectDic!)
     }
     
     func gmPickerDidCancelSelection(gmPicker: GMPicker){

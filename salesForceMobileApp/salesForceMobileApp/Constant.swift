@@ -10,3 +10,10 @@ import Foundation
 
 let TextFieldType = "Textpicker"
 let DatePicker = "Datepicker"
+let AccountPIcker = "AccountPIcker"
+
+
+
+
+
+let AccountPIckerQuery = "SELECT Id, Name FROM RecentlyViewed WHERE Type IN ('Account')  "

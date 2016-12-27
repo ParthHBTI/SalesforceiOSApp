@@ -38,7 +38,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         dateFormatter.dateFormat = "YYYY-MM-dd"
         setupDatePicker()
         
-        let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'" )
+        let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c, Picker_Value__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'" )
         SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
             print(error)
             
@@ -229,6 +229,8 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         textFieldIndexPath = self.tableView.indexPathForRowAtPoint(pointInTable)
         
         if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Name"] as? String == "Status"{
+            let Str =  objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Picker_Value__c"] as? String
+            print(Str)
             self.leadStatusPickListValues()
             return false
         }
@@ -239,6 +241,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         return false
         }
         return true
+        
     }
     
     @IBAction func leadStatusPickListValues() {

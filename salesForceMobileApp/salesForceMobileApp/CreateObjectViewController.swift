@@ -13,17 +13,15 @@ import SalesforceSDKCore
 import SalesforceNetwork
 import SalesforceRestAPI
 import MBProgressHUD
-var leadStatusValues: AnyObject = []
+//var leadStatusValues: AnyObject = []
 
-class CreateObjectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SFRestDelegate,ExecuteQueryDelegate, AccountListDelegate, UITextFieldDelegate {
+class CreateObjectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SFRestDelegate, AccountListDelegate, UITextFieldDelegate {
     var textFieldIndexPath : NSIndexPath?
     @IBOutlet weak var tableView: UITableView!
     var objDataArr = NSMutableArray()
     var objectType = String()
+    
     var delegate: CreateNewLeadDelegate?
-    var exDelegate: ExecuteQuery = ExecuteQuery()
-    var  OfflineFormateArr:AnyObject = NSMutableArray()
-    var OppOfflineArr:AnyObject = NSMutableArray()
     var status = String()
     var presentTextField = UITextField()
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -34,39 +32,63 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
+    
+    
+    func getSelectedAccountInfo(accointDetail:NSDictionary) {
+     //   self.accountNameText.text = 
+        let accountName = accointDetail["Id"] as? String
+        presentTextField.text = accountName
+      //  accointInfo = accointDetail;
+        
+        let objectDic = objDataArr.objectAtIndex((textFieldIndexPath?.row)!).mutableCopy() as? NSMutableDictionary
+        objectDic?.setObject(accountName!, forKey: FieldValueKey)
+        objDataArr.replaceObjectAtIndex((textFieldIndexPath?.row)!, withObject: objectDic!)
+        
+        print(accointDetail)
+    }
+    @IBAction func chosseAccountPicker() {
+        
+        let reqq = SFRestAPI.sharedInstance().requestForQuery(AccountPIckerQuery)
+        SFRestAPI.sharedInstance().sendRESTRequest(reqq, failBlock: {_ in
+            print("Error")
+            }, completeBlock: {response in
+                print(response)
+                dispatch_async(dispatch_get_main_queue(), {
+                    let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+                    let presentVC = storyboard.instantiateViewControllerWithIdentifier( "AccountListViewController") as? AccountListViewController
+                    presentVC!.accountListArr = response!["records"]
+                    presentVC?.delegate = self;
+                    let nvc: UINavigationController = UINavigationController(rootViewController: presentVC!)
+                    self.presentViewController(nvc, animated: true, completion:nil)
+                })
+        })
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupPickerView()
         dateFormatter.dateFormat = "YYYY-MM-dd"
         setupDatePicker()
-       // let queryStr = "Select Name, (Select Name, Display_Name__c,Display_order__c, Picker_Value__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'"
-        //let request = SFRestAPI.sharedInstance().requestForQuery(queryStr)
         let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c, Input_Type__c, Picker_Value__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'" )
-
         SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
             print(error)
             }, completeBlock: { response in
                 print(response)
                 let arr = ((response!["records"]) as? NSArray)!
+                if  arr.count > 0 {
                 if (response!["records"]!.valueForKey("FieldInfos__r")?.objectAtIndex(0).valueForKey("records")?.count > 0 ) {
                 let midarr = arr.valueForKey("FieldInfos__r") as! NSArray
                 self.objDataArr = (midarr.objectAtIndex(0).valueForKey("records") as! NSArray).mutableCopy() as! NSMutableArray
+                    }
                 dispatch_async(dispatch_get_main_queue(), {
                     self.tableView.reloadData()
                 })
             }
         })
         self.tableView.separatorColor = UIColor.clearColor()
+        // Do any additional setup after loading the view.
     }
     
-    
- override func viewWillAppear(animated: Bool)    {
-    super.viewWillAppear(animated)
-//    OfflineFormateArr.addObject(objDataArr)
-//    let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OfflineFormateArr)
-//    defaults.setObject(arrOfOppData, forKey: OfflineFormatDataKey)
-//        self.setNavigationBarItem()
-    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -78,17 +100,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if exDelegate.isConnectedToNetwork() {
-            return objDataArr.count
-        } else {
-            if let arrayOfObjectsData = defaults.objectForKey(OfflineFormatDataKey) as? NSData {
-                objDataArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.tableView.reloadData()
-                })
-            }
-            return objDataArr.count
-        }
+        return objDataArr.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -114,38 +126,44 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     @IBAction func saveAction(sender: AnyObject) {
-        if objectType == "Lead" {
-            saveDataOnLeadObject()
-        } else if objectType == "Account"{
-            saveDataOnAccountObject()
-        } else if objectType == "Contact"{
-            saveDataOnContactObject()
-        } else {
-            saveDataOnOpportunity()
-        }
+        
+        postDataObjectInServer()
+        
+
     }
     
-    func  saveDataOnLeadObject() {
+    func  postDataObjectInServer() {
         self.view.endEditing(true)
         var  fields = [String: AnyObject]()
         for   data in self.objDataArr {
-            let keyExists = data[FieldValueKey] as? String
-            fields[ (data["Name"] as? String)!] = data[FieldValueKey]
+            
+           // let dic = data[FieldValueKey] as? String
+            
+            if let val = data[FieldValueKey] {
+                if let x = val {
+                    print(x)
+                    fields[ (data["Name"] as? String)!] = data[FieldValueKey]
+                } else {
+                    print("value is nil")
+                }
+            } else {
+                print("key is not present in dict")
+            }            
         }
         
         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
-        loading.detailsLabelText = "Lead is creating!"
+        loading.detailsLabelText = "\(objectType) is creating!"
         loading.removeFromSuperViewOnHide = true
         
         
-        SFRestAPI.sharedInstance().performCreateWithObjectType("Lead", fields: fields, failBlock: {error in
-            
-            loading.hide(true, afterDelay: 1)
+        SFRestAPI.sharedInstance().performCreateWithObjectType(objectType, fields: fields, failBlock: {error in
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
             dispatch_after(delayTime, dispatch_get_main_queue()) {
+                loading.hide(true, afterDelay: 1)
                 let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                alert.show()            }
+                alert.show()
+            }
             
             }, completeBlock: { succes in
                 
@@ -160,7 +178,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         })
     }
     
-    func saveDataOnAccountObject(){
+   /* func saveDataOnAccountObject(){
         self.view.endEditing(true)
         var  fields = [String: AnyObject]()
         for data in self.objDataArr {
@@ -171,12 +189,18 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         loading.detailsLabelText = "Account is creating!"
         loading.removeFromSuperViewOnHide = true
         
-        SFRestAPI.sharedInstance().performCreateWithObjectType("Account", fields: fields, failBlock: {error in
-            let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-            alert.show()
+        SFRestAPI.sharedInstance().performCreateWithObjectType(objectType, fields: fields, failBlock: {error in
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                loading.hide(true, afterDelay: 1)
+                let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+            }
             
             }, completeBlock: { succes in
                 dispatch_async(dispatch_get_main_queue(), {
+                    loading.hide(true, afterDelay: 1)
+
                     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
                     dispatch_after(delayTime, dispatch_get_main_queue()) {
                         self.navigationController?.popViewControllerAnimated(true)
@@ -198,8 +222,12 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         loading.removeFromSuperViewOnHide = true
         
         SFRestAPI.sharedInstance().performCreateWithObjectType("Contact", fields: fields, failBlock: {error in
-            let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-            alert.show()
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                loading.hide(true, afterDelay: 1)
+                let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+            }
             }, completeBlock: { succes in
                 dispatch_async(dispatch_get_main_queue(), {
                     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
@@ -217,42 +245,31 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         for data in self.objDataArr {
             fields[ (data["Name"] as? String)!] = data[FieldValueKey]
         }
-        if exDelegate.isConnectedToNetwork() {
-            OppOfflineArr.addObject(fields)
-            let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
-            defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
-            dispatch_async(dispatch_get_main_queue(), {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Indeterminate
-                loading.detailsLabelText = "Opporcunity is creating!"
-                loading.hide(true, afterDelay: 2)
-                loading.removeFromSuperViewOnHide = true
-                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
-                dispatch_after(delayTime, dispatch_get_main_queue()) {
-                    self.navigationController?.popViewControllerAnimated(true)
-                }
-            })
-        } else {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Opportunity is creating!"
-            loading.removeFromSuperViewOnHide = true
-            SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: {error in
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
+        loading.detailsLabelText = "Opportunity is creating!"
+        loading.removeFromSuperViewOnHide = true
+        
+        SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: {error in
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                loading.hide(true, afterDelay: 1)
                 let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
                 alert.show()
-                }, completeBlock: { succes in
-                    dispatch_async(dispatch_get_main_queue(), {
-                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-                        dispatch_after(delayTime, dispatch_get_main_queue()) {
-                            self.navigationController?.popViewControllerAnimated(true)
-                        }
-                    })
-            })
-        }
+            }
+            }, completeBlock: { succes in
+                dispatch_async(dispatch_get_main_queue(), {
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+                    dispatch_after(delayTime, dispatch_get_main_queue()) {
+                        self.navigationController?.popViewControllerAnimated(true)
+                    }
+                })
+        })
+        
     }
     
     
-    
+    */
     func textFieldDidBeginEditing(textField: UITextField) {
         let pointInTable = textField.convertPoint(textField.bounds.origin, toView: self.tableView)
         textFieldIndexPath = self.tableView.indexPathForRowAtPoint(pointInTable)
@@ -264,31 +281,29 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         presentTextField = textField
         let pointInTable = textField.convertPoint(textField.bounds.origin, toView: self.tableView)
         textFieldIndexPath = self.tableView.indexPathForRowAtPoint(pointInTable)
-        if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Name"] as? String == "Status"{
-            let Str =  objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Picker_Value__c"] as? String
-            print(Str)
-            self.leadStatusPickListValues()
+        
         if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Input_Type__c"] as? String == TextFieldType {
+            
             let pickerValue = self.objDataArr[(textFieldIndexPath?.row)!]["Picker_Value__c"] as! String
             print(pickerValue)
             let textPickerValueArr = pickerValue.componentsSeparatedByString(",")
             self.picker.showTextPicker(textPickerValueArr)
             self.picker.show(inVC: self)
-
             return false
-        }
-        
-        if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Input_Type__c"] as? String == DatePicker {
+        }  else if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Input_Type__c"] as? String == DatePicker {
             presentTextField.resignFirstResponder()
             chooseDOB()
             return false
+        }  else if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Input_Type__c"] as? String == AccountPIcker {
+            presentTextField.resignFirstResponder()
+            chosseAccountPicker()
+            return false
         }
-      }
-         return true
+        return true
     }
+    
+    @IBAction func leadStatusPickListValues() {
         
-        
-    func leadStatusPickListValues() {
         let reqq = SFRestAPI.sharedInstance().requestForQuery("SELECT ApiName FROM LeadStatus")
         SFRestAPI.sharedInstance().sendRESTRequest(reqq, failBlock: {_ in
             print("Error")
@@ -303,6 +318,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     var picker = GMPicker()
+    
     var datePicker = GMDatePicker()
     var dateFormatter = NSDateFormatter()
     
@@ -326,6 +342,13 @@ extension CreateObjectViewController: GMDatePickerDelegate {
     func gmDatePicker(gmDatePicker: GMDatePicker, didSelect date: NSDate){
         print(date)
         presentTextField.text = dateFormatter.stringFromDate(date)
+        
+        
+        let objectDic = objDataArr.objectAtIndex((textFieldIndexPath?.row)!).mutableCopy() as? NSMutableDictionary
+        objectDic?.setObject(presentTextField.text!, forKey: FieldValueKey)
+        objDataArr.replaceObjectAtIndex((textFieldIndexPath?.row)!, withObject: objectDic!)
+        
+
     }
     func gmDatePickerDidCancelSelection(gmDatePicker: GMDatePicker) {
         
@@ -354,6 +377,9 @@ extension CreateObjectViewController: GMPickerDelegate {
     
     func gmPicker(gmPicker: GMPicker, didSelect string: String) {
         presentTextField.text = string
+        let objectDic = objDataArr.objectAtIndex((textFieldIndexPath?.row)!).mutableCopy() as? NSMutableDictionary
+        objectDic?.setObject(presentTextField.text!, forKey: FieldValueKey)
+        objDataArr.replaceObjectAtIndex((textFieldIndexPath?.row)!, withObject: objectDic!)
     }
     
     func gmPickerDidCancelSelection(gmPicker: GMPicker){
@@ -376,5 +402,3 @@ extension CreateObjectViewController: GMPickerDelegate {
     }
     
 }
-
-

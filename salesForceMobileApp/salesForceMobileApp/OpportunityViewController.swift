@@ -7,6 +7,7 @@
 //
 let OppOnlineDataKey = "OpportunityOnlineDataKey"
 let OppOfflineDataKey = "OpportunityOfflineDataKey"
+let OfflineFormatDataKey = "OfflineFormatDataKey"
 //let offlineData = OfflineShrinkData()
 
 import UIKit

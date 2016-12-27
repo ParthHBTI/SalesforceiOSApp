@@ -15,12 +15,15 @@ import SalesforceRestAPI
 import MBProgressHUD
 var leadStatusValues: AnyObject = []
 
-class CreateObjectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SFRestDelegate, AccountListDelegate, UITextFieldDelegate {
+class CreateObjectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SFRestDelegate,ExecuteQueryDelegate, AccountListDelegate, UITextFieldDelegate {
     var textFieldIndexPath : NSIndexPath?
     @IBOutlet weak var tableView: UITableView!
     var objDataArr = NSMutableArray()
     var objectType = String()
     var delegate: CreateNewLeadDelegate?
+    var exDelegate: ExecuteQuery = ExecuteQuery()
+    var  OfflineFormateArr:AnyObject = NSMutableArray()
+    var OppOfflineArr:AnyObject = NSMutableArray()
     var status = String()
     var presentTextField = UITextField()
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -36,7 +39,8 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         setupPickerView()
         dateFormatter.dateFormat = "YYYY-MM-dd"
         setupDatePicker()
-        //let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c, Picker_Value__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'" )
+       // let queryStr = "Select Name, (Select Name, Display_Name__c,Display_order__c, Picker_Value__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'"
+        //let request = SFRestAPI.sharedInstance().requestForQuery(queryStr)
         let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c, Input_Type__c, Picker_Value__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'" )
 
         SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
@@ -56,6 +60,14 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     
+ override func viewWillAppear(animated: Bool)    {
+    super.viewWillAppear(animated)
+//    OfflineFormateArr.addObject(objDataArr)
+//    let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OfflineFormateArr)
+//    defaults.setObject(arrOfOppData, forKey: OfflineFormatDataKey)
+//        self.setNavigationBarItem()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -66,7 +78,17 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return objDataArr.count
+        if exDelegate.isConnectedToNetwork() {
+            return objDataArr.count
+        } else {
+            if let arrayOfObjectsData = defaults.objectForKey(OfflineFormatDataKey) as? NSData {
+                objDataArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.tableView.reloadData()
+                })
+            }
+            return objDataArr.count
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -195,23 +217,38 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         for data in self.objDataArr {
             fields[ (data["Name"] as? String)!] = data[FieldValueKey]
         }
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
-        loading.detailsLabelText = "Opportunity is creating!"
-        loading.removeFromSuperViewOnHide = true
-        
-        SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: {error in
-            let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-            alert.show()
-            }, completeBlock: { succes in
-                dispatch_async(dispatch_get_main_queue(), {
-                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-                    dispatch_after(delayTime, dispatch_get_main_queue()) {
-                        self.navigationController?.popViewControllerAnimated(true)
-                    }
-                })
-        })
-        
+        if exDelegate.isConnectedToNetwork() {
+            OppOfflineArr.addObject(fields)
+            let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(OppOfflineArr)
+            defaults.setObject(arrOfOppData, forKey: OppOfflineDataKey)
+            dispatch_async(dispatch_get_main_queue(), {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Indeterminate
+                loading.detailsLabelText = "Opporcunity is creating!"
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                    self.navigationController?.popViewControllerAnimated(true)
+                }
+            })
+        } else {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            loading.detailsLabelText = "Opportunity is creating!"
+            loading.removeFromSuperViewOnHide = true
+            SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: {error in
+                let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                alert.show()
+                }, completeBlock: { succes in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+                        dispatch_after(delayTime, dispatch_get_main_queue()) {
+                            self.navigationController?.popViewControllerAnimated(true)
+                        }
+                    })
+            })
+        }
     }
     
     

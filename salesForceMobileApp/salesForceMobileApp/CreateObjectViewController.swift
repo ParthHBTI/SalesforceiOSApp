@@ -16,11 +16,15 @@ import MBProgressHUD
 
 var exDelegate: ExecuteQuery = ExecuteQuery()
 
+protocol UpdateInfoDelegate {
+    func updateInfo(params:Bool)
+}
+
 
 class CreateObjectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SFRestDelegate, AccountListDelegate, UITextFieldDelegate {
     
     var offLineDataArr: AnyObject = NSMutableArray()
-    
+    var delegate:UpdateInfoDelegate?
     var objectInfoDic = [:]
 
     var isEditable = false
@@ -31,7 +35,6 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     var objDataArr = NSMutableArray()
     var objectType = String()
     
-    var delegate: CreateNewLeadDelegate?
     var status = String()
     var presentTextField = UITextField()
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -222,10 +225,10 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     alert.show()
     })
     }){ succes in
-   // self.delegate!.getValFromAccVC(true)
+        self.delegate!.updateInfo(true)
     dispatch_async(dispatch_get_main_queue(), {
         loading.hide(true, afterDelay: 1)
-
+        
     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
     dispatch_after(delayTime, dispatch_get_main_queue()) {
     self.navigationController?.popViewControllerAnimated(true)

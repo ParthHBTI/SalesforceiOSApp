@@ -7,7 +7,7 @@ import MBProgressHUD
 let KeyValue = "KeyValue"
 let KeyName  = "KeyName"
 
-class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate, UIActionSheetDelegate,CreateNewLeadDelegate {
+class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate, UIActionSheetDelegate,UpdateInfoDelegate {
 
     @IBOutlet weak var leadSegment: UISegmentedControl!
     //var getResponseArr:AnyObject = []
@@ -21,6 +21,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     var coutFile = Int()
     var tempCell = LeadContentCell()
     var exDelegate: ExecuteQuery = ExecuteQuery()
+    var delegate:UpdateInfoDelegate?
     var parentIndex:Int = 0
     var isOfflineData:Bool = false
     var isUpdatedSuccessfully:Bool = false
@@ -127,6 +128,10 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     
     func getValFromLeadVC(params: Bool ) {
         self.isUpdatedSuccessfully = params
+    }
+    
+    func updateInfo(flag: Bool ) {
+        self.isUpdatedSuccessfully = flag
     }
 
     
@@ -296,10 +301,8 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             switch (section) {
                 
             case 0:
-                
                 return  leadArr.count //leadDataArr.count
             case 1:
-                
                 return attachmentArr.count
             case 2:
                 return noteArr.count
@@ -456,6 +459,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         nv.objectInfoDic = self.getResponseArr
         nv.isOffLine = isOfflineData
         nv.isEditable = true
+        nv.delegate = self
         navigationController?.pushViewController(nv, animated: true)
     }
     

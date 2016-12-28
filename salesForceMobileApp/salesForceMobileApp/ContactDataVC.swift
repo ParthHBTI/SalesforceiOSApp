@@ -10,7 +10,7 @@ import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
 
-class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate,CreateNewContactDelegate {
+class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate,UpdateInfoDelegate {
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var feedData: AnyObject = []
@@ -110,6 +110,10 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     
     func getValFromContactVC(params: Bool) {
         isUpdatedSuccessfully = params
+    }
+    
+    func updateInfo(flag: Bool ) {
+        self.isUpdatedSuccessfully = flag
     }
     
     func contactOfflineUpdateData(dataArr: NSMutableArray) {
@@ -357,7 +361,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         vc.isOffLine = isOfflineData
         vc.isEditable = true
         self.navigationController?.pushViewController(vc, animated: true)
-        //vc.delegate = self
+        vc.delegate = self
     }
     
     /*

@@ -11,7 +11,7 @@ import SalesforceRestAPI
 import MBProgressHUD
 typealias UserSelectionType = (Bool, Bool) -> Void
 
-class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate,CreateNewOppDelegate {
+class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate,UpdateInfoDelegate {
     var onSuccess: UserSelectionType?
     var feedData: AnyObject = []
     var getResponseArr = NSMutableDictionary()
@@ -112,6 +112,9 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     }
 
     
+    func updateInfo(flag: Bool) {
+        isUpdatedSuccessfully = flag
+    }
     
     func getValFromOppVC(params:Bool) {
         isUpdatedSuccessfully = params
@@ -136,7 +139,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         vc.isOffLine = isOfflineData
         vc.isEditable = true
         self.navigationController?.pushViewController(vc, animated: true)
-        //vc.delegate = self
+        vc.delegate = self
     }
     
     

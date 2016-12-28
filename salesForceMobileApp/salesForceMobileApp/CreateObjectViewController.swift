@@ -203,15 +203,41 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         objDataArr.replaceObjectAtIndex((textFieldIndexPath?.row)!, withObject: objectDic!)
     }
     
+    
+    
+    func updateInfo(fields:[String: AnyObject]) {
+    if exDelegate.isConnectedToNetwork() {
+   
+    SFRestAPI.sharedInstance().performUpdateWithObjectType("Account", objectId: (objectInfoDic["Id"] as? String)!, fields: fields , failBlock: { err in
+    dispatch_async(dispatch_get_main_queue(), {
+    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+    alert.show()
+    })
+    }){ succes in
+   // self.delegate!.getValFromAccVC(true)
+    dispatch_async(dispatch_get_main_queue(), {
+    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+    loading.mode = MBProgressHUDMode.Indeterminate
+    loading.detailsLabelText = "Updating!"
+    loading.hide(true, afterDelay: 2)
+    loading.removeFromSuperViewOnHide = true
+    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+    dispatch_after(delayTime, dispatch_get_main_queue()) {
+    self.navigationController?.popViewControllerAnimated(true)
+    }
+    })
+    }
+    } else {
+   
+}
+}
+    
     @IBAction func saveAction(sender: AnyObject) {
         
        
         self.view.endEditing(true)
         var  fields = [String: AnyObject]()
         for   data in self.objDataArr {
-            
-           // let dic = data[FieldValueKey] as? String
-            
             if let val = data[FieldValueKey] {
                 if let x = val {
                     print(x)
@@ -221,8 +247,14 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                 }
             } else {
                 print("key is not present in dict")
-            }            
+            }
         }
+        
+        if isEditable {
+        
+        updateInfo(fields)
+        
+        } else {
         
         
         if exDelegate.isConnectedToNetwork() {
@@ -286,7 +318,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                 }
             })
         }
-        
+        }
        
     }
     

@@ -186,7 +186,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         let cell = tableView.dequeueReusableCellWithIdentifier(Identifier) as? CreateObjectsCell
         cell!.fieldLabel.text = self.objDataArr[indexPath.row].valueForKey("Display_Name__c") as? String
         if let valueToShow =  self.objDataArr[indexPath.row].valueForKey(FieldValueKey){
-            cell!.objectTextField.text = valueToShow as? String
+            cell!.objectTextField.text =  String(valueToShow)//as? String
         } else {
             cell!.objectTextField.text = ""
         }
@@ -207,21 +207,26 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     
     func updateInfo(fields:[String: AnyObject]) {
     if exDelegate.isConnectedToNetwork() {
+        
+        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        loading.mode = MBProgressHUDMode.Indeterminate
+        loading.detailsLabelText = "Updating!"
+        loading.hide(true, afterDelay: 2)
+        loading.removeFromSuperViewOnHide = true
    
-    SFRestAPI.sharedInstance().performUpdateWithObjectType("Account", objectId: (objectInfoDic["Id"] as? String)!, fields: fields , failBlock: { err in
+    SFRestAPI.sharedInstance().performUpdateWithObjectType(objectType, objectId: (objectInfoDic["Id"] as? String)!, fields: fields , failBlock: { err in
     dispatch_async(dispatch_get_main_queue(), {
+        loading.hide(true, afterDelay: 1)
+
     let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
     alert.show()
     })
     }){ succes in
    // self.delegate!.getValFromAccVC(true)
     dispatch_async(dispatch_get_main_queue(), {
-    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-    loading.mode = MBProgressHUDMode.Indeterminate
-    loading.detailsLabelText = "Updating!"
-    loading.hide(true, afterDelay: 2)
-    loading.removeFromSuperViewOnHide = true
-    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+        loading.hide(true, afterDelay: 1)
+
+    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
     dispatch_after(delayTime, dispatch_get_main_queue()) {
     self.navigationController?.popViewControllerAnimated(true)
     }

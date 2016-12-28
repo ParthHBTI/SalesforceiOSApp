@@ -123,14 +123,20 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     }
     
     func editAction() {
-        let storyboard = UIStoryboard(name: "Main" , bundle: nil)
-        let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
-        vc.opportunityDataDic = self.getResponseArr
-        vc.flag = true
-        vc.section = section
-        vc.indexForOflineUpdate = parentIndex
+        //let storyboard = UIStoryboard(name: "Main" , bundle: nil)
+        let storyboard = UIStoryboard(name: "SubContentsViewController" , bundle: nil)
+        //let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
+        let vc = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
+        //vc.opportunityDataDic = self.getResponseArr
+        //vc.flag = true
+        //vc.section = section
+        //vc.indexForOflineUpdate = parentIndex
+        vc.objectType = "Opportunity"
+        vc.objectInfoDic = self.getResponseArr
+        vc.isOffLine = isOfflineData
+        vc.isEditable = true
         self.navigationController?.pushViewController(vc, animated: true)
-        vc.delegate = self
+        //vc.delegate = self
     }
     
     

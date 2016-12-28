@@ -15,6 +15,7 @@ import MBProgressHUD
 
 class ContactViewController: UIViewController , ExecuteQueryDelegate {
     
+    
     @IBOutlet weak var tableView: UITableView!
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var delContactAtIndexPath:NSIndexPath? = nil

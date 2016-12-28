@@ -10,7 +10,7 @@ import Foundation
 
 let TextFieldType = "Textpicker"
 let DatePicker = "Datepicker"
-let AccountPIcker = "AccountPIcker"
+let AccountPIcker = "AccountPicker"
 
 let SchemaKeySuffix = "SchemaKey"
 let OffLineKeySuffix = "OfLineDataKey"

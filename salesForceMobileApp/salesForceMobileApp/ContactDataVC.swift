@@ -33,6 +33,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         }
     }
     
+    
     @IBAction func contactSegAction(sender: AnyObject) {
         if feedSegment.selectedSegmentIndex == 0 {
             dispatch_async(dispatch_get_main_queue(), {

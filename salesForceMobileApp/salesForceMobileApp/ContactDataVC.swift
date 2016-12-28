@@ -344,12 +344,19 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     }
     
     func editAction() {
-        let storyboard = UIStoryboard(name: "Main" , bundle: nil)
-        let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
-        vc.contactDataDic = self.getResponseArr
-        vc.flag = true
+        //let storyboard = UIStoryboard(name: "Main" , bundle: nil)
+        let storyboard = UIStoryboard(name: "SubContentsViewController" , bundle: nil)
+
+        //let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewContactVC") as! CreateNewContactVC
+        let vc = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
+        //vc.contactDataDic = self.getResponseArr
+        //vc.flag = true
+        vc.objectType = "Contact"
+        vc.objectInfoDic = self.getResponseArr
+        vc.isOffLine = isOfflineData
+        vc.isEditable = true
         self.navigationController?.pushViewController(vc, animated: true)
-        vc.delegate = self
+        //vc.delegate = self
     }
     
     /*

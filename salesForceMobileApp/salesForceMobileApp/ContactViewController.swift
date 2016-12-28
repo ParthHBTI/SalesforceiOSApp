@@ -182,6 +182,7 @@ extension ContactViewController : UITableViewDataSource {
                 self.navigationController?.pushViewController(subContentsVC, animated: true)
             }
         }
+        globalIndex = (indexPath.row)
     }
     
     

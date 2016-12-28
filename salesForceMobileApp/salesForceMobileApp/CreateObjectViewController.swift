@@ -98,9 +98,6 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             
             
             self.tableView.reloadData()
-
-           
-            
             //isOfflineData
         }
     }
@@ -242,7 +239,41 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     })
     }
     } else {
-   
+        if offLineDataArr.count > globalIndex {
+            var keyForOffLine = ""
+            switch objectType {
+            case "Lead":
+                keyForOffLine = LeadOfLineDataKey
+                break
+            case "Contact":
+                keyForOffLine = ContactOfLineDataKey
+                break
+            case "Account":
+                keyForOffLine = AccOffLineDataKey
+                break
+            case "Opportunity":
+                keyForOffLine = OppOffLineDataKey
+                break
+            default:
+                keyForOffLine = ""
+            }
+            offLineDataArr.setObject(fields, atIndex: globalIndex )
+            //offLineDataArr.addObject(fields)
+            let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(offLineDataArr)
+            defaults.setObject(arrOfLeadData, forKey: keyForOffLine)
+            dispatch_async(dispatch_get_main_queue(), {
+                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                loading.mode = MBProgressHUDMode.Indeterminate
+                loading.detailsLabelText = "Lead is creating!"
+                loading.removeFromSuperViewOnHide = true
+                loading.hide(true, afterDelay:2)
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                    self.navigationController?.popViewControllerAnimated(true)
+                }
+            })
+
+        }
 }
 }
     

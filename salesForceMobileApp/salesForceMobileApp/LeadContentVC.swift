@@ -6,6 +6,7 @@ import MBProgressHUD
 
 let KeyValue = "KeyValue"
 let KeyName  = "KeyName"
+var globalIndex = 0
 
 class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate, UIActionSheetDelegate,UpdateInfoDelegate {
 

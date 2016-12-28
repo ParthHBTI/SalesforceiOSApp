@@ -37,6 +37,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     
     var status = String()
     var presentTextField = UITextField()
+    
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil
@@ -85,8 +86,13 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                 let objKey = loopObjc["Name"] as? String
                 let  objValue = objectInfoDic[objKey!]
                 let objectDic = loopObjc.mutableCopy() as? NSMutableDictionary
-                objectDic?.setObject(objValue!, forKey: FieldValueKey)
-                objDataArr.replaceObjectAtIndex(k, withObject: objectDic!)
+                if let _ = objValue {
+                    objectDic?.setObject(objValue!, forKey: FieldValueKey)
+                    objDataArr.replaceObjectAtIndex(k, withObject: objectDic!)
+                }else {
+                    objectDic?.setObject("", forKey: FieldValueKey)
+                    objDataArr.replaceObjectAtIndex(k, withObject: objectDic!)
+                }
                 k += 1;
             }
             

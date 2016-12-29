@@ -249,16 +249,16 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         var keyForOffLine = ""
         switch objectType {
         case "Lead":
-            keyForOffLine = LeadOfLineDataKey
+            keyForOffLine = "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)"
             break
         case "Contact":
-            keyForOffLine = ContactOfLineDataKey
+            keyForOffLine = "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)"
             break
         case "Account":
-            keyForOffLine = AccOffLineDataKey
+            keyForOffLine = "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)"
             break
         case "Opportunity":
-            keyForOffLine = OppOffLineDataKey
+            keyForOffLine = "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)"
             break
         default:
             keyForOffLine = ""
@@ -320,27 +320,9 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             })
         } else {
             
-            var keyForOffLine = ""
-            switch objectType {
-            case "Lead":
-                keyForOffLine = LeadOfLineDataKey
-                break
-            case "Contact":
-                keyForOffLine = ContactOfLineDataKey
-                break
-            case "Account":
-                keyForOffLine = AccOffLineDataKey
-                break
-            case "Opportunity":
-                keyForOffLine = OppOffLineDataKey
-                break
-            default:
-                keyForOffLine = ""
-            }
-           
             offLineDataArr.addObject(fields)
             let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(offLineDataArr)
-            defaults.setObject(arrOfLeadData, forKey: keyForOffLine)
+            defaults.setObject(arrOfLeadData, forKey: getDataKey())
             dispatch_async(dispatch_get_main_queue(), {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Indeterminate

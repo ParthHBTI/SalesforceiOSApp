@@ -154,6 +154,7 @@ extension OpportunityViewController : UITableViewDataSource {
             cell.notConnectedImage.hidden = false
         } else {
             cell.dataText?.text = oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.detailText?.text = oppOnlineArr.objectAtIndex(indexPath.row)["Account"]!["Name"] as? String
             cell.notConnectedImage.hidden = true
         }
         cell.dataImage.backgroundColor = UIColor.init(hex: "FFB642")

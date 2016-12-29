@@ -155,7 +155,7 @@ extension ContactViewController : UITableViewDataSource {
             cell.notConnectedImage.hidden = false
         } else {
             cell.dataText.text = contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String
-            cell.detailText.text = contactOnLineArr.objectAtIndex(indexPath.row)["Account"] as? String
+            cell.detailText.text = contactOnLineArr.objectAtIndex(indexPath.row)["Account"]!["Name"] as? String
             cell.notConnectedImage.hidden = true
         }
         cell.dataImage.backgroundColor = UIColor.init(hex: "9996D2")

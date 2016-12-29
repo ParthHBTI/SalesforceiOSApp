@@ -150,6 +150,9 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                     } else if key as! String == "attributes" {
                         objectDic.setObject(key, forKey: KeyName)
                         objectDic.setObject(val["type"], forKey: KeyValue)
+                    }else if key as! String == "Account" {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val["Name"], forKey: KeyValue)
                     }
                     contactDataArr.addObject(objectDic)
                 }

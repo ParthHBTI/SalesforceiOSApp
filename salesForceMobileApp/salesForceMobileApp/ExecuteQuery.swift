@@ -28,7 +28,7 @@ class ExecuteQuery: UIViewController, SFRestDelegate {
     var leadRequest = "SELECT Address,City,Company,CreatedDate,FirstName,Id,IsConverted,LastName,LeadSource,MobilePhone,Name,Phone,PostalCode,State,Status,Title FROM Lead Order by CreatedDate DESC"
    var accountRequest = "SELECT Owner.Name,AccountNumber,Fax,LastModifiedDate,Name,Ownership,Phone,Type,Website,Id,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet  FROM Account  Order by CreatedDate DESC"
     
-    var contactRequest = "SELECT AccountId,Birthdate,CleanStatus,Email,Fax,FirstName,Id,LastReferencedDate,Name FROM Contact"
+    var contactRequest = "SELECT AccountId,Birthdate,CleanStatus,Email,Fax,FirstName, LastName,Id,LastReferencedDate,Name, Phone FROM Contact"
     //var contactRequest = "Select Id, Name,Email,Fax, FirstName,Phone,Salutation, (Select  Name, Email, Salutation, Fax, Phone, Id, FirstName, LastName From Contacts) From Account WHERE Id IN (Select AccountId From Contact)  Order by CreatedDate DESC"
     var opporchunityRequest = "SELECT Owner.Name,Amount,CloseDate,CreatedDate,IsClosed,IsDeleted,IsPrivate,LastModifiedDate,LeadSource,Name,Probability,StageName,Type,Id FROM Opportunity Order by CreatedDate DESC"
     //Select Id, Name, (Select Name,Email, Salutation, Fax, Phone, Id, FirstName, LastName From Contacts) From Account WHERE Id IN (Select AccountId From Contact)

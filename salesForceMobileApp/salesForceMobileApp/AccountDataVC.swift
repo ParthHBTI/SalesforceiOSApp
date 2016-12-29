@@ -121,6 +121,10 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         accountDataArr = dataArr
     }
     
+    func updateOfflineData(offlineData: NSMutableArray) {
+        accountDataArr = offlineData
+    }
+    
     func isAccDataNil() {
         if isOfflineData {
             for (key, value) in getResponseArr{

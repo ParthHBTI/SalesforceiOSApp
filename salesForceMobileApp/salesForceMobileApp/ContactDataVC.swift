@@ -108,17 +108,23 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     }
 
     
-    func getValFromContactVC(params: Bool) {
-        isUpdatedSuccessfully = params
-    }
+//    func getValFromContactVC(params: Bool) {
+//        isUpdatedSuccessfully = params
+//    }
+//    
+//    func contactOfflineUpdateData(dataArr: NSMutableArray) {
+//        contactDataArr = dataArr
+//    }
+    
     
     func updateInfo(flag: Bool ) {
         self.isUpdatedSuccessfully = flag
     }
     
-    func contactOfflineUpdateData(dataArr: NSMutableArray) {
-        contactDataArr = dataArr
+    func updateOfflineData(offlineData: NSMutableArray) {
+        contactDataArr = offlineData
     }
+
     
     func isContactDataNil() {
         if isOfflineData {

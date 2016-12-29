@@ -6,6 +6,7 @@ import MBProgressHUD
 
 let KeyValue = "KeyValue"
 let KeyName  = "KeyName"
+var globalIndex = 0
 
 class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate, UIActionSheetDelegate,UpdateInfoDelegate {
 
@@ -52,8 +53,8 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         configureTableView()
+        if exDelegate.isConnectedToNetwork() {
         if isUpdatedSuccessfully {
-            if exDelegate.isConnectedToNetwork() {
                 exDelegate.leadQueryDe("lead")
             }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
@@ -70,6 +71,8 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             loading.detailsLabelText = "Updated Successfully!"
             loading.removeFromSuperViewOnHide = true
             loading.hide(true, afterDelay:2)*/
+        } else {
+            
         }
         isUpdatedSuccessfully = false
         dowloadAttachment()
@@ -84,6 +87,11 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         }
         getResponseArr = offlineUpdatedLeadData
     }
+    
+    func updateOfflineData(offlineData: NSMutableArray) {
+        leadArr = offlineData
+    }
+
     
     func configureTableView() {
         tableView.delegate = self
@@ -134,7 +142,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         self.isUpdatedSuccessfully = flag
     }
 
-    
+   
     func dowloadAttachment() {
         let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
         let reqs = SFRestAPI.sharedInstance().requestForQuery(query)

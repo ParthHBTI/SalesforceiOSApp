@@ -18,7 +18,6 @@ var exDelegate: ExecuteQuery = ExecuteQuery()
 
 protocol UpdateInfoDelegate {
     func updateInfo(params:Bool)
-    func updateOfflineData(offlineData: NSMutableArray)
 }
 
 
@@ -38,7 +37,6 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     
     var status = String()
     var presentTextField = UITextField()
-    
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil
@@ -59,7 +57,6 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         
         print(accointDetail)
     }
-    
     @IBAction func chosseAccountPicker() {
         
         let reqq = SFRestAPI.sharedInstance().requestForQuery(AccountPIckerQuery)
@@ -88,18 +85,16 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                 let objKey = loopObjc["Name"] as? String
                 let  objValue = objectInfoDic[objKey!]
                 let objectDic = loopObjc.mutableCopy() as? NSMutableDictionary
-                if let _ = objValue {
-                    objectDic?.setObject(objValue!, forKey: FieldValueKey)
-                    objDataArr.replaceObjectAtIndex(k, withObject: objectDic!)
-                }else {
-                    objectDic?.setObject("", forKey: FieldValueKey)
-                    objDataArr.replaceObjectAtIndex(k, withObject: objectDic!)
-                }
+                objectDic?.setObject(objValue!, forKey: FieldValueKey)
+                objDataArr.replaceObjectAtIndex(k, withObject: objectDic!)
                 k += 1;
             }
             
             
             self.tableView.reloadData()
+
+           
+            
             //isOfflineData
         }
     }
@@ -241,45 +236,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     })
     }
     } else {
-        if offLineDataArr.count > globalIndex {
-            var keyForOffLine = ""
-            switch objectType {
-            case "Lead":
-                keyForOffLine = LeadOfLineDataKey
-                break
-            case "Contact":
-                keyForOffLine = ContactOfLineDataKey
-                break
-            case "Account":
-                keyForOffLine = AccOffLineDataKey
-                break
-            case "Opportunity":
-                keyForOffLine = OppOffLineDataKey
-                break
-            default:
-                keyForOffLine = ""
-            }
-            
-            offLineDataArr.setObject(fields, atIndex: globalIndex )
-            //offLineDataArr.addObject(fields)
-            delegate?.updateOfflineData(offLineDataArr as! NSMutableArray)
-            let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(offLineDataArr)
-            defaults.setObject(arrOfLeadData, forKey: keyForOffLine)
-            delegate?.updateInfo(true)
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Indeterminate
-                loading.detailsLabelText = "Lead is creating!"
-                loading.removeFromSuperViewOnHide = true
-                loading.hide(true, afterDelay:1)
-                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-                dispatch_after(delayTime, dispatch_get_main_queue()) {
-                    self.navigationController?.popViewControllerAnimated(true)
-                }
-            })
-
-        }
+   
 }
 }
     

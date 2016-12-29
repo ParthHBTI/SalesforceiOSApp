@@ -295,6 +295,7 @@ extension LeadViewController : UITableViewDataSource {
             
         }
         subContentsVC.parentIndex = (indexPath.row)
+        globalIndex = (indexPath.row)
         self.navigationController?.pushViewController(subContentsVC, animated: true)
     }
     

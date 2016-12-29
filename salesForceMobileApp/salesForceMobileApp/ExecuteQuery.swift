@@ -10,12 +10,7 @@ import UIKit
 import SalesforceRestAPI
 import SystemConfiguration
 import MBProgressHUD
-//public enum selectObject: String {
-//    case lead = "lead"
-//    case account = "account"
-//    case contact = "contact"
-//    case opporchunity = "opporchunity"
-//}
+
 
 @objc public protocol ExecuteQueryDelegate {
     optional func executeQuery()
@@ -25,13 +20,8 @@ class ExecuteQuery: UIViewController, SFRestDelegate {
     
     internal weak var delegate : ExecuteQueryDelegate?
     var resArr:AnyObject = NSMutableArray()
-    var leadRequest = "SELECT Address,City,Company,CreatedDate,FirstName,Id,IsConverted,LastName,LeadSource,MobilePhone,Name,Phone,PostalCode,State,Status,Title FROM Lead Order by CreatedDate DESC"
-   var accountRequest = "SELECT Owner.Name,AccountNumber,Fax,LastModifiedDate,Name,Ownership,Phone,Type,Website,Id,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet  FROM Account  Order by CreatedDate DESC"
     
-    var contactRequest = "SELECT AccountId,Birthdate,CleanStatus,Email,Fax,FirstName, LastName,Id,LastReferencedDate,Name, Phone FROM Contact"
-    //var contactRequest = "Select Id, Name,Email,Fax, FirstName,Phone,Salutation, (Select  Name, Email, Salutation, Fax, Phone, Id, FirstName, LastName From Contacts) From Account WHERE Id IN (Select AccountId From Contact)  Order by CreatedDate DESC"
-    var opporchunityRequest = "SELECT Owner.Name,Amount,CloseDate,CreatedDate,IsClosed,IsDeleted,IsPrivate,LastModifiedDate,LeadSource,Name,Probability,StageName,Type,Id FROM Opportunity Order by CreatedDate DESC"
-    //Select Id, Name, (Select Name,Email, Salutation, Fax, Phone, Id, FirstName, LastName From Contacts) From Account WHERE Id IN (Select AccountId From Contact)
+    
     func request(request: SFRestRequest, didLoadResponse jsonResponse: AnyObject) {
         print(jsonResponse)
         resArr = jsonResponse["records"] as! [NSDictionary]
@@ -39,13 +29,13 @@ class ExecuteQuery: UIViewController, SFRestDelegate {
         dispatch_async(dispatch_get_main_queue(), {
         let str = self.removeSpecialCharsFromString(request.queryParams!.debugDescription)
            let newStr = String(str.substringFromIndex(str.startIndex.advancedBy(2)))
-            if newStr == self.leadRequest  {
+            if newStr == leadRequest  {
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
                 defaults.setObject(arrOfLeadData, forKey: LeadOnLineDataKey)
-            } else if newStr == self.accountRequest {
+            } else if newStr == accountRequest {
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
                 defaults.setObject(arrOfLeadData, forKey: AccOnLineDataKey)
-            } else if newStr == self.contactRequest {
+            } else if newStr == contactRequest {
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
                 defaults.setObject(arrOfLeadData, forKey: ContactOnLineDataKey)
             } else {
@@ -114,20 +104,5 @@ class ExecuteQuery: UIViewController, SFRestDelegate {
         return (isReachable && !needsConnection)
     }
     
-//    func showServerHUD() {
-//        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-//        loading.mode = MBProgressHUDMode.Indeterminate
-//        loading.detailsLabelText = "Uploading Data from Server"
-//        loading.hide(true, afterDelay: 2)
-//        loading.removeFromSuperViewOnHide = true
-//    }
-//    
-//    func showLocalHUD() {
-//        let loading = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
-//        loading.mode = MBProgressHUDMode.Indeterminate
-//        loading.detailsLabelText = "Uploading Data from Local"
-//        loading.hide(true, afterDelay: 2)
-//        loading.removeFromSuperViewOnHide = true
-//    }
 
 }

@@ -5,11 +5,12 @@
 //  Created by HemendraSingh on 15/12/16.
 //  Copyright © 2016 Salesforce. All rights reserved.
 //
-let fieldValueKey = "FieldValue"
+
 
 import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
+let fieldValueKey = "FieldValue"
 
 class AddNewObjectVC: UITableViewController,SFRestDelegate {
     

@@ -18,6 +18,7 @@ var exDelegate: ExecuteQuery = ExecuteQuery()
 
 protocol UpdateInfoDelegate {
     func updateInfo(params:Bool)
+    func updateOfflineData(offlineData: NSMutableArray)
 }
 
 
@@ -58,6 +59,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         
         print(accointDetail)
     }
+    
     @IBAction func chosseAccountPicker() {
         
         let reqq = SFRestAPI.sharedInstance().requestForQuery(AccountPIckerQuery)
@@ -257,17 +259,21 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             default:
                 keyForOffLine = ""
             }
+            
             offLineDataArr.setObject(fields, atIndex: globalIndex )
             //offLineDataArr.addObject(fields)
+            delegate?.updateOfflineData(offLineDataArr as! NSMutableArray)
             let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(offLineDataArr)
             defaults.setObject(arrOfLeadData, forKey: keyForOffLine)
+            delegate?.updateInfo(true)
+            
             dispatch_async(dispatch_get_main_queue(), {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Indeterminate
                 loading.detailsLabelText = "Lead is creating!"
                 loading.removeFromSuperViewOnHide = true
-                loading.hide(true, afterDelay:2)
-                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                loading.hide(true, afterDelay:1)
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
                 dispatch_after(delayTime, dispatch_get_main_queue()) {
                     self.navigationController?.popViewControllerAnimated(true)
                 }

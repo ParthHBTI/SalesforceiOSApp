@@ -82,6 +82,10 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         if isUpdatedSuccessfully {
             if exDelegate.isConnectedToNetwork(){
             self.exDelegate.leadQueryDe("opporchunity")
+            } else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.tableView.reloadData()
+                })
             }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Text
@@ -116,14 +120,21 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         isUpdatedSuccessfully = flag
     }
     
-    func getValFromOppVC(params:Bool) {
-        isUpdatedSuccessfully = params
-        
+//    
+//     func oppOfflineUpdateData(dataArr: NSMutableArray) {
+//        opportunityDataArr = dataArr
+//    }
+//    
+//    func getValFromOppVC(params:Bool) {
+//        isUpdatedSuccessfully = params
+//        
+//    }
+    
+    func updateOfflineData(offlineData: NSMutableArray) {
+        opportunityDataArr = offlineData
     }
     
-     func oppOfflineUpdateData(dataArr: NSMutableArray) {
-        opportunityDataArr = dataArr
-    }
+
     
     func editAction() {
         //let storyboard = UIStoryboard(name: "Main" , bundle: nil)
@@ -278,7 +289,6 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         } else {
             return feedData.count
         }
-        
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -367,6 +377,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         
         
     }
+    
     func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
         //let attachmentID = dataResponse["id"] as! String
         self.feedData = dataResponse["records"]

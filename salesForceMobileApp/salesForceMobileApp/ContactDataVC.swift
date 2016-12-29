@@ -150,6 +150,9 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                     } else if key as! String == "attributes" {
                         objectDic.setObject(key, forKey: KeyName)
                         objectDic.setObject(val["type"], forKey: KeyValue)
+                    }else if key as! String == "Account" {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val["Name"], forKey: KeyValue)
                     }
                     contactDataArr.addObject(objectDic)
                 }
@@ -362,7 +365,8 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
         //vc.contactDataDic = self.getResponseArr
         //vc.flag = true
-        vc.objectType = "Contact"
+        vc.objectType = ObjectDataType.contactValue.rawValue
+
         vc.objectInfoDic = self.getResponseArr
         vc.isOffLine = isOfflineData
         vc.isEditable = true

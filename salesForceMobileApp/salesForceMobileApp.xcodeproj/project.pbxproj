@@ -15,6 +15,7 @@
 		049EAE171DD1BCED00C178DA /* feedTemplate.json in Resources */ = {isa = PBXBuildFile; fileRef = 049EAE161DD1BCED00C178DA /* feedTemplate.json */; };
 		04A552321DE2E602003D546E /* NoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A552311DE2E602003D546E /* NoteViewController.swift */; };
 		04B776391DEBF69E009A7213 /* AccountListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B776381DEBF69E009A7213 /* AccountListViewController.swift */; };
+		04BDF40C1E14EC7E0008D87F /* OffLineSetupData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BDF40B1E14EC7E0008D87F /* OffLineSetupData.swift */; };
 		04CB1DE41DAF807400D2621C /* SlideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB1DE31DAF807400D2621C /* SlideMenuController.swift */; };
 		04CE8B331DC087AE0057B0A9 /* ExecuteQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE8B321DC087AE0057B0A9 /* ExecuteQuery.swift */; };
 		04D2551C1DF6EB1900CB1A9B /* LeadContentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04D2551B1DF6EB1900CB1A9B /* LeadContentCell.xib */; };
@@ -87,6 +88,7 @@
 		049EAE161DD1BCED00C178DA /* feedTemplate.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = feedTemplate.json; sourceTree = "<group>"; };
 		04A552311DE2E602003D546E /* NoteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NoteViewController.swift; path = salesForceMobileApp/NoteViewController.swift; sourceTree = "<group>"; };
 		04B776381DEBF69E009A7213 /* AccountListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountListViewController.swift; path = salesForceMobileApp/AccountListViewController.swift; sourceTree = "<group>"; };
+		04BDF40B1E14EC7E0008D87F /* OffLineSetupData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffLineSetupData.swift; sourceTree = "<group>"; };
 		04CB1DE21DAF807400D2621C /* SlideMenuControllerSwift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideMenuControllerSwift.h; sourceTree = "<group>"; };
 		04CB1DE31DAF807400D2621C /* SlideMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideMenuController.swift; sourceTree = "<group>"; };
 		04CE8B321DC087AE0057B0A9 /* ExecuteQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExecuteQuery.swift; path = salesForceMobileApp/ExecuteQuery.swift; sourceTree = "<group>"; };
@@ -277,6 +279,8 @@
 			isa = PBXGroup;
 			children = (
 				7331FBD31E0CF5FD00C86DD6 /* Constant.swift */,
+				04BDF40B1E14EC7E0008D87F /* OffLineSetupData.swift */,
+				73311EDF1E00153E00DF4EEC /* OfflineSyncData.swift */,
 				7331FBD41E0CF5FD00C86DD6 /* GMDatePicker.swift */,
 				7331FBD51E0CF5FD00C86DD6 /* GMPicker.swift */,
 				0416F9C01E0A888E005F3A54 /* CreateObjectsCell.swift */,
@@ -302,7 +306,6 @@
 				04F96F331DAF75E0000D715A /* ExSlideMenuController.swift */,
 				4FD6C49D1B755242002F9F90 /* InitialViewController.swift */,
 				4FD6C4791B754AF1002F9F90 /* AppDelegate.swift */,
-				73311EDF1E00153E00DF4EEC /* OfflineSyncData.swift */,
 				4F393A281C3C8BCD00B3EA13 /* main.swift */,
 				732D9DB71DB88A23002AEDBA /* LeadContentVC.swift */,
 				73BAB84C1DB8D9F200586320 /* AccountDataVC.swift */,
@@ -494,6 +497,7 @@
 				04310E901DDF0BF7000DFEC4 /* NoteAndAttachFileCell.swift in Sources */,
 				7331FBD81E0CF5FD00C86DD6 /* GMPicker.swift in Sources */,
 				04F96F241DAF74F8000D715A /* ImageHeaderView.swift in Sources */,
+				04BDF40C1E14EC7E0008D87F /* OffLineSetupData.swift in Sources */,
 				4FD6C49F1B755242002F9F90 /* RootViewController.swift in Sources */,
 				0416F9C31E0A888E005F3A54 /* CreateObjectViewController.swift in Sources */,
 				733CB6301DD1DE920079F7CC /* UITableViewController.swift in Sources */,

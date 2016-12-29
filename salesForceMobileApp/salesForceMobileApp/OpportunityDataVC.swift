@@ -141,11 +141,7 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         let storyboard = UIStoryboard(name: "SubContentsViewController" , bundle: nil)
         //let vc = storyboard.instantiateViewControllerWithIdentifier("CreateNewOpportunityVC") as! CreateNewOpportunityVC
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
-        //vc.opportunityDataDic = self.getResponseArr
-        //vc.flag = true
-        //vc.section = section
-        //vc.indexForOflineUpdate = parentIndex
-        vc.objectType = "Opportunity"
+        vc.objectType = ObjectDataType.opportunityValue.rawValue
         vc.objectInfoDic = self.getResponseArr
         vc.isOffLine = isOfflineData
         vc.isEditable = true
@@ -178,6 +174,9 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
                     } else if key as! String == "attributes" {
                         objectDic.setObject(key, forKey: KeyName)
                         objectDic.setObject(val["type"], forKey: KeyValue)
+                    } else if key as! String == "Account" {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val["Name"], forKey: KeyValue)
                     }
                     opportunityDataArr.addObject(objectDic)
                 }

@@ -113,7 +113,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
-        nv.objectType = "Lead"
+        nv.objectType =   "Lead"
         navigationController?.pushViewController(nv, animated: true)    }
     
     

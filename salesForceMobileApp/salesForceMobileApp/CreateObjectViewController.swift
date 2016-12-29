@@ -147,32 +147,9 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         self.tableView.separatorColor = UIColor.clearColor()
         // Do any additional setup after loading the view.
         downloadSchemaForPage()
-        
-        var keyForOffLine = ""
-        switch objectType {
-        case "Lead":
-            keyForOffLine = LeadOfLineDataKey
-            break
-        case "Contact":
-            keyForOffLine = ContactOfLineDataKey
-            break
-        case "Account":
-            keyForOffLine = AccOffLineDataKey
-            break
-        case "Opportunity":
-            keyForOffLine = OppOffLineDataKey
-            break
-        default:
-            keyForOffLine = ""
-        }
-        
-        if let arrayOfObjectsData = defaults.objectForKey(keyForOffLine) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey(getDataKey()) as? NSData {
             offLineDataArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
         }
-        
-        
-        
-        
     }
     
     
@@ -194,12 +171,11 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         let cell = tableView.dequeueReusableCellWithIdentifier(Identifier) as? CreateObjectsCell
         cell!.fieldLabel.text = self.objDataArr[indexPath.row].valueForKey("Display_Name__c") as? String
         if let valueToShow =  self.objDataArr[indexPath.row].valueForKey(FieldValueKey){
-            cell!.objectTextField.text =  String(valueToShow)//as? String
+            cell!.objectTextField.text =  String(valueToShow)
         } else {
             cell!.objectTextField.text = ""
         }
         return cell!
-        
     }
     
     
@@ -215,7 +191,6 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     
     func updateInfo(fields:[String: AnyObject]) {
     if exDelegate.isConnectedToNetwork() {
-        
         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
         loading.detailsLabelText = "Updating!"
@@ -242,35 +217,22 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     }
     } else {
         if offLineDataArr.count > globalIndex {
-            var keyForOffLine = ""
-            switch objectType {
-            case "Lead":
-                keyForOffLine = LeadOfLineDataKey
-                break
-            case "Contact":
-                keyForOffLine = ContactOfLineDataKey
-                break
-            case "Account":
-                keyForOffLine = AccOffLineDataKey
-                break
-            case "Opportunity":
-                keyForOffLine = OppOffLineDataKey
-                break
-            default:
-                keyForOffLine = ""
-            }
-            
             offLineDataArr.setObject(fields, atIndex: globalIndex )
-            //offLineDataArr.addObject(fields)
-            delegate?.updateOfflineData(offLineDataArr as! NSMutableArray)
+            let offlineUpdatedArr = NSMutableArray()
+            for (key, value) in fields {
+                let objectDic = NSMutableDictionary()
+                objectDic.setObject(key, forKey: KeyName)
+                objectDic.setObject(value, forKey: KeyValue)
+                offlineUpdatedArr.addObject(objectDic)
+            }
+            delegate?.updateOfflineData(offlineUpdatedArr)
             let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(offLineDataArr)
-            defaults.setObject(arrOfLeadData, forKey: keyForOffLine)
+            defaults.setObject(arrOfLeadData, forKey: getDataKey())
             delegate?.updateInfo(true)
-            
             dispatch_async(dispatch_get_main_queue(), {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Indeterminate
-                loading.detailsLabelText = "Lead is creating!"
+                loading.detailsLabelText = "\(self.objectType) is creating!"
                 loading.removeFromSuperViewOnHide = true
                 loading.hide(true, afterDelay:1)
                 let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
@@ -282,6 +244,28 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         }
 }
 }
+   
+    func getDataKey() -> String {
+        var keyForOffLine = ""
+        switch objectType {
+        case "Lead":
+            keyForOffLine = LeadOfLineDataKey
+            break
+        case "Contact":
+            keyForOffLine = ContactOfLineDataKey
+            break
+        case "Account":
+            keyForOffLine = AccOffLineDataKey
+            break
+        case "Opportunity":
+            keyForOffLine = OppOffLineDataKey
+            break
+        default:
+            keyForOffLine = ""
+        }
+
+        return keyForOffLine
+    }
     
     @IBAction func saveAction(sender: AnyObject) {
         

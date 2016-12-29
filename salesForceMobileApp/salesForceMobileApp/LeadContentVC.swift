@@ -4,9 +4,6 @@ import SalesforceNetwork
 import SystemConfiguration
 import MBProgressHUD
 
-let KeyValue = "KeyValue"
-let KeyName  = "KeyName"
-var globalIndex = 0
 
 class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate, UIActionSheetDelegate,UpdateInfoDelegate {
 
@@ -53,8 +50,9 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         configureTableView()
-        if exDelegate.isConnectedToNetwork() {
+        
         if isUpdatedSuccessfully {
+            if exDelegate.isConnectedToNetwork() {
                 exDelegate.leadQueryDe("lead")
             }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
@@ -78,15 +76,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         dowloadAttachment()
     }
     
-    
-    func getOfflineUpdatedLeadData(getOfflineLeadArr: NSMutableArray) {
-        leadArr = getOfflineLeadArr
-        let offlineUpdatedLeadData : NSMutableDictionary = [:]
-        for var data in getOfflineLeadArr {
-        offlineUpdatedLeadData.setObject(data["KeyValue"] as! String, forKey:data["KeyName"] as! String)
-        }
-        getResponseArr = offlineUpdatedLeadData
-    }
     
     func updateOfflineData(offlineData: NSMutableArray) {
         leadArr = offlineData
@@ -133,10 +122,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         })
     }
     
-    
-    func getValFromLeadVC(params: Bool ) {
-        self.isUpdatedSuccessfully = params
-    }
     
     func updateInfo(flag: Bool ) {
         self.isUpdatedSuccessfully = flag

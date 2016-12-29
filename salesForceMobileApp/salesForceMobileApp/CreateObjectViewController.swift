@@ -261,16 +261,21 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             }
             
             offLineDataArr.setObject(fields, atIndex: globalIndex )
-            //offLineDataArr.addObject(fields)
-            delegate?.updateOfflineData(offLineDataArr as! NSMutableArray)
+            let offlineUpdatedArr = NSMutableArray()
+            for (key, value) in fields {
+                let objectDic = NSMutableDictionary()
+                objectDic.setObject(key, forKey: KeyName)
+                objectDic.setObject(value, forKey: KeyValue)
+                offlineUpdatedArr.addObject(objectDic)
+            }
+            delegate?.updateOfflineData(offlineUpdatedArr)
             let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(offLineDataArr)
             defaults.setObject(arrOfLeadData, forKey: keyForOffLine)
             delegate?.updateInfo(true)
-            
             dispatch_async(dispatch_get_main_queue(), {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Indeterminate
-                loading.detailsLabelText = "Lead is creating!"
+                loading.detailsLabelText = "\(self.objectType) is creating!"
                 loading.removeFromSuperViewOnHide = true
                 loading.hide(true, afterDelay:1)
                 let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))

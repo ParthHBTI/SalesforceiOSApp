@@ -109,16 +109,8 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     }
     
     
-    func getValFromAccVC(params: Bool) {
-        isUpdatedSuccessfully = params
-    }
-    
     func updateInfo(flag: Bool ) {
         self.isUpdatedSuccessfully = flag
-    }
-    
-    func accOfflineUpdateData(dataArr: NSMutableArray) {
-        accountDataArr = dataArr
     }
     
     func updateOfflineData(offlineData: NSMutableArray) {

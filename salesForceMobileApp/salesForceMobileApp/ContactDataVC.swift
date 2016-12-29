@@ -362,7 +362,8 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
         //vc.contactDataDic = self.getResponseArr
         //vc.flag = true
-        vc.objectType = "Contact"
+        vc.objectType = ObjectDataType.contactValue.rawValue
+
         vc.objectInfoDic = self.getResponseArr
         vc.isOffLine = isOfflineData
         vc.isEditable = true

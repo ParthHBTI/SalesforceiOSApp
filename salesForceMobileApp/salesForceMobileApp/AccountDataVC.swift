@@ -362,7 +362,8 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         let vc = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
         //vc.accountDataDic = self.getResponseArr
         //vc.flag = true
-        vc.objectType = "Account"
+        vc.objectType = ObjectDataType.accountValue.rawValue
+
         vc.objectInfoDic = self.getResponseArr
         vc.isOffLine = isOfflineData
         vc.isEditable = true

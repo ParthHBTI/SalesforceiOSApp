@@ -8,17 +8,29 @@
 
 import Foundation
 
+
+//"Lead"
+
+
+enum ObjectDataType: String {
+    case leadValue = "Lead"
+    case accountValue = "Account"
+    case contactValue = "Contact"
+    case opportunityValue = "Opportunity"
+}
+
 let KeyValue = "KeyValue"
 let KeyName  = "KeyName"
 var globalIndex = 0
 
 
 let TextFieldType = "Textpicker"
-let DatePicker = "Datepicker"
+let DatePicker    = "Datepicker"
 let AccountPIcker = "AccountPicker"
 
 let SchemaKeySuffix = "SchemaKey"
-let OffLineKeySuffix = "OfLineDataKey"
+let OffLineKeySuffix = "OffLineDataKey"
+let OnLineKeySuffix = "OnLineDataKey"
 
 var keyForOffLine = ""
 let LeadOnLineDataKey = "LeadOnLineDataKey"

@@ -53,7 +53,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
             exDelegate.leadQueryDe("lead")
             }
         }*/
-        if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)") as? NSData {
             leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -142,7 +142,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("lead")
-        } else if let arrayOfObjectsData = defaults.objectForKey(LeadOnLineDataKey) as? NSData {
+        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -193,7 +193,7 @@ extension LeadViewController : UITableViewDataSource {
         }
         
        
-
+        
         
         
         return cell
@@ -258,7 +258,7 @@ extension LeadViewController : UITableViewDataSource {
                 self.leadOfLineArr.removeObjectAtIndex(indexPath.row)
                 self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                 let offlineLeadArr = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
-                defaults.setObject(offlineLeadArr, forKey: LeadOfLineDataKey)
+                defaults.setObject(offlineLeadArr, forKey:"\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
                 self.deleteLeadAtIndexPath = nil
             }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)

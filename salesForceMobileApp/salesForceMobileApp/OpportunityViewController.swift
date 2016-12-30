@@ -62,7 +62,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        if let arrayOfObjectsData = defaults.objectForKey(OppOffLineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)") as? NSData {
             oppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -77,7 +77,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
 //                    offlineData.oppOfflineShrinkData(oppOfflineArr as! NSMutableArray)
 //                }
                 exDelegate.leadQueryDe("Opportunity")
-            } else if let arrayOfObjectsData = defaults.objectForKey(ContactOnLineDataKey) as? NSData {
+            } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
                 oppOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
                 dispatch_async(dispatch_get_main_queue(), {
                     self.tableView.reloadData()
@@ -115,7 +115,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("opporchunity")
            
-        } else if let arrayOfObjectsData = defaults.objectForKey(OppOnLineDataKey) as? NSData {
+        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -154,7 +154,7 @@ extension OpportunityViewController : UITableViewDataSource {
             cell.notConnectedImage.hidden = false
         } else {
             cell.dataText?.text = oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as? String
-            cell.detailText?.text = oppOnlineArr.objectAtIndex(indexPath.row)["Account"]!["Name"] as? String
+            cell.detailText?.text = oppOnlineArr.objectAtIndex(indexPath.row)["Account"]?["Name"] as? String
             cell.notConnectedImage.hidden = true
         }
         cell.dataImage.backgroundColor = UIColor.init(hex: "FFB642")
@@ -228,7 +228,7 @@ extension OpportunityViewController : UITableViewDataSource {
                     self.oppOfflineArr.removeObjectAtIndex(indexPath.row)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                     let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.oppOfflineArr)
-                    defaults.setObject(arrOfOppData, forKey: OppOffLineDataKey)
+                    defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
                     self.delOppAtIndexPath = nil
                 }
             })

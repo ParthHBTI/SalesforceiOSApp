@@ -65,7 +65,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let arrayOfObjectsData = defaults.objectForKey(ContactOfLineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)") as? NSData {
             contactOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -77,7 +77,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             if exDelegate.isConnectedToNetwork() {
                 exDelegate.leadQueryDe("contact")
-            } else if let arrayOfObjectsData = defaults.objectForKey(ContactOnLineDataKey) as? NSData {
+            } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
                 contactOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
                 dispatch_async(dispatch_get_main_queue(), {
                     self.tableView.reloadData()
@@ -114,7 +114,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("contact")
-        } else if let arrayOfObjectsData = defaults.objectForKey(ContactOnLineDataKey) as? NSData {
+        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -222,7 +222,7 @@ extension ContactViewController : UITableViewDataSource {
                     self.contactOfLineArr.removeObjectAtIndex(indexPath.row)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                     let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.contactOfLineArr)
-                    defaults.setObject(arrOfOppData, forKey: ContactOfLineDataKey)
+                    defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
                     self.delContactAtIndexPath = nil
                 }
             })

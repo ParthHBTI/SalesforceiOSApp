@@ -113,7 +113,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
-        nv.objectType =   "Lead"
+        nv.objectType = ObjectDataType.leadValue.rawValue
         navigationController?.pushViewController(nv, animated: true)    }
     
     
@@ -141,7 +141,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            exDelegate.leadQueryDe("lead")
+            exDelegate.leadQueryDe(ObjectDataType.leadValue.rawValue)
         } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)

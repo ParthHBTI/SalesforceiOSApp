@@ -80,7 +80,6 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     
     func setUpEditableValue()  {
         if isEditable {
-            
             print(objectInfoDic)
             print(objDataArr)
             var k = 0
@@ -97,46 +96,16 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                 }
                 k += 1;
             }
-            
-            
             self.tableView.reloadData()
-            //isOfflineData
         }
     }
     
     func downloadSchemaForPage() {
-        
         let schemaKey = "\(objectType)_\(SchemaKeySuffix)"
-        
-        if exDelegate.isConnectedToNetwork() {
-        let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c, Input_Type__c, Picker_Value__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'" )
-        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
-            print(error)
-            }, completeBlock: { response in
-                print(response)
-                let arr = ((response!["records"]) as? NSArray)!
-                if  arr.count > 0 {
-                    if (response!["records"]!.valueForKey("FieldInfos__r")?.objectAtIndex(0).valueForKey("records")?.count > 0 ) {
-                        let midarr = arr.valueForKey("FieldInfos__r") as! NSArray
-                        self.objDataArr = (midarr.objectAtIndex(0).valueForKey("records") as! NSArray).mutableCopy() as! NSMutableArray
-                        let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject( self.objDataArr)
-                        defaults.setObject(arrOfLeadData, forKey: schemaKey)
-                    }
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.setUpEditableValue()
-                        self.tableView.reloadData()
-                    })
-                }
-        })
-        } else {
-            if let arrayOfObjectsData = defaults.objectForKey(schemaKey) as? NSData {
+                   if let arrayOfObjectsData = defaults.objectForKey(schemaKey) as? NSData {
                  self.objDataArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
                 self.setUpEditableValue()
-
-            }
-        
         }
-
     }
     
     override func viewDidLoad() {
@@ -252,13 +221,13 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             keyForOffLine = "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)"
             break
         case "Contact":
-            keyForOffLine = "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)"
+            keyForOffLine = "\(ObjectDataType.contactValue.rawValue)\(OffLineKeySuffix)"
             break
         case "Account":
-            keyForOffLine = "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)"
+            keyForOffLine = "\(ObjectDataType.accountValue.rawValue)\(OffLineKeySuffix)"
             break
         case "Opportunity":
-            keyForOffLine = "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)"
+            keyForOffLine = "\(ObjectDataType.opportunityValue.rawValue)\(OffLineKeySuffix)"
             break
         default:
             keyForOffLine = ""

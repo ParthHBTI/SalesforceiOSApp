@@ -51,7 +51,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
-        nv.objectType = "Opportunity"
+        nv.objectType = ObjectDataType.opportunityValue.rawValue
         navigationController?.pushViewController(nv, animated: true)
         //nv.delegate = self
     }
@@ -62,7 +62,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)") as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.opportunityValue.rawValue)\(OffLineKeySuffix)") as? NSData {
             oppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -76,8 +76,8 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
 //                if oppOfflineArr.count > 0 {
 //                    offlineData.oppOfflineShrinkData(oppOfflineArr as! NSMutableArray)
 //                }
-                exDelegate.leadQueryDe("Opportunity")
-            } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
+                exDelegate.leadQueryDe(ObjectDataType.opportunityValue.rawValue)
+            } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.opportunityValue.rawValue)\(OnLineKeySuffix)") as? NSData {
                 oppOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
                 dispatch_async(dispatch_get_main_queue(), {
                     self.tableView.reloadData()
@@ -113,9 +113,9 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            exDelegate.leadQueryDe("opporchunity")
+            exDelegate.leadQueryDe(ObjectDataType.opportunityValue.rawValue)
            
-        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
+        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.opportunityValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -228,7 +228,7 @@ extension OpportunityViewController : UITableViewDataSource {
                     self.oppOfflineArr.removeObjectAtIndex(indexPath.row)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                     let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.oppOfflineArr)
-                    defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
+                    defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.opportunityValue.rawValue)\(OffLineKeySuffix)")
                     self.delOppAtIndexPath = nil
                 }
             })

@@ -33,14 +33,6 @@ let OffLineKeySuffix = "OffLineDataKey"
 let OnLineKeySuffix = "OnLineDataKey"
 
 var keyForOffLine = ""
-let LeadOnLineDataKey = "LeadOnLineDataKey"
-let LeadOfLineDataKey = "LeadOfLineDataKey"
-let OppOnLineDataKey = "OpportunityOnlineDataKey"
-let OppOffLineDataKey = "OpportunityOfflineDataKey"
-
-let AccOnLineDataKey = "AccOnlineDataKey"
-let AccOffLineDataKey = "AccOfflineDataKey"
-
 
 let AccountPIckerQuery = "SELECT Id, Name FROM RecentlyViewed WHERE Type IN ('Account')  "
 

@@ -48,7 +48,6 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
-        nv.objectType = "Account"
         navigationController?.pushViewController(nv, animated: true)
         //nv.delegate = self
     }
@@ -60,7 +59,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)") as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.accountValue.rawValue)\(OffLineKeySuffix)") as? NSData {
             accOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -100,7 +99,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("account")
-        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
+        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.accountValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -206,7 +205,7 @@ extension AccountViewController : UITableViewDataSource {
                     self.accOfflineArr.removeObjectAtIndex(indexPath.row)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                     let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.accOfflineArr)
-                    defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
+                    defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.accountValue.rawValue)\(OffLineKeySuffix)")
                     self.delAccAtIndexPath = nil
                 }
             })

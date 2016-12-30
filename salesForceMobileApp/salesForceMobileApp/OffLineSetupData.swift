@@ -16,7 +16,7 @@ class OffLineSetupData: NSObject {
 
     
     
-    func setupForAddObject() {
+   class func setupForAddObject() {
         
         downloadSchemaForPage(ObjectDataType.leadValue.rawValue)
         downloadSchemaForPage(ObjectDataType.contactValue.rawValue)
@@ -25,7 +25,7 @@ class OffLineSetupData: NSObject {
     }
     
     
-    func downloadSchemaForPage(objectType:String) {
+  class  func downloadSchemaForPage(objectType:String) {
         
         let schemaKey = "\(objectType)_\(SchemaKeySuffix)"
         

@@ -23,8 +23,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     var isCreatedSuccessfully:Bool = false
     var contactOnLineArr: AnyObject = NSMutableArray()
     var contactOfLineArr: AnyObject = NSMutableArray()
-    
-    override func viewDidLoad() {
+       override func viewDidLoad() {
         super.viewDidLoad()
         exDelegate.delegate = self
          self.title = "Contacts View"
@@ -52,7 +51,6 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
-        nv.objectType = "Contact"
         navigationController?.pushViewController(nv, animated: true)
         //nv.delegate = self
     }
@@ -64,8 +62,8 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)") as? NSData {
+        ObjectDataType.contactValue.rawValue
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.contactValue.rawValue)\(OffLineKeySuffix)") as? NSData {
             contactOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -77,7 +75,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             if exDelegate.isConnectedToNetwork() {
                 exDelegate.leadQueryDe("contact")
-            } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
+            } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.contactValue.rawValue)\(OnLineKeySuffix)") as? NSData {
                 contactOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
                 dispatch_async(dispatch_get_main_queue(), {
                     self.tableView.reloadData()
@@ -105,7 +103,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     func loadContact() {
         let defaults = NSUserDefaults.standardUserDefaults()
         let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
+        
         if exDelegate.isConnectedToNetwork() {
 //            if contactOfLineArr.count > 0 {
 //                offlineData.contactOfflineShrinkData(contactOfLineArr as! NSMutableArray)
@@ -114,7 +112,8 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe("contact")
-        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
+        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.contactValue.rawValue)\(OnLineKeySuffix)") as? NSData {
+            loading.mode = MBProgressHUDMode.Indeterminate
             loading.detailsLabelText = "Loading Data from Local"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
@@ -151,7 +150,7 @@ extension ContactViewController : UITableViewDataSource {
 //        cell.textLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
 //        cell.detailTextLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         if indexPath.section == 0 {
-            cell.dataText.text = contactOfLineArr.objectAtIndex(indexPath.row)["LastName"] as? String
+            cell.dataText.text = contactOfLineArr.objectAtIndex(indexPath.row)["Name"] as? String
             cell.notConnectedImage.hidden = false
         } else {
             cell.dataText.text = contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String

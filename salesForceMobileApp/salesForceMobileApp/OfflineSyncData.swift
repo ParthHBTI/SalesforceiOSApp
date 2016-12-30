@@ -63,7 +63,7 @@ class OfflineSyncData: UIViewController {
                     print(result?.errors )
                     print(result?.id )
                     print(result?.success)
-                    defaults.removeObjectForKey(AccOffLineDataKey)
+                    defaults.removeObjectForKey("\(ObjectDataType.accountValue.rawValue)\(OffLineKeySuffix)")
                 }
         })
 

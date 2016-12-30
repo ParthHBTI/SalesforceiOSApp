@@ -21,7 +21,6 @@ protocol UpdateInfoDelegate {
     func updateOfflineData(offlineData: NSMutableArray)
 }
 
-
 class CreateObjectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SFRestDelegate, AccountListDelegate, UITextFieldDelegate {
     
     var offLineDataArr: AnyObject = NSMutableArray()
@@ -35,7 +34,6 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var tableView: UITableView!
     var objDataArr = NSMutableArray()
     var objectType = String()
-    
     var status = String()
     var presentTextField = UITextField()
     

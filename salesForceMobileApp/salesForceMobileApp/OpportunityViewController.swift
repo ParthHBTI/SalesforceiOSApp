@@ -104,21 +104,19 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     
     func loadOpporchunity() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
+        
         if exDelegate.isConnectedToNetwork() {
 //            if oppOfflineArr.count > 0 {
 //                offlineData.oppOflineShrinkData(oppOfflineArr as! NSMutableArray)
 //            }
+            let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe(ObjectDataType.opportunityValue.rawValue)
            
         } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.opportunityValue.rawValue)\(OnLineKeySuffix)") as? NSData {
-            loading.detailsLabelText = "Loading Data from Local"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
             oppOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()

@@ -34,7 +34,7 @@ class OfflineSyncData: UIViewController {
                     print(result?.errors )
                     print(result?.id )
                     print(result?.success)
-                    defaults.removeObjectForKey(LeadOfLineDataKey)
+                    defaults.removeObjectForKey("\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
                 }
         })
 
@@ -116,7 +116,7 @@ class OfflineSyncData: UIViewController {
                     print(result?.errors )
                     print(result?.id )
                     print(result?.success)
-                    defaults.removeObjectForKey(OppOffLineDataKey)
+                    defaults.removeObjectForKey(ObjectDataType.opportunityValue.rawValue)
                 }
         })
     }

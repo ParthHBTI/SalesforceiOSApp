@@ -75,7 +75,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
 //                if oppOfflineArr.count > 0 {
 //                    offlineData.oppOfflineShrinkData(oppOfflineArr as! NSMutableArray)
 //                }
-                exDelegate.leadQueryDe("Opportunity")
+                exDelegate.leadQueryDe(ObjectDataType.opportunityValue.rawValue)
             } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.opportunityValue.rawValue)\(OnLineKeySuffix)") as? NSData {
                 oppOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
                 dispatch_async(dispatch_get_main_queue(), {
@@ -112,7 +112,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            exDelegate.leadQueryDe("opporchunity")
+            exDelegate.leadQueryDe(ObjectDataType.opportunityValue.rawValue)
            
         } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.opportunityValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             loading.detailsLabelText = "Loading Data from Local"

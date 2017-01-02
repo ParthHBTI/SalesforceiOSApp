@@ -293,10 +293,10 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             dispatch_async(dispatch_get_main_queue(), {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Indeterminate
-                loading.detailsLabelText = "Lead is creating!"
+                loading.detailsLabelText = "\(self.objectType) is creating!"
                 loading.removeFromSuperViewOnHide = true
-                loading.hide(true, afterDelay:2)
-                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                loading.hide(true, afterDelay:1)
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
                 dispatch_after(delayTime, dispatch_get_main_queue()) {
                     self.navigationController?.popViewControllerAnimated(true)
                 }

@@ -99,9 +99,11 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     func loadAccount() {
         
         if exDelegate.isConnectedToNetwork() {
-            //            if accOfflineArr.count > 0 {
-            //                offlineData.accOfflineShrinkData(accOfflineArr as! NSMutableArray)
-            //            }
+       if accOfflineArr.count > 0 {
+        let obj = OfflineSyncData()
+        obj.accOfflineShrinkData(accOfflineArr as! NSMutableArray)
+//            offlineData.oppOflineShrinkData(oppOfflineArr as! NSMutableArray)
+            }
             let loading = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)

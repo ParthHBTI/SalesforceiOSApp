@@ -134,15 +134,18 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         let defaults = NSUserDefaults.standardUserDefaults()
        
         if exDelegate.isConnectedToNetwork() {
-//            if leadOfLineArr.count > 0 {
-//                offlineData.leadOfflineShrinkData(leadOfLineArr as! NSMutableArray)
-//            }
+            if leadOfLineArr.count > 0 {
+                obj.OfflineShrinkData(leadOfLineArr as! NSMutableArray, objType: ObjectDataType.leadValue.rawValue)
+            }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe(ObjectDataType.leadValue.rawValue)
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
         } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             leadOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {

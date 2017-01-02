@@ -33,6 +33,7 @@ let OffLineKeySuffix = "OffLineDataKey"
 let OnLineKeySuffix = "OnLineDataKey"
 
 var keyForOffLine = ""
+let obj = OfflineSyncData()
 
 let AccountPIckerQuery = "SELECT Id, Name FROM RecentlyViewed WHERE Type IN ('Account')  "
 

@@ -29,6 +29,8 @@ import SalesforceRestAPI
 
     let UIAppDelegate = UIApplication.sharedApplication().delegate! as! AppDelegate
     let defaults = NSUserDefaults.standardUserDefaults()
+   let  EXDelegate: ExecuteQuery = ExecuteQuery()
+
 
 // Fill these in when creating a new Connected Application on Force.com
 let RemoteAccessConsumerKey = "3MVG9Iu66FKeHhINkB1l7xt7kR8czFcCTUhgoA8Ol2Ltf1eYHOU4SqQRSEitYFDUpqRWcoQ2.dBv_a1Dyu5xa";
@@ -39,7 +41,15 @@ let OAuthRedirectURI        = "testsfdc:///mobilesdk/detect/oauth/done";
 
 class AppDelegate : UIResponder, UIApplicationDelegate {
     var window: UIWindow?
+    var myTimer: NSTimer? = nil
     
+    func timerFunc() {
+       // print("timerFunc()")
+        
+        if EXDelegate.isConnectedToNetwork() {
+            OfflineSyncData.syncOffLineDataToServer()
+        }
+    }
     override
     init() {
         super.init()
@@ -47,8 +57,6 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
         SalesforceSDKManager.sharedManager().connectedAppId = RemoteAccessConsumerKey
         SalesforceSDKManager.sharedManager().connectedAppCallbackUri = OAuthRedirectURI
         SalesforceSDKManager.sharedManager().authScopes = ["web", "api"];
-//        let userId = SFAuthenticationManager.sharedManager().idCoordinator.idData.userId
-//        let isAdminRequest = SFRestAPI.sharedInstance().requestForQuery("select MyApp_UserType__c from User where Id = '\(userId)'")
         SalesforceSDKManager.sharedManager().postLaunchAction = {
             [unowned self] (launchActionList: SFSDKLaunchAction) in
             let launchActionString = SalesforceSDKManager.launchActionsStringRepresentation(launchActionList)
@@ -73,9 +81,15 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
             [unowned self] (fromUser: SFUserAccount?, toUser: SFUserAccount?) -> () in
             self.handleUserSwitch(fromUser, toUser: toUser)
         }
+        
+        
+    
+
     }
     
     // MARK: - App delegate lifecycle
+    
+  
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
@@ -103,8 +117,14 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
         //
         SalesforceSDKManager.sharedManager().launch()
         
+        //
+        myTimer = NSTimer(timeInterval: 5.0, target: self, selector:#selector(AppDelegate.timerFunc), userInfo: nil, repeats: true)
+        //myTimer?.fire()
+        NSRunLoop.currentRunLoop().addTimer(myTimer!, forMode: NSRunLoopCommonModes)
+        
         return true
     }
+   
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         //

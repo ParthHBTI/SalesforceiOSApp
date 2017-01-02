@@ -30,8 +30,27 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
         self.setNavigationBarItem()
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
+        
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector:#selector(AccountViewController.dataUpdateToServer),
+            name: "\(ObjectDataType.accountValue.rawValue)\(NotificationSuffix)",
+            object: nil)
     }
-    
+    func dataUpdateToServer()  {
+        print("interNetChanges")
+        accOfflineArr.removeAllObjects()
+        
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.accountValue.rawValue)\(OffLineKeySuffix)") as? NSData {
+            accOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+        }
+        dispatch_async(dispatch_get_main_queue(), {
+            self.tableView.reloadData()
+        })
+        loadAccount()
+    }
+  
+
     func executeQuery()  {
         accOnlineArr = exDelegate.resArr.mutableCopy() as! NSMutableArray
         dispatch_async(dispatch_get_main_queue(), {
@@ -100,22 +119,22 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
         
         if exDelegate.isConnectedToNetwork() {
        if accOfflineArr.count > 0 {
-        let obj = OfflineSyncData()
-        obj.accOfflineShrinkData(accOfflineArr as! NSMutableArray)
-//            offlineData.oppOflineShrinkData(oppOfflineArr as! NSMutableArray)
+      //  obj.OfflineShrinkData(accOfflineArr as! NSMutableArray, objType: ObjectDataType.accountValue.rawValue)
             }
             let loading = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe(ObjectDataType.accountValue.rawValue)
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
         } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.accountValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             dispatch_async(dispatch_get_main_queue(), {
             self.accOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
                 self.tableView.reloadData()
             })
         }
-        
     }
 }
 

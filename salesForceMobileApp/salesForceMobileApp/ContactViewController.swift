@@ -23,6 +23,25 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     var isCreatedSuccessfully:Bool = false
     var contactOnLineArr: AnyObject = NSMutableArray()
     var contactOfLineArr: AnyObject = NSMutableArray()
+    
+    
+    
+    func dataUpdateToServer()  {
+        print("interNetChanges")
+        contactOfLineArr.removeAllObjects()
+        
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.contactValue.rawValue)\(OffLineKeySuffix)") as? NSData {
+            contactOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+           
+        }
+        loadContact()
+        dispatch_async(dispatch_get_main_queue(), {
+            self.tableView.reloadData()
+        })
+    }
+    
+ 
+    
        override func viewDidLoad() {
         super.viewDidLoad()
         exDelegate.delegate = self
@@ -31,7 +50,11 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         //self.addRightBarButtonWithImage1(UIImage(named: "plus")!)
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
-        
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector:#selector(ContactViewController.dataUpdateToServer),
+            name: "\(ObjectDataType.contactValue.rawValue)\(NotificationSuffix)",
+            object: nil)
     }
     
     func executeQuery()  {
@@ -103,14 +126,17 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         let defaults = NSUserDefaults.standardUserDefaults()
         
         if exDelegate.isConnectedToNetwork() {
-//            if contactOfLineArr.count > 0 {
-//                offlineData.contactOfflineShrinkData(contactOfLineArr as! NSMutableArray)
-//            }
+            if contactOfLineArr.count > 0 {
+               // obj.OfflineShrinkData(contactOfLineArr as! NSMutableArray, objType: ObjectDataType.contactValue.rawValue)
+            }
              let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe(ObjectDataType.contactValue.rawValue)
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
         } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.contactValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             contactOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {

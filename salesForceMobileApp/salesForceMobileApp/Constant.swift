@@ -32,7 +32,12 @@ let SchemaKeySuffix = "SchemaKey"
 let OffLineKeySuffix = "OffLineDataKey"
 let OnLineKeySuffix = "OnLineDataKey"
 
+let NotificationSuffix = "NotificationSuffixKey"
+
+
+
 var keyForOffLine = ""
+let obj = OfflineSyncData()
 
 let AccountPIckerQuery = "SELECT Id, Name FROM RecentlyViewed WHERE Type IN ('Account')  "
 

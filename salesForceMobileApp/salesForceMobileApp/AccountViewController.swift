@@ -97,20 +97,20 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     }
     
     func loadAccount() {
-        let loading = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
+        
         if exDelegate.isConnectedToNetwork() {
-            //            if accOfflineArr.count > 0 {
-            //                offlineData.accOfflineShrinkData(accOfflineArr as! NSMutableArray)
-            //            }
+       if accOfflineArr.count > 0 {
+        let obj = OfflineSyncData()
+        obj.accOfflineShrinkData(accOfflineArr as! NSMutableArray)
+//            offlineData.oppOflineShrinkData(oppOfflineArr as! NSMutableArray)
+            }
+            let loading = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe(ObjectDataType.accountValue.rawValue)
         } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.accountValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             dispatch_async(dispatch_get_main_queue(), {
-            loading.detailsLabelText = "Loading Data from Local"
-            loading.removeFromSuperViewOnHide = true
-            loading.hide(true, afterDelay: 2)
             self.accOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
                 self.tableView.reloadData()
             })

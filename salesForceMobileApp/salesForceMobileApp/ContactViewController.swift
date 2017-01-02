@@ -101,21 +101,17 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     
     func loadContact() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         
         if exDelegate.isConnectedToNetwork() {
 //            if contactOfLineArr.count > 0 {
 //                offlineData.contactOfflineShrinkData(contactOfLineArr as! NSMutableArray)
 //            }
+             let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe(ObjectDataType.contactValue.rawValue)
         } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.contactValue.rawValue)\(OnLineKeySuffix)") as? NSData {
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Loading Data from Local"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
             contactOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -149,7 +145,7 @@ extension ContactViewController : UITableViewDataSource {
 //        cell.textLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
 //        cell.detailTextLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         if indexPath.section == 0 {
-            cell.dataText.text = contactOfLineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.dataText.text = contactOfLineArr.objectAtIndex(indexPath.row)["LastName"] as? String
             cell.notConnectedImage.hidden = false
         } else {
             cell.dataText.text = contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String

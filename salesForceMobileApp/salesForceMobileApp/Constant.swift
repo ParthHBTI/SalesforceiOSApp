@@ -32,6 +32,10 @@ let SchemaKeySuffix = "SchemaKey"
 let OffLineKeySuffix = "OffLineDataKey"
 let OnLineKeySuffix = "OnLineDataKey"
 
+let NotificationSuffix = "NotificationSuffixKey"
+
+
+
 var keyForOffLine = ""
 let obj = OfflineSyncData()
 

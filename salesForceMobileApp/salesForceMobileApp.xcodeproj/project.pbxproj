@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0416F9C21E0A888E005F3A54 /* CreateObjectsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0416F9C01E0A888E005F3A54 /* CreateObjectsCell.swift */; };
 		0416F9C31E0A888E005F3A54 /* CreateObjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0416F9C11E0A888E005F3A54 /* CreateObjectViewController.swift */; };
+		041F84E61E1A65120017F6DC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 041F84E51E1A65120017F6DC /* SystemConfiguration.framework */; };
 		042971A61E15158600A55EC0 /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042971A51E15158600A55EC0 /* InitialViewController.swift */; };
 		04310E901DDF0BF7000DFEC4 /* NoteAndAttachFileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04310E8F1DDF0BF7000DFEC4 /* NoteAndAttachFileCell.swift */; };
 		044D66BA1DE5AD1B0071D817 /* NoCopyPasteUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044D66B91DE5AD1B0071D817 /* NoCopyPasteUITextField.swift */; };
@@ -81,6 +82,7 @@
 /* Begin PBXFileReference section */
 		0416F9C01E0A888E005F3A54 /* CreateObjectsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateObjectsCell.swift; sourceTree = "<group>"; };
 		0416F9C11E0A888E005F3A54 /* CreateObjectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateObjectViewController.swift; sourceTree = "<group>"; };
+		041F84E51E1A65120017F6DC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		042971A51E15158600A55EC0 /* InitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 		04310E8F1DDF0BF7000DFEC4 /* NoteAndAttachFileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteAndAttachFileCell.swift; sourceTree = "<group>"; };
 		044D66B91DE5AD1B0071D817 /* NoCopyPasteUITextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NoCopyPasteUITextField.swift; path = salesForceMobileApp/NoCopyPasteUITextField.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				041F84E61E1A65120017F6DC /* SystemConfiguration.framework in Frameworks */,
 				5814ABBD9E1C70793E9ED7CB /* Pods_salesForceMobileApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -320,6 +323,7 @@
 		6B868AEB1ACA7FCA4636C7F7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				041F84E51E1A65120017F6DC /* SystemConfiguration.framework */,
 				732B386E1DD34ACB00945BCE /* AFNetworking.framework */,
 				732B386C1DD349C200945BCE /* SDWebImage.framework */,
 				390E28E00C7AB6A235AA7680 /* Pods_salesForceMobileApp.framework */,

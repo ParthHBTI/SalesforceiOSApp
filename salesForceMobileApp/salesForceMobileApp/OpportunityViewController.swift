@@ -25,6 +25,20 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     var isCreatedSuccessfully:Bool = false
     var oppOfflineArr:AnyObject = NSMutableArray()
     
+    func dataUpdateToServer()  {
+        print("interNetChanges")
+        oppOfflineArr.removeAllObjects()
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.opportunityValue.rawValue)\(OffLineKeySuffix)") as? NSData {
+            oppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+        }
+        loadOpporchunity()
+        dispatch_async(dispatch_get_main_queue(), {
+            self.tableView.reloadData()
+        })
+    }
+    
+ 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         isFirstLoad = true
@@ -33,6 +47,12 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
         self.setNavigationBarItem()
         self.addRightBarButtonWithImage1()
         self.tableView.registerCellNib(DataTableViewCell.self)
+        
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector:#selector(OpportunityViewController.dataUpdateToServer),
+            name: "\(ObjectDataType.opportunityValue.rawValue)\(NotificationSuffix)",
+            object: nil)
            }
     
     func executeQuery()  {
@@ -107,7 +127,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
         
         if exDelegate.isConnectedToNetwork() {
             if oppOfflineArr.count > 0 {
-                  obj.OfflineShrinkData(oppOfflineArr as! NSMutableArray, objType: ObjectDataType.opportunityValue.rawValue)
+             //     obj.OfflineShrinkData(oppOfflineArr as! NSMutableArray, objType: ObjectDataType.opportunityValue.rawValue)
             }
             let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate

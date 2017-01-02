@@ -32,6 +32,21 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     var  client:ZKSforceClient?
     var  results:ZKQueryResult?
     
+    
+    
+    func dataUpdateToServer()  {
+        print("interNetChanges")
+        leadOfLineArr.removeAllObjects()
+        
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)") as? NSData {
+            leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
+        }
+        loadLead()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         exDelegate.delegate = self
@@ -44,6 +59,12 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         client = ZKSforceClient()
         let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
         client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
+        
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector:#selector(LeadViewController.dataUpdateToServer),
+            name: "\(ObjectDataType.leadValue.rawValue)\(NotificationSuffix)",
+            object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -132,10 +153,9 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     
     func loadLead() {
         let defaults = NSUserDefaults.standardUserDefaults()
-       
         if exDelegate.isConnectedToNetwork() {
             if leadOfLineArr.count > 0 {
-                obj.OfflineShrinkData(leadOfLineArr as! NSMutableArray, objType: ObjectDataType.leadValue.rawValue)
+              //  obj.OfflineShrinkData(leadOfLineArr as! NSMutableArray, objType: ObjectDataType.leadValue.rawValue)
             }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
@@ -166,10 +186,10 @@ extension LeadViewController : UITableViewDelegate {
 
 extension LeadViewController : UITableViewDataSource {
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int // Default is 1 if not implemented
-    {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 2;
     }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (section == 0) ? leadOfLineArr.count : leadOnLineArr.count
     }
@@ -204,7 +224,6 @@ extension LeadViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             if indexPath.section == 0 {
-                //print(leadOfLineArr)
                 deleteLeadAtIndexPath = indexPath
                 let leadToDelete = self.leadOfLineArr.objectAtIndex(indexPath.row)["LastName"] as! String
                 confirmDelete(leadToDelete)

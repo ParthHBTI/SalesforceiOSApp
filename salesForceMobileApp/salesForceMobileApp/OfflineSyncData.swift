@@ -12,42 +12,65 @@ import SalesforceSDKCore
 
 class OfflineSyncData: UIViewController {
 
-    var  client:ZKSforceClient?
+//    var  client:ZKSforceClient?
 
 
-    func OfflineShrinkData(dataArray: NSMutableArray, objType: String) {
-        client = fatchClient()
+    
+    class func syncOffLineDataToServer() {
+        OfflineShrinkData(ObjectDataType.leadValue.rawValue)
+        OfflineShrinkData(ObjectDataType.contactValue.rawValue)
+        OfflineShrinkData(ObjectDataType.opportunityValue.rawValue)
+        OfflineShrinkData(ObjectDataType.accountValue.rawValue)
+    }
+
+ class   func OfflineShrinkData(objType: String) {
+    
+    var oppOfflineArr = []
+    if let arrayOfObjectsData = defaults.objectForKey("\(objType)\(OffLineKeySuffix)") as? NSData {
+            oppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSArray
+            
+        }
+    
+    if  oppOfflineArr.count > 0 {
+        let   client = fatchClient()
         let dataArr: NSMutableArray =  []
-        for val in dataArray {
+        for val in oppOfflineArr {
             let account: AnyObject = ZKSObject.withType(objType)
-                let objectDic = NSMutableDictionary()
-                for (key, val) in (val as? NSDictionary)! {
-                    objectDic.setObject(key, forKey: KeyName)
-                    objectDic.setObject(val, forKey: KeyValue)
-                    account.setFieldValue(objectDic[KeyValue] as? String, field: objectDic[KeyName] as? String)
+            let objectDic = NSMutableDictionary()
+            for (key, val) in (val as? NSDictionary)! {
+                objectDic.setObject(key, forKey: KeyName)
+                objectDic.setObject(val, forKey: KeyValue)
+                account.setFieldValue(objectDic[KeyValue] as? String, field: objectDic[KeyName] as? String)
             }
             dataArr.addObject(account)
         }
-        client?.performCreate(dataArr as! [AnyObject], failBlock: { exp in
+        client.performCreate(dataArr as [AnyObject], failBlock: { exp in
             print(exp)
             }, completeBlock: { results in
                 print(results)
-                for var resultV  in results {
-                    //                  let result = results.last as? ZKSaveResult
+                for  resultV  in results {
                     let result = resultV as? ZKSaveResult
                     print(result?.errors )
                     print(result?.id )
                     print(result?.success)
                     defaults.removeObjectForKey("\(objType)\(OffLineKeySuffix)")
+                    
+                    
+                    let nc = NSNotificationCenter.defaultCenter()
+                    nc.postNotificationName("\(objType)\(NotificationSuffix)",
+                        object: nil,
+                        userInfo: ["message":"Hello there!", "date":NSDate()])
                 }
         })
     }
     
-    func fatchClient() -> ZKSforceClient {
-        client = ZKSforceClient()
-        let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
-        client?.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
-        return client!
+   
     }
     
+   class func fatchClient() -> ZKSforceClient {
+     let   client = ZKSforceClient()
+        let authoCordinater =    SFAuthenticationManager.sharedManager().coordinator.credentials
+        client.loginWithRefreshToken(authoCordinater.refreshToken, authUrl:  authoCordinater.identityUrl, oAuthConsumerKey: RemoteAccessConsumerKey)
+        return client
+    }
 }

@@ -145,7 +145,7 @@ extension ContactViewController : UITableViewDataSource {
 //        cell.textLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
 //        cell.detailTextLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         if indexPath.section == 0 {
-            cell.dataText.text = contactOfLineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.dataText.text = contactOfLineArr.objectAtIndex(indexPath.row)["LastName"] as? String
             cell.notConnectedImage.hidden = false
         } else {
             cell.dataText.text = contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String

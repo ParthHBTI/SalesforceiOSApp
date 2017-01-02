@@ -18,10 +18,11 @@ class OfflineSyncData: UIViewController {
         client = fatchClient()
         let dataArr: NSMutableArray =  []
         for countData in dataArray {
-            let lead: AnyObject = ZKSObject.withType("Lead")
-            lead.setFieldValue(countData["LastName"] as? String, field: "LastName")
-            lead.setFieldValue(countData["Company"] as? String, field: "Company")
-            lead.setFieldValue(countData["Status"] as? String, field: "Status")
+            
+        let lead: AnyObject = ZKSObject.withType("Lead")
+            lead.setFieldValue(countData[KeyValue] as? String, field: KeyName)
+//            lead.setFieldValue(countData["Company"] as? String, field: "Company")
+//            lead.setFieldValue(countData["Status"] as? String, field: "Status")
             dataArr.addObject(lead)
         }
         client?.performCreate(dataArr as! [AnyObject], failBlock: { exp in
@@ -42,15 +43,15 @@ class OfflineSyncData: UIViewController {
 
     func accOfflineShrinkData(dataArray: NSMutableArray) {
         client = fatchClient()
+        let account: AnyObject = ZKSObject.withType("Account")
         let dataArr: NSMutableArray =  []
-        for countData in dataArray {
-            let account: AnyObject = ZKSObject.withType("Account")
-            account.setFieldValue(countData["Name"] as? String, field: "Name")
-            account.setFieldValue(countData["BillingStreet"] as? String, field: "BillingStreet")
-            account.setFieldValue(countData["BillingCity"] as? String, field: "BillingCity")
-            account.setFieldValue(countData["BillingState"] as? String, field: "BillingState")
-            account.setFieldValue(countData["BillingCountry"] as? String, field: "BillingCountry")
-            account.setFieldValue(countData["BillingPostalCode"] as? String, field: "BillingPostalCode")
+        for val in dataArray {
+                let objectDic = NSMutableDictionary()
+                for (key, val) in (val as? NSDictionary)! {
+                    objectDic.setObject(key, forKey: KeyName)
+                    objectDic.setObject(val, forKey: KeyValue)
+                    account.setFieldValue(objectDic[KeyValue] as? String, field: objectDic[KeyName] as? String)
+            }
             dataArr.addObject(account)
         }
         client?.performCreate(dataArr as! [AnyObject], failBlock: { exp in

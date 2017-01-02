@@ -138,6 +138,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
     }
     
     func setupRootViewController() {
+        OffLineSetupData.setupForAddObject()
        /* let rootVC = RootViewController(nibName: nil, bundle: nil)
         let navVC = UINavigationController(rootViewController: rootVC)
         self.window!.rootViewController = navVC*/

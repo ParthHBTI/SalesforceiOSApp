@@ -41,7 +41,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)") as? NSData {
             leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
         }
         
@@ -133,7 +133,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
            ]
             leadOfLineArr.addObject(leadDataArr)
             let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
-            defaults.setObject(arrOfLeadData, forKey: LeadOfLineDataKey)
+            defaults.setObject(arrOfLeadData, forKey: "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
             dispatch_async(dispatch_get_main_queue(), {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Indeterminate
@@ -205,7 +205,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
                 }
                 leadOfLineArr.setObject(leadDataArr, atIndex: updateOfflineLeadAtIndex )
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
-                defaults.setObject(arrOfLeadData, forKey: LeadOfLineDataKey)
+                defaults.setObject(arrOfLeadData, forKey: "\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
                 
                 self.delegate!.getValFromLeadVC(true)
                 self.delegate!.getOfflineUpdatedLeadData(leadOfflineArray as NSMutableArray)

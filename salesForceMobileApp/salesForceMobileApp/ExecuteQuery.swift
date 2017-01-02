@@ -31,16 +31,16 @@ class ExecuteQuery: UIViewController, SFRestDelegate {
            let newStr = String(str.substringFromIndex(str.startIndex.advancedBy(2)))
             if newStr == leadRequest  {
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
-                defaults.setObject(arrOfLeadData, forKey: LeadOnLineDataKey)
+                defaults.setObject(arrOfLeadData, forKey: "\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)")
             } else if newStr == accountRequest {
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
-                defaults.setObject(arrOfLeadData, forKey: AccOnLineDataKey)
+                defaults.setObject(arrOfLeadData, forKey: "\(ObjectDataType.accountValue.rawValue)\(OnLineKeySuffix)")
             } else if newStr == contactRequest {
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
-                defaults.setObject(arrOfLeadData, forKey: ContactOnLineDataKey)
+                defaults.setObject(arrOfLeadData, forKey: "\(ObjectDataType.contactValue.rawValue)\(OnLineKeySuffix)")
             } else {
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(self.resArr)
-                defaults.setObject(arrOfLeadData, forKey: OppOnLineDataKey)
+                defaults.setObject(arrOfLeadData, forKey: "\(ObjectDataType.opportunityValue.rawValue)\(OnLineKeySuffix)")
             }
             
         })
@@ -72,16 +72,16 @@ class ExecuteQuery: UIViewController, SFRestDelegate {
     }
 
     func leadQueryDe(typeObject: AnyObject)  {
-        if (typeObject as! String == "lead" )  {
+        if (typeObject as! String == "Lead" )  {
             let request = SFRestAPI.sharedInstance().requestForQuery(leadRequest)
             SFRestAPI.sharedInstance().send(request, delegate: self);
-        } else if (typeObject as! String == "account") {
+        } else if (typeObject as! String == "Account") {
             let request = SFRestAPI.sharedInstance().requestForQuery(accountRequest)
             SFRestAPI.sharedInstance().send(request, delegate: self);
-        } else if (typeObject as! String == "contact") {
+        } else if (typeObject as! String == "Contact") {
             let request = SFRestAPI.sharedInstance().requestForQuery(contactRequest)
             SFRestAPI.sharedInstance().send(request, delegate: self);
-        } else if (typeObject as! String == "opporchunity") {
+        } else if (typeObject as! String == "Opportunity") {
             let request = SFRestAPI.sharedInstance().requestForQuery(opporchunityRequest)
             SFRestAPI.sharedInstance().send(request, delegate: self);
         }

@@ -48,7 +48,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
-        nv.objectType = "Account"
+        nv.objectType = ObjectDataType.accountValue.rawValue
         navigationController?.pushViewController(nv, animated: true)
         //nv.delegate = self
     }
@@ -60,7 +60,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let arrayOfObjectsData = defaults.objectForKey(AccOffLineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.accountValue.rawValue)\(OffLineKeySuffix)") as? NSData {
             accOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -69,10 +69,18 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
         loadAccount()
         if isCreatedSuccessfully {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Text
-            loading.detailsLabelText = "Created Successfully!"
-            loading.hide(true, afterDelay:2)
-            loading.removeFromSuperViewOnHide = true
+        if exDelegate.isConnectedToNetwork() {
+            exDelegate.leadQueryDe(ObjectDataType.accountValue.rawValue)
+        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.accountValue.rawValue)\(OnLineKeySuffix)") as? NSData {
+            accOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
+            dispatch_async(dispatch_get_main_queue(), {
+                self.tableView.reloadData()
+            })
+        }
+        loading.mode = MBProgressHUDMode.Text
+        loading.detailsLabelText = "Created Successfully!"
+        loading.removeFromSuperViewOnHide = true
+        loading.hide(true, afterDelay:2)
         }
         isCreatedSuccessfully = false
         self.setNavigationBarItem()
@@ -89,27 +97,23 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     }
     
     func loadAccount() {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let loading = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
+        
         if exDelegate.isConnectedToNetwork() {
-//            if accOfflineArr.count > 0 {
-//                offlineData.accOfflineShrinkData(accOfflineArr as! NSMutableArray)
-//            }
+            //            if accOfflineArr.count > 0 {
+            //                offlineData.accOfflineShrinkData(accOfflineArr as! NSMutableArray)
+            //            }
+            let loading = MBProgressHUD.showHUDAddedTo(self.navigationController?.view, animated: true)
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            exDelegate.leadQueryDe("account")
-        } else if let arrayOfObjectsData = defaults.objectForKey(AccOnLineDataKey) as? NSData {
-            loading.detailsLabelText = "Loading Data from Local"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
-            accOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
+            exDelegate.leadQueryDe(ObjectDataType.accountValue.rawValue)
+        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.accountValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             dispatch_async(dispatch_get_main_queue(), {
+            self.accOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
                 self.tableView.reloadData()
             })
         }
-
+        
     }
 }
 
@@ -157,7 +161,7 @@ extension AccountViewController : UITableViewDataSource {
             subContentsVC.getResponseArr = self.accOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.parentIndex = (indexPath.row)
             self.navigationController?.pushViewController(subContentsVC, animated: true)
-
+            
         } else {
             if self.exDelegate.isConnectedToNetwork() {
                 subContentsVC.getResponseArr = self.accOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
@@ -206,28 +210,28 @@ extension AccountViewController : UITableViewDataSource {
                     self.accOfflineArr.removeObjectAtIndex(indexPath.row)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                     let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.accOfflineArr)
-                    defaults.setObject(arrOfOppData, forKey: AccOffLineDataKey)
+                    defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.accountValue.rawValue)\(OffLineKeySuffix)")
                     self.delAccAtIndexPath = nil
                 }
             })
         } else {
-        if exDelegate.isConnectedToNetwork() {
-            SFRestAPI.sharedInstance().performDeleteWithObjectType("Account", objectId: delObjAtId,failBlock: { err in
-                dispatch_async(dispatch_get_main_queue(), {
-                    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                    alert.show()
-                })
-                print( (err))
-            }){ succes in
-                dispatch_async(dispatch_get_main_queue(), {
-                    if let indexPath = self.delAccAtIndexPath {
-                        self.accOnlineArr.removeObjectAtIndex(indexPath.row)
-                        self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                        ///self.tableView.reloadData()
-                        self.delAccAtIndexPath = nil
-                    }
-                })
+            if exDelegate.isConnectedToNetwork() {
+                SFRestAPI.sharedInstance().performDeleteWithObjectType("Account", objectId: delObjAtId,failBlock: { err in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                        alert.show()
+                    })
+                    print( (err))
+                }){ succes in
+                    dispatch_async(dispatch_get_main_queue(), {
+                        if let indexPath = self.delAccAtIndexPath {
+                            self.accOnlineArr.removeObjectAtIndex(indexPath.row)
+                            self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                            ///self.tableView.reloadData()
+                            self.delAccAtIndexPath = nil
+                        }
+                    })
+                }
             }
-        }
-    }    }
+        }    }
 }

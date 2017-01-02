@@ -51,7 +51,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
-        nv.objectType = "Opportunity"
+        nv.objectType = ObjectDataType.opportunityValue.rawValue
         navigationController?.pushViewController(nv, animated: true)
         //nv.delegate = self
     }
@@ -62,7 +62,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        if let arrayOfObjectsData = defaults.objectForKey(OppOffLineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.opportunityValue.rawValue)\(OffLineKeySuffix)") as? NSData {
             oppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -76,8 +76,8 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
 //                if oppOfflineArr.count > 0 {
 //                    offlineData.oppOfflineShrinkData(oppOfflineArr as! NSMutableArray)
 //                }
-                exDelegate.leadQueryDe("Opportunity")
-            } else if let arrayOfObjectsData = defaults.objectForKey(ContactOnLineDataKey) as? NSData {
+                exDelegate.leadQueryDe(ObjectDataType.opportunityValue.rawValue)
+            } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.opportunityValue.rawValue)\(OnLineKeySuffix)") as? NSData {
                 oppOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableArray
                 dispatch_async(dispatch_get_main_queue(), {
                     self.tableView.reloadData()
@@ -104,21 +104,19 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     
     func loadOpporchunity() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
+        
         if exDelegate.isConnectedToNetwork() {
 //            if oppOfflineArr.count > 0 {
 //                offlineData.oppOflineShrinkData(oppOfflineArr as! NSMutableArray)
 //            }
+            let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            exDelegate.leadQueryDe("opporchunity")
+            exDelegate.leadQueryDe(ObjectDataType.opportunityValue.rawValue)
            
-        } else if let arrayOfObjectsData = defaults.objectForKey(OppOnLineDataKey) as? NSData {
-            loading.detailsLabelText = "Loading Data from Local"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
+        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.opportunityValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             oppOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -154,7 +152,7 @@ extension OpportunityViewController : UITableViewDataSource {
             cell.notConnectedImage.hidden = false
         } else {
             cell.dataText?.text = oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as? String
-            cell.detailText?.text = oppOnlineArr.objectAtIndex(indexPath.row)["Account"]!["Name"] as? String
+            cell.detailText?.text = oppOnlineArr.objectAtIndex(indexPath.row)["Account"]?["Name"] as? String
             cell.notConnectedImage.hidden = true
         }
         cell.dataImage.backgroundColor = UIColor.init(hex: "FFB642")
@@ -228,7 +226,7 @@ extension OpportunityViewController : UITableViewDataSource {
                     self.oppOfflineArr.removeObjectAtIndex(indexPath.row)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                     let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.oppOfflineArr)
-                    defaults.setObject(arrOfOppData, forKey: OppOffLineDataKey)
+                    defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.opportunityValue.rawValue)\(OffLineKeySuffix)")
                     self.delOppAtIndexPath = nil
                 }
             })

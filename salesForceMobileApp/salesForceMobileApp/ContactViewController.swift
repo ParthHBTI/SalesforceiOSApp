@@ -23,8 +23,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     var isCreatedSuccessfully:Bool = false
     var contactOnLineArr: AnyObject = NSMutableArray()
     var contactOfLineArr: AnyObject = NSMutableArray()
-    
-    override func viewDidLoad() {
+       override func viewDidLoad() {
         super.viewDidLoad()
         exDelegate.delegate = self
          self.title = "Contacts View"
@@ -52,7 +51,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
-        nv.objectType = "Contact"
+        nv.objectType = ObjectDataType.contactValue.rawValue
         navigationController?.pushViewController(nv, animated: true)
         //nv.delegate = self
     }
@@ -64,8 +63,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if let arrayOfObjectsData = defaults.objectForKey(ContactOfLineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.contactValue.rawValue)\(OffLineKeySuffix)") as? NSData {
             contactOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -73,11 +71,10 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
         }
         loadContact()
         if isCreatedSuccessfully {
-            let defaults = NSUserDefaults.standardUserDefaults()
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             if exDelegate.isConnectedToNetwork() {
-                exDelegate.leadQueryDe("contact")
-            } else if let arrayOfObjectsData = defaults.objectForKey(ContactOnLineDataKey) as? NSData {
+                exDelegate.leadQueryDe(ObjectDataType.contactValue.rawValue)
+            } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.contactValue.rawValue)\(OnLineKeySuffix)") as? NSData {
                 contactOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
                 dispatch_async(dispatch_get_main_queue(), {
                     self.tableView.reloadData()
@@ -104,20 +101,17 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     
     func loadContact() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
+        
         if exDelegate.isConnectedToNetwork() {
 //            if contactOfLineArr.count > 0 {
 //                offlineData.contactOfflineShrinkData(contactOfLineArr as! NSMutableArray)
 //            }
+             let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            exDelegate.leadQueryDe("contact")
-        } else if let arrayOfObjectsData = defaults.objectForKey(ContactOnLineDataKey) as? NSData {
-            loading.detailsLabelText = "Loading Data from Local"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
+            exDelegate.leadQueryDe(ObjectDataType.contactValue.rawValue)
+        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.contactValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             contactOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -151,7 +145,7 @@ extension ContactViewController : UITableViewDataSource {
 //        cell.textLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
 //        cell.detailTextLabel?.text = resArr1.objectAtIndex(indexPath.row)["Name"] as? String
         if indexPath.section == 0 {
-            cell.dataText.text = contactOfLineArr.objectAtIndex(indexPath.row)["LastName"] as? String
+            cell.dataText.text = contactOfLineArr.objectAtIndex(indexPath.row)["Name"] as? String
             cell.notConnectedImage.hidden = false
         } else {
             cell.dataText.text = contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String
@@ -222,7 +216,7 @@ extension ContactViewController : UITableViewDataSource {
                     self.contactOfLineArr.removeObjectAtIndex(indexPath.row)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                     let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.contactOfLineArr)
-                    defaults.setObject(arrOfOppData, forKey: ContactOfLineDataKey)
+                    defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.contactValue.rawValue)\(OffLineKeySuffix)")
                     self.delContactAtIndexPath = nil
                 }
             })

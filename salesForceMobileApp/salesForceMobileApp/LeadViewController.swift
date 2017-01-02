@@ -53,7 +53,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
             exDelegate.leadQueryDe("lead")
             }
         }*/
-        if let arrayOfObjectsData = defaults.objectForKey(LeadOfLineDataKey) as? NSData {
+        if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)") as? NSData {
             leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -113,7 +113,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     func toggleRight1() {
         let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
-        nv.objectType =   "Lead"
+        nv.objectType = ObjectDataType.leadValue.rawValue
         navigationController?.pushViewController(nv, animated: true)    }
     
     
@@ -132,20 +132,18 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     
     func loadLead() {
         let defaults = NSUserDefaults.standardUserDefaults()
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
+       
         if exDelegate.isConnectedToNetwork() {
 //            if leadOfLineArr.count > 0 {
 //                offlineData.leadOfflineShrinkData(leadOfLineArr as! NSMutableArray)
 //            }
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
             loading.detailsLabelText = "Loading Data from Server"
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-            exDelegate.leadQueryDe("lead")
-        } else if let arrayOfObjectsData = defaults.objectForKey(LeadOnLineDataKey) as? NSData {
-            loading.detailsLabelText = "Loading Data from Local"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
+            exDelegate.leadQueryDe(ObjectDataType.leadValue.rawValue)
+        } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             leadOnLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
             dispatch_async(dispatch_get_main_queue(), {
                 self.tableView.reloadData()
@@ -193,7 +191,7 @@ extension LeadViewController : UITableViewDataSource {
         }
         
        
-
+        
         
         
         return cell
@@ -258,7 +256,7 @@ extension LeadViewController : UITableViewDataSource {
                 self.leadOfLineArr.removeObjectAtIndex(indexPath.row)
                 self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                 let offlineLeadArr = NSKeyedArchiver.archivedDataWithRootObject(leadOfLineArr)
-                defaults.setObject(offlineLeadArr, forKey: LeadOfLineDataKey)
+                defaults.setObject(offlineLeadArr, forKey:"\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
                 self.deleteLeadAtIndexPath = nil
             }
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)

@@ -10,12 +10,13 @@ import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
 
-class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate  {
+class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate, ExecuteQueryDelegate  {
     var leadDetailInfo:AnyObject = []
     var leadId = ""
+    var imagesDirectoryPath:String!
     var checkButton = false
     @IBOutlet weak var attachTextView: UITextView!
-    
+    var exDelegate: ExecuteQuery = ExecuteQuery()
     @IBOutlet weak var checkUncheckBtn: UIButton!
     @IBOutlet weak var imageView: UIImageView!
 let imagePicker = UIImagePickerController()
@@ -37,6 +38,19 @@ let imagePicker = UIImagePickerController()
         attachTextView.delegate = self
         checkUncheckBtn.layer.borderColor = UIColor.blackColor().CGColor
         imagePicker.delegate = self
+        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let documentDirectorPath:String = paths[0]
+        imagesDirectoryPath = documentDirectorPath.stringByAppendingString("/Attachment")
+        var objcBool:ObjCBool = true
+        let isExist = NSFileManager.defaultManager().fileExistsAtPath(imagesDirectoryPath, isDirectory: &objcBool)
+        if isExist == false{
+            do{
+                try NSFileManager.defaultManager().createDirectoryAtPath(imagesDirectoryPath, withIntermediateDirectories: true, attributes: nil)
+            }catch{
+                print("Something went wrong while creating a new folder")
+            }
+        }
+
         let borderColor = UIColor(red: 204.0 / 255.0, green: 204.0 / 255.0, blue: 204.0 / 255.0, alpha: 1.0)
         attachTextView.layer.borderColor = borderColor.CGColor
         attachTextView.layer.borderWidth = 1.0
@@ -98,7 +112,19 @@ let imagePicker = UIImagePickerController()
         }
         
         
-
+        
+        if !exDelegate.isConnectedToNetwork() {
+            var imagePath = NSDate().description
+            imagePath = imagePath.stringByReplacingOccurrencesOfString(" ", withString: "")
+            imagePath = imagesDirectoryPath.stringByAppendingString("/\(imagePath).png")
+            let imageData = UIImageJPEGRepresentation(imageView.image!, 0.5)
+          let success =  NSFileManager.defaultManager().createFileAtPath(imagePath as String, contents: imageData, attributes: nil)
+            if success {
+                self.navigationController?.popViewControllerAnimated(true)
+            }else {
+                print("Something went wrong")
+            }
+        } else {
         
         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
@@ -125,9 +151,8 @@ let imagePicker = UIImagePickerController()
        //  print(response)
             loading.hide(true, afterDelay: 2)
             loading.removeFromSuperViewOnHide = true
-
-
             self.navigationController?.popViewControllerAnimated(true)
+        }
         }
         
     }

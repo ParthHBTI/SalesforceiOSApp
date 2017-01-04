@@ -29,9 +29,8 @@ import SalesforceRestAPI
 
     let UIAppDelegate = UIApplication.sharedApplication().delegate! as! AppDelegate
     let defaults = NSUserDefaults.standardUserDefaults()
-   let  EXDelegate: ExecuteQuery = ExecuteQuery()
-
-
+    let  EXDelegate: ExecuteQuery = ExecuteQuery()
+    
 // Fill these in when creating a new Connected Application on Force.com
 let RemoteAccessConsumerKey = "3MVG9Iu66FKeHhINkB1l7xt7kR8czFcCTUhgoA8Ol2Ltf1eYHOU4SqQRSEitYFDUpqRWcoQ2.dBv_a1Dyu5xa";
 let OAuthRedirectURI        = "testsfdc:///mobilesdk/detect/oauth/done";
@@ -42,13 +41,58 @@ let OAuthRedirectURI        = "testsfdc:///mobilesdk/detect/oauth/done";
 class AppDelegate : UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var myTimer: NSTimer? = nil
+    var offlineMsgView: OfflineMessageDisplayView!
+    var isDismiss = false
+    var flag = false
+    
+    func showOfflineMsg() {
+        
+    }
+    func removeInternetAlert() {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.offlineMsgView.removeFromSuperview()
+        }
+    }
+    
+    func openInternetAlert() {
+        //self.offlineMsgView = OfflineMessageDisplayView.loadNib()
+        //let screenSize: CGRect = UIScreen.mainScreen().bounds
+        //offlineMsgView.frame = CGRectMake(0,0, 0, screenSize.width)
+        //if !flag {
+        self.offlineMsgView = OfflineMessageDisplayView.loadNib()
+         UIApplication.sharedApplication().keyWindow?.addSubview((self.offlineMsgView)!)
+        self.offlineMsgView.frame.origin.y = -64.0
+        UIView.animateWithDuration(1.0, delay: 1.0, options: .TransitionNone, animations: {
+            self.offlineMsgView.frame.origin.y = 0.0
+            }, completion: {_ in
+                //self.flag = true
+        })
+   //}
+        self.offlineMsgView.dismissBtn.addTarget(self, action:#selector(self.dismissInternetAlert), forControlEvents:UIControlEvents.TouchUpInside)
+    }
+    
+    func dismissInternetAlert() {
+        
+        UIView.animateWithDuration(1.0, delay: 0.0, options: .TransitionNone, animations: {
+            self.offlineMsgView.frame.origin.y = -64.0
+            //self.offlineMsgView.removeFromSuperview()
+            }, completion: {_ in
+                //self.flag = true
+        })
+        self.isDismiss = true
+    }
     
     func timerFunc() {
-       // print("timerFunc()")
-        
         if EXDelegate.isConnectedToNetwork() {
+            removeInternetAlert()
+            //self.isDismiss = true
             OfflineSyncData.syncOffLineDataToServer()
-        }
+         }
+        if !exDelegate.isConnectedToNetwork() {
+            if !self.isDismiss {
+                openInternetAlert()
+            }
+         }
     }
     override
     init() {
@@ -94,7 +138,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         self.initializeAppViewState();
-        
+         openInternetAlert()
         //
         // If you wish to register for push notifications, uncomment the line below.  Note that,
         // if you want to receive push notifications from Salesforce, you will also need to

@@ -77,6 +77,8 @@
 		73BAB8531DB8DBA200586320 /* OpportunityDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BAB8521DB8DBA200586320 /* OpportunityDataCell.swift */; };
 		73BAB8551DB8DBCA00586320 /* ContactDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BAB8541DB8DBCA00586320 /* ContactDataVC.swift */; };
 		73BAB8571DB8DBE300586320 /* OpportunityDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BAB8561DB8DBE300586320 /* OpportunityDataVC.swift */; };
+		73EF1AFC1E1B8C9400755685 /* OfflineMessageDisplayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 73EF1AFB1E1B8C9400755685 /* OfflineMessageDisplayView.xib */; };
+		73EF1AFE1E1B8E3200755685 /* OfflineMessageDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73EF1AFD1E1B8E3200755685 /* OfflineMessageDisplayView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -157,6 +159,8 @@
 		73BAB8521DB8DBA200586320 /* OpportunityDataCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpportunityDataCell.swift; sourceTree = "<group>"; };
 		73BAB8541DB8DBCA00586320 /* ContactDataVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactDataVC.swift; sourceTree = "<group>"; };
 		73BAB8561DB8DBE300586320 /* OpportunityDataVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpportunityDataVC.swift; sourceTree = "<group>"; };
+		73EF1AFB1E1B8C9400755685 /* OfflineMessageDisplayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OfflineMessageDisplayView.xib; sourceTree = "<group>"; };
+		73EF1AFD1E1B8E3200755685 /* OfflineMessageDisplayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OfflineMessageDisplayView.swift; path = ../OfflineMessageDisplayView.swift; sourceTree = "<group>"; };
 		762732C14CFE40A989C3AD70 /* Pods-salesForceMobileApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-salesForceMobileApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-salesForceMobileApp/Pods-salesForceMobileApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -196,6 +200,7 @@
 				04F96F221DAF74F8000D715A /* ImageHeaderView.swift */,
 				04D2551D1DF6EB3400CB1A9B /* AccountDataImageCell.xib */,
 				04F96F231DAF74F8000D715A /* ImageHeaderView.xib */,
+				73EF1AFB1E1B8C9400755685 /* OfflineMessageDisplayView.xib */,
 				04F96F271DAF7517000D715A /* BaseTableViewCell.swift */,
 				04F96F281DAF7517000D715A /* DataTableViewCell.swift */,
 				04F96F291DAF7517000D715A /* DataTableViewCell.xib */,
@@ -312,6 +317,7 @@
 				4F393A281C3C8BCD00B3EA13 /* main.swift */,
 				732D9DB71DB88A23002AEDBA /* LeadContentVC.swift */,
 				73BAB84C1DB8D9F200586320 /* AccountDataVC.swift */,
+				73EF1AFD1E1B8E3200755685 /* OfflineMessageDisplayView.swift */,
 				73BAB8541DB8DBCA00586320 /* ContactDataVC.swift */,
 				73BAB8561DB8DBE300586320 /* OpportunityDataVC.swift */,
 				73B8B9B71DD5AA6A00933451 /* TextFieldViewController.swift */,
@@ -407,6 +413,7 @@
 				04F96ED01DAF6E01000D715A /* Main.storyboard in Resources */,
 				04F96F351DAF75E0000D715A /* SubContentsViewController.storyboard in Resources */,
 				04D2551E1DF6EB3400CB1A9B /* AccountDataImageCell.xib in Resources */,
+				73EF1AFC1E1B8C9400755685 /* OfflineMessageDisplayView.xib in Resources */,
 				736B3FCF1E07ED2300612093 /* arrow_left-128.png in Resources */,
 				731BC9E01DB4F86600B3C6C7 /* Images.xcassets in Resources */,
 				04D255221DF6EC2000CB1A9B /* AccountDataCell.xib in Resources */,
@@ -509,6 +516,7 @@
 				04F96F341DAF75E0000D715A /* SubContentsViewController.swift in Sources */,
 				04F96F0F1DAF7333000D715A /* LeadViewController.swift in Sources */,
 				04CB1DE41DAF807400D2621C /* SlideMenuController.swift in Sources */,
+				73EF1AFE1E1B8E3200755685 /* OfflineMessageDisplayView.swift in Sources */,
 				042971A61E15158600A55EC0 /* InitialViewController.swift in Sources */,
 				04F96F1B1DAF740C000D715A /* UIViewController.swift in Sources */,
 				7331FBD61E0CF5FD00C86DD6 /* Constant.swift in Sources */,

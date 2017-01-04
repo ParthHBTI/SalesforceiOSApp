@@ -433,7 +433,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             self.picker.showTextPicker(textPickerValueArr)
             self.picker.show(inVC: self)
             return false
-        }  else if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Input_Type__c"] as? String == DatePicker {
+        }  else if (objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Input_Type__c"] as? String == DatePicker) {
             presentTextField.resignFirstResponder()
             chooseDOB()
             return false

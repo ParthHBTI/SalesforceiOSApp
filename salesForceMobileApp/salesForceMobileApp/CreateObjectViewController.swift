@@ -135,8 +135,17 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let Identifier = "cellIdentifier"
+        let attachment = NSTextAttachment()
+        attachment.image = UIImage(named: "star_icon")
+        let attachmentString = NSAttributedString(attachment: attachment)
+        let myString = NSMutableAttributedString(string: (self.objDataArr[indexPath.row].valueForKey("Display_Name__c") as? String)!)
+        myString.appendAttributedString(attachmentString)
         let cell = tableView.dequeueReusableCellWithIdentifier(Identifier) as? CreateObjectsCell
-        cell!.fieldLabel.text = self.objDataArr[indexPath.row].valueForKey("Display_Name__c") as? String
+        if self.objDataArr.objectAtIndex(indexPath.row)["IsMandatory__c"] as? Int == 1 {
+            cell!.fieldLabel.attributedText = myString
+        } else {
+            cell!.fieldLabel.text = self.objDataArr[indexPath.row].valueForKey("Display_Name__c") as? String
+        }
         if let valueToShow =  self.objDataArr[indexPath.row].valueForKey(FieldValueKey){
             cell!.objectTextField.text =  String(valueToShow)
         } else {
@@ -245,7 +254,13 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                     print(x)
                     fields[ (data["Name"] as? String)!] = data[FieldValueKey]
                 } else {
-                    print("value is nil")
+                    if (data["IsMandatory__c"] as? Int == 1) {
+                        let alert = UIAlertView.init(title: "Empty Fields", message: "Please fill mandatory fields", delegate: nil, cancelButtonTitle: "OK")
+                        alert.show()
+                        return
+                    } else {
+                        print("value is nil")
+                    }
                 }
             } else {
                 print("key is not present in dict")

@@ -30,7 +30,7 @@ class OffLineSetupData: NSObject {
         let schemaKey = "\(objectType)_\(SchemaKeySuffix)"
         
         if exDelegate.isConnectedToNetwork() {
-            let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c, Input_Type__c, Picker_Value__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'" )
+            let request = SFRestAPI.sharedInstance().requestForQuery("Select Name, (Select Name, Display_Name__c,Display_order__c, Input_Type__c, Picker_Value__c, IsMandatory__c from FieldInfos__r Order by Display_order__c ASC ) from Master_Object__c Where name = '\(objectType)'" )
             SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
                 print(error)
                 }, completeBlock: { response in

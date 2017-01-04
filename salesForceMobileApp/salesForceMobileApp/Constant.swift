@@ -17,6 +17,7 @@ enum ObjectDataType: String {
     case accountValue = "Account"
     case contactValue = "Contact"
     case opportunityValue = "Opportunity"
+    case attachment = "Attachment"
 }
 
 let KeyValue = "KeyValue"
@@ -31,7 +32,7 @@ let AccountPIcker = "AccountPicker"
 let SchemaKeySuffix = "SchemaKey"
 let OffLineKeySuffix = "OffLineDataKey"
 let OnLineKeySuffix = "OnLineDataKey"
-
+let offlineAttachKey = "offlineAttachKey"
 let NotificationSuffix = "NotificationSuffixKey"
 
 

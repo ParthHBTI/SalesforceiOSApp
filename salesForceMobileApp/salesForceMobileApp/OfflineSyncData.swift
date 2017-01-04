@@ -21,6 +21,7 @@ class OfflineSyncData: UIViewController {
         OfflineShrinkData(ObjectDataType.contactValue.rawValue)
         OfflineShrinkData(ObjectDataType.opportunityValue.rawValue)
         OfflineShrinkData(ObjectDataType.accountValue.rawValue)
+        OfflineShrinkData1(ObjectDataType.attachment.rawValue)
     }
 
  class   func OfflineShrinkData(objType: String) {
@@ -54,8 +55,6 @@ class OfflineSyncData: UIViewController {
                     print(result?.id )
                     print(result?.success)
                     defaults.removeObjectForKey("\(objType)\(OffLineKeySuffix)")
-                    
-                    
                     let nc = NSNotificationCenter.defaultCenter()
                     nc.postNotificationName("\(objType)\(NotificationSuffix)",
                         object: nil,
@@ -63,9 +62,52 @@ class OfflineSyncData: UIViewController {
                 }
         })
     }
+}
     
-   
+    
+    class   func OfflineShrinkData1(objType: String) {
+        
+        var offlineAttachmentDic = NSDictionary()
+        if let arrayOfObjectsData = defaults.objectForKey(offlineAttachKey) as? NSData {
+            offlineAttachmentDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSDictionary
+            
+        }
+       
+        if  offlineAttachmentDic.count > 0 {
+            let   client = fatchClient()
+            let dataArr: NSMutableArray =  []
+                for (key, _) in offlineAttachmentDic {
+                     let attachment: AnyObject = ZKSObject.withType(objType)
+                    let dataArray = offlineAttachmentDic.valueForKey(key as! String)
+                    for element in (dataArray as? NSArray)! {
+                        attachment.setFieldValue(element["Name"] as? String, field: "Name")
+                        attachment.setFieldValue(element["Body"] as? String, field: "Body")
+                        attachment.setFieldValue(element["ParentId"] as? String, field: "ParentId")
+                    }
+                     dataArr.addObject(attachment)
+                }
+            client.performCreate(dataArr as [AnyObject], failBlock: { exp in
+                print(exp)
+                }, completeBlock: { results in
+                    print(results)
+                    for  resultV  in results {
+                        let result = resultV as? ZKSaveResult
+                        print(result?.errors )
+                        print(result?.id )
+                        print(result?.success)
+                        defaults.removeObjectForKey(offlineAttachKey)
+                        let nc = NSNotificationCenter.defaultCenter()
+                        nc.postNotificationName("\(objType)\(NotificationSuffix)",
+                            object: nil,
+                            userInfo: ["message":"Hello there!", "date":NSDate()])
+                    }
+            })
+        }
+        
+        
     }
+    
+    
     
    class func fatchClient() -> ZKSforceClient {
      let   client = ZKSforceClient()

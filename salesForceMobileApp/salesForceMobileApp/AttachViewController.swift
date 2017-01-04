@@ -9,6 +9,8 @@
 import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
+var attachOfflineArr = NSMutableArray()
+var attachOfflineDic =  NSMutableDictionary()
 
 class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate, ExecuteQueryDelegate  {
     var leadDetailInfo:AnyObject = []
@@ -19,6 +21,7 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
     var exDelegate: ExecuteQuery = ExecuteQuery()
     @IBOutlet weak var checkUncheckBtn: UIButton!
     @IBOutlet weak var imageView: UIImageView!
+    var addObjFlag = true
 let imagePicker = UIImagePickerController()
     
     
@@ -33,6 +36,9 @@ let imagePicker = UIImagePickerController()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "New Post"
+        if let arrayOfObjectsData = defaults.objectForKey(offlineAttachKey) as? NSData {
+            attachOfflineDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
+        }
         checkUncheckBtn.layer.cornerRadius = 5
         checkUncheckBtn.layer.borderWidth = 1
         attachTextView.delegate = self
@@ -106,21 +112,35 @@ let imagePicker = UIImagePickerController()
             
             let alert = UIAlertView.init(title: "Error", message: "Please attach image first." , delegate: self, cancelButtonTitle: "OK")
             alert.show()
-
-            
-            return;
+     return;
         }
         
-        
-        
-        if !exDelegate.isConnectedToNetwork() {
+        let imageData: NSData = UIImageJPEGRepresentation(imageView.image!, 0.1)!
+        let b64 = imageData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.EncodingEndLineWithLineFeed)
+        let fields = [
+            "Name": "background.png",
+            "Body": b64,
+            "ParentId":leadId
+        ]
+        if exDelegate.isConnectedToNetwork() {
+            
+            
+            var attachedArr = attachOfflineDic[leadId]
+            if let _ = attachedArr {
+                attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
+            } else {
+                attachedArr = NSMutableArray()
+            }
+            attachedArr?.addObject(fields)
+            attachOfflineDic.setObject(attachedArr!, forKey: leadId)
+            defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachOfflineDic), forKey: offlineAttachKey)
+            
             var imagePath = NSDate().description
             imagePath = imagePath.stringByReplacingOccurrencesOfString(" ", withString: "")
             imagePath = imagesDirectoryPath.stringByAppendingString("/\(imagePath).png")
-            let imageData = UIImageJPEGRepresentation(imageView.image!, 0.5)
           let success =  NSFileManager.defaultManager().createFileAtPath(imagePath as String, contents: imageData, attributes: nil)
             if success {
-                self.navigationController?.popViewControllerAnimated(true)
+               self.navigationController?.popViewControllerAnimated(true)
             }else {
                 print("Something went wrong")
             }
@@ -128,31 +148,34 @@ let imagePicker = UIImagePickerController()
         
         let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loading.mode = MBProgressHUDMode.Indeterminate
-        
-        let imageData: NSData = UIImageJPEGRepresentation(imageView.image!, 0.1)!
-        let b64 = imageData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.EncodingEndLineWithLineFeed)
-
-
-        
-        let fields = [
-            "Name": "background.png",
-            "Body": b64,
-            "ParentId":leadId
-        ]
-        //"00Q2800000RyOjpEAF"
-        let request = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Attachment", fields: fields)
-
-        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
-            print(error)
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
-
-        }) { response in
-       //  print(response)
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
-            self.navigationController?.popViewControllerAnimated(true)
-        }
+            SFRestAPI.sharedInstance().performCreateWithObjectType("Attachment", fields: fields, failBlock: { err in
+                dispatch_async(dispatch_get_main_queue(), {
+                    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                    alert.show()
+                })
+                print( (err))
+            }) { succes in
+                dispatch_async(dispatch_get_main_queue(), {
+                    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                    loading.hide(true, afterDelay: 2)
+                    loading.removeFromSuperViewOnHide = true
+                    self.navigationController?.popViewControllerAnimated(true)
+                })
+            }
+            
+            
+            
+//        let request = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Attachment", fields: fields)
+//        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
+//            print(error)
+//            loading.hide(true, afterDelay: 2)
+//            loading.removeFromSuperViewOnHide = true
+//
+//        }) { response in
+//            loading.hide(true, afterDelay: 2)
+//            loading.removeFromSuperViewOnHide = true
+//            self.navigationController?.popViewControllerAnimated(true)
+//        }
         }
         
     }

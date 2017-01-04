@@ -50,7 +50,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         configureTableView()
-        
+        dowloadAttachment()
         if isUpdatedSuccessfully {
             if exDelegate.isConnectedToNetwork() {
                 exDelegate.leadQueryDe("lead")
@@ -73,7 +73,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             
         }
         isUpdatedSuccessfully = false
-        dowloadAttachment()
     }
     
     
@@ -142,7 +141,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 })
                 
         })
-        let attachQuery = "SELECT ContentType,IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
+        let attachQuery = "SELECT ContentType,CreatedDate, IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
         let attachReq = SFRestAPI.sharedInstance().requestForQuery(attachQuery)
         SFRestAPI.sharedInstance().sendRESTRequest(attachReq, failBlock: {
             erro in
@@ -309,13 +308,16 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         
     }
     
-    func getTimeFromString(index: Int) -> String {
-        let str = attachmentArr.objectAtIndex(index)["CreatedDate"] as? String
-        let arrayWithTwoStrings = str!.componentsSeparatedByString("T")
-        let StringsAfter = arrayWithTwoStrings[1]
-        let timeStr = StringsAfter.componentsSeparatedByString(".")
-        let timeSt = timeStr[0]
-        return timeSt
+    func getTimeFromString(index: Int, array: NSArray) -> String {
+        if array.count != 0 {
+            let str = array.objectAtIndex(index)["CreatedDate"] as? String
+            let arrayWithTwoStrings = str!.componentsSeparatedByString("T")
+            let StringsAfter = arrayWithTwoStrings[1]
+            let timeStr = StringsAfter.componentsSeparatedByString(".")
+            let timeSt = timeStr[0]
+            return timeSt
+        }
+        return ""
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -339,7 +341,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 tableView.rowHeight = 70
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
                 
-               textFeedCell.attachNoteTime.text = getTimeFromString(indexPath.row)
+               textFeedCell.attachNoteTime.text = getTimeFromString(indexPath.row, array: attachmentArr as! NSArray)
                 textFeedCell.attachAndNoteFileName.text = attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
                 let typeArr: AnyObject = attachmentArr.objectAtIndex(indexPath.row)["attributes"]
                     textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
@@ -350,7 +352,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 tableView.rowHeight = 70
                 
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
-                textFeedCell.attachNoteTime.text = getTimeFromString(indexPath.row)
+               textFeedCell.attachNoteTime.text = getTimeFromString(indexPath.row, array: noteArr as! NSArray)
                 textFeedCell.attachAndNoteFileName.text = noteArr.objectAtIndex(indexPath.row)["Name"] as? String
                 let typeArr: AnyObject = noteArr.objectAtIndex(indexPath.row)["attributes"]
                 textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String

@@ -55,24 +55,17 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
     }
     
     func openInternetAlert() {
-        //self.offlineMsgView = OfflineMessageDisplayView.loadNib()
-        //let screenSize: CGRect = UIScreen.mainScreen().bounds
-        //offlineMsgView.frame = CGRectMake(0,0, 0, screenSize.width)
-        //if !flag {
         self.offlineMsgView = OfflineMessageDisplayView.loadNib()
          UIApplication.sharedApplication().keyWindow?.addSubview((self.offlineMsgView)!)
         self.offlineMsgView.frame.origin.y = -64.0
         UIView.animateWithDuration(1.0, delay: 1.0, options: .TransitionNone, animations: {
             self.offlineMsgView.frame.origin.y = 0.0
             }, completion: {_ in
-                //self.flag = true
         })
-   //}
         self.offlineMsgView.dismissBtn.addTarget(self, action:#selector(self.dismissInternetAlert), forControlEvents:UIControlEvents.TouchUpInside)
     }
     
     func dismissInternetAlert() {
-        
         UIView.animateWithDuration(1.0, delay: 0.0, options: .TransitionNone, animations: {
             self.offlineMsgView.frame.origin.y = -64.0
             //self.offlineMsgView.removeFromSuperview()
@@ -85,7 +78,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
     func timerFunc() {
         if EXDelegate.isConnectedToNetwork() {
             removeInternetAlert()
-            //self.isDismiss = true
+            self.isDismiss = true
             OfflineSyncData.syncOffLineDataToServer()
          }
         if !exDelegate.isConnectedToNetwork() {

@@ -122,7 +122,7 @@ let imagePicker = UIImagePickerController()
             "Body": b64,
             "ParentId":leadId
         ]
-        if exDelegate.isConnectedToNetwork() {
+        if !exDelegate.isConnectedToNetwork() {
             
             
             var attachedArr = attachOfflineDic[leadId]

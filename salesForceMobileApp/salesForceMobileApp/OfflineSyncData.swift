@@ -96,11 +96,7 @@ class OfflineSyncData: UIViewController {
                         print(result?.id )
                         print(result?.success)
                         defaults.removeObjectForKey(offlineAttachKey)
-                        let nc = NSNotificationCenter.defaultCenter()
-                        nc.postNotificationName("\(objType)\(NotificationSuffix)",
-                            object: nil,
-                            userInfo: ["message":"Hello there!", "date":NSDate()])
-                    }
+                }
             })
         }
         

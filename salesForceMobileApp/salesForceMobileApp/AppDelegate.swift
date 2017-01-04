@@ -162,7 +162,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
         SalesforceSDKManager.sharedManager().launch()
         
         //
-        myTimer = NSTimer(timeInterval: 5.0, target: self, selector:#selector(AppDelegate.timerFunc), userInfo: nil, repeats: true)
+        myTimer = NSTimer(timeInterval: 15.0, target: self, selector:#selector(AppDelegate.timerFunc), userInfo: nil, repeats: true)
         //myTimer?.fire()
         NSRunLoop.currentRunLoop().addTimer(myTimer!, forMode: NSRunLoopCommonModes)
         

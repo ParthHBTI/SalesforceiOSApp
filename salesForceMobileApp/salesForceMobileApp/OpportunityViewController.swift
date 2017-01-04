@@ -199,6 +199,11 @@ extension OpportunityViewController : UITableViewDataSource {
                 subContentsVC.leadID = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
                 subContentsVC.parentIndex = (indexPath.row)
                 self.navigationController?.pushViewController(subContentsVC, animated: true)
+            } else {
+                subContentsVC.getResponseArr = self.oppOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+                subContentsVC.leadID = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                subContentsVC.parentIndex = (indexPath.row)
+                self.navigationController?.pushViewController(subContentsVC, animated: true)
             }
         }
         globalIndex = (indexPath.row)

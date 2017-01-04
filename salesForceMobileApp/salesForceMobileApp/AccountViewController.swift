@@ -189,6 +189,11 @@ extension AccountViewController : UITableViewDataSource {
                 subContentsVC.leadID = self.accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
                 subContentsVC.parentIndex = (indexPath.row)
                 self.navigationController?.pushViewController(subContentsVC, animated: true)
+            } else {
+                subContentsVC.getResponseArr = self.accOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+                subContentsVC.leadID = self.accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                subContentsVC.parentIndex = (indexPath.row)
+                self.navigationController?.pushViewController(subContentsVC, animated: true)
             }
         }
         globalIndex = (indexPath.row)

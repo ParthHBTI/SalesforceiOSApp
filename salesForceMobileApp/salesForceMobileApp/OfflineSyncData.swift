@@ -39,6 +39,7 @@ class OfflineSyncData: UIViewController {
             let account: AnyObject = ZKSObject.withType(objType)
             let objectDic = NSMutableDictionary()
             for (key, val) in (val as? NSDictionary)! {
+                
                 objectDic.setObject(key, forKey: KeyName)
                 objectDic.setObject(val, forKey: KeyValue)
                 account.setFieldValue(objectDic[KeyValue] as? String, field: objectDic[KeyName] as? String)

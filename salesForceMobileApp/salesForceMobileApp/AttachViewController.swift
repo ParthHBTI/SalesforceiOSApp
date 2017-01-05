@@ -11,19 +11,21 @@ import SalesforceRestAPI
 import MBProgressHUD
 var attachOfflineArr = NSMutableArray()
 var attachOfflineDic =  NSMutableDictionary()
+var attachmentForOfflinObjDic = NSMutableDictionary()
 
 class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate, ExecuteQueryDelegate  {
     var leadDetailInfo:AnyObject = []
     var leadId = ""
     var imagesDirectoryPath:String!
+    var imagesDirectoryPathOfflineObj: String!
     var checkButton = false
     @IBOutlet weak var attachTextView: UITextView!
     var exDelegate: ExecuteQuery = ExecuteQuery()
     @IBOutlet weak var checkUncheckBtn: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     var addObjFlag = true
-let imagePicker = UIImagePickerController()
-    
+    let imagePicker = UIImagePickerController()
+    var Section = Int()
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -36,42 +38,66 @@ let imagePicker = UIImagePickerController()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "New Post"
-        if let arrayOfObjectsData = defaults.objectForKey(offlineAttachKey) as? NSData {
-            attachOfflineDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
+        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let documentDirectorPath:String = paths[0]
+        var objcBool:ObjCBool = true
+        if Section == 0 {
+            if let arrayOfObjectsData = defaults.objectForKey(offAttachmentForOffObjKey) as? NSData {
+                attachmentForOfflinObjDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
+            }
+            imagesDirectoryPathOfflineObj = documentDirectorPath.stringByAppendingString("/AttachmentForOfflineObj")
+            let isExists = NSFileManager.defaultManager().fileExistsAtPath(imagesDirectoryPathOfflineObj, isDirectory: &objcBool)
+            if isExists == false{
+                do{
+                    try NSFileManager.defaultManager().createDirectoryAtPath(imagesDirectoryPathOfflineObj, withIntermediateDirectories: true, attributes: nil)
+                }catch{
+                    print("Something went wrong while creating a new folder")
+                }
+            }
+        } else {
+            if let arrayOfObjectsData = defaults.objectForKey(offlineAttachKey) as? NSData {
+                attachOfflineDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
+            }
+            imagesDirectoryPath = documentDirectorPath.stringByAppendingString("/Attachment")
+            let isExists = NSFileManager.defaultManager().fileExistsAtPath(imagesDirectoryPath, isDirectory: &objcBool)
+            if isExists == false{
+                do{
+                    try NSFileManager.defaultManager().createDirectoryAtPath(imagesDirectoryPath, withIntermediateDirectories: true, attributes: nil)
+                }catch{
+                    print("Something went wrong while creating a new folder")
+                }
+            }
         }
         checkUncheckBtn.layer.cornerRadius = 5
         checkUncheckBtn.layer.borderWidth = 1
         attachTextView.delegate = self
         checkUncheckBtn.layer.borderColor = UIColor.blackColor().CGColor
         imagePicker.delegate = self
-        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
-        let documentDirectorPath:String = paths[0]
-        imagesDirectoryPath = documentDirectorPath.stringByAppendingString("/Attachment")
-        var objcBool:ObjCBool = true
-        let isExist = NSFileManager.defaultManager().fileExistsAtPath(imagesDirectoryPath, isDirectory: &objcBool)
-        if isExist == false{
-            do{
-                try NSFileManager.defaultManager().createDirectoryAtPath(imagesDirectoryPath, withIntermediateDirectories: true, attributes: nil)
-            }catch{
-                print("Something went wrong while creating a new folder")
-            }
-        }
-
+        
+        /* let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+         let documentDirectorPath:String = paths[0]
+         imagesDirectoryPath = documentDirectorPath.stringByAppendingString("/Attachment")
+         var objcBool:ObjCBool = true
+         let isExist = NSFileManager.defaultManager().fileExistsAtPath(imagesDirectoryPath, isDirectory: &objcBool)
+         if isExist == false{
+         do{
+         try NSFileManager.defaultManager().createDirectoryAtPath(imagesDirectoryPath, withIntermediateDirectories: true, attributes: nil)
+         }catch{
+         print("Something went wrong while creating a new folder")
+         }
+         }*/
+        
         let borderColor = UIColor(red: 204.0 / 255.0, green: 204.0 / 255.0, blue: 204.0 / 255.0, alpha: 1.0)
         attachTextView.layer.borderColor = borderColor.CGColor
         attachTextView.layer.borderWidth = 1.0
         attachTextView.layer.cornerRadius = 5.0
         let shareBarButton = UIBarButtonItem(title: "Share", style: .Plain, target: self, action: #selector(AttachViewController.shareAction))
-        
         self.navigationItem.setRightBarButtonItem(shareBarButton, animated: true)
-        
-
         if let _ = nullToNil(leadDetailInfo["Id"]) {
             leadId = (leadDetailInfo["Id"] as? String)!
         }
-        
-        
     }
+    
     @IBAction func checkPrivateAction(sender: AnyObject) {
         if !checkButton {
             checkButton = true
@@ -81,6 +107,7 @@ let imagePicker = UIImagePickerController()
             checkUncheckBtn.setImage(nil, forState: UIControlState.Normal)
         }
     }
+    
     func textViewShouldBeginEditing(textView: UITextView) -> Bool {
         self.attachTextView.text = nil
         return true
@@ -93,9 +120,9 @@ let imagePicker = UIImagePickerController()
         }
         return true
     }
-
     
-       override func didReceiveMemoryWarning() {
+    
+    override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
@@ -103,18 +130,14 @@ let imagePicker = UIImagePickerController()
         self.view.endEditing(true)
     }
     
- 
+    
     func shareAction() {
-        
         self.view.endEditing(true)
-
         if imageView.image == nil {
-            
             let alert = UIAlertView.init(title: "Error", message: "Please attach image first." , delegate: self, cancelButtonTitle: "OK")
             alert.show()
-     return;
+            return;
         }
-        
         let imageData: NSData = UIImageJPEGRepresentation(imageView.image!, 0.1)!
         let b64 = imageData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.EncodingEndLineWithLineFeed)
         let fields = [
@@ -123,31 +146,50 @@ let imagePicker = UIImagePickerController()
             "ParentId":leadId
         ]
         if !exDelegate.isConnectedToNetwork() {
-            
-            
-            var attachedArr = attachOfflineDic[leadId]
-            if let _ = attachedArr {
-                attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
+            if (Section == 0) {
+                var attachedArr = attachmentForOfflinObjDic[leadId]
+                if let _ = attachedArr {
+                    attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
+                } else {
+                    attachedArr = NSMutableArray()
+                }
+                attachedArr?.addObject(fields)
+                attachmentForOfflinObjDic.setObject(attachedArr!, forKey: leadId)
+                print(attachmentForOfflinObjDic)
+                defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachmentForOfflinObjDic), forKey: offAttachmentForOffObjKey)
+                var imagePath = NSDate().description
+                imagePath = imagePath.stringByReplacingOccurrencesOfString(" ", withString: "")
+                imagePath = imagesDirectoryPathOfflineObj.stringByAppendingString("/\(imagePath).png")
+                let success =  NSFileManager.defaultManager().createFileAtPath(imagePath as String, contents: imageData, attributes: nil)
+                if success {
+                    self.navigationController?.popViewControllerAnimated(true)
+                }else {
+                    print("Something went wrong")
+                }
             } else {
-                attachedArr = NSMutableArray()
-            }
-            attachedArr?.addObject(fields)
-            attachOfflineDic.setObject(attachedArr!, forKey: leadId)
-            defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachOfflineDic), forKey: offlineAttachKey)
-            
-            var imagePath = NSDate().description
-            imagePath = imagePath.stringByReplacingOccurrencesOfString(" ", withString: "")
-            imagePath = imagesDirectoryPath.stringByAppendingString("/\(imagePath).png")
-          let success =  NSFileManager.defaultManager().createFileAtPath(imagePath as String, contents: imageData, attributes: nil)
-            if success {
-               self.navigationController?.popViewControllerAnimated(true)
-            }else {
-                print("Something went wrong")
+                var attachedArr = attachOfflineDic[leadId]
+                if let _ = attachedArr {
+                    attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
+                } else {
+                    attachedArr = NSMutableArray()
+                }
+                attachedArr?.addObject(fields)
+                attachOfflineDic.setObject(attachedArr!, forKey: leadId)
+                defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachOfflineDic), forKey: offlineAttachKey)
+                print(attachOfflineDic)
+                var imagePath = NSDate().description
+                imagePath = imagePath.stringByReplacingOccurrencesOfString(" ", withString: "")
+                imagePath = imagesDirectoryPath.stringByAppendingString("/\(imagePath).png")
+                let success =  NSFileManager.defaultManager().createFileAtPath(imagePath as String, contents: imageData, attributes: nil)
+                if success {
+                    self.navigationController?.popViewControllerAnimated(true)
+                }else {
+                    print("Something went wrong")
+                }
             }
         } else {
-        
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
             SFRestAPI.sharedInstance().performCreateWithObjectType("Attachment", fields: fields, failBlock: { err in
                 dispatch_async(dispatch_get_main_queue(), {
                     let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
@@ -165,30 +207,26 @@ let imagePicker = UIImagePickerController()
             
             
             
-//        let request = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Attachment", fields: fields)
-//        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
-//            print(error)
-//            loading.hide(true, afterDelay: 2)
-//            loading.removeFromSuperViewOnHide = true
-//
-//        }) { response in
-//            loading.hide(true, afterDelay: 2)
-//            loading.removeFromSuperViewOnHide = true
-//            self.navigationController?.popViewControllerAnimated(true)
-//        }
+            //        let request = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Attachment", fields: fields)
+            //        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
+            //            print(error)
+            //            loading.hide(true, afterDelay: 2)
+            //            loading.removeFromSuperViewOnHide = true
+            //
+            //        }) { response in
+            //            loading.hide(true, afterDelay: 2)
+            //            loading.removeFromSuperViewOnHide = true
+            //            self.navigationController?.popViewControllerAnimated(true)
+            //        }
         }
-        
     }
     
-    
-    
     func createFeedForAttachment(field: String) {
-    let entID = SFUserAccountManager.sharedInstance().currentUser?.idData.userId
+        let entID = SFUserAccountManager.sharedInstance().currentUser?.idData.userId
         let req = SFRestAPI.sharedInstance().requestForAddFileShare(field, entityId: entID!, shareType: "V")
-//        let res = SFRestAPI.sharedInstance().requestForFileShares(entID!, page: 1)
-//          SFRestAPI.sharedInstance().send(res, delegate: self)
+        //        let res = SFRestAPI.sharedInstance().requestForFileShares(entID!, page: 1)
+        //          SFRestAPI.sharedInstance().send(res, delegate: self)
         SFRestAPI.sharedInstance().send(req, delegate: self)
-        
     }
     
     func createFeedForAttachmentId(attachmentId: String) {
@@ -198,17 +236,17 @@ let imagePicker = UIImagePickerController()
         var feedJSONTemplateStr = String(data: feedJSONTemplateData, encoding: NSUTF8StringEncoding)
         feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__BODY_TEXT__", withString: "__kloudrac_softwares__")
         feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__ATTACHMENT_ID__", withString: attachmentId)
-//        feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__Parent_Id__", withString: leadId)
+        //        feedJSONTemplateStr = feedJSONTemplateStr!.stringByReplacingOccurrencesOfString("__Parent_Id__", withString: leadId)
         let data = feedJSONTemplateStr!.dataUsingEncoding(NSUTF8StringEncoding)
         let jsonObj: AnyObject = try! NSJSONSerialization.JSONObjectWithData(data!, options: []) as! [String:AnyObject]
         //var path: String =  "/%@/chatter/feeds/record/%@/feed-items/"
-      let api = SFRestAPI.sharedInstance()
+        let api = SFRestAPI.sharedInstance()
         let path: String = "/services/data/v36.0/chatter/groups/00D28000001acWmEAI/photos"
-//let getSessionId = SFUserAccountManager.sharedInstance().currentUser?.idData.userId
-     let request = SFRestRequest(method: SFRestMethod.POST , path: path, queryParams: jsonObj as? [String : String])
+        //let getSessionId = SFUserAccountManager.sharedInstance().currentUser?.idData.userId
+        let request = SFRestRequest(method: SFRestMethod.POST , path: path, queryParams: jsonObj as? [String : String])
         request.setHeaderValue("Authorization", forHeaderName: "OAuth " )
         request.setHeaderValue("Content-Type:", forHeaderName: "application/json");
-       // let method = SFRestMethod.POST
+        // let method = SFRestMethod.POST
         //let req = SFRestRequest.init(method: method, path: path, queryParams: jsonObj as? [String : String]
         
         SFRestAPI.sharedInstance().send(request, delegate: self)
@@ -219,18 +257,18 @@ let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .PhotoLibrary
         presentViewController(imagePicker, animated: true, completion: nil)
     }
-
+    
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
             imageView.image = pickedImage
             
             
-//          let imageData: NSData = UIImageJPEGRepresentation(pickedImage, 0.1)!
-//            let req = SFRestAPI.sharedInstance().requestForUploadFile(imageData, name: "swift_iOS_app_developers.jpg", description: "Share Image", mimeType: "image/jpeg")
-//
-//            SFRestAPI.sharedInstance().send(req, delegate: self)
-      
+            //          let imageData: NSData = UIImageJPEGRepresentation(pickedImage, 0.1)!
+            //            let req = SFRestAPI.sharedInstance().requestForUploadFile(imageData, name: "swift_iOS_app_developers.jpg", description: "Share Image", mimeType: "image/jpeg")
+            //
+            //            SFRestAPI.sharedInstance().send(req, delegate: self)
+            
         }
         dismissViewControllerAnimated(true, completion: nil)
     }
@@ -241,22 +279,22 @@ let imagePicker = UIImagePickerController()
     
     
     func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
-       
+        
         print(dataResponse);
         /*
-        if request.method == SFRestMethod.POST {
-            let range = (request.path as NSString).rangeOfString("/feed-items")
-            if range.location == NSNotFound {
-                createFeedForAttachmentId(dataResponse.objectForKey("id") as! String)
-            } else {
-                dispatch_async(dispatch_get_main_queue(), {() -> Void in
-                    self.presentingViewController!.presentingViewController!.dismissViewControllerAnimated(true, completion: { _ in })
-                })
-
-            }
-        }*/
-//        let attachmentId = (dataResponse["id"] as! String)
-//        createFeedForAttachmentId(attachmentId)
+         if request.method == SFRestMethod.POST {
+         let range = (request.path as NSString).rangeOfString("/feed-items")
+         if range.location == NSNotFound {
+         createFeedForAttachmentId(dataResponse.objectForKey("id") as! String)
+         } else {
+         dispatch_async(dispatch_get_main_queue(), {() -> Void in
+         self.presentingViewController!.presentingViewController!.dismissViewControllerAnimated(true, completion: { _ in })
+         })
+         
+         }
+         }*/
+        //        let attachmentId = (dataResponse["id"] as! String)
+        //        createFeedForAttachmentId(attachmentId)
     }
     
     
@@ -277,21 +315,21 @@ let imagePicker = UIImagePickerController()
             alert.show()
         }
     }
-//    func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
-//        let attachmentId = dataResponse.valueForKey("id") as! String
-//        let range = (request.path as NSString).rangeOfString("/feed-items")
-//        //Note: this request:didLoadResponse is called for both Attachment upload and create feedItem.
-//        //So we need to distinguish b/w the two and take appropriate action
-//        if range.location == NSNotFound {
-//            //Just uploaded image but not associated it to a feed item, so create feedItem w/ attachment.
-//            self.createFeedForAttachmentId(attachmentId)
-//        }
-//        else {
-//            dispatch_async(dispatch_get_main_queue(), {() -> Void in
-//                self.presentingViewController!.presentingViewController!.dismissViewControllerAnimated(true, completion: { _ in })
-//            })
-//        }
-//    }
+    //    func request(request: SFRestRequest, didLoadResponse dataResponse: AnyObject) {
+    //        let attachmentId = dataResponse.valueForKey("id") as! String
+    //        let range = (request.path as NSString).rangeOfString("/feed-items")
+    //        //Note: this request:didLoadResponse is called for both Attachment upload and create feedItem.
+    //        //So we need to distinguish b/w the two and take appropriate action
+    //        if range.location == NSNotFound {
+    //            //Just uploaded image but not associated it to a feed item, so create feedItem w/ attachment.
+    //            self.createFeedForAttachmentId(attachmentId)
+    //        }
+    //        else {
+    //            dispatch_async(dispatch_get_main_queue(), {() -> Void in
+    //                self.presentingViewController!.presentingViewController!.dismissViewControllerAnimated(true, completion: { _ in })
+    //            })
+    //        }
+    //    }
     
     func request(request: SFRestRequest, didFailLoadWithError error: NSError){
         self.log(.Debug, msg: "didFailLoadWithError: \(error)")
@@ -310,7 +348,7 @@ let imagePicker = UIImagePickerController()
         self.log(.Debug, msg: "requestDidTimeout: \(request)")
         // Add your failed error handling here
     }
-
+    
 }
 /*
  

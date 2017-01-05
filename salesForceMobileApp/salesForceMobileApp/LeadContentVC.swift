@@ -23,6 +23,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     var parentIndex:Int = 0
     var isOfflineData:Bool = false
     var isUpdatedSuccessfully:Bool = false
+    var selectedSectionVal = Int()
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -94,6 +95,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         title = "Lead Detail"
         self.tableView.separatorColor = UIColor.clearColor()
         self.setNavigationBarItem()
@@ -256,6 +258,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
             let attachmentVC = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
             attachmentVC.leadDetailInfo = getResponseArr;
+            attachmentVC.Section = selectedSectionVal
             self.navigationController?.pushViewController(attachmentVC, animated: true)
             print("Save")
         case 2:

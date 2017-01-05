@@ -26,9 +26,9 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     var offLineDataArr: AnyObject = NSMutableArray()
     var delegate:UpdateInfoDelegate?
     var objectInfoDic = [:]
-
+    
     var isEditable = false
-
+    
     var isOffLine = false
     var textFieldIndexPath : NSIndexPath?
     @IBOutlet weak var tableView: UITableView!
@@ -100,9 +100,9 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     
     func downloadSchemaForPage() {
         let schemaKey = "\(objectType)_\(SchemaKeySuffix)"
-                   if let arrayOfObjectsData = defaults.objectForKey(schemaKey) as? NSData {
-                 self.objDataArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
-                self.setUpEditableValue()
+        if let arrayOfObjectsData = defaults.objectForKey(schemaKey) as? NSData {
+            self.objDataArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
+            self.setUpEditableValue()
         }
     }
     
@@ -166,61 +166,62 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     
     
     func updateInfo(fields:[String: AnyObject]) {
-    if exDelegate.isConnectedToNetwork() {
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
-        loading.detailsLabelText = "Updating!"
-        loading.hide(true, afterDelay: 2)
-        loading.removeFromSuperViewOnHide = true
-   
-    SFRestAPI.sharedInstance().performUpdateWithObjectType(objectType, objectId: (objectInfoDic["Id"] as? String)!, fields: fields , failBlock: { err in
-    dispatch_async(dispatch_get_main_queue(), {
-        loading.hide(true, afterDelay: 1)
-
-    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-    alert.show()
-    })
-    }){ succes in
-        self.delegate!.updateInfo(true)
-    dispatch_async(dispatch_get_main_queue(), {
-        loading.hide(true, afterDelay: 1)
-        
-    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-    dispatch_after(delayTime, dispatch_get_main_queue()) {
-    self.navigationController?.popViewControllerAnimated(true)
-    }
-    })
-    }
-    } else {
-        if offLineDataArr.count > globalIndex {
-            offLineDataArr.setObject(fields, atIndex: globalIndex )
-            let offlineUpdatedArr = NSMutableArray()
-            for (key, value) in fields {
-                let objectDic = NSMutableDictionary()
-                objectDic.setObject(key, forKey: KeyName)
-                objectDic.setObject(value, forKey: KeyValue)
-                offlineUpdatedArr.addObject(objectDic)
+        if exDelegate.isConnectedToNetwork() {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            loading.detailsLabelText = "Updating!"
+            loading.hide(true, afterDelay: 2)
+            loading.removeFromSuperViewOnHide = true
+            
+            SFRestAPI.sharedInstance().performUpdateWithObjectType(objectType, objectId: (objectInfoDic["Id"] as? String)!, fields: fields , failBlock: { err in
+                dispatch_async(dispatch_get_main_queue(), {
+                    loading.hide(true, afterDelay: 1)
+                    
+                    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                    alert.show()
+                })
+            }){ succes in
+                self.delegate!.updateInfo(true)
+                dispatch_async(dispatch_get_main_queue(), {
+                    loading.hide(true, afterDelay: 1)
+                    
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+                    dispatch_after(delayTime, dispatch_get_main_queue()) {
+                        self.navigationController?.popViewControllerAnimated(true)
+                    }
+                })
             }
-            delegate?.updateOfflineData(offlineUpdatedArr)
-            let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(offLineDataArr)
-            defaults.setObject(arrOfLeadData, forKey: getDataKey())
-            delegate?.updateInfo(true)
-            dispatch_async(dispatch_get_main_queue(), {
-                let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                loading.mode = MBProgressHUDMode.Indeterminate
-                loading.detailsLabelText = "\(self.objectType) is creating!"
-                loading.removeFromSuperViewOnHide = true
-                loading.hide(true, afterDelay:1)
-                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-                dispatch_after(delayTime, dispatch_get_main_queue()) {
-                    self.navigationController?.popViewControllerAnimated(true)
+        } else {
+            //print(fields)
+            if offLineDataArr.count > globalIndex {
+                offLineDataArr.setObject(fields, atIndex: globalIndex )
+                let offlineUpdatedArr = NSMutableArray()
+                for (key, value) in fields {
+                    let objectDic = NSMutableDictionary()
+                    objectDic.setObject(key, forKey: KeyName)
+                    objectDic.setObject(value, forKey: KeyValue)
+                    offlineUpdatedArr.addObject(objectDic)
                 }
-            })
-
+                delegate?.updateOfflineData(offlineUpdatedArr)
+                let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(offLineDataArr)
+                defaults.setObject(arrOfLeadData, forKey: getDataKey())
+                delegate?.updateInfo(true)
+                dispatch_async(dispatch_get_main_queue(), {
+                    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                    loading.mode = MBProgressHUDMode.Indeterminate
+                    loading.detailsLabelText = "\(self.objectType) is creating!"
+                    loading.removeFromSuperViewOnHide = true
+                    loading.hide(true, afterDelay:1)
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+                    dispatch_after(delayTime, dispatch_get_main_queue()) {
+                        self.navigationController?.popViewControllerAnimated(true)
+                    }
+                })
+                
+            }
         }
-}
-}
-   
+    }
+    
     func getDataKey() -> String {
         var keyForOffLine = ""
         switch objectType {
@@ -239,15 +240,17 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         default:
             keyForOffLine = ""
         }
-
+        
         return keyForOffLine
     }
     
     @IBAction func saveAction(sender: AnyObject) {
         
-       
         self.view.endEditing(true)
         var  fields = [String: AnyObject]()
+        //        if !exDelegate.isConnectedToNetwork(){
+        //            fields["Id"] = self.objectType.stringByAppendingString("offlineObject").stringByAppendingString(NSUUID().UUIDString)
+        //        }
         for   data in self.objDataArr {
             if let val = data[FieldValueKey] {
                 if let x = val {
@@ -268,151 +271,151 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         }
         
         if isEditable {
-        
-        updateInfo(fields)
-        
-        } else {
-        
-        
-        if exDelegate.isConnectedToNetwork() {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "\(objectType) is creating!"
-            loading.removeFromSuperViewOnHide = true
             
+            updateInfo(fields)
             
-            SFRestAPI.sharedInstance().performCreateWithObjectType(objectType, fields: fields, failBlock: {error in
-                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-                dispatch_after(delayTime, dispatch_get_main_queue()) {
-                    loading.hide(true, afterDelay: 1)
-                    let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                    alert.show()
-                }
-                
-                }, completeBlock: { succes in
-                    
-                    print(succes)
-                    dispatch_async(dispatch_get_main_queue(), {
-                        loading.hide(true, afterDelay: 1)
-                        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-                        dispatch_after(delayTime, dispatch_get_main_queue()) {
-                            self.navigationController?.popViewControllerAnimated(true)
-                        }
-                    })
-            })
         } else {
             
-            offLineDataArr.addObject(fields)
-            let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(offLineDataArr)
-            defaults.setObject(arrOfLeadData, forKey: getDataKey())
-            dispatch_async(dispatch_get_main_queue(), {
+            if exDelegate.isConnectedToNetwork() {
                 let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 loading.mode = MBProgressHUDMode.Indeterminate
-                loading.detailsLabelText = "\(self.objectType) is creating!"
+                loading.detailsLabelText = "\(objectType) is creating!"
                 loading.removeFromSuperViewOnHide = true
-                loading.hide(true, afterDelay:1)
-                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-                dispatch_after(delayTime, dispatch_get_main_queue()) {
-                    self.navigationController?.popViewControllerAnimated(true)
-                }
-            })
-        }
-        }
-       
-    }
-    
-   /* func saveDataOnAccountObject(){
-        self.view.endEditing(true)
-        var  fields = [String: AnyObject]()
-        for data in self.objDataArr {
-            fields[ (data["Name"] as? String)!] = data[FieldValueKey]
-        }
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
-        loading.detailsLabelText = "Account is creating!"
-        loading.removeFromSuperViewOnHide = true
-        
-        SFRestAPI.sharedInstance().performCreateWithObjectType(objectType, fields: fields, failBlock: {error in
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTime, dispatch_get_main_queue()) {
-                loading.hide(true, afterDelay: 1)
-                let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                alert.show()
-            }
-            
-            }, completeBlock: { succes in
+                
+                
+                SFRestAPI.sharedInstance().performCreateWithObjectType(objectType, fields: fields, failBlock: {error in
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+                    dispatch_after(delayTime, dispatch_get_main_queue()) {
+                        loading.hide(true, afterDelay: 1)
+                        let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                        alert.show()
+                    }
+                    
+                    }, completeBlock: { succes in
+                        
+                        print(succes)
+                        dispatch_async(dispatch_get_main_queue(), {
+                            loading.hide(true, afterDelay: 1)
+                            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+                            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                                self.navigationController?.popViewControllerAnimated(true)
+                            }
+                        })
+                })
+            } else {
+                fields["Id"] = "offline".stringByAppendingString(self.objectType).stringByAppendingString(NSUUID().UUIDString)
+                print(fields)
+                offLineDataArr.addObject(fields)
+                let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(offLineDataArr)
+                defaults.setObject(arrOfLeadData, forKey: getDataKey())
                 dispatch_async(dispatch_get_main_queue(), {
-                    loading.hide(true, afterDelay: 1)
-
+                    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                    loading.mode = MBProgressHUDMode.Indeterminate
+                    loading.detailsLabelText = "\(self.objectType) is creating!"
+                    loading.removeFromSuperViewOnHide = true
+                    loading.hide(true, afterDelay:1)
                     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
                     dispatch_after(delayTime, dispatch_get_main_queue()) {
                         self.navigationController?.popViewControllerAnimated(true)
                     }
                 })
-        })
-        
-    }
-    
-    func saveDataOnContactObject() {
-        self.view.endEditing(true)
-        var  fields = [String: AnyObject]()
-        for data in self.objDataArr {
-            fields[ (data["Name"] as? String)!] = data[FieldValueKey]
-        }
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
-        loading.detailsLabelText = "Contact is creating!"
-        loading.removeFromSuperViewOnHide = true
-        
-        SFRestAPI.sharedInstance().performCreateWithObjectType("Contact", fields: fields, failBlock: {error in
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTime, dispatch_get_main_queue()) {
-                loading.hide(true, afterDelay: 1)
-                let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                alert.show()
             }
-            }, completeBlock: { succes in
-                dispatch_async(dispatch_get_main_queue(), {
-                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-                    dispatch_after(delayTime, dispatch_get_main_queue()) {
-                        self.navigationController?.popViewControllerAnimated(true)
-                    }
-                })
-        })
-        
-    }
-    
-    func saveDataOnOpportunity() {
-        self.view.endEditing(true)
-        var  fields = [String: AnyObject]()
-        for data in self.objDataArr {
-            fields[ (data["Name"] as? String)!] = data[FieldValueKey]
         }
-        let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loading.mode = MBProgressHUDMode.Indeterminate
-        loading.detailsLabelText = "Opportunity is creating!"
-        loading.removeFromSuperViewOnHide = true
-        
-        SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: {error in
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTime, dispatch_get_main_queue()) {
-                loading.hide(true, afterDelay: 1)
-                let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                alert.show()
-            }
-            }, completeBlock: { succes in
-                dispatch_async(dispatch_get_main_queue(), {
-                    let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
-                    dispatch_after(delayTime, dispatch_get_main_queue()) {
-                        self.navigationController?.popViewControllerAnimated(true)
-                    }
-                })
-        })
         
     }
     
-    
-    */
+    /* func saveDataOnAccountObject(){
+     self.view.endEditing(true)
+     var  fields = [String: AnyObject]()
+     for data in self.objDataArr {
+     fields[ (data["Name"] as? String)!] = data[FieldValueKey]
+     }
+     let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+     loading.mode = MBProgressHUDMode.Indeterminate
+     loading.detailsLabelText = "Account is creating!"
+     loading.removeFromSuperViewOnHide = true
+     
+     SFRestAPI.sharedInstance().performCreateWithObjectType(objectType, fields: fields, failBlock: {error in
+     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+     dispatch_after(delayTime, dispatch_get_main_queue()) {
+     loading.hide(true, afterDelay: 1)
+     let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+     alert.show()
+     }
+     
+     }, completeBlock: { succes in
+     dispatch_async(dispatch_get_main_queue(), {
+     loading.hide(true, afterDelay: 1)
+     
+     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+     dispatch_after(delayTime, dispatch_get_main_queue()) {
+     self.navigationController?.popViewControllerAnimated(true)
+     }
+     })
+     })
+     
+     }
+     
+     func saveDataOnContactObject() {
+     self.view.endEditing(true)
+     var  fields = [String: AnyObject]()
+     for data in self.objDataArr {
+     fields[ (data["Name"] as? String)!] = data[FieldValueKey]
+     }
+     let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+     loading.mode = MBProgressHUDMode.Indeterminate
+     loading.detailsLabelText = "Contact is creating!"
+     loading.removeFromSuperViewOnHide = true
+     
+     SFRestAPI.sharedInstance().performCreateWithObjectType("Contact", fields: fields, failBlock: {error in
+     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+     dispatch_after(delayTime, dispatch_get_main_queue()) {
+     loading.hide(true, afterDelay: 1)
+     let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+     alert.show()
+     }
+     }, completeBlock: { succes in
+     dispatch_async(dispatch_get_main_queue(), {
+     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+     dispatch_after(delayTime, dispatch_get_main_queue()) {
+     self.navigationController?.popViewControllerAnimated(true)
+     }
+     })
+     })
+     
+     }
+     
+     func saveDataOnOpportunity() {
+     self.view.endEditing(true)
+     var  fields = [String: AnyObject]()
+     for data in self.objDataArr {
+     fields[ (data["Name"] as? String)!] = data[FieldValueKey]
+     }
+     let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+     loading.mode = MBProgressHUDMode.Indeterminate
+     loading.detailsLabelText = "Opportunity is creating!"
+     loading.removeFromSuperViewOnHide = true
+     
+     SFRestAPI.sharedInstance().performCreateWithObjectType("Opportunity", fields: fields, failBlock: {error in
+     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+     dispatch_after(delayTime, dispatch_get_main_queue()) {
+     loading.hide(true, afterDelay: 1)
+     let alert = UIAlertView.init(title: "Error", message: error!.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+     alert.show()
+     }
+     }, completeBlock: { succes in
+     dispatch_async(dispatch_get_main_queue(), {
+     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
+     dispatch_after(delayTime, dispatch_get_main_queue()) {
+     self.navigationController?.popViewControllerAnimated(true)
+     }
+     })
+     })
+     
+     }
+     
+     
+     */
     func textFieldDidBeginEditing(textField: UITextField) {
         let pointInTable = textField.convertPoint(textField.bounds.origin, toView: self.tableView)
         textFieldIndexPath = self.tableView.indexPathForRowAtPoint(pointInTable)
@@ -452,7 +455,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             print("Error")
             }, completeBlock: {response in
                 print(response)
-               let leadStatusValues = response!["records"]
+                let leadStatusValues = response!["records"]
                 dispatch_async(dispatch_get_main_queue(), {
                     self.picker.showTextPicker(leadStatusValues as! NSArray )
                     self.picker.show(inVC: self)
@@ -491,7 +494,7 @@ extension CreateObjectViewController: GMDatePickerDelegate {
         objectDic?.setObject(presentTextField.text!, forKey: FieldValueKey)
         objDataArr.replaceObjectAtIndex((textFieldIndexPath?.row)!, withObject: objectDic!)
         
-
+        
     }
     func gmDatePickerDidCancelSelection(gmDatePicker: GMDatePicker) {
         

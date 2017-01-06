@@ -33,7 +33,6 @@ let SchemaKeySuffix = "SchemaKey"
 let OffLineKeySuffix = "OffLineDataKey"
 let OnLineKeySuffix = "OnLineDataKey"
 let offlineAttachKey = "offlineAttachKey"
-let offAttachmentForOffObjKey = "offlineAttachmentForOfflineObjectKey"
 let NotificationSuffix = "NotificationSuffixKey"
 
 

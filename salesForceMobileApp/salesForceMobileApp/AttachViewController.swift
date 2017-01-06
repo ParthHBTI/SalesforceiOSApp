@@ -25,7 +25,7 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
     @IBOutlet weak var imageView: UIImageView!
     var addObjFlag = true
     let imagePicker = UIImagePickerController()
-    var Section = Int()
+    //var Section = Int()
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -41,20 +41,20 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
         let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
         let documentDirectorPath:String = paths[0]
         var objcBool:ObjCBool = true
-        if Section == 0 {
-            if let arrayOfObjectsData = defaults.objectForKey(offAttachmentForOffObjKey) as? NSData {
-                attachmentForOfflinObjDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
-            }
-            imagesDirectoryPathOfflineObj = documentDirectorPath.stringByAppendingString("/AttachmentForOfflineObj")
-            let isExists = NSFileManager.defaultManager().fileExistsAtPath(imagesDirectoryPathOfflineObj, isDirectory: &objcBool)
-            if isExists == false{
-                do{
-                    try NSFileManager.defaultManager().createDirectoryAtPath(imagesDirectoryPathOfflineObj, withIntermediateDirectories: true, attributes: nil)
-                }catch{
-                    print("Something went wrong while creating a new folder")
-                }
-            }
-        } else {
+//        if Section == 0 {
+//            if let arrayOfObjectsData = defaults.objectForKey(offAttachmentForOffObjKey) as? NSData {
+//                attachmentForOfflinObjDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
+//            }
+//            imagesDirectoryPathOfflineObj = documentDirectorPath.stringByAppendingString("/AttachmentForOfflineObj")
+//            let isExists = NSFileManager.defaultManager().fileExistsAtPath(imagesDirectoryPathOfflineObj, isDirectory: &objcBool)
+//            if isExists == false{
+//                do{
+//                    try NSFileManager.defaultManager().createDirectoryAtPath(imagesDirectoryPathOfflineObj, withIntermediateDirectories: true, attributes: nil)
+//                }catch{
+//                    print("Something went wrong while creating a new folder")
+//                }
+//            }
+//        } else {
             if let arrayOfObjectsData = defaults.objectForKey(offlineAttachKey) as? NSData {
                 attachOfflineDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
             }
@@ -67,7 +67,7 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
                     print("Something went wrong while creating a new folder")
                 }
             }
-        }
+        //}
         checkUncheckBtn.layer.cornerRadius = 5
         checkUncheckBtn.layer.borderWidth = 1
         attachTextView.delegate = self
@@ -146,27 +146,27 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
             "ParentId":leadId
         ]
         if !exDelegate.isConnectedToNetwork() {
-            if (Section == 0) {
-                var attachedArr = attachmentForOfflinObjDic[leadId]
-                if let _ = attachedArr {
-                    attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
-                } else {
-                    attachedArr = NSMutableArray()
-                }
-                attachedArr?.addObject(fields)
-                attachmentForOfflinObjDic.setObject(attachedArr!, forKey: leadId)
-                print(attachmentForOfflinObjDic)
-                defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachmentForOfflinObjDic), forKey: offAttachmentForOffObjKey)
-                var imagePath = NSDate().description
-                imagePath = imagePath.stringByReplacingOccurrencesOfString(" ", withString: "")
-                imagePath = imagesDirectoryPathOfflineObj.stringByAppendingString("/\(imagePath).png")
-                let success =  NSFileManager.defaultManager().createFileAtPath(imagePath as String, contents: imageData, attributes: nil)
-                if success {
-                    self.navigationController?.popViewControllerAnimated(true)
-                }else {
-                    print("Something went wrong")
-                }
-            } else {
+//            if (Section == 0) {
+//                var attachedArr = attachmentForOfflinObjDic[leadId]
+//                if let _ = attachedArr {
+//                    attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
+//                } else {
+//                    attachedArr = NSMutableArray()
+//                }
+//                attachedArr?.addObject(fields)
+//                attachmentForOfflinObjDic.setObject(attachedArr!, forKey: leadId)
+//                print(attachmentForOfflinObjDic)
+//                defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachmentForOfflinObjDic), forKey: offAttachmentForOffObjKey)
+//                var imagePath = NSDate().description
+//                imagePath = imagePath.stringByReplacingOccurrencesOfString(" ", withString: "")
+//                imagePath = imagesDirectoryPathOfflineObj.stringByAppendingString("/\(imagePath).png")
+//                let success =  NSFileManager.defaultManager().createFileAtPath(imagePath as String, contents: imageData, attributes: nil)
+//                if success {
+//                    self.navigationController?.popViewControllerAnimated(true)
+//                }else {
+//                    print("Something went wrong")
+//                }
+//            } else {
                 var attachedArr = attachOfflineDic[leadId]
                 if let _ = attachedArr {
                     attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
@@ -187,7 +187,8 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
                     print("Something went wrong")
                 }
             }
-        } else {
+        //}
+    else {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
             SFRestAPI.sharedInstance().performCreateWithObjectType("Attachment", fields: fields, failBlock: { err in

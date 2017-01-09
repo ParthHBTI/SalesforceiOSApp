@@ -22,10 +22,53 @@ class OfflineSyncData: UIViewController {
         OfflineShrinkData(ObjectDataType.opportunityValue.rawValue)
         OfflineShrinkData(ObjectDataType.accountValue.rawValue)
         OfflineShrinkData1(ObjectDataType.attachment.rawValue)
+        onlineShrinkData(ObjectDataType.leadValue.rawValue)
+        onlineShrinkData(ObjectDataType.contactValue.rawValue)
+        onlineShrinkData(ObjectDataType.opportunityValue.rawValue)
+        onlineShrinkData(ObjectDataType.accountValue.rawValue)
+        onlineDeleteObjects()
     }
 
- class   func OfflineShrinkData(objType: String) {
     
+    class   func onlineShrinkData(objType: String) {
+        var onlineArr = []
+        if let arrayOfObjectsData = defaults.objectForKey("\(objType)\(OnLineKeySuffix)") as? NSData {
+            onlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSArray
+        }
+        let   client = fatchClient()
+        let dataArr: NSMutableArray =  []
+        var k = 0
+        for _ in onlineArr {
+            let account: AnyObject = ZKSObject.withType(objType)
+            let objectDic = NSMutableDictionary()
+            let keyExist = (onlineArr.objectAtIndex(k)["editKey"]!)
+            if  (keyExist != nil) {
+                for (key, val) in (onlineArr.objectAtIndex(k)["editKey"] as? NSDictionary)! {
+                    objectDic.setObject(key, forKey: KeyName)
+                    objectDic.setObject(val, forKey: KeyValue)
+                    account.setFieldValue(objectDic[KeyValue] as? String, field: objectDic[KeyName] as? String)
+                }
+                account.setFieldValue(onlineArr.objectAtIndex(k)["Id"]! as? String, field: "Id")
+                dataArr.addObject(account)
+            }
+            k += 1;
+        }
+        
+        client.performUpdate(dataArr as [AnyObject], failBlock: { exp in
+            print(exp)
+            }, completeBlock: { results in
+                print(results)
+                for  resultV  in results {
+                    let result = resultV as? ZKSaveResult
+                    print(result?.errors )
+                    print(result?.id )
+                    print(result?.success)
+                    defaults.removeObjectForKey("\(objType)\(OffLineKeySuffix)")
+                }
+        })
+    }
+    
+ class   func OfflineShrinkData(objType: String) {
     var oppOfflineArr = []
     if let arrayOfObjectsData = defaults.objectForKey("\(objType)\(OffLineKeySuffix)") as? NSData {
             oppOfflineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSArray
@@ -105,7 +148,28 @@ class OfflineSyncData: UIViewController {
         
     }
     
-    
+    class func onlineDeleteObjects() {
+        var onlineData: AnyObject = []
+        if let arrayOfObjectsData = defaults.objectForKey(onlineDeletsObjectsKey) as? NSData {
+            onlineData = (NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData))!
+            
+        }
+            let   client = fatchClient()
+        client.performDelete(onlineData as! [AnyObject], failBlock: {
+            exp in
+            print(exp)
+            }, completeBlock: {
+                results in
+                print(results)
+                for  resultV  in results {
+                    let result = resultV as? ZKDeleteResult
+                    print(result?.errors )
+                    print(result?.id )
+                    print(result?.success)
+                    defaults.removeObjectForKey(onlineDeletsObjectsKey)
+                }
+        })
+}
     
    class func fatchClient() -> ZKSforceClient {
      let   client = ZKSforceClient()

@@ -71,7 +71,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             loading.removeFromSuperViewOnHide = true
             loading.hide(true, afterDelay:2)*/
         } else {
-            
         }
         isUpdatedSuccessfully = false
     }

@@ -55,6 +55,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
     }
     
     func openInternetAlert() {
+        
         self.offlineMsgView = OfflineMessageDisplayView.loadNib()
          UIApplication.sharedApplication().keyWindow?.addSubview((self.offlineMsgView)!)
         self.offlineMsgView.frame.origin.y = -64.0

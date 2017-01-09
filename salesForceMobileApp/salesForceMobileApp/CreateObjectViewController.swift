@@ -19,13 +19,14 @@ var exDelegate: ExecuteQuery = ExecuteQuery()
 protocol UpdateInfoDelegate {
     func updateInfo(params:Bool)
     func updateOfflineData(offlineData: NSMutableArray)
+    func updateOnlineData(leadOnLineArr: NSMutableArray)
 }
 
 class CreateObjectViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SFRestDelegate, AccountListDelegate, UITextFieldDelegate {
     
     var offLineDataArr: AnyObject = NSMutableArray()
     var delegate:UpdateInfoDelegate?
-    var objectInfoDic = [:]
+    var objectInfoDic: NSMutableDictionary = [:]
     
     var isEditable = false
     
@@ -36,7 +37,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     var objectType = String()
     var status = String()
     var presentTextField = UITextField()
-    
+    var editStatusFlag = false
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil
@@ -191,8 +192,31 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                     }
                 })
             }
-        } else {
-            //print(fields)
+        } else if !isOffLine {
+           print(objectInfoDic)
+            for (fieldkey, fieldvalue) in fields {
+            for (key, _) in objectInfoDic {
+                if key as! String == fieldkey {
+                    objectInfoDic.setValue(fieldvalue, forKeyPath: fieldkey)
+                    editStatusFlag = true
+                    break
+                }
+            }
+            }
+            if editStatusFlag {
+                objectInfoDic.setValue("Updated", forKey: "editKey")
+            }
+            let onlineArr: AnyObject = getOnlineDataKey().1
+            let onlineKey = getOnlineDataKey().0
+             onlineArr.setObject(objectInfoDic, atIndex: globalIndex -  offLineDataArr.count)
+            delegate?.updateOnlineData(onlineArr as! NSMutableArray)
+            let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(onlineArr)
+            defaults.setObject(arrOfLeadData, forKey: onlineKey)
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                    self.navigationController?.popViewControllerAnimated(true)
+                }
+        }else {
             if offLineDataArr.count > globalIndex {
                 offLineDataArr.setObject(fields, atIndex: globalIndex )
                 let offlineUpdatedArr = NSMutableArray()
@@ -243,6 +267,35 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         
         return keyForOffLine
     }
+    
+    
+    func getOnlineDataKey() -> (String, NSMutableArray) {
+        var keyForOffLine = ""
+        var arr: AnyObject = NSMutableArray()
+        switch objectType {
+        case "Lead":
+            keyForOffLine = "\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)"
+            arr = leadOnLineArr as! NSMutableArray
+            break
+        case "Contact":
+            keyForOffLine = "\(ObjectDataType.contactValue.rawValue)\(OnLineKeySuffix)"
+            arr = contactOnLineArr as! NSMutableArray
+            break
+        case "Account":
+            keyForOffLine = "\(ObjectDataType.accountValue.rawValue)\(OnLineKeySuffix)"
+            arr = accOnlineArr as! NSMutableArray
+            break
+        case "Opportunity":
+            keyForOffLine = "\(ObjectDataType.opportunityValue.rawValue)\(OnLineKeySuffix)"
+            arr = oppOnlineArr
+            break
+        default:
+            keyForOffLine = ""
+        }
+        
+        return (keyForOffLine, arr as! NSMutableArray)
+    }
+
     
     @IBAction func saveAction(sender: AnyObject) {
         

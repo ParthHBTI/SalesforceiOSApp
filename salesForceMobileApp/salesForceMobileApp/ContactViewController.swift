@@ -13,6 +13,8 @@ import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
 
+var contactOnLineArr: AnyObject = NSMutableArray()
+
 class ContactViewController: UIViewController , ExecuteQueryDelegate {
     
     
@@ -21,7 +23,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     var delContactAtIndexPath:NSIndexPath? = nil
     var delObjAtId:String = " "
     var isCreatedSuccessfully:Bool = false
-    var contactOnLineArr: AnyObject = NSMutableArray()
+   
     var contactOfLineArr: AnyObject = NSMutableArray()
     
     
@@ -196,13 +198,13 @@ extension ContactViewController : UITableViewDataSource {
             self.navigationController?.pushViewController(subContentsVC, animated: true)
         } else {
             if self.exDelegate.isConnectedToNetwork() {
-                subContentsVC.getResponseArr = self.contactOnLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-                subContentsVC.leadID = self.contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                subContentsVC.getResponseArr = contactOnLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+                subContentsVC.leadID = contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
                 subContentsVC.parentIndex = (indexPath.row)
                 self.navigationController?.pushViewController(subContentsVC, animated: true)
             } else {
-                subContentsVC.getResponseArr = self.contactOnLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-                subContentsVC.leadID = self.contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                subContentsVC.getResponseArr = contactOnLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+                subContentsVC.leadID = contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
                 subContentsVC.parentIndex = (indexPath.row)
                 self.navigationController?.pushViewController(subContentsVC, animated: true)
             }
@@ -214,8 +216,8 @@ extension ContactViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             delContactAtIndexPath = indexPath
-            delObjAtId = self.contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
-            let contactToDelete = self.contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
+            delObjAtId = contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            let contactToDelete = contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
             confirmDelete(contactToDelete)
         }
     }
@@ -262,7 +264,7 @@ extension ContactViewController : UITableViewDataSource {
             }){ succes in
                 dispatch_async(dispatch_get_main_queue(), {
                     if let indexPath = self.delContactAtIndexPath {
-                        self.contactOnLineArr.removeObjectAtIndex(indexPath.row)
+                        contactOnLineArr.removeObjectAtIndex(indexPath.row)
                         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                         self.delContactAtIndexPath = nil
                     }

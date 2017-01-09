@@ -13,10 +13,12 @@ import SalesforceRestAPI
 import MBProgressHUD
 import SalesforceRestAPI
 
+var oppOnlineArr = NSMutableArray()
+
 class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    var oppOnlineArr = NSMutableArray()
+    
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var isFirstLoad : Bool = false
     
@@ -195,13 +197,13 @@ extension OpportunityViewController : UITableViewDataSource {
             self.navigationController?.pushViewController(subContentsVC, animated: true)
         } else {
             if self.exDelegate.isConnectedToNetwork() {
-                subContentsVC.getResponseArr = self.oppOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-                subContentsVC.leadID = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                subContentsVC.getResponseArr = oppOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+                subContentsVC.leadID = oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
                 subContentsVC.parentIndex = (indexPath.row)
                 self.navigationController?.pushViewController(subContentsVC, animated: true)
             } else {
-                subContentsVC.getResponseArr = self.oppOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-                subContentsVC.leadID = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                subContentsVC.getResponseArr = oppOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+                subContentsVC.leadID = oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
                 subContentsVC.parentIndex = (indexPath.row)
                 self.navigationController?.pushViewController(subContentsVC, animated: true)
             }
@@ -215,8 +217,8 @@ extension OpportunityViewController : UITableViewDataSource {
         if editingStyle == .Delete {
             delOppAtIndexPath = indexPath
             if indexPath.section != 0 {
-                delObjAtId = self.oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
-                let oppToDelete = self.oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
+                delObjAtId = oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                let oppToDelete = oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
                 confirmDelete(oppToDelete)
             } else {
                 let oppToDelete = self.oppOfflineArr.objectAtIndex(indexPath.row)["Name"] as! String
@@ -273,7 +275,7 @@ extension OpportunityViewController : UITableViewDataSource {
             }){ succes in
                 dispatch_async(dispatch_get_main_queue(), {
                     if let indexPath = self.delOppAtIndexPath {
-                        self.oppOnlineArr.removeObjectAtIndex(indexPath.row)
+                        oppOnlineArr.removeObjectAtIndex(indexPath.row)
                         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                         self.delOppAtIndexPath = nil
                     }

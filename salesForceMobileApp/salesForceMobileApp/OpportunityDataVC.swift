@@ -134,6 +134,9 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
         opportunityDataArr = offlineData
     }
     
+    func updateOnlineData(offlineData: NSMutableArray) {
+        opportunityDataArr = offlineData
+    }
 
     
     func editAction() {

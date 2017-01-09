@@ -14,12 +14,14 @@ import SystemConfiguration
 import MBProgressHUD
 import ZKSforce
 
+var leadOnLineArr: AnyObject = NSMutableArray()
+
 // class for Lead's data
 class LeadViewController: UIViewController, ExecuteQueryDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     //var resArr1:AnyObject = []
-    var leadOnLineArr: AnyObject = NSMutableArray()
+    
     var leadOfLineArr: AnyObject = NSMutableArray()
     
     var exDelegate: ExecuteQuery = ExecuteQuery()
@@ -91,6 +93,10 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
         }
         isFirstLoaded = false
         isCreatedSuccessfully = false
+    }
+    
+    func updateOnlineData(leadOnLineUpdateArr: NSMutableArray) {
+      leadOnLineArr = leadOnLineUpdateArr
     }
     
     func convertLeadWithLeadId(leadId:String)  {
@@ -208,7 +214,7 @@ extension LeadViewController : UITableViewDataSource {
             cell.dataText.text = leadOfLineArr.objectAtIndex(indexPath.row)["LastName"] as? String
             cell.notConnectedImage.hidden = false
         } else {
-            cell.dataText.text = leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as? String
+            cell.dataText.text = leadOnLineArr.objectAtIndex(indexPath.row)["LastName"] as? String
              cell.detailText.text = leadOnLineArr.objectAtIndex(indexPath.row)["Title"] as? String
             cell.notConnectedImage.hidden = true
         }
@@ -229,8 +235,8 @@ extension LeadViewController : UITableViewDataSource {
                 confirmDelete(leadToDelete)
             } else {
                 deleteLeadAtIndexPath = indexPath
-                delObjAtId = self.leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
-                let leadToDelete = self.leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
+                delObjAtId = leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                let leadToDelete = leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
                 confirmDelete(leadToDelete)
             }
         }
@@ -265,7 +271,7 @@ extension LeadViewController : UITableViewDataSource {
             }){ succes in
                 dispatch_async(dispatch_get_main_queue(), {
                     if let indexPath = self.deleteLeadAtIndexPath {
-                        self.leadOnLineArr.removeObjectAtIndex(indexPath.row)
+                        leadOnLineArr.removeObjectAtIndex(indexPath.row)
                         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                         ///self.tableView.reloadData()
                         self.deleteLeadAtIndexPath = nil
@@ -281,11 +287,6 @@ extension LeadViewController : UITableViewDataSource {
                 defaults.setObject(offlineLeadArr, forKey:"\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
                 self.deleteLeadAtIndexPath = nil
             }
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
         }
     }
     
@@ -294,8 +295,8 @@ extension LeadViewController : UITableViewDataSource {
     func btnClicked(sender: UIButton) {
         let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
         let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ConvertLeadViewController") as! ConvertLeadViewController
-        subContentsVC.convertLeadDataArr = self.leadOnLineArr.objectAtIndex(sender.tag)
-        subContentsVC.leadID = self.leadOnLineArr.objectAtIndex(sender.tag)["Id"] as! String
+        subContentsVC.convertLeadDataArr = leadOnLineArr.objectAtIndex(sender.tag)
+        subContentsVC.leadID = leadOnLineArr.objectAtIndex(sender.tag)["Id"] as! String
         self.navigationController?.pushViewController(subContentsVC, animated: true)
         //convertLeadWithLeadId(self.resArr1.objectAtIndex(sender.tag)["Id"] as! String)
     }
@@ -313,8 +314,8 @@ extension LeadViewController : UITableViewDataSource {
             subContentsVC.leadID = self.leadOfLineArr.objectAtIndex(indexPath.row)["Id"] as! String
             //subContentsVC.selectedSectionVal = indexPath.section
         } else {
-            subContentsVC.getResponseArr = self.leadOnLineArr.objectAtIndex(indexPath.row) as! NSDictionary
-            subContentsVC.leadID = self.leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            subContentsVC.getResponseArr = leadOnLineArr.objectAtIndex(indexPath.row) as! NSDictionary
+            subContentsVC.leadID = leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
             //subContentsVC.selectedSectionVal = indexPath.section
             
         }

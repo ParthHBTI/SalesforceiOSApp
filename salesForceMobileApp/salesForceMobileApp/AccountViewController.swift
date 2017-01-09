@@ -13,13 +13,14 @@ import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
 
+var accOnlineArr: AnyObject = NSMutableArray()
+
 class AccountViewController:UIViewController, ExecuteQueryDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     var delAccAtIndexPath:NSIndexPath? = nil
     var delObjAtId: String = " "
     var exDelegate: ExecuteQuery = ExecuteQuery()
-    var accOnlineArr: AnyObject = NSMutableArray()
     var accOfflineArr: AnyObject = NSMutableArray()
     var isCreatedSuccessfully: Bool = false
     
@@ -131,7 +132,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
             })
         } else if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.accountValue.rawValue)\(OnLineKeySuffix)") as? NSData {
             dispatch_async(dispatch_get_main_queue(), {
-            self.accOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
+            accOnlineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableArray
                 self.tableView.reloadData()
             })
         }
@@ -185,13 +186,13 @@ extension AccountViewController : UITableViewDataSource {
             
         } else {
             if self.exDelegate.isConnectedToNetwork() {
-                subContentsVC.getResponseArr = self.accOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-                subContentsVC.leadID = self.accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                subContentsVC.getResponseArr = accOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+                subContentsVC.leadID = accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
                 subContentsVC.parentIndex = (indexPath.row)
                 self.navigationController?.pushViewController(subContentsVC, animated: true)
             } else {
-                subContentsVC.getResponseArr = self.accOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-                subContentsVC.leadID = self.accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                subContentsVC.getResponseArr = accOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+                subContentsVC.leadID = accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
                 subContentsVC.parentIndex = (indexPath.row)
                 self.navigationController?.pushViewController(subContentsVC, animated: true)
             }
@@ -203,8 +204,8 @@ extension AccountViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             delAccAtIndexPath = indexPath
-            delObjAtId = self.accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
-            let accToDelete = self.accOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
+            delObjAtId = accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            let accToDelete = accOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
             confirmDelete(accToDelete)
         }
     }
@@ -251,7 +252,7 @@ extension AccountViewController : UITableViewDataSource {
                 }){ succes in
                     dispatch_async(dispatch_get_main_queue(), {
                         if let indexPath = self.delAccAtIndexPath {
-                            self.accOnlineArr.removeObjectAtIndex(indexPath.row)
+                            accOnlineArr.removeObjectAtIndex(indexPath.row)
                             self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                             ///self.tableView.reloadData()
                             self.delAccAtIndexPath = nil

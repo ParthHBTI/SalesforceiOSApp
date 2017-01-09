@@ -80,7 +80,10 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     func updateOfflineData(offlineData: NSMutableArray) {
         leadArr = offlineData
     }
-
+    
+    func updateOnlineData(offlineData: NSMutableArray) {
+        leadArr = offlineData
+    }
     
     func configureTableView() {
         tableView.delegate = self
@@ -186,59 +189,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             }
         }
     }
-    
-    
-    /*func isLeadDataNil() {
-        if !isOfflineData {
-            var email = ""
-            if  let _  = nullToNil( getResponseArr["Email"]) {
-                email =  (getResponseArr["Email"] as? String)!
-            }
-            
-            var phone = ""
-            if  let _  = nullToNil( getResponseArr["Phone"]) {
-                phone =  (getResponseArr["Phone"] as? String)!
-            }
-            
-            var title = ""
-            if  let _  = nullToNil( getResponseArr["Title"]) {
-                title =  (getResponseArr["Title"] as? String)!
-            }
-            
-            /*var salutation = ""
-             if let _ = nullToNil(getResponseArr["Salutation"]) {
-             salutation = (getResponseArr["Salutation"] as? String)!
-             }*/
-            
-            /* var leadName = getResponseArr["Name"] as! String
-             if salutation != "" {
-             leadName = salutation + " " + (getResponseArr["Name"] as! String)
-             }*/
-            var leadName = ""
-            if let _ = nullToNil(getResponseArr["Name"]) {
-                leadName = (getResponseArr["Name"] as! String)
-            }
-            
-            leadDataArr = [getResponseArr["Owner"]!["Name"] as! String,
-                           leadName,
-                           getResponseArr["Company"] as! String,
-                           email,
-                           phone,
-                           title
-            ]
-        } else {
-            leadDataArr = [getResponseArr["LastName"] as! String,
-                           getResponseArr["Company"] as! String,
-                           getResponseArr["Status"] as! String
-            ]
-            cellTitleArr = [
-                "Last Name",
-                "Company",
-                "Status"
-            ]
-        }
-    }*/
-    
     
     func shareAction() {
         let actionSheet = UIActionSheet(title: "Choose Option", delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Add Attachment", "Add Note")
@@ -454,7 +404,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
         let nv = storyboard.instantiateViewControllerWithIdentifier("CreateObjectViewController") as! CreateObjectViewController
         nv.objectType = "Lead"
-        nv.objectInfoDic = self.getResponseArr
+        nv.objectInfoDic = self.getResponseArr.mutableCopy() as! NSMutableDictionary
         nv.isOffLine = isOfflineData
         nv.isEditable = true
         nv.delegate = self

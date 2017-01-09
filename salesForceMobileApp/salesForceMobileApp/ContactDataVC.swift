@@ -125,7 +125,10 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         contactDataArr = offlineData
     }
 
-    
+    func updateOnlineData(offlineData: NSMutableArray) {
+        contactDataArr = offlineData
+    }
+
     func isContactDataNil() {
         if isOfflineData {
             for (key, value) in getResponseArr{

@@ -26,7 +26,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
     var delOppAtIndexPath:NSIndexPath? = nil
     var isCreatedSuccessfully:Bool = false
     var oppOfflineArr:AnyObject = NSMutableArray()
-    
+    var onlineDataFlag = false
     func dataUpdateToServer()  {
         print("interNetChanges")
         oppOfflineArr.removeAllObjects()
@@ -215,16 +215,24 @@ extension OpportunityViewController : UITableViewDataSource {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            delOppAtIndexPath = indexPath
-            if indexPath.section != 0 {
-                delObjAtId = oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
-                let oppToDelete = oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
-                confirmDelete(oppToDelete)
-            } else {
-                let oppToDelete = self.oppOfflineArr.objectAtIndex(indexPath.row)["Name"] as! String
-                confirmDelete(oppToDelete)
-            }
             
+            
+            if indexPath.section == 0 {
+                delOppAtIndexPath = indexPath
+                let leadToDelete = self.oppOfflineArr.objectAtIndex(indexPath.row)["LastName"] as! String
+                confirmDelete(leadToDelete)
+            } else if exDelegate.isConnectedToNetwork() {
+                delOppAtIndexPath = indexPath
+                delObjAtId = oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                let leadToDelete = oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
+                confirmDelete(leadToDelete)
+            } else {
+                onlineDataFlag = true
+                delOppAtIndexPath = indexPath
+                delObjAtId = oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                let leadToDelete = oppOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
+                confirmDelete(leadToDelete)
+            }
         }
     }
     
@@ -249,23 +257,7 @@ extension OpportunityViewController : UITableViewDataSource {
     
     
     func oppDelAction(alertAction: UIAlertAction) -> Void {
-         if delOppAtIndexPath!.section == 0  {
-            dispatch_async(dispatch_get_main_queue(), {
-                if let indexPath = self.delOppAtIndexPath {
-                    self.oppOfflineArr.removeObjectAtIndex(indexPath.row)
-                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                    let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.oppOfflineArr)
-                    defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.opportunityValue.rawValue)\(OffLineKeySuffix)")
-                    self.delOppAtIndexPath = nil
-                }
-            })
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
-         } else {
-            if exDelegate.isConnectedToNetwork() {
+        if exDelegate.isConnectedToNetwork() {
             SFRestAPI.sharedInstance().performDeleteWithObjectType("Opportunity", objectId: delObjAtId,failBlock: { err in
                 dispatch_async(dispatch_get_main_queue(), {
                     let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
@@ -281,7 +273,27 @@ extension OpportunityViewController : UITableViewDataSource {
                     }
                 })
             }
+        } else if onlineDataFlag {
+            dispatch_async(dispatch_get_main_queue(), {
+                if let indexPath = self.delOppAtIndexPath {
+                    oppOnlineArr.removeObjectAtIndex(indexPath.row)
+                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    deletedKeysArr.addObject(self.delObjAtId)
+                    print(self.delObjAtId)
+                    let onlineDeletsKeys = NSKeyedArchiver.archivedDataWithRootObject(deletedKeysArr)
+                    defaults.setObject(onlineDeletsKeys, forKey:onlineDeletsObjectsKey)
+                    self.delOppAtIndexPath = nil
+                }
+            })
+        } else {
+            if let indexPath = self.delOppAtIndexPath {
+                self.oppOfflineArr.removeObjectAtIndex(indexPath.row)
+                self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.oppOfflineArr)
+                defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.opportunityValue.rawValue)\(OffLineKeySuffix)")
+                self.delOppAtIndexPath = nil
         }
-        }
+
     }
+}
 }

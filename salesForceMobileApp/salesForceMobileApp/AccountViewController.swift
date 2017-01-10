@@ -23,7 +23,7 @@ class AccountViewController:UIViewController, ExecuteQueryDelegate {
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var accOfflineArr: AnyObject = NSMutableArray()
     var isCreatedSuccessfully: Bool = false
-    
+    var onlineDataFlag = false
     override func viewDidLoad() {
         super.viewDidLoad()
         exDelegate.delegate = self
@@ -203,10 +203,23 @@ extension AccountViewController : UITableViewDataSource {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            delAccAtIndexPath = indexPath
-            delObjAtId = accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
-            let accToDelete = accOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
-            confirmDelete(accToDelete)
+            
+            if indexPath.section == 0 {
+                delAccAtIndexPath = indexPath
+                let leadToDelete = self.accOfflineArr.objectAtIndex(indexPath.row)["LastName"] as! String
+                confirmDelete(leadToDelete)
+            } else if exDelegate.isConnectedToNetwork() {
+                delAccAtIndexPath = indexPath
+                delObjAtId = accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                let leadToDelete = accOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
+                confirmDelete(leadToDelete)
+            } else {
+                onlineDataFlag = true
+                delAccAtIndexPath = indexPath
+                delObjAtId = accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                let leadToDelete = accOnlineArr.objectAtIndex(indexPath.row)["Name"] as! String
+                confirmDelete(leadToDelete)
+            }
         }
     }
     
@@ -231,34 +244,43 @@ extension AccountViewController : UITableViewDataSource {
     }
     
     func accDelAction(alertAction: UIAlertAction) -> Void {
-        if delAccAtIndexPath!.section == 0  {
+        if exDelegate.isConnectedToNetwork() {
+            SFRestAPI.sharedInstance().performDeleteWithObjectType("Account", objectId: delObjAtId,failBlock: { err in
+                dispatch_async(dispatch_get_main_queue(), {
+                    let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
+                    alert.show()
+                })
+                print( (err))
+            }){ succes in
+                dispatch_async(dispatch_get_main_queue(), {
+                    if let indexPath = self.delAccAtIndexPath {
+                        accOnlineArr.removeObjectAtIndex(indexPath.row)
+                        self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                        ///self.tableView.reloadData()
+                        self.delAccAtIndexPath = nil
+                    }
+                })
+            }
+        } else if onlineDataFlag {
             dispatch_async(dispatch_get_main_queue(), {
                 if let indexPath = self.delAccAtIndexPath {
-                    self.accOfflineArr.removeObjectAtIndex(indexPath.row)
+                    accOnlineArr.removeObjectAtIndex(indexPath.row)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                    let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.accOfflineArr)
-                    defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.accountValue.rawValue)\(OffLineKeySuffix)")
+                    deletedKeysArr.addObject(self.delObjAtId)
+                    print(self.delObjAtId)
+                    let onlineDeletsKeys = NSKeyedArchiver.archivedDataWithRootObject(deletedKeysArr)
+                    defaults.setObject(onlineDeletsKeys, forKey:onlineDeletsObjectsKey)
                     self.delAccAtIndexPath = nil
                 }
             })
         } else {
-            if exDelegate.isConnectedToNetwork() {
-                SFRestAPI.sharedInstance().performDeleteWithObjectType("Account", objectId: delObjAtId,failBlock: { err in
-                    dispatch_async(dispatch_get_main_queue(), {
-                        let alert = UIAlertView.init(title: "Error", message: err?.localizedDescription , delegate: self, cancelButtonTitle: "OK")
-                        alert.show()
-                    })
-                    print( (err))
-                }){ succes in
-                    dispatch_async(dispatch_get_main_queue(), {
-                        if let indexPath = self.delAccAtIndexPath {
-                            accOnlineArr.removeObjectAtIndex(indexPath.row)
-                            self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                            ///self.tableView.reloadData()
-                            self.delAccAtIndexPath = nil
-                        }
-                    })
-                }
-            }
-        }    }
+            if let indexPath = self.delAccAtIndexPath {
+                self.accOfflineArr.removeObjectAtIndex(indexPath.row)
+                self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.accOfflineArr)
+                defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.accountValue.rawValue)\(OffLineKeySuffix)")
+                self.delAccAtIndexPath = nil
+        }
+     }
+}
 }

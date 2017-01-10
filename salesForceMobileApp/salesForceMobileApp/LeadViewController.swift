@@ -15,7 +15,7 @@ import MBProgressHUD
 import ZKSforce
 
 var leadOnLineArr: AnyObject = NSMutableArray()
-
+var deletedKeysArr: AnyObject = NSMutableArray()
 // class for Lead's data
 class LeadViewController: UIViewController, ExecuteQueryDelegate {
     
@@ -28,6 +28,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     var isCreatedSuccessfully: Bool = false
     var createLeadDelegate: CreateNewLeadDelegate?
     var deleteLeadAtIndexPath: NSIndexPath? = nil
+    var onlineDataFlag = false
     var delObjAtId: String = " "
     var isFirstLoaded:Bool = false
     
@@ -71,11 +72,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        /*if !isFirstLoaded {
-            if exDelegate.isConnectedToNetwork() {
-            exDelegate.leadQueryDe("lead")
-            }
-        }*/
+
         if let arrayOfObjectsData = defaults.objectForKey("\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)") as? NSData {
             leadOfLineArr = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!
             dispatch_async(dispatch_get_main_queue(), {
@@ -233,7 +230,13 @@ extension LeadViewController : UITableViewDataSource {
                 deleteLeadAtIndexPath = indexPath
                 let leadToDelete = self.leadOfLineArr.objectAtIndex(indexPath.row)["LastName"] as! String
                 confirmDelete(leadToDelete)
+            } else if exDelegate.isConnectedToNetwork() {
+                deleteLeadAtIndexPath = indexPath
+                delObjAtId = leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                let leadToDelete = leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
+                confirmDelete(leadToDelete)
             } else {
+                onlineDataFlag = true
                 deleteLeadAtIndexPath = indexPath
                 delObjAtId = leadOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
                 let leadToDelete = leadOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
@@ -273,13 +276,23 @@ extension LeadViewController : UITableViewDataSource {
                     if let indexPath = self.deleteLeadAtIndexPath {
                         leadOnLineArr.removeObjectAtIndex(indexPath.row)
                         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                        ///self.tableView.reloadData()
                         self.deleteLeadAtIndexPath = nil
                     }
                 })
             }
-        }
-        else {
+        } else if onlineDataFlag {
+            dispatch_async(dispatch_get_main_queue(), {
+                if let indexPath = self.deleteLeadAtIndexPath {
+                    leadOnLineArr.removeObjectAtIndex(indexPath.row)
+                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    deletedKeysArr.addObject(self.delObjAtId)
+                    print(self.delObjAtId)
+                    let onlineDeletsKeys = NSKeyedArchiver.archivedDataWithRootObject(deletedKeysArr)
+                    defaults.setObject(onlineDeletsKeys, forKey:onlineDeletsObjectsKey)
+                    self.deleteLeadAtIndexPath = nil
+                }
+            })
+        } else {
             if let indexPath = self.deleteLeadAtIndexPath {
                 self.leadOfLineArr.removeObjectAtIndex(indexPath.row)
                 self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)

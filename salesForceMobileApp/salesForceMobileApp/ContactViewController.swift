@@ -23,7 +23,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
     var delContactAtIndexPath:NSIndexPath? = nil
     var delObjAtId:String = " "
     var isCreatedSuccessfully:Bool = false
-   
+    var onlineDataFlag = false
     var contactOfLineArr: AnyObject = NSMutableArray()
     
     
@@ -215,10 +215,22 @@ extension ContactViewController : UITableViewDataSource {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            delContactAtIndexPath = indexPath
-            delObjAtId = contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
-            let contactToDelete = contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
-            confirmDelete(contactToDelete)
+            if indexPath.section == 0 {
+                delContactAtIndexPath = indexPath
+                let leadToDelete = self.contactOfLineArr.objectAtIndex(indexPath.row)["LastName"] as! String
+                confirmDelete(leadToDelete)
+            } else if exDelegate.isConnectedToNetwork() {
+                delContactAtIndexPath = indexPath
+                delObjAtId = contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                let leadToDelete = contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
+                confirmDelete(leadToDelete)
+            } else {
+                onlineDataFlag = true
+                delContactAtIndexPath = indexPath
+                delObjAtId = contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+                let leadToDelete = contactOnLineArr.objectAtIndex(indexPath.row)["Name"] as! String
+                confirmDelete(leadToDelete)
+            }
         }
     }
     
@@ -243,17 +255,6 @@ extension ContactViewController : UITableViewDataSource {
     
     
     func conDelAction(alertAction: UIAlertAction) -> Void {
-        if delContactAtIndexPath!.section == 0  {
-            dispatch_async(dispatch_get_main_queue(), {
-                if let indexPath = self.delContactAtIndexPath {
-                    self.contactOfLineArr.removeObjectAtIndex(indexPath.row)
-                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                    let arrOfOppData = NSKeyedArchiver.archivedDataWithRootObject(self.contactOfLineArr)
-                    defaults.setObject(arrOfOppData, forKey: "\(ObjectDataType.contactValue.rawValue)\(OffLineKeySuffix)")
-                    self.delContactAtIndexPath = nil
-                }
-            })
-        } else {
         if exDelegate.isConnectedToNetwork() {
             SFRestAPI.sharedInstance().performDeleteWithObjectType("Contact", objectId: delObjAtId,failBlock: { err in
                 dispatch_async(dispatch_get_main_queue(), {
@@ -270,14 +271,26 @@ extension ContactViewController : UITableViewDataSource {
                     }
                 })
             }
-        }
-        else {
-            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            loading.mode = MBProgressHUDMode.Indeterminate
-            loading.detailsLabelText = "Please check your Internet connection!"
-            loading.hide(true, afterDelay: 2)
-            loading.removeFromSuperViewOnHide = true
+        }   else if onlineDataFlag {
+            dispatch_async(dispatch_get_main_queue(), {
+                if let indexPath = self.delContactAtIndexPath {
+                    contactOnLineArr.removeObjectAtIndex(indexPath.row)
+                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    deletedKeysArr.addObject(self.delObjAtId)
+                    print(self.delObjAtId)
+                    let onlineDeletsKeys = NSKeyedArchiver.archivedDataWithRootObject(deletedKeysArr)
+                    defaults.setObject(onlineDeletsKeys, forKey:onlineDeletsObjectsKey)
+                    self.delContactAtIndexPath = nil
+                }
+            })
+        } else {
+            if let indexPath = self.delContactAtIndexPath {
+                self.contactOfLineArr.removeObjectAtIndex(indexPath.row)
+                self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                let offlineLeadArr = NSKeyedArchiver.archivedDataWithRootObject(contactOfLineArr)
+                defaults.setObject(offlineLeadArr, forKey:"\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
+                self.delContactAtIndexPath = nil
+            }
             }
         }
-    }
 }

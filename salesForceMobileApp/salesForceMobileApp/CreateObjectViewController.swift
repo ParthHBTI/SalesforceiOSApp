@@ -38,6 +38,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     var status = String()
     var presentTextField = UITextField()
     var editStatusFlag = false
+    
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
             return nil
@@ -185,7 +186,6 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                 self.delegate!.updateInfo(true)
                 dispatch_async(dispatch_get_main_queue(), {
                     loading.hide(true, afterDelay: 1)
-                    
                     let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0 * Double(NSEC_PER_SEC)))
                     dispatch_after(delayTime, dispatch_get_main_queue()) {
                         self.navigationController?.popViewControllerAnimated(true)
@@ -204,12 +204,19 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             }
             }
             if editStatusFlag {
-                objectInfoDic.setValue("Updated", forKey: "editKey")
+                objectInfoDic.setValue(fields, forKey: "editKey")
             }
             let onlineArr: AnyObject = getOnlineDataKey().1
             let onlineKey = getOnlineDataKey().0
              onlineArr.setObject(objectInfoDic, atIndex: globalIndex -  offLineDataArr.count)
-            delegate?.updateOnlineData(onlineArr as! NSMutableArray)
+            let offlineUpdatedArr = NSMutableArray()
+            for (key, value) in objectInfoDic {
+                    let objectDic = NSMutableDictionary()
+                    objectDic.setObject(key, forKey: KeyName)
+                    objectDic.setObject(value, forKey: KeyValue)
+                    offlineUpdatedArr.addObject(objectDic)
+            }
+            delegate?.updateOnlineData(offlineUpdatedArr)
             let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(onlineArr)
             defaults.setObject(arrOfLeadData, forKey: onlineKey)
                 let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))

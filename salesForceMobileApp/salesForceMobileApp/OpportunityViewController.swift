@@ -134,7 +134,7 @@ class OpportunityViewController: UIViewController, ExecuteQueryDelegate,SFRestDe
             let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
             loading.detailsLabelText = "Loading Data from Server"
-            loading.hide(true, afterDelay: 2)
+            loading.hide(true, afterDelay: 0.5)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe(ObjectDataType.opportunityValue.rawValue)
             dispatch_async(dispatch_get_main_queue(), {

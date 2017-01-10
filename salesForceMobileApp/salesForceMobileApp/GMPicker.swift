@@ -77,6 +77,9 @@ class GMPicker: UIView {
     
     func showTextPicker(textArr:NSArray){
         
+        if Array.count > 0 {
+            Array.removeAll()
+        }
         for data in textArr {
             print(data)
             Array.append((data as? String)!)

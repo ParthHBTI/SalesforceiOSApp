@@ -207,17 +207,13 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
             let attachmentVC = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
             attachmentVC.leadDetailInfo = getResponseArr;
-            //attachmentVC.Section = selectedSectionVal
             self.navigationController?.pushViewController(attachmentVC, animated: true)
-            print("Save")
         case 2:
             let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = leadID
             notesVC.noteDetailArr = leadArr //leadDataArr
             self.navigationController?.pushViewController(notesVC, animated: true)
-            
-            print("Delete")
         default:
             print("Default")
         }

@@ -17,11 +17,12 @@ class OfflineSyncData: UIViewController {
 
     
     class func syncOffLineDataToServer() {
-        OfflineShrinkData(ObjectDataType.leadValue.rawValue)
-        OfflineShrinkData(ObjectDataType.contactValue.rawValue)
-        OfflineShrinkData(ObjectDataType.opportunityValue.rawValue)
-        OfflineShrinkData(ObjectDataType.accountValue.rawValue)
-        OfflineShrinkData1(ObjectDataType.attachment.rawValue)
+        dispatch_async(dispatch_get_main_queue(), {
+            OfflineShrinkData(ObjectDataType.leadValue.rawValue)
+            OfflineShrinkData(ObjectDataType.contactValue.rawValue)
+            OfflineShrinkData(ObjectDataType.opportunityValue.rawValue)
+            OfflineShrinkData(ObjectDataType.accountValue.rawValue)
+        })
         onlineShrinkData(ObjectDataType.leadValue.rawValue)
         onlineShrinkData(ObjectDataType.contactValue.rawValue)
         onlineShrinkData(ObjectDataType.opportunityValue.rawValue)
@@ -78,6 +79,13 @@ class OfflineSyncData: UIViewController {
     if  oppOfflineArr.count > 0 {
         let   client = fatchClient()
         let dataArr: NSMutableArray =  []
+        let offLineObjectIdsArr = oppOfflineArr.valueForKey("Id")
+        
+        var attachmenetDic = NSMutableDictionary()
+        if let arrayOfObjectsData = defaults.objectForKey(offlineAttachKey) as? NSData {
+            attachmenetDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)!.mutableCopy() as! NSMutableDictionary
+        }
+        
         for val in oppOfflineArr {
             let account: AnyObject = ZKSObject.withType(objType)
             let objectDic = NSMutableDictionary()
@@ -94,41 +102,72 @@ class OfflineSyncData: UIViewController {
             print(exp)
             }, completeBlock: { results in
                 print(results)
+                var k = 0
                 for  resultV  in results {
                     let result = resultV as? ZKSaveResult
                     print(result?.errors )
                     print(result?.id )
                     print(result?.success)
+                    
+                    ////////////Attachment Dic
+                    let offlineObjectId = offLineObjectIdsArr.objectAtIndex(k) as! String
+                    let actualObjecId = result?.id
+                    
+                    if let val = attachmenetDic[offlineObjectId] {
+                        if let attachArr = val as? NSArray {
+//                            
+//                            for var attachDic in attachArr {
+//                                 attachDic = attachDic.mutableCopy()
+//                                 attachDic.setObject(actualObjecId, forKey: "ParentId")
+//                            
+//                            }
+                        
+                            attachmenetDic.setObject(attachArr, forKey: actualObjecId!)
+                            attachmenetDic.removeObjectForKey(offlineObjectId)
+                            print("value is not nil")
+                        } else {
+                            print("value is nil")
+                        }
+                    } else {
+                        print("key is not present in dict")
+                    }
+                    
+                   // attachmenetDic
+                    
+                    //////
+                
                     defaults.removeObjectForKey("\(objType)\(OffLineKeySuffix)")
                     let nc = NSNotificationCenter.defaultCenter()
                     nc.postNotificationName("\(objType)\(NotificationSuffix)",
                         object: nil,
                         userInfo: ["message":"Hello there!", "date":NSDate()])
+                    k += 1
                 }
+                defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachmenetDic), forKey: offlineAttachKey)
+                print(attachOfflineDic)
+                OfflineShrinkData1(ObjectDataType.attachment.rawValue)
+
         })
     }
 }
     
     
     class   func OfflineShrinkData1(objType: String) {
-        
-        var offlineAttachmentDic = NSDictionary()
+        var onlineAttachmenetDic = NSDictionary()
         if let arrayOfObjectsData = defaults.objectForKey(offlineAttachKey) as? NSData {
-            offlineAttachmentDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSDictionary
-            
+            onlineAttachmenetDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSDictionary
         }
-       
-        if  offlineAttachmentDic.count > 0 {
+        if  onlineAttachmenetDic.count > 0 {
             let   client = fatchClient()
             let dataArr: NSMutableArray =  []
-                for (key, _) in offlineAttachmentDic {
-                     let attachment: AnyObject = ZKSObject.withType(objType)
-                    let dataArray = offlineAttachmentDic.valueForKey(key as! String)
-                    for element in (dataArray as? NSArray)! {
-                        attachment.setFieldValue(element["Name"] as? String, field: "Name")
-                        attachment.setFieldValue(element["Body"] as? String, field: "Body")
-                        attachment.setFieldValue(element["ParentId"] as? String, field: "ParentId")
-                    }
+                for (key, _) in onlineAttachmenetDic {
+                    let attachment: AnyObject = ZKSObject.withType(objType)
+                    let dataArray = onlineAttachmenetDic.valueForKey(key as! String)
+                        for element in (dataArray as? NSArray)! {
+                            attachment.setFieldValue(element["Name"] as? String, field: "Name")
+                            attachment.setFieldValue(element["Body"] as? String, field: "Body")
+                            attachment.setFieldValue(key as? String, field: "ParentId")
+                        }
                      dataArr.addObject(attachment)
                 }
             client.performCreate(dataArr as [AnyObject], failBlock: { exp in

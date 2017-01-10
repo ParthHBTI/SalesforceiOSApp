@@ -11,7 +11,6 @@ import SalesforceRestAPI
 import MBProgressHUD
 var attachOfflineArr = NSMutableArray()
 var attachOfflineDic =  NSMutableDictionary()
-var attachmentForOfflinObjDic = NSMutableDictionary()
 
 class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate, ExecuteQueryDelegate  {
     var leadDetailInfo:AnyObject = []
@@ -23,9 +22,8 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
     var exDelegate: ExecuteQuery = ExecuteQuery()
     @IBOutlet weak var checkUncheckBtn: UIButton!
     @IBOutlet weak var imageView: UIImageView!
-    var addObjFlag = true
     let imagePicker = UIImagePickerController()
-    //var Section = Int()
+
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -146,27 +144,6 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
             "ParentId":leadId
         ]
         if !exDelegate.isConnectedToNetwork() {
-//            if (Section == 0) {
-//                var attachedArr = attachmentForOfflinObjDic[leadId]
-//                if let _ = attachedArr {
-//                    attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
-//                } else {
-//                    attachedArr = NSMutableArray()
-//                }
-//                attachedArr?.addObject(fields)
-//                attachmentForOfflinObjDic.setObject(attachedArr!, forKey: leadId)
-//                print(attachmentForOfflinObjDic)
-//                defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachmentForOfflinObjDic), forKey: offAttachmentForOffObjKey)
-//                var imagePath = NSDate().description
-//                imagePath = imagePath.stringByReplacingOccurrencesOfString(" ", withString: "")
-//                imagePath = imagesDirectoryPathOfflineObj.stringByAppendingString("/\(imagePath).png")
-//                let success =  NSFileManager.defaultManager().createFileAtPath(imagePath as String, contents: imageData, attributes: nil)
-//                if success {
-//                    self.navigationController?.popViewControllerAnimated(true)
-//                }else {
-//                    print("Something went wrong")
-//                }
-//            } else {
                 var attachedArr = attachOfflineDic[leadId]
                 if let _ = attachedArr {
                     attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
@@ -186,9 +163,7 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
                 }else {
                     print("Something went wrong")
                 }
-            }
-        //}
-    else {
+            } else {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
             SFRestAPI.sharedInstance().performCreateWithObjectType("Attachment", fields: fields, failBlock: { err in

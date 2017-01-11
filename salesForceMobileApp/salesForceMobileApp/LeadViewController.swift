@@ -163,7 +163,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
             loading.detailsLabelText = "Loading Data from Server"
-            loading.hide(true, afterDelay: 2)
+            loading.hide(true, afterDelay: 0.5)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe(ObjectDataType.leadValue.rawValue)
             dispatch_async(dispatch_get_main_queue(), {

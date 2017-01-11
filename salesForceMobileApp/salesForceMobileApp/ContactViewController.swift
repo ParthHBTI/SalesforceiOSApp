@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Yuji Hato. All rights reserved.
 //
 
-let ContactOnLineDataKey = "ContactOnLineDataKey"
 let ContactOfLineDataKey = "ContactOfLineDataKey"
 
 import UIKit
@@ -133,7 +132,7 @@ class ContactViewController: UIViewController , ExecuteQueryDelegate {
             }
              let loading = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
             loading.detailsLabelText = "Loading Data from Server"
-            loading.hide(true, afterDelay: 2)
+            loading.hide(true, afterDelay: 0.5)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe(ObjectDataType.contactValue.rawValue)
             dispatch_async(dispatch_get_main_queue(), {

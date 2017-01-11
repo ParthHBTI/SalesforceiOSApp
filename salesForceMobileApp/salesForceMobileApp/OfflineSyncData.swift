@@ -110,9 +110,11 @@ class OfflineSyncData: UIViewController {
                     print(result?.success)
                     
                     ////////////Attachment Dic
+                    
+                    
                     let offlineObjectId = offLineObjectIdsArr.objectAtIndex(k) as! String
                     let actualObjecId = result?.id
-                    
+                    if (actualObjecId != nil) {
                     if let val = attachmenetDic[offlineObjectId] {
                         if let attachArr = val as? NSArray {
 //                            
@@ -131,7 +133,7 @@ class OfflineSyncData: UIViewController {
                     } else {
                         print("key is not present in dict")
                     }
-                    
+                    }
                    // attachmenetDic
                     
                     //////
@@ -145,46 +147,52 @@ class OfflineSyncData: UIViewController {
                 }
                 defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachmenetDic), forKey: offlineAttachKey)
                 print(attachOfflineDic)
-                OfflineShrinkData1(ObjectDataType.attachment.rawValue)
+                offlineAttachDataShrink(ObjectDataType.attachment.rawValue)
 
         })
     }
 }
     
     
-    class   func OfflineShrinkData1(objType: String) {
-        var onlineAttachmenetDic = NSDictionary()
+    class   func offlineAttachDataShrink(objType: String) {
+        var onlineAttachmenetDic = NSMutableDictionary()
         if let arrayOfObjectsData = defaults.objectForKey(offlineAttachKey) as? NSData {
-            onlineAttachmenetDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSDictionary
+            onlineAttachmenetDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
         }
         if  onlineAttachmenetDic.count > 0 {
+            
             let   client = fatchClient()
             let dataArr: NSMutableArray =  []
                 for (key, _) in onlineAttachmenetDic {
-                    let attachment: AnyObject = ZKSObject.withType(objType)
-                    let dataArray = onlineAttachmenetDic.valueForKey(key as! String)
+                    if !key .hasPrefix("offline") {
+                        let attachment: AnyObject = ZKSObject.withType(objType)
+                        let dataArray = onlineAttachmenetDic.valueForKey(key as! String)
                         for element in (dataArray as? NSArray)! {
                             attachment.setFieldValue(element["Name"] as? String, field: "Name")
                             attachment.setFieldValue(element["Body"] as? String, field: "Body")
                             attachment.setFieldValue(key as? String, field: "ParentId")
                         }
-                     dataArr.addObject(attachment)
+                        dataArr.addObject(attachment)
+                    }
                 }
-            client.performCreate(dataArr as [AnyObject], failBlock: { exp in
-                print(exp)
-                }, completeBlock: { results in
-                    print(results)
-                    for  resultV  in results {
-                        let result = resultV as? ZKSaveResult
-                        print(result?.errors )
-                        print(result?.id )
-                        print(result?.success)
-                        defaults.removeObjectForKey(offlineAttachKey)
-                }
-            })
+            if dataArr.count > 0 {
+                client.performCreate(dataArr as [AnyObject], failBlock: { exp in
+                    print(exp)
+                    }, completeBlock: { results in
+                        print(results)
+                        for  resultV  in results {
+                            let result = resultV as? ZKSaveResult
+                            print(result?.errors )
+                            print(result?.id )
+                            print(result?.success)
+                            onlineAttachmenetDic.removeObjectForKey((result?.id)!)
+                            //defaults.removeObjectForKey(offlineAttachKey)
+                        }
+                })
+            }
+            
         }
-        
-        
+        defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(onlineAttachmenetDic), forKey:offlineAttachKey)
     }
     
     class func onlineDeleteObjects() {

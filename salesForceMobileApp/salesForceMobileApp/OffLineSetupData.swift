@@ -43,7 +43,6 @@ class OffLineSetupData: NSObject {
                             let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(objDataArr)
                             defaults.setObject(arrOfLeadData, forKey: schemaKey)
                         }
-                       
                     }
             })
         } else {

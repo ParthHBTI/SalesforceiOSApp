@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Yuji Hato. All rights reserved.
 //
 
-let ContactOnLineDataKey = "ContactOnLineDataKey"
 let ContactOfLineDataKey = "ContactOfLineDataKey"
 
 import UIKit

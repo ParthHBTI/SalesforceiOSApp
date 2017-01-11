@@ -114,6 +114,7 @@ class OfflineSyncData: UIViewController {
                     
                     let offlineObjectId = offLineObjectIdsArr.objectAtIndex(k) as! String
                     let actualObjecId = result?.id
+                    if (actualObjecId != nil) {
                     if let val = attachmenetDic[offlineObjectId] {
                         if let attachArr = val as? NSArray {
 //                            
@@ -132,7 +133,7 @@ class OfflineSyncData: UIViewController {
                     } else {
                         print("key is not present in dict")
                     }
-                    
+                    }
                    // attachmenetDic
                     
                     //////

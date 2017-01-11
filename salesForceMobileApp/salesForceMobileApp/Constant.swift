@@ -35,6 +35,7 @@ let OnLineKeySuffix = "OnLineDataKey"
 let offlineAttachKey = "offlineAttachKey"
 let NotificationSuffix = "NotificationSuffixKey"
 let onlineDeletsObjectsKey = "onlineDeletsObjectsKey"
+let offlineNotesKey = "offlineNotesKey"
 
 
 var keyForOffLine = ""

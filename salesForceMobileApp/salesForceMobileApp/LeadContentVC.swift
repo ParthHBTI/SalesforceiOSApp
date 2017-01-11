@@ -213,6 +213,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = leadID
             notesVC.noteDetailArr = leadArr //leadDataArr
+            notesVC.noteDetailInfo = getResponseArr
             self.navigationController?.pushViewController(notesVC, animated: true)
         default:
             print("Default")

@@ -33,9 +33,9 @@ let SchemaKeySuffix = "SchemaKey"
 let OffLineKeySuffix = "OffLineDataKey"
 let OnLineKeySuffix = "OnLineDataKey"
 let offlineAttachKey = "offlineAttachKey"
+let onlineAttachKey = "onlineAttachKey"
 let NotificationSuffix = "NotificationSuffixKey"
 let onlineDeletsObjectsKey = "onlineDeletsObjectsKey"
-
 
 var keyForOffLine = ""
 let obj = OfflineSyncData()

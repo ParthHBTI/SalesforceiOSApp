@@ -207,6 +207,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
             let attachmentVC = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
             attachmentVC.leadDetailInfo = getResponseArr;
+            attachmentVC.offlineMode = !isOfflineData
             self.navigationController?.pushViewController(attachmentVC, animated: true)
         case 2:
             let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)

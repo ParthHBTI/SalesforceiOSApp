@@ -163,7 +163,7 @@ class LeadViewController: UIViewController, ExecuteQueryDelegate {
             let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loading.mode = MBProgressHUDMode.Indeterminate
             loading.detailsLabelText = "Loading Data from Server"
-            loading.hide(true, afterDelay: 2)
+            loading.hide(true, afterDelay: 0.5)
             loading.removeFromSuperViewOnHide = true
             exDelegate.leadQueryDe(ObjectDataType.leadValue.rawValue)
             dispatch_async(dispatch_get_main_queue(), {
@@ -289,6 +289,8 @@ extension LeadViewController : UITableViewDataSource {
                     print(self.delObjAtId)
                     let onlineDeletsKeys = NSKeyedArchiver.archivedDataWithRootObject(deletedKeysArr)
                     defaults.setObject(onlineDeletsKeys, forKey:onlineDeletsObjectsKey)
+                    let offlineLeadArr = NSKeyedArchiver.archivedDataWithRootObject(leadOnLineArr)
+                    defaults.setObject(offlineLeadArr, forKey:"\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)")
                     self.deleteLeadAtIndexPath = nil
                 }
             })

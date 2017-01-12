@@ -52,6 +52,9 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         super.viewWillAppear(animated)
         configureTableView()
         dowloadAttachment()
+        if !exDelegate.isConnectedToNetwork() {
+            OfflineDataModelVC.offlineDataModel()
+        }
         if isUpdatedSuccessfully {
             if exDelegate.isConnectedToNetwork() {
                 exDelegate.leadQueryDe("lead")
@@ -109,7 +112,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
         nav!.tintColor = UIColor.whiteColor()
         nav!.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         let navEditBtn = UIBarButtonItem(image: UIImage(named: "editImg-1"), style: .Plain, target: self, action:#selector(self.editAction))
-        //let navEditBtn = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action:#selector(self.editAction))
         let navBarActionBtn: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(LeadContentVC.shareAction))
         self.navigationItem.setRightBarButtonItems([navBarActionBtn,navEditBtn], animated: true)
         isLeadDataNil()
@@ -132,6 +134,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
 
    
     func dowloadAttachment() {
+        if exDelegate.isConnectedToNetwork() {
         let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
         let reqs = SFRestAPI.sharedInstance().requestForQuery(query)
         SFRestAPI.sharedInstance().sendRESTRequest(reqs, failBlock: {
@@ -143,7 +146,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 dispatch_async(dispatch_get_main_queue(), {
                     self.tableView.reloadData()
                 })
-                
         })
         let attachQuery = "SELECT ContentType,CreatedDate, IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
         let attachReq = SFRestAPI.sharedInstance().requestForQuery(attachQuery)
@@ -156,9 +158,16 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 dispatch_async(dispatch_get_main_queue(), {
                     self.tableView.reloadData()
                 })
-                
         })
-        
+        } else {
+            if let _ = attachOfflineDic.valueForKey(leadID) {
+                noteArr = attachOfflineDic.valueForKey(leadID)!
+            }
+            
+            if let _ = attachOnlineDic.valueForKey(leadID) {
+                noteArr = attachOnlineDic.valueForKey(leadID)!
+            }
+        }
     }
     
     func isLeadDataNil() {
@@ -242,15 +251,14 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             switch (section) {
                 
             case 0:
-                return  leadArr.count //leadDataArr.count
+                return  leadArr.count
             case 1:
-                return attachmentArr.count
+                    return attachmentArr.count
             case 2:
-                return noteArr.count
+                    return noteArr.count
             default:
                 return 1
             }
-            //            return (section==0) ? leadDataArr.count : attachmentArr.count
         } else {
             return feedData.count
         }
@@ -290,10 +298,10 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 tableView.rowHeight = 70
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
                 
-               textFeedCell.attachNoteTime.text = getTimeFromString(indexPath.row, array: attachmentArr as! NSArray)
+              // textFeedCell.attachNoteTime.text = getTimeFromString(indexPath.row, array: attachmentArr as! NSArray)
                 textFeedCell.attachAndNoteFileName.text = attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
-                let typeArr: AnyObject = attachmentArr.objectAtIndex(indexPath.row)["attributes"]
-                    textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
+                //let typeArr: AnyObject = attachmentArr.objectAtIndex(indexPath.row)["attributes"]
+                   // textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 textFeedCell.attachPhoto.backgroundColor = UIColor(hex: "FFD434" )
                 textFeedCell.attachPhoto.layer.cornerRadius = 1.0
                 return textFeedCell
@@ -301,10 +309,10 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 tableView.rowHeight = 70
                 
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
-               textFeedCell.attachNoteTime.text = getTimeFromString(indexPath.row, array: noteArr as! NSArray)
+               //textFeedCell.attachNoteTime.text = getTimeFromString(indexPath.row, array: noteArr as! NSArray)
                 textFeedCell.attachAndNoteFileName.text = noteArr.objectAtIndex(indexPath.row)["Name"] as? String
-                let typeArr: AnyObject = noteArr.objectAtIndex(indexPath.row)["attributes"]
-                textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
+                //let typeArr: AnyObject = noteArr.objectAtIndex(indexPath.row)["attributes"]
+                //textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 return textFeedCell
             }
         } else {

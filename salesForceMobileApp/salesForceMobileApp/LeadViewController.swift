@@ -289,6 +289,8 @@ extension LeadViewController : UITableViewDataSource {
                     print(self.delObjAtId)
                     let onlineDeletsKeys = NSKeyedArchiver.archivedDataWithRootObject(deletedKeysArr)
                     defaults.setObject(onlineDeletsKeys, forKey:onlineDeletsObjectsKey)
+                    let offlineLeadArr = NSKeyedArchiver.archivedDataWithRootObject(leadOnLineArr)
+                    defaults.setObject(offlineLeadArr, forKey:"\(ObjectDataType.leadValue.rawValue)\(OnLineKeySuffix)")
                     self.deleteLeadAtIndexPath = nil
                 }
             })

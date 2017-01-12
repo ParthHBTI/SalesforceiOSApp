@@ -11,6 +11,7 @@ import SalesforceRestAPI
 import MBProgressHUD
 var attachOfflineArr = NSMutableArray()
 var attachOfflineDic =  NSMutableDictionary()
+var attachOnlineDic =  NSMutableDictionary()
 
 class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate, ExecuteQueryDelegate  {
     var leadDetailInfo:AnyObject = []
@@ -18,6 +19,7 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
     var imagesDirectoryPath:String!
     var imagesDirectoryPathOfflineObj: String!
     var checkButton = false
+    var offlineMode = false
     @IBOutlet weak var attachTextView: UITextView!
     var exDelegate: ExecuteQuery = ExecuteQuery()
     @IBOutlet weak var checkUncheckBtn: UIButton!
@@ -56,6 +58,9 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
             if let arrayOfObjectsData = defaults.objectForKey(offlineAttachKey) as? NSData {
                 attachOfflineDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
             }
+        if let arrayOfObjectsData = defaults.objectForKey(onlineAttachKey) as? NSData {
+            attachOnlineDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
+        }
             imagesDirectoryPath = documentDirectorPath.stringByAppendingString("/Attachment")
             let isExists = NSFileManager.defaultManager().fileExistsAtPath(imagesDirectoryPath, isDirectory: &objcBool)
             if isExists == false{
@@ -138,12 +143,25 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
         }
         let imageData: NSData = UIImageJPEGRepresentation(imageView.image!, 0.1)!
         let b64 = imageData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.EncodingEndLineWithLineFeed)
+        print(b64)
         let fields = [
-            "Name": "background.png",
+            "Name": "k4",
             "Body": b64,
             "ParentId":leadId
         ]
         if !exDelegate.isConnectedToNetwork() {
+            if offlineMode {
+                var attachedArr = attachOnlineDic[leadId]
+                if let _ = attachedArr {
+                    attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
+                } else {
+                    attachedArr = NSMutableArray()
+                }
+                attachedArr?.addObject(fields)
+                print(fields.indexForKey("Body"))
+                attachOnlineDic.setObject(attachedArr!, forKey: leadId)
+                defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachOnlineDic), forKey: onlineAttachKey)
+            } else  {
                 var attachedArr = attachOfflineDic[leadId]
                 if let _ = attachedArr {
                     attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
@@ -153,7 +171,7 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
                 attachedArr?.addObject(fields)
                 attachOfflineDic.setObject(attachedArr!, forKey: leadId)
                 defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachOfflineDic), forKey: offlineAttachKey)
-                print(attachOfflineDic)
+            }
                 var imagePath = NSDate().description
                 imagePath = imagePath.stringByReplacingOccurrencesOfString(" ", withString: "")
                 imagePath = imagesDirectoryPath.stringByAppendingString("/\(imagePath).png")
@@ -180,20 +198,6 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
                     self.navigationController?.popViewControllerAnimated(true)
                 })
             }
-            
-            
-            
-            //        let request = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Attachment", fields: fields)
-            //        SFRestAPI.sharedInstance().sendRESTRequest(request, failBlock: { error in
-            //            print(error)
-            //            loading.hide(true, afterDelay: 2)
-            //            loading.removeFromSuperViewOnHide = true
-            //
-            //        }) { response in
-            //            loading.hide(true, afterDelay: 2)
-            //            loading.removeFromSuperViewOnHide = true
-            //            self.navigationController?.popViewControllerAnimated(true)
-            //        }
         }
     }
     

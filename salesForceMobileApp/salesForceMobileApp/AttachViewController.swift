@@ -9,7 +9,6 @@
 import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
-var attachOfflineArr = NSMutableArray()
 var attachOfflineDic =  NSMutableDictionary()
 var attachOnlineDic =  NSMutableDictionary()
 

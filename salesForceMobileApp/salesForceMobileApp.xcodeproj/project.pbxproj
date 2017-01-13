@@ -16,6 +16,7 @@
 		044D66BC1DE5AD620071D817 /* ConvertLeadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 044D66BB1DE5AD620071D817 /* ConvertLeadViewController.swift */; };
 		049EAE171DD1BCED00C178DA /* feedTemplate.json in Resources */ = {isa = PBXBuildFile; fileRef = 049EAE161DD1BCED00C178DA /* feedTemplate.json */; };
 		04A552321DE2E602003D546E /* NoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A552311DE2E602003D546E /* NoteViewController.swift */; };
+		04AE685F1E27910B006F8B2A /* OfflineDataModelVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AE685E1E27910A006F8B2A /* OfflineDataModelVC.swift */; };
 		04B776391DEBF69E009A7213 /* AccountListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B776381DEBF69E009A7213 /* AccountListViewController.swift */; };
 		04BDF40C1E14EC7E0008D87F /* OffLineSetupData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BDF40B1E14EC7E0008D87F /* OffLineSetupData.swift */; };
 		04CB1DE41DAF807400D2621C /* SlideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CB1DE31DAF807400D2621C /* SlideMenuController.swift */; };
@@ -92,6 +93,7 @@
 		045D1C5BC2F1EADFDFB3671E /* Pods-salesForceMobileApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-salesForceMobileApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-salesForceMobileApp/Pods-salesForceMobileApp.release.xcconfig"; sourceTree = "<group>"; };
 		049EAE161DD1BCED00C178DA /* feedTemplate.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = feedTemplate.json; sourceTree = "<group>"; };
 		04A552311DE2E602003D546E /* NoteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NoteViewController.swift; path = salesForceMobileApp/NoteViewController.swift; sourceTree = "<group>"; };
+		04AE685E1E27910A006F8B2A /* OfflineDataModelVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OfflineDataModelVC.swift; path = salesForceMobileApp/OfflineDataModelVC.swift; sourceTree = "<group>"; };
 		04B776381DEBF69E009A7213 /* AccountListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccountListViewController.swift; path = salesForceMobileApp/AccountListViewController.swift; sourceTree = "<group>"; };
 		04BDF40B1E14EC7E0008D87F /* OffLineSetupData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OffLineSetupData.swift; sourceTree = "<group>"; };
 		04CB1DE21DAF807400D2621C /* SlideMenuControllerSwift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideMenuControllerSwift.h; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 		4FD6C46B1B754AF1002F9F90 = {
 			isa = PBXGroup;
 			children = (
+				04AE685E1E27910A006F8B2A /* OfflineDataModelVC.swift */,
 				04B776381DEBF69E009A7213 /* AccountListViewController.swift */,
 				04A552311DE2E602003D546E /* NoteViewController.swift */,
 				04EE4B0B1DD06D5E00590A7D /* AttachViewController.swift */,
@@ -499,6 +502,7 @@
 				04F96F3A1DAF762E000D715A /* ContactViewController.swift in Sources */,
 				04DB2FA51DB4ED3E00C4519F /* CreateNewAccountVC.swift in Sources */,
 				04F96F1C1DAF740C000D715A /* UIImageView.swift in Sources */,
+				04AE685F1E27910B006F8B2A /* OfflineDataModelVC.swift in Sources */,
 				4FD6C47A1B754AF1002F9F90 /* AppDelegate.swift in Sources */,
 				04F96F381DAF761F000D715A /* AccountViewController.swift in Sources */,
 				04EE4B0C1DD06D5E00590A7D /* AttachViewController.swift in Sources */,

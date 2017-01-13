@@ -266,6 +266,8 @@ extension AccountViewController : UITableViewDataSource {
                     print(self.delObjAtId)
                     let onlineDeletsKeys = NSKeyedArchiver.archivedDataWithRootObject(deletedKeysArr)
                     defaults.setObject(onlineDeletsKeys, forKey:onlineDeletsObjectsKey)
+                    let offlineAccountArr = NSKeyedArchiver.archivedDataWithRootObject(accOnlineArr)
+                    defaults.setObject(offlineAccountArr, forKey:"\(ObjectDataType.accountValue.rawValue)\(OnLineKeySuffix)")
                     self.delAccAtIndexPath = nil
                 }
             })

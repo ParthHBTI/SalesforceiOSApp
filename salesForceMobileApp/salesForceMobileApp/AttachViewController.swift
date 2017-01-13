@@ -161,6 +161,7 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
                 print(fields.indexForKey("Body"))
                 attachOnlineDic.setObject(attachedArr!, forKey: leadId)
                 defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachOnlineDic), forKey: onlineAttachKey)
+                //print(attachOnlineDic)
             } else  {
                 var attachedArr = attachOfflineDic[leadId]
                 if let _ = attachedArr {

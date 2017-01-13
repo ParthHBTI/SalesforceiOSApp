@@ -54,5 +54,7 @@ var contactRequest = "SELECT AccountId, Birthdate, Account.Name, CleanStatus, Em
 var opporchunityRequest = "SELECT Owner.Name,Amount,Account.Name,CloseDate,CreatedDate,IsClosed,IsDeleted,IsPrivate,LastModifiedDate,LeadSource,Name,Probability,StageName,Type,Id FROM Opportunity Order by CreatedDate DESC"
 
 
+var LeadStatusAPI = "SELECT ApiName FROM LeadStatus"
+
 
 

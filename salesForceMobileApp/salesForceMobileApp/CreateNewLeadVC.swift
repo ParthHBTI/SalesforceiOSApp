@@ -233,7 +233,7 @@ class CreateNewLeadVC: TextFieldViewController, ExecuteQueryDelegate, SFRestDele
     
     @IBAction func leadStatusPickListValues() {
         
-            let reqq = SFRestAPI.sharedInstance().requestForQuery("SELECT ApiName FROM LeadStatus")
+            let reqq = SFRestAPI.sharedInstance().requestForQuery(LeadStatusAPI)
             SFRestAPI.sharedInstance().sendRESTRequest(reqq, failBlock: {_ in
                 print("Error")
                 }, completeBlock: {response in

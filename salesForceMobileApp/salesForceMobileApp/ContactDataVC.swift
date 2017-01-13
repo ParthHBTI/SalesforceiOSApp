@@ -220,6 +220,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
             let attachmentVC = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
             attachmentVC.leadDetailInfo = getResponseArr;
+            attachmentVC.offlineMode = !isOfflineData
             self.navigationController?.pushViewController(attachmentVC, animated: true)
             print("Save")
         case 2:

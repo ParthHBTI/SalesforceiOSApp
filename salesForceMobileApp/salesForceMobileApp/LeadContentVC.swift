@@ -147,36 +147,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     func updateInfo(flag: Bool ) {
         self.isUpdatedSuccessfully = flag
     }
-
-   
-    func getAttachmentList() {
-        if exDelegate.isConnectedToNetwork() {
-        let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
-        let reqs = SFRestAPI.sharedInstance().requestForQuery(query)
-        SFRestAPI.sharedInstance().sendRESTRequest(reqs, failBlock: {
-            erro in
-            print(erro)
-            }, completeBlock: { response in
-                print(response)
-                self.attachmentArr = response!["records"]
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.tableView.reloadData()
-                })
-        })
-        let attachQuery = "SELECT ContentType,CreatedDate, IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
-        let attachReq = SFRestAPI.sharedInstance().requestForQuery(attachQuery)
-        SFRestAPI.sharedInstance().sendRESTRequest(attachReq, failBlock: {
-            erro in
-            print(erro)
-            }, completeBlock: { response in
-                print(response)
-                self.noteArr = response!["records"]
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.tableView.reloadData()
-                })
-        })
-        }
-    }
     
     func offlineDataModel() {
         if let _ = attachOfflineDic.valueForKey(leadID) {

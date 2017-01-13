@@ -99,10 +99,12 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             if isOfflineData {
                 OfflineDataModelVC.offlineDataModel()
                 offlineDataModel()
+                self.tableView.reloadData()
             }
             else {
                 OfflineDataModelVC.onlineDataModel()
                 onlineDataModel()
+                self.tableView.reloadData()
             }
         } else {
                 OfflineDataModelVC.getAttachmentList(leadID, completeService: { attachmentArray in
@@ -115,6 +117,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                 })
     }
     }
+    
     func offlineDataModel() {
         if let _ = attachOfflineDic.valueForKey(leadID) {
             noteArr = attachOfflineDic.valueForKey(leadID)!
@@ -212,6 +215,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
             let attachmentVC = storyboard.instantiateViewControllerWithIdentifier("AttachViewController") as! AttachViewController
             attachmentVC.leadDetailInfo = getResponseArr;
+            attachmentVC.offlineMode = !isOfflineData
             self.navigationController?.pushViewController(attachmentVC, animated: true)
             print("Save")
             

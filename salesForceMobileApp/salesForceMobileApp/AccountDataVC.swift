@@ -10,6 +10,7 @@ import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
 
+
 class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate, UIActionSheetDelegate,UpdateInfoDelegate {
     
     var feedData: AnyObject = []
@@ -94,9 +95,45 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         }
         isUpdatedSuccessfully = false
         self.setNavigationBarItem()
-        dowloadAttachment()
+        if !exDelegate.isConnectedToNetwork() {
+            if isOfflineData {
+                OfflineDataModelVC.offlineDataModel()
+                offlineDataModel()
+            }
+            else {
+                OfflineDataModelVC.onlineDataModel()
+                onlineDataModel()
+            }
+        } else {
+                OfflineDataModelVC.getAttachmentList(leadID, completeService: { attachmentArray in
+                    self.noteArr = attachmentArray!
+                    self.tableView.reloadData()
+                })
+                OfflineDataModelVC.getNotesList(leadID, completeService: { noteArray in
+                    self.attachmentArr = noteArray!
+                    self.tableView.reloadData()
+                })
+    }
+    }
+    func offlineDataModel() {
+        if let _ = attachOfflineDic.valueForKey(leadID) {
+            noteArr = attachOfflineDic.valueForKey(leadID)!
+        }
+        if let _ = offlineNotesDic.valueForKey(leadID) {
+            attachmentArr = offlineNotesDic.valueForKey(leadID)!
+        }
     }
     
+    func onlineDataModel() {
+        if let _ = attachOnlineDic.valueForKey(leadID) {
+            noteArr = attachOnlineDic.valueForKey(leadID)!
+        }
+        
+        if let _ = onlineNotesDic.valueForKey(leadID) {
+            attachmentArr = onlineNotesDic.valueForKey(leadID)!
+        }
+    }
+
     func configureTableView() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -155,34 +192,6 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     }
     
     
-    func dowloadAttachment() {
-        let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
-        let reqs = SFRestAPI.sharedInstance().requestForQuery(query)
-        SFRestAPI.sharedInstance().sendRESTRequest(reqs, failBlock: {
-            erro in
-            print(erro)
-            }, completeBlock: { response in
-                print(response)
-                self.attachmentArr = response!["records"]
-                self.tableView.reloadData()
-                
-                
-        })
-        
-        let attachQuery = "SELECT ContentType,IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
-        let attachReq = SFRestAPI.sharedInstance().requestForQuery(attachQuery)
-        SFRestAPI.sharedInstance().sendRESTRequest(attachReq, failBlock: {
-            erro in
-            print(erro)
-            }, completeBlock: { response in
-                print(response)
-                self.noteArr = response!["records"]
-                self.tableView.reloadData()
-                
-                
-        })
-        
-    }
     
     
     func shareAction() {
@@ -280,8 +289,8 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                 tableView.rowHeight = 70
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
                 textFeedCell.attachAndNoteFileName.text = attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
-                let typeArr: AnyObject = attachmentArr.objectAtIndex(indexPath.row)["attributes"]
-                textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
+                //let typeArr: AnyObject = attachmentArr.objectAtIndex(indexPath.row)["attributes"]
+                //textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 textFeedCell.attachPhoto.backgroundColor = UIColor(hex: "FFD434" )
                 textFeedCell.attachPhoto.layer.cornerRadius = 1.0
                 
@@ -290,8 +299,8 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                 tableView.rowHeight = 70
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
                 textFeedCell.attachAndNoteFileName.text = noteArr.objectAtIndex(indexPath.row)["Name"] as? String
-                let typeArr: AnyObject = noteArr.objectAtIndex(indexPath.row)["attributes"]
-                textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
+                //let typeArr: AnyObject = noteArr.objectAtIndex(indexPath.row)["attributes"]
+                //textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 return textFeedCell
             }
         } else {

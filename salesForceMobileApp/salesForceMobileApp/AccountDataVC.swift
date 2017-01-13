@@ -21,8 +21,8 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     var parentIndex : Int = 0
     var accountCellTitleArr: NSArray = ["Account Owner:","Account Name:","Account Number:","Type:","Ownership:","Website:","Phone:","Fax:","Last Modified Date:"]
     var accountDataArr = NSMutableArray()
+    var notesArr: AnyObject = []
     var attachmentArr: AnyObject = []
-    var noteArr: AnyObject = []
     var isUpdatedSuccessfully:Bool = false
     var isOfflineData:Bool = false
     
@@ -88,7 +88,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             if let dic = OfflineDataModelVC.getOffLineNotesDic() {
                 if dic.count > 0 {
                     if let valueArr = dic.valueForKey(leadID) {
-                        self.noteArr =  valueArr
+                        self.notesArr =  valueArr
                     }
                 }
             }
@@ -105,7 +105,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             if let dic = OfflineDataModelVC.getOnlineeNotesDic() {
                 if dic.count > 0 {
                     if let valueArr = dic.valueForKey(leadID) {
-                        self.noteArr =  valueArr
+                        self.notesArr =  valueArr
                     }                }
             }
             
@@ -136,11 +136,11 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             offlinenotesAttchmentSetup()
         } else {
                 OfflineDataModelVC.getAttachmentList(leadID, completeService: { attachmentArray in
-                    self.noteArr = attachmentArray!
+                    self.attachmentArr = attachmentArray!
                     self.tableView.reloadData()
                 })
                 OfflineDataModelVC.getNotesList(leadID, completeService: { noteArray in
-                    self.attachmentArr = noteArray!
+                    self.notesArr = noteArray!
                     self.tableView.reloadData()
                 })
     }
@@ -148,20 +148,20 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     
     func offlineDataModel() {
         if let _ = attachOfflineDic.valueForKey(leadID) {
-            noteArr = attachOfflineDic.valueForKey(leadID)!
+            attachmentArr = attachOfflineDic.valueForKey(leadID)!
         }
         if let _ = offlineNotesDic.valueForKey(leadID) {
-            attachmentArr = offlineNotesDic.valueForKey(leadID)!
+            notesArr = offlineNotesDic.valueForKey(leadID)!
         }
     }
     
     func onlineDataModel() {
         if let _ = attachOnlineDic.valueForKey(leadID) {
-            noteArr = attachOnlineDic.valueForKey(leadID)!
+            attachmentArr = attachOnlineDic.valueForKey(leadID)!
         }
         
         if let _ = onlineNotesDic.valueForKey(leadID) {
-            attachmentArr = onlineNotesDic.valueForKey(leadID)!
+            notesArr = onlineNotesDic.valueForKey(leadID)!
         }
     }
 
@@ -287,10 +287,10 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                 return accountDataArr.count
                 
             case 1:
-                return attachmentArr.count
+                return notesArr.count
                 
             case 2:
-                return noteArr.count
+                return attachmentArr.count
                 
             default:
                 return 1
@@ -320,7 +320,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             } else if indexPath.section == 1 {
                 tableView.rowHeight = 70
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
-                textFeedCell.attachAndNoteFileName.text = attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
+                textFeedCell.attachAndNoteFileName.text = notesArr.objectAtIndex(indexPath.row)["Title"] as? String
                 //let typeArr: AnyObject = attachmentArr.objectAtIndex(indexPath.row)["attributes"]
                 //textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 textFeedCell.attachPhoto.backgroundColor = UIColor(hex: "FFD434" )
@@ -330,7 +330,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             } else {
                 tableView.rowHeight = 70
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
-                textFeedCell.attachAndNoteFileName.text = noteArr.objectAtIndex(indexPath.row)["Name"] as? String
+                textFeedCell.attachAndNoteFileName.text = attachmentArr.objectAtIndex(indexPath.row)["Name"] as? String
                 //let typeArr: AnyObject = noteArr.objectAtIndex(indexPath.row)["attributes"]
                 //textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 return textFeedCell

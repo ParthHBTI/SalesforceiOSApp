@@ -78,7 +78,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate {
     
     func timerFunc() {
         if EXDelegate.isConnectedToNetwork() {
-            removeInternetAlert()
+            //removeInternetAlert()
             self.isDismiss = true
             OfflineSyncData.syncOffLineDataToServer()
          }

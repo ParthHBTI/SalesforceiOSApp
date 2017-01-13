@@ -13,8 +13,8 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     var leadID = String()
     var leadArr = NSMutableArray()
     var feedData: AnyObject = []
+    var notesArr: AnyObject = []
     var attachmentArr: AnyObject = []
-    var noteArr: AnyObject = []
     var checkResponseType = false
     var coutFile = Int()
     var tempCell = LeadContentCell()
@@ -59,7 +59,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             if let dic = OfflineDataModelVC.getOffLineNotesDic() {
                 if dic.count > 0 {
                     if let valueArr = dic.valueForKey(leadID) {
-                        self.noteArr =  valueArr
+                        self.notesArr =  valueArr
                     }
                 }
             }
@@ -76,7 +76,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             if let dic = OfflineDataModelVC.getOnlineeNotesDic() {
                 if dic.count > 0 {
                     if let valueArr = dic.valueForKey(leadID) {
-                        self.noteArr =  valueArr
+                        self.notesArr =  valueArr
                     }                }
             }
             
@@ -95,11 +95,11 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             offlinenotesAttchmentSetup()
         } else {
             OfflineDataModelVC.getAttachmentList(leadID, completeService: { attachmentArray in
-                self.noteArr = attachmentArray!
+                self.attachmentArr = attachmentArray!
                 self.tableView.reloadData()
             })
             OfflineDataModelVC.getNotesList(leadID, completeService: { noteArray in
-                self.attachmentArr = noteArray!
+                self.notesArr = noteArray!
                 self.tableView.reloadData()
             })
         }
@@ -183,20 +183,20 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     
     func offlineDataModel() {
         if let _ = attachOfflineDic.valueForKey(leadID) {
-            noteArr = attachOfflineDic.valueForKey(leadID)!
+            attachmentArr = attachOfflineDic.valueForKey(leadID)!
         }
         if let _ = offlineNotesDic.valueForKey(leadID) {
-            attachmentArr = offlineNotesDic.valueForKey(leadID)!
+            notesArr = offlineNotesDic.valueForKey(leadID)!
         }
     }
     
     func onlineDataModel() {
         if let _ = attachOnlineDic.valueForKey(leadID) {
-            noteArr = attachOnlineDic.valueForKey(leadID)!
+            attachmentArr = attachOnlineDic.valueForKey(leadID)!
         }
         
         if let _ = onlineNotesDic.valueForKey(leadID) {
-            attachmentArr = onlineNotesDic.valueForKey(leadID)!
+            notesArr = onlineNotesDic.valueForKey(leadID)!
         }
     }
     
@@ -285,9 +285,9 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             case 0:
                 return  leadArr.count
             case 1:
-                    return attachmentArr.count
+                    return notesArr.count
             case 2:
-                    return noteArr.count
+                    return attachmentArr.count
             default:
                 return 1
             }
@@ -331,7 +331,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("AttachCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
                 
               // textFeedCell.attachNoteTime.text = getTimeFromString(indexPath.row, array: attachmentArr as! NSArray)
-                textFeedCell.attachAndNoteFileName.text = attachmentArr.objectAtIndex(indexPath.row)["Title"] as? String
+                textFeedCell.attachAndNoteFileName.text = notesArr.objectAtIndex(indexPath.row)["Title"] as? String
                 //let typeArr: AnyObject = attachmentArr.objectAtIndex(indexPath.row)["attributes"]
                    // textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 textFeedCell.attachPhoto.backgroundColor = UIColor(hex: "FFD434" )
@@ -342,7 +342,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
                 
                 let textFeedCell = tableView.dequeueReusableCellWithIdentifier("NoteCellID", forIndexPath: indexPath) as! NoteAndAttachFileCell
                //textFeedCell.attachNoteTime.text = getTimeFromString(indexPath.row, array: noteArr as! NSArray)
-                textFeedCell.attachAndNoteFileName.text = noteArr.objectAtIndex(indexPath.row)["Name"] as? String
+                textFeedCell.attachAndNoteFileName.text = attachmentArr.objectAtIndex(indexPath.row)["Name"] as? String
                 //let typeArr: AnyObject = noteArr.objectAtIndex(indexPath.row)["attributes"]
                 //textFeedCell.attachNoteFileSize.text = typeArr["type"] as? String
                 return textFeedCell

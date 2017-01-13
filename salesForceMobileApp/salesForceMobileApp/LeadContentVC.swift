@@ -51,10 +51,26 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         configureTableView()
-        dowloadAttachment()
         if !exDelegate.isConnectedToNetwork() {
-            OfflineDataModelVC.offlineDataModel()
+            if isOfflineData {
+                 OfflineDataModelVC.offlineDataModel()
+                offlineDataModel()
+            }
+            else {
+                OfflineDataModelVC.onlineDataModel()
+                onlineDataModel()
+            }
+        } else {
+            OfflineDataModelVC.getAttachmentList(leadID, completeService: { attachmentArray in
+                self.noteArr = attachmentArray!
+                self.tableView.reloadData()
+            })
+            OfflineDataModelVC.getNotesList(leadID, completeService: { noteArray in
+                self.attachmentArr = noteArray!
+                self.tableView.reloadData()
+            })
         }
+        
         if isUpdatedSuccessfully {
             if exDelegate.isConnectedToNetwork() {
                 exDelegate.leadQueryDe("lead")
@@ -131,42 +147,23 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     func updateInfo(flag: Bool ) {
         self.isUpdatedSuccessfully = flag
     }
-
-   
-    func dowloadAttachment() {
-        if exDelegate.isConnectedToNetwork() {
-        let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"
-        let reqs = SFRestAPI.sharedInstance().requestForQuery(query)
-        SFRestAPI.sharedInstance().sendRESTRequest(reqs, failBlock: {
-            erro in
-            print(erro)
-            }, completeBlock: { response in
-                print(response)
-                self.attachmentArr = response!["records"]
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.tableView.reloadData()
-                })
-        })
-        let attachQuery = "SELECT ContentType,CreatedDate, IsDeleted,IsPrivate,LastModifiedDate,Name FROM Attachment Where ParentId = '\(leadID)'"
-        let attachReq = SFRestAPI.sharedInstance().requestForQuery(attachQuery)
-        SFRestAPI.sharedInstance().sendRESTRequest(attachReq, failBlock: {
-            erro in
-            print(erro)
-            }, completeBlock: { response in
-                print(response)
-                self.noteArr = response!["records"]
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.tableView.reloadData()
-                })
-        })
-        } else {
-            if let _ = attachOfflineDic.valueForKey(leadID) {
-                noteArr = attachOfflineDic.valueForKey(leadID)!
-            }
-            
-            if let _ = attachOnlineDic.valueForKey(leadID) {
-                noteArr = attachOnlineDic.valueForKey(leadID)!
-            }
+    
+    func offlineDataModel() {
+        if let _ = attachOfflineDic.valueForKey(leadID) {
+            noteArr = attachOfflineDic.valueForKey(leadID)!
+        }
+        if let _ = offlineNotesDic.valueForKey(leadID) {
+            attachmentArr = offlineNotesDic.valueForKey(leadID)!
+        }
+    }
+    
+    func onlineDataModel() {
+        if let _ = attachOnlineDic.valueForKey(leadID) {
+            noteArr = attachOnlineDic.valueForKey(leadID)!
+        }
+        
+        if let _ = onlineNotesDic.valueForKey(leadID) {
+            attachmentArr = onlineNotesDic.valueForKey(leadID)!
         }
     }
     

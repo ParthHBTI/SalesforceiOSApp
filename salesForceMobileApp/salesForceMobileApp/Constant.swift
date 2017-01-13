@@ -9,6 +9,10 @@
 import Foundation
 
 
+public typealias AttachmentResponseBlock = ([AnyObject]?) -> Void
+public typealias NotesResponseBlock = ([AnyObject]?) -> Void
+
+
 //"Lead"
 
 

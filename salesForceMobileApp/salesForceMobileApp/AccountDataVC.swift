@@ -97,15 +97,16 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         self.setNavigationBarItem()
         if !exDelegate.isConnectedToNetwork() {
             if isOfflineData {
-                OfflineDataModelVC.offlineDataModel()
-                offlineDataModel()
-                self.tableView.reloadData()
+                self.attachmentArr =   OfflineDataModelVC.getOffLineAttachmentDic()
+                self.noteArr =   OfflineDataModelVC.getOffLineNotesDic()
             }
             else {
-                OfflineDataModelVC.onlineDataModel()
-                onlineDataModel()
-                self.tableView.reloadData()
+                self.attachmentArr =   OfflineDataModelVC.getOnlineAttachmentDic()
+                self.noteArr =   OfflineDataModelVC.getOnlineeNotesDic()
+                
             }
+            self.tableView.reloadData()
+
         } else {
                 OfflineDataModelVC.getAttachmentList(leadID, completeService: { attachmentArray in
                     self.noteArr = attachmentArray!

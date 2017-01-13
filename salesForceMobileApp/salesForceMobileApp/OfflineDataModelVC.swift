@@ -12,25 +12,36 @@ import SalesforceRestAPI
 class OfflineDataModelVC: UIViewController {
 
 
-    class func offlineDataModel() {
-        if let arrayOfObjectsData = defaults.objectForKey(offlineAttachKey) as? NSData {
-            attachOfflineDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
-        }
-        if let arrayOfObjectsData = defaults.objectForKey(offlineNotesKey) as? NSData {
-            offlineNotesDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
-        }
+    class func getOffLineAttachmentDic() -> NSMutableDictionary {
+        return loadDataWithKey(offlineAttachKey)
     }
     
-    class func onlineDataModel() {
-        if let arrayOfObjectsData = defaults.objectForKey(onlineAttachKey) as? NSData {
-            attachOnlineDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
-        }
+    class func getOffLineNotesDic() -> NSMutableDictionary {
+        return loadDataWithKey(offlineNotesKey)
+    }
+    
+    
+    class func getOnlineAttachmentDic() -> NSMutableDictionary {
+        return loadDataWithKey(onlineAttachKey)
+    }
+    
+    class func getOnlineeNotesDic() -> NSMutableDictionary {
+        return loadDataWithKey(onlineNotesKey)
+    }
+    
+    
+    
+    class func loadDataWithKey(key:String) -> NSMutableDictionary {
         
-        if let arrayOfObjectsData = defaults.objectForKey(onlineNotesKey) as? NSData {
-            onlineNotesDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
+        var infoDataDic =  NSMutableDictionary()
+        if let infoObjectData = defaults.objectForKey(key) as? NSData {
+            infoDataDic = NSKeyedUnarchiver.unarchiveObjectWithData(infoObjectData)! as! NSMutableDictionary
         }
+        return infoDataDic
     }
     
+    
+       
 class  func getNotesList(leadID: String , completeService: NotesResponseBlock) {
         if exDelegate.isConnectedToNetwork() {
             let query = "SELECT Body,CreatedDate,Id,Title FROM Note Where ParentId = '\(leadID)'"

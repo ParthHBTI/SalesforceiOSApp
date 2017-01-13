@@ -37,6 +37,7 @@ let onlineAttachKey = "onlineAttachKey"
 let NotificationSuffix = "NotificationSuffixKey"
 let onlineDeletsObjectsKey = "onlineDeletsObjectsKey"
 let offlineNotesKey = "offlineNotesKey"
+let onlineNotesKey = "onlineNotesKey"
 
 var keyForOffLine = ""
 let obj = OfflineSyncData()

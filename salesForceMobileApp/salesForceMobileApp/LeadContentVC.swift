@@ -52,12 +52,15 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             
             if let dic = OfflineDataModelVC.getOffLineAttachmentDic() {
                 if dic.count > 0 {
-                    self.attachmentArr =  dic.valueForKey(leadID)!
-                }
+                    if let valueArr = dic.valueForKey(leadID) {
+                        self.noteArr =  valueArr
+                    }                }
             }
             if let dic = OfflineDataModelVC.getOffLineNotesDic() {
                 if dic.count > 0 {
-                    self.noteArr =  dic.valueForKey(leadID)!
+                    if let valueArr = dic.valueForKey(leadID) {
+                        self.noteArr =  valueArr
+                    }
                 }
             }
             
@@ -66,13 +69,15 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             
             if let dic = OfflineDataModelVC.getOnlineAttachmentDic() {
                 if dic.count > 0 {
-                    self.attachmentArr =  dic.valueForKey(leadID)!
-                }
+                    if let valueArr = dic.valueForKey(leadID) {
+                        self.noteArr =  valueArr
+                    }                }
             }
             if let dic = OfflineDataModelVC.getOnlineeNotesDic() {
                 if dic.count > 0 {
-                    self.noteArr =  dic.valueForKey(leadID)!
-                }
+                    if let valueArr = dic.valueForKey(leadID) {
+                        self.noteArr =  valueArr
+                    }                }
             }
             
             

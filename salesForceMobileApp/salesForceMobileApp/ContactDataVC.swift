@@ -95,12 +95,12 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         isUpdatedSuccessfully = false
         if !exDelegate.isConnectedToNetwork() {
             if isOfflineData {
-                self.attachmentArr =   OfflineDataModelVC.getOffLineAttachmentDic()
-                self.noteArr =   OfflineDataModelVC.getOffLineNotesDic()
+                self.attachmentArr =   OfflineDataModelVC.getOffLineAttachmentDic().valueForKey(leadID)!
+                self.noteArr =   OfflineDataModelVC.getOffLineNotesDic().valueForKey(leadID)!
             }
             else {
-                self.attachmentArr =   OfflineDataModelVC.getOnlineAttachmentDic()
-                self.noteArr =   OfflineDataModelVC.getOnlineeNotesDic()
+                self.attachmentArr =   OfflineDataModelVC.getOnlineAttachmentDic().valueForKey(leadID)!
+                self.noteArr =   OfflineDataModelVC.getOnlineeNotesDic().valueForKey(leadID)!
                 
             }
             self.tableView.reloadData()

@@ -23,7 +23,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
     var parentIndex:Int = 0
     var isOfflineData:Bool = false
     var isUpdatedSuccessfully:Bool = false
-    //var selectedSectionVal = Int()
+    var selectedSectionVal = Int()
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
         if value is NSNull {
@@ -223,6 +223,8 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = leadID
             notesVC.noteDetailArr = leadArr //leadDataArr
+            notesVC.noteDetailInfo = getResponseArr
+            notesVC.SectionVal = selectedSectionVal
             self.navigationController?.pushViewController(notesVC, animated: true)
         default:
             print("Default")

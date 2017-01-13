@@ -9,6 +9,9 @@
 import UIKit
 import SalesforceRestAPI
 import MBProgressHUD
+var offlineNotesDic = NSMutableDictionary()
+var onlineNotesDic = NSMutableDictionary()
+
 class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var noteOwnerName: UILabel!
@@ -19,7 +22,11 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
     var leadId = String()
     var checkButton = false
     var noteDetailArr: AnyObject = []
+    var noteDetailInfo:AnyObject = []
+    var SectionVal = Int()
+    
     @IBAction func checkUncheckBtn(sender: AnyObject) {
+        
         if !checkButton {
             checkButton = true
             checkNoteIsPrivate.setImage(UIImage(named: "checkUncheck"), forState: UIControlState.Normal)
@@ -39,6 +46,16 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if SectionVal == 0 {
+            if let arrayOfObjectsData = defaults.objectForKey(offlineNotesKey) as? NSData {
+                offlineNotesDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
+            }
+        } else {
+            if let arrayOfObjectsData = defaults.objectForKey(onlineNotesKey) as? NSData {
+                onlineNotesDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
+            }
+        }
         let borderColor = UIColor(red: 204.0 / 255.0, green: 204.0 / 255.0, blue: 204.0 / 255.0, alpha: 1.0)
         noteBodyTextView.delegate = self
         noteTitleText.delegate = self
@@ -51,7 +68,6 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
         let shareBarButton = UIBarButtonItem(title: "Share", style: .Plain, target: self, action: #selector(NoteViewController.shareAction))
         print(noteDetailArr)
         noteOwnerName.text = noteDetailArr.objectAtIndex(1) as? String
-        //ownerCompanyName.text = noteDetailArr.objectAtIndex(2) as? String
         self.navigationItem.setRightBarButtonItem(shareBarButton, animated: true)
         
         
@@ -67,40 +83,58 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-   func  shareAction() {
-    let noteFields = [
-        
-        "Title":noteTitleText.text,
-        
-        "Body": noteBodyTextView.text,
-        
-        "ParentId":leadId
-        
-    ]
     
-    self.view.endEditing(true)
     
-    print(noteFields)
-    
-    let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-    loading.mode = MBProgressHUDMode.Indeterminate
-
-    let request1 = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Note", fields: noteFields)
-    SFRestAPI.sharedInstance().sendRESTRequest(request1, failBlock: { error in
-        print(error)
-        loading.hide(true, afterDelay: 2)
-        loading.removeFromSuperViewOnHide = true
-        
-
-        })
-    { response in
-        print(response)
-        loading.hide(true, afterDelay: 2)
-        loading.removeFromSuperViewOnHide = true
-        
-
-        self.navigationController?.popViewControllerAnimated(true)
-    }
+    func  shareAction() {
+        self.view.endEditing(true)
+        let params = [
+            "Title":noteTitleText.text,
+            "Body": noteBodyTextView.text,
+            "ParentId":leadId
+        ]
+        //print(params)
+        if exDelegate.isConnectedToNetwork() {
+            let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loading.mode = MBProgressHUDMode.Indeterminate
+            let request1 = SFRestAPI.sharedInstance().requestForCreateWithObjectType("Note", fields: params)
+            SFRestAPI.sharedInstance().sendRESTRequest(request1, failBlock: { error in
+                print(error)
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                })
+            { response in
+                print(response)
+                loading.hide(true, afterDelay: 2)
+                loading.removeFromSuperViewOnHide = true
+                self.navigationController?.popViewControllerAnimated(true)
+            }
+        } else {
+            if SectionVal == 0 {
+                var NotesArr = offlineNotesDic[leadId]
+                if let _ = NotesArr {
+                    NotesArr = NotesArr?.mutableCopy() as? NSMutableArray
+                } else {
+                    NotesArr = NSMutableArray()
+                }
+                NotesArr?.addObject(params)
+                offlineNotesDic.setObject(NotesArr!, forKey: leadId)
+                defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(offlineNotesDic), forKey: offlineNotesKey)
+                print(offlineNotesDic)
+                self.navigationController?.popViewControllerAnimated(true)
+            } else {
+                var NotesArr = onlineNotesDic[leadId]
+                if let _ = NotesArr {
+                    NotesArr = NotesArr?.mutableCopy() as? NSMutableArray
+                } else {
+                    NotesArr = NSMutableArray()
+                }
+                NotesArr?.addObject(params)
+                onlineNotesDic.setObject(NotesArr!, forKey: leadId)
+                defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(onlineNotesDic), forKey: onlineNotesKey)
+                print(onlineNotesDic)
+                self.navigationController?.popViewControllerAnimated(true)
+            }
+        }
     }
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {

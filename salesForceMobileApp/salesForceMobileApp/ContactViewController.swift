@@ -194,19 +194,15 @@ extension ContactViewController : UITableViewDataSource {
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.contactOfLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.parentIndex = (indexPath.row)
+            subContentsVC.selectedSectionVal = indexPath.section
             self.navigationController?.pushViewController(subContentsVC, animated: true)
         } else {
-            if self.exDelegate.isConnectedToNetwork() {
-                subContentsVC.getResponseArr = contactOnLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-                subContentsVC.leadID = contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
-                subContentsVC.parentIndex = (indexPath.row)
-                self.navigationController?.pushViewController(subContentsVC, animated: true)
-            } else {
-                subContentsVC.getResponseArr = contactOnLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-                subContentsVC.leadID = contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
-                subContentsVC.parentIndex = (indexPath.row)
-                self.navigationController?.pushViewController(subContentsVC, animated: true)
-            }
+            subContentsVC.getResponseArr = contactOnLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+            subContentsVC.leadID = contactOnLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            subContentsVC.isOfflineData = false
+            subContentsVC.parentIndex = (indexPath.row)
+            subContentsVC.selectedSectionVal = indexPath.section
+            self.navigationController?.pushViewController(subContentsVC, animated: true)
         }
         globalIndex = (indexPath.row)
     }

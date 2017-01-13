@@ -194,19 +194,15 @@ extension OpportunityViewController : UITableViewDataSource {
             subContentsVC.section = indexPath.section
             subContentsVC.getResponseArr = self.oppOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.parentIndex = (indexPath.row)
+            subContentsVC.selectedSectionVal = indexPath.section
             self.navigationController?.pushViewController(subContentsVC, animated: true)
-        } else {
-            if self.exDelegate.isConnectedToNetwork() {
-                subContentsVC.getResponseArr = oppOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-                subContentsVC.leadID = oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
-                subContentsVC.parentIndex = (indexPath.row)
-                self.navigationController?.pushViewController(subContentsVC, animated: true)
-            } else {
-                subContentsVC.getResponseArr = oppOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-                subContentsVC.leadID = oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
-                subContentsVC.parentIndex = (indexPath.row)
-                self.navigationController?.pushViewController(subContentsVC, animated: true)
-            }
+        }else {
+            subContentsVC.getResponseArr = oppOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+            subContentsVC.leadID = oppOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            subContentsVC.parentIndex = (indexPath.row)
+            subContentsVC.selectedSectionVal = indexPath.section
+            subContentsVC.isOfflineData = false
+            self.navigationController?.pushViewController(subContentsVC, animated: true)
         }
         globalIndex = (indexPath.row)
       

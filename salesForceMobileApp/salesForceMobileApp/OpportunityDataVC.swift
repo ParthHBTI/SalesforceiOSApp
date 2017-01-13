@@ -19,6 +19,8 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
     var exDelegate: ExecuteQuery = ExecuteQuery()
     var attachmentArr: AnyObject = []
     var noteArr: AnyObject = []
+    var selectedSectionVal = Int()
+    
     var cellTitleArr: NSArray = ["Opportunity Owner:","Opportunity Name:","Account Name:","Lead Source:","Stage Name:","Type:","Ammount:","Probability:","Is Private:","Created Date:","Close Date:","Is Closed:","Is Deleted:","Last Modified Date:"]
     var leadID = String()
     var isOfflineData = false
@@ -281,6 +283,8 @@ class OpportunityDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDeleg
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = leadID
             notesVC.noteDetailArr = opportunityDataArr
+            notesVC.SectionVal = selectedSectionVal
+            notesVC.noteDetailInfo = getResponseArr
             self.navigationController?.pushViewController(notesVC, animated: true)
             
             print("Delete")

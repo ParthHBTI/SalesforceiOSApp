@@ -182,20 +182,16 @@ extension AccountViewController : UITableViewDataSource {
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.accOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.parentIndex = (indexPath.row)
+            subContentsVC.selectedSectionVal = indexPath.section
             self.navigationController?.pushViewController(subContentsVC, animated: true)
             
         } else {
-            if self.exDelegate.isConnectedToNetwork() {
-                subContentsVC.getResponseArr = accOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-                subContentsVC.leadID = accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
-                subContentsVC.parentIndex = (indexPath.row)
-                self.navigationController?.pushViewController(subContentsVC, animated: true)
-            } else {
-                subContentsVC.getResponseArr = accOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
-                subContentsVC.leadID = accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
-                subContentsVC.parentIndex = (indexPath.row)
-                self.navigationController?.pushViewController(subContentsVC, animated: true)
-            }
+            subContentsVC.getResponseArr = accOnlineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
+            subContentsVC.leadID = accOnlineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            subContentsVC.parentIndex = (indexPath.row)
+            subContentsVC.selectedSectionVal = indexPath.section
+            subContentsVC.isOfflineData = false
+            self.navigationController?.pushViewController(subContentsVC, animated: true)
         }
         globalIndex = (indexPath.row)
     }

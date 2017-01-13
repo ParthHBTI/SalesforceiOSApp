@@ -23,6 +23,8 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     var parentIndex:Int = 0
     var isUpdatedSuccessfully:Bool = false
     var isOfflineData:Bool = false
+    var selectedSectionVal = Int()
+    
     @IBOutlet weak var feedSegment: UISegmentedControl!
     
     func nullToNil(value : AnyObject?) -> AnyObject? {
@@ -258,6 +260,8 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = leadID
             notesVC.noteDetailArr = contactDataArr
+            notesVC.SectionVal = selectedSectionVal
+            notesVC.noteDetailInfo = getResponseArr
             self.navigationController?.pushViewController(notesVC, animated: true)
             
             print("Delete")

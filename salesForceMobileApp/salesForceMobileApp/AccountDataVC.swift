@@ -25,6 +25,7 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     var attachmentArr: AnyObject = []
     var isUpdatedSuccessfully:Bool = false
     var isOfflineData:Bool = false
+    var selectedSectionVal = Int()
     
     @IBOutlet weak var feedSegment: UISegmentedControl!
     
@@ -252,6 +253,8 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = leadID
             notesVC.noteDetailArr = accountDataArr
+            notesVC.noteDetailInfo = getResponseArr
+            notesVC.SectionVal = selectedSectionVal
             self.navigationController?.pushViewController(notesVC, animated: true)
             
             print("Delete")

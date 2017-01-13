@@ -18,6 +18,7 @@ enum ObjectDataType: String {
     case contactValue = "Contact"
     case opportunityValue = "Opportunity"
     case attachment = "Attachment"
+    case noteValue = "Note"
 }
 
 let KeyValue = "KeyValue"

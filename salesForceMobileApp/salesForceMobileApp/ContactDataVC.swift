@@ -75,6 +75,38 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         })
     }
     
+    func  offlinenotesAttchmentSetup()  {
+        if isOfflineData {
+            
+            if let dic = OfflineDataModelVC.getOffLineAttachmentDic() {
+                if dic.count > 0 {
+                    self.attachmentArr =  dic.valueForKey(leadID)!
+                }
+            }
+            if let dic = OfflineDataModelVC.getOffLineNotesDic() {
+                if dic.count > 0 {
+                    self.noteArr =  dic.valueForKey(leadID)!
+                }
+            }
+            
+        }
+        else {
+            
+            if let dic = OfflineDataModelVC.getOnlineAttachmentDic() {
+                if dic.count > 0 {
+                    self.attachmentArr =  dic.valueForKey(leadID)!
+                }
+            }
+            if let dic = OfflineDataModelVC.getOnlineeNotesDic() {
+                if dic.count > 0 {
+                    self.noteArr =  dic.valueForKey(leadID)!
+                }
+            }
+            
+            
+        }
+        self.tableView.reloadData()
+    }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
@@ -93,19 +125,9 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             })
         }
         isUpdatedSuccessfully = false
-        if !exDelegate.isConnectedToNetwork() {
-            if isOfflineData {
-                self.attachmentArr =   OfflineDataModelVC.getOffLineAttachmentDic().valueForKey(leadID)!
-                self.noteArr =   OfflineDataModelVC.getOffLineNotesDic().valueForKey(leadID)!
-            }
-            else {
-                self.attachmentArr =   OfflineDataModelVC.getOnlineAttachmentDic().valueForKey(leadID)!
-                self.noteArr =   OfflineDataModelVC.getOnlineeNotesDic().valueForKey(leadID)!
-                
-            }
-            self.tableView.reloadData()
-
-        } else {
+        if !exDelegate.isConnectedToNetwork()   {
+        offlinenotesAttchmentSetup()
+         } else {
             OfflineDataModelVC.getAttachmentList(leadID, completeService: { attachmentArray in
                 self.noteArr = attachmentArray!
                 self.tableView.reloadData()

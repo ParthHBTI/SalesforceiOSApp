@@ -12,20 +12,20 @@ import SalesforceRestAPI
 class OfflineDataModelVC: UIViewController {
 
 
-    class func getOffLineAttachmentDic() -> NSMutableDictionary {
+    class func getOffLineAttachmentDic() -> NSMutableDictionary? {
         return loadDataWithKey(offlineAttachKey)
     }
     
-    class func getOffLineNotesDic() -> NSMutableDictionary {
+    class func getOffLineNotesDic() -> NSMutableDictionary? {
         return loadDataWithKey(offlineNotesKey)
     }
     
     
-    class func getOnlineAttachmentDic() -> NSMutableDictionary {
+    class func getOnlineAttachmentDic() -> NSMutableDictionary? {
         return loadDataWithKey(onlineAttachKey)
     }
     
-    class func getOnlineeNotesDic() -> NSMutableDictionary {
+    class func getOnlineeNotesDic() -> NSMutableDictionary? {
         return loadDataWithKey(onlineNotesKey)
     }
     

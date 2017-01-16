@@ -200,8 +200,7 @@ extension LeadViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCellWithIdentifier(DataTableViewCell.identifier) as! DataTableViewCell
         cell.dataImage.layer.cornerRadius = 2.0
-        cell.dataImage.image = UIImage.init(named: "leadImg")
-        cell.dataImage.image = UIImage.init(named: "lead")
+        cell.dataImage.image = UIImage.init(named: "Lead")
         cell.convertButton.titleLabel?.textColor = self.navigationController?.navigationBar.barTintColor
         cell.convertButton.layer.borderColor = self.navigationController?.navigationBar.barTintColor?.CGColor
         cell.convertButton.tag = indexPath.row

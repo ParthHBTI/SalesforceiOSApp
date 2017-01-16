@@ -259,7 +259,6 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = objectID
-            notesVC.noteDetailArr = contactDataArr
             notesVC.SectionVal = selectedSectionVal
             notesVC.noteDetailInfo = getResponseArr
             self.navigationController?.pushViewController(notesVC, animated: true)

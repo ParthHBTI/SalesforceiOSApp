@@ -447,6 +447,7 @@
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="ObjTypeImageView" destination="T9B-U2-X41" id="KBs-0a-kJj"/>
                         <outlet property="checkNoteIsPrivate" destination="MTx-EN-Yzu" id="y6g-Ee-KXX"/>
                         <outlet property="noteBodyTextView" destination="5k4-Qs-flJ" id="zIn-mv-uF4"/>
                         <outlet property="noteOwnerName" destination="JPR-QP-066" id="qyE-DE-DkC"/>

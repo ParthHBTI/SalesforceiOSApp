@@ -27,7 +27,7 @@ class LeftViewController : UIViewController, LeftMenuProtocol {
     
     @IBOutlet weak var tableView: UITableView!
     var menus = ["Leads", "Accounts", "Contacts", "Opportunities", "Logout"]
-    var menuIconsArr:[UIImage] = [UIImage(named: "leadImg")!, UIImage(named: "accImg")!,UIImage(named: "contact-1")!, UIImage(named: "opportunity")!, UIImage(named: "userLogOutImg")!]
+    var menuIconsArr:[UIImage] = [UIImage(named: "leadImg")!, UIImage(named: "accImg")!,UIImage(named: "contact-1")!, UIImage(named: "opportunity1")!, UIImage(named: "userLogOutImg")!]
     var mainViewController: UIViewController!
     var swiftViewController: UIViewController!
     var javaViewController: UIViewController!

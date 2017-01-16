@@ -253,7 +253,6 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = objectID
-            notesVC.noteDetailArr = leadArr //leadDataArr
             notesVC.noteDetailInfo = getResponseArr
             notesVC.SectionVal = selectedSectionVal
             self.navigationController?.pushViewController(notesVC, animated: true)

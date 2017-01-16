@@ -221,8 +221,10 @@ class ObjectDetailVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegat
                 if let _ = nullToNil(val) {
                     let objectDic = NSMutableDictionary()
                     if val is String {
-                        objectDic.setObject(key, forKey: KeyName)
-                        objectDic.setObject(val, forKey: KeyValue)
+                        if key as! String != "Id" {
+                            objectDic.setObject(key, forKey: KeyName)
+                            objectDic.setObject(val, forKey: KeyValue)
+                        }
                     } else if val is Double {
                         objectDic.setObject(key, forKey: KeyName)
                         objectDic.setObject(String(val), forKey: KeyValue)
@@ -236,7 +238,9 @@ class ObjectDetailVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegat
                         objectDic.setObject(key, forKey: KeyName)
                         objectDic.setObject(val["Name"], forKey: KeyValue)
                     }
+                    if objectDic.count > 0 {
                     leadArr.addObject(objectDic)
+                    }
                 }
             }
         }
@@ -266,7 +270,6 @@ class ObjectDetailVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegat
             let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
             notesVC.leadId = objectID
-            notesVC.noteDetailArr = leadArr //leadDataArr
             notesVC.noteDetailInfo = getResponseArr
             notesVC.SectionVal = selectedSectionVal
             self.navigationController?.pushViewController(notesVC, animated: true)

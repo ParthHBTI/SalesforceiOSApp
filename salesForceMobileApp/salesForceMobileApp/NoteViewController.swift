@@ -13,7 +13,7 @@ var offlineNotesDic = NSMutableDictionary()
 var onlineNotesDic = NSMutableDictionary()
 
 class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, UITextFieldDelegate {
-
+    @IBOutlet weak var ObjTypeImageView: UIImageView!
     @IBOutlet weak var noteOwnerName: UILabel!
     @IBOutlet weak var ownerCompanyName: UILabel!
     @IBOutlet weak var checkNoteIsPrivate: UIButton!
@@ -21,10 +21,10 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
     @IBOutlet weak var noteBodyTextView: UITextView!
     var leadId = String()
     var checkButton = false
-    var noteDetailArr: AnyObject = []
     var noteDetailInfo:AnyObject = []
     var SectionVal = Int()
-    
+    var objectType:ObjectDataType?
+   
     @IBAction func checkUncheckBtn(sender: AnyObject) {
         
         if !checkButton {
@@ -47,6 +47,8 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setNavigationBarItem()
+        print(objectType)
+        ObjTypeImageView.image = UIImage(named: "\(objectType?.rawValue)")
         if SectionVal == 0 {
             if let arrayOfObjectsData = defaults.objectForKey(offlineNotesKey) as? NSData {
                 offlineNotesDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
@@ -66,8 +68,6 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
         checkNoteIsPrivate.layer.borderWidth = 1
         checkNoteIsPrivate.layer.borderColor = UIColor.blackColor().CGColor
         let shareBarButton = UIBarButtonItem(title: "Share", style: .Plain, target: self, action: #selector(NoteViewController.shareAction))
-        print(noteDetailArr)
-        noteOwnerName.text = noteDetailArr.objectAtIndex(1) as? String
         self.navigationItem.setRightBarButtonItem(shareBarButton, animated: true)
         
         

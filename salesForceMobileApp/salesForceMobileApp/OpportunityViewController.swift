@@ -181,7 +181,7 @@ extension OpportunityViewController : UITableViewDataSource {
         }
         cell.dataImage.backgroundColor = UIColor.init(hex: "FFB642")
         cell.dataImage.layer.cornerRadius = 2.0
-        cell.dataImage.image = UIImage.init(named: "opportunity")
+        cell.dataImage.image = UIImage.init(named: "opportunity1")
         print(cell.textLabel?.text)
         return cell
     }

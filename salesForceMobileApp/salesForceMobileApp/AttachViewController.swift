@@ -14,7 +14,7 @@ var attachOnlineDic =  NSMutableDictionary()
 
 class AttachViewController: UIViewController, UIPopoverPresentationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate, SFRestDelegate, UITextViewDelegate, ExecuteQueryDelegate  {
     var leadDetailInfo:AnyObject = []
-    var leadId = ""
+    var objectId = ""
     var imagesDirectoryPath:String!
     var imagesDirectoryPathOfflineObj: String!
     var checkButton = false
@@ -97,7 +97,7 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
         let shareBarButton = UIBarButtonItem(title: "Share", style: .Plain, target: self, action: #selector(AttachViewController.shareAction))
         self.navigationItem.setRightBarButtonItem(shareBarButton, animated: true)
         if let _ = nullToNil(leadDetailInfo["Id"]) {
-            leadId = (leadDetailInfo["Id"] as? String)!
+            objectId = (leadDetailInfo["Id"] as? String)!
         }
     }
     
@@ -160,29 +160,29 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
         let fields = [
             "Name": "k4",
             "Body": b64,
-            "ParentId":leadId
+            "ParentId":objectId
         ]
         if !exDelegate.isConnectedToNetwork() {
             if offlineMode {
-                var attachedArr = attachOnlineDic[leadId]
+                var attachedArr = attachOnlineDic[objectId]
                 if let _ = attachedArr {
                     attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
                 } else {
                     attachedArr = NSMutableArray()
                 }
                 attachedArr?.addObject(fields)
-                attachOnlineDic.setObject(attachedArr!, forKey: leadId)
+                attachOnlineDic.setObject(attachedArr!, forKey: objectId)
                 defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachOnlineDic), forKey: onlineAttachKey)
                 //print(attachOnlineDic)
             } else  {
-                var attachedArr = attachOfflineDic[leadId]
+                var attachedArr = attachOfflineDic[objectId]
                 if let _ = attachedArr {
                     attachedArr = attachedArr?.mutableCopy() as? NSMutableArray
                 } else {
                     attachedArr = NSMutableArray()
                 }
                 attachedArr?.addObject(fields)
-                attachOfflineDic.setObject(attachedArr!, forKey: leadId)
+                attachOfflineDic.setObject(attachedArr!, forKey: objectId)
                 defaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(attachOfflineDic), forKey: offlineAttachKey)
             }
                 var imagePath = NSDate().description

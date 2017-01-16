@@ -19,7 +19,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     var contactDataArr = NSMutableArray()
     var notesArr: AnyObject = []
     var attachmentArr: AnyObject = []
-    var leadID = String()
+    var objectID = String()
     var parentIndex:Int = 0
     var isUpdatedSuccessfully:Bool = false
     var isOfflineData:Bool = false
@@ -39,7 +39,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     @IBAction func contactSegAction(sender: AnyObject) {
         if feedSegment.selectedSegmentIndex == 0 {
             dispatch_async(dispatch_get_main_queue(), {
-                let path: String =  "/services/data/v36.0/sobjects/Contact/\(self.leadID)/feeds"
+                let path: String =  "/services/data/v36.0/sobjects/Contact/\(self.objectID)/feeds"
                 let request = SFRestRequest(method: SFRestMethod.GET , path: path, queryParams: nil)
                 SFRestAPI.sharedInstance().send(request, delegate: self)
                 self.tableView.reloadData()
@@ -82,13 +82,13 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             
             if let dic = OfflineDataModelVC.getOffLineAttachmentDic() {
                 if dic.count > 0 {
-                    if let valueArr = dic.valueForKey(leadID) {
+                    if let valueArr = dic.valueForKey(objectID) {
                         self.attachmentArr =  valueArr
                     }                }
             }
             if let dic = OfflineDataModelVC.getOffLineNotesDic() {
                 if dic.count > 0 {
-                    if let valueArr = dic.valueForKey(leadID) {
+                    if let valueArr = dic.valueForKey(objectID) {
                         self.notesArr =  valueArr
                     }
                 }
@@ -99,13 +99,13 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
             
             if let dic = OfflineDataModelVC.getOnlineAttachmentDic() {
                 if dic.count > 0 {
-                    if let valueArr = dic.valueForKey(leadID) {
+                    if let valueArr = dic.valueForKey(objectID) {
                         self.attachmentArr =  valueArr
                     }                }
             }
             if let dic = OfflineDataModelVC.getOnlineeNotesDic() {
                 if dic.count > 0 {
-                    if let valueArr = dic.valueForKey(leadID) {
+                    if let valueArr = dic.valueForKey(objectID) {
                         self.notesArr =  valueArr
                     }                }
             }
@@ -135,11 +135,11 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         if !exDelegate.isConnectedToNetwork()   {
         offlinenotesAttchmentSetup()
          } else {
-            OfflineDataModelVC.getAttachmentList(leadID, completeService: { attachmentArray in
+            OfflineDataModelVC.getAttachmentList(objectID, completeService: { attachmentArray in
                 self.attachmentArr = attachmentArray!
                 self.tableView.reloadData()
             })
-            OfflineDataModelVC.getNotesList(leadID, completeService: { noteArray in
+            OfflineDataModelVC.getNotesList(objectID, completeService: { noteArray in
                 self.notesArr = noteArray!
                 self.tableView.reloadData()
             })
@@ -147,21 +147,21 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
     }
     
     func offlineDataModel() {
-        if let _ = attachOfflineDic.valueForKey(leadID) {
-            attachmentArr = attachOfflineDic.valueForKey(leadID)!
+        if let _ = attachOfflineDic.valueForKey(objectID) {
+            attachmentArr = attachOfflineDic.valueForKey(objectID)!
         }
-        if let _ = offlineNotesDic.valueForKey(leadID) {
-            notesArr = offlineNotesDic.valueForKey(leadID)!
+        if let _ = offlineNotesDic.valueForKey(objectID) {
+            notesArr = offlineNotesDic.valueForKey(objectID)!
         }
     }
     
     func onlineDataModel() {
-        if let _ = attachOnlineDic.valueForKey(leadID) {
-            attachmentArr = attachOnlineDic.valueForKey(leadID)!
+        if let _ = attachOnlineDic.valueForKey(objectID) {
+            attachmentArr = attachOnlineDic.valueForKey(objectID)!
         }
         
-        if let _ = onlineNotesDic.valueForKey(leadID) {
-            notesArr = onlineNotesDic.valueForKey(leadID)!
+        if let _ = onlineNotesDic.valueForKey(objectID) {
+            notesArr = onlineNotesDic.valueForKey(objectID)!
         }
     }
 
@@ -258,7 +258,7 @@ class ContactDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
         case 2:
             let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
             let notesVC = storyboard.instantiateViewControllerWithIdentifier("NoteViewController") as! NoteViewController
-            notesVC.leadId = leadID
+            notesVC.leadId = objectID
             notesVC.noteDetailArr = contactDataArr
             notesVC.SectionVal = selectedSectionVal
             notesVC.noteDetailInfo = getResponseArr

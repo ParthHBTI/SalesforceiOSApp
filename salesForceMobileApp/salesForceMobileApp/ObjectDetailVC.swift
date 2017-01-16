@@ -223,12 +223,18 @@ class ObjectDetailVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegat
                     if val is String {
                         objectDic.setObject(key, forKey: KeyName)
                         objectDic.setObject(val, forKey: KeyValue)
+                    } else if val is Double {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(String(val), forKey: KeyValue)
                     } else if key as! String == "Owner" {
                         objectDic.setObject(key, forKey: KeyName)
                         objectDic.setObject(val["Name"], forKey: KeyValue)
                     } else if key as! String == "attributes" {
                         objectDic.setObject(key, forKey: KeyName)
                         objectDic.setObject(val["type"], forKey: KeyValue)
+                    }else if key as! String == "Account" {
+                        objectDic.setObject(key, forKey: KeyName)
+                        objectDic.setObject(val["Name"], forKey: KeyValue)
                     }
                     leadArr.addObject(objectDic)
                 }

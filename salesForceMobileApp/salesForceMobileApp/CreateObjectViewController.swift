@@ -110,6 +110,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setNavigationBarItem()
         setupPickerView()
         dateFormatter.dateFormat = "YYYY-MM-dd"
         setupDatePicker()
@@ -121,6 +122,18 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
+    override func setNavigationBarItem() {
+        self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
+    }
+    
+    func leftBarButtonWithImage(buttonImage: UIImage) {
+        let leftButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.backAction))
+        navigationItem.leftBarButtonItem = leftButton;
+    }
+    
+    func backAction() {
+        navigationController?.popViewControllerAnimated(true)
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

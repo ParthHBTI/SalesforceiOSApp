@@ -46,7 +46,7 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.setNavigationBarItem()
         if SectionVal == 0 {
             if let arrayOfObjectsData = defaults.objectForKey(offlineNotesKey) as? NSData {
                 offlineNotesDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary
@@ -78,7 +78,18 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
 
         // Do any additional setup after loading the view.
     }
-
+    override func setNavigationBarItem() {
+        self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
+    }
+    
+    func leftBarButtonWithImage(buttonImage: UIImage) {
+        let leftButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.backAction))
+        navigationItem.leftBarButtonItem = leftButton;
+    }
+    
+    func backAction() {
+        navigationController?.popViewControllerAnimated(true)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

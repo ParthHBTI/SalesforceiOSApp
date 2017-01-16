@@ -36,6 +36,7 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setNavigationBarItem()
         self.title = "New Post"
         let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
         let documentDirectorPath:String = paths[0]
@@ -98,6 +99,19 @@ class AttachViewController: UIViewController, UIPopoverPresentationControllerDel
         if let _ = nullToNil(leadDetailInfo["Id"]) {
             leadId = (leadDetailInfo["Id"] as? String)!
         }
+    }
+    
+     override func setNavigationBarItem() {
+        self.leftBarButtonWithImage(UIImage(named: "back_NavIcon")!)
+    }
+    
+    func leftBarButtonWithImage(buttonImage: UIImage) {
+        let leftButton: UIBarButtonItem = UIBarButtonItem(image: buttonImage, style: UIBarButtonItemStyle.Plain, target: self, action: #selector(self.backAction))
+        navigationItem.leftBarButtonItem = leftButton;
+    }
+    
+    func backAction() {
+        navigationController?.popViewControllerAnimated(true)
     }
     
     @IBAction func checkPrivateAction(sender: AnyObject) {

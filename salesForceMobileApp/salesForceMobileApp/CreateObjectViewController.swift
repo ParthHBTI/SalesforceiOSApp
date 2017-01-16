@@ -225,9 +225,13 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                 }
         }else {
             if offLineDataArr.count > globalIndex {
-                offLineDataArr.setObject(fields, atIndex: globalIndex )
+                //print(fields)
+                var params = fields
+                params["Id"] = objectInfoDic["Id"] as? String
+                //print(params)
+                offLineDataArr.setObject(params, atIndex: globalIndex )
                 let offlineUpdatedArr = NSMutableArray()
-                for (key, value) in fields {
+                for (key, value) in params {
                     let objectDic = NSMutableDictionary()
                     objectDic.setObject(key, forKey: KeyName)
                     objectDic.setObject(value, forKey: KeyValue)
@@ -368,6 +372,7 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
                 offLineDataArr.addObject(fields)
                 let arrOfLeadData = NSKeyedArchiver.archivedDataWithRootObject(offLineDataArr)
                 defaults.setObject(arrOfLeadData, forKey: getDataKey())
+                //print(offLineDataArr)
                 dispatch_async(dispatch_get_main_queue(), {
                     let loading = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                     loading.mode = MBProgressHUDMode.Indeterminate

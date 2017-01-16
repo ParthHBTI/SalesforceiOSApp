@@ -60,6 +60,8 @@
 		4FD6C49E1B755242002F9F90 /* InitialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4FD6C49B1B755242002F9F90 /* InitialViewController.xib */; };
 		4FD6C49F1B755242002F9F90 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD6C49C1B755242002F9F90 /* RootViewController.swift */; };
 		5814ABBD9E1C70793E9ED7CB /* Pods_salesForceMobileApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 390E28E00C7AB6A235AA7680 /* Pods_salesForceMobileApp.framework */; };
+		5B06A7021E2CD2E500B178EB /* ObjectDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B06A7001E2CD2E500B178EB /* ObjectDetailVC.swift */; };
+		5B06A7031E2CD2E500B178EB /* NewDetail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B06A7011E2CD2E500B178EB /* NewDetail.storyboard */; };
 		731BC9E01DB4F86600B3C6C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 731BC9DF1DB4F86600B3C6C7 /* Images.xcassets */; };
 		732D9DB81DB88A23002AEDBA /* LeadContentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732D9DB71DB88A23002AEDBA /* LeadContentVC.swift */; };
 		732D9DBA1DB88EC7002AEDBA /* LeadContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732D9DB91DB88EC7002AEDBA /* LeadContentCell.swift */; };
@@ -141,6 +143,8 @@
 		4FD6C49A1B755242002F9F90 /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		4FD6C49B1B755242002F9F90 /* InitialViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InitialViewController.xib; sourceTree = "<group>"; };
 		4FD6C49C1B755242002F9F90 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		5B06A7001E2CD2E500B178EB /* ObjectDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectDetailVC.swift; sourceTree = "<group>"; };
+		5B06A7011E2CD2E500B178EB /* NewDetail.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = NewDetail.storyboard; sourceTree = "<group>"; };
 		731BC9DF1DB4F86600B3C6C7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		732B386C1DD349C200945BCE /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = "Pods/../build/Debug-iphoneos/SDWebImage/SDWebImage.framework"; sourceTree = "<group>"; };
 		732B386E1DD34ACB00945BCE /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AFNetworking.framework; path = "Pods/../build/Debug-iphoneos/AFNetworking/AFNetworking.framework"; sourceTree = "<group>"; };
@@ -289,6 +293,8 @@
 		4FD6C4A11B755265002F9F90 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				5B06A7001E2CD2E500B178EB /* ObjectDetailVC.swift */,
+				5B06A7011E2CD2E500B178EB /* NewDetail.storyboard */,
 				7331FBD31E0CF5FD00C86DD6 /* Constant.swift */,
 				04BDF40B1E14EC7E0008D87F /* OffLineSetupData.swift */,
 				73311EDF1E00153E00DF4EEC /* OfflineSyncData.swift */,
@@ -418,6 +424,7 @@
 				04D2551E1DF6EB3400CB1A9B /* AccountDataImageCell.xib in Resources */,
 				73EF1AFC1E1B8C9400755685 /* OfflineMessageDisplayView.xib in Resources */,
 				736B3FCF1E07ED2300612093 /* arrow_left-128.png in Resources */,
+				5B06A7031E2CD2E500B178EB /* NewDetail.storyboard in Resources */,
 				731BC9E01DB4F86600B3C6C7 /* Images.xcassets in Resources */,
 				04D255221DF6EC2000CB1A9B /* AccountDataCell.xib in Resources */,
 				4FD6C49E1B755242002F9F90 /* InitialViewController.xib in Resources */,
@@ -528,6 +535,7 @@
 				04F96F2A1DAF7517000D715A /* BaseTableViewCell.swift in Sources */,
 				7331FBD71E0CF5FD00C86DD6 /* GMDatePicker.swift in Sources */,
 				04F96F3C1DAF763B000D715A /* OpportunityViewController.swift in Sources */,
+				5B06A7021E2CD2E500B178EB /* ObjectDetailVC.swift in Sources */,
 				04F96F1A1DAF740C000D715A /* UITableViewExtension.swift in Sources */,
 				04EE4B0E1DD07FE500590A7D /* PopOverViewController.swift in Sources */,
 				04A552321DE2E602003D546E /* NoteViewController.swift in Sources */,

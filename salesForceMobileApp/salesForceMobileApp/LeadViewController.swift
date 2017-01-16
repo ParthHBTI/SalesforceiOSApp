@@ -318,9 +318,13 @@ extension LeadViewController : UITableViewDataSource {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        //convertLeadWithLeadId(self.resArr1.objectAtIndex(indexPath.row)["Id"] as! String)
-        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
-        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("LeadContentVC") as! LeadContentVC
+//        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
+//        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("LeadContentVC") as! LeadContentVC
+//        
+        let storyboard = UIStoryboard(name: "NewDetail", bundle: nil)
+        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ObjectDetailVC") as! ObjectDetailVC
+        subContentsVC.objectType = .leadValue
+        
         if indexPath.section == 0 {
             subContentsVC.isOfflineData  = true
             //subContentsVC.getResponseArr = self.leadOfLineArr.objectAtIndex(indexPath.row)

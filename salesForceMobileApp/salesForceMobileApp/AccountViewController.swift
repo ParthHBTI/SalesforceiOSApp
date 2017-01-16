@@ -176,8 +176,13 @@ extension AccountViewController : UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
-        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("AccountDataVC") as! AccountDataVC
+//        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
+//        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("AccountDataVC") as! AccountDataVC
+        
+        let storyboard = UIStoryboard(name: "NewDetail", bundle: nil)
+        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ObjectDetailVC") as! ObjectDetailVC
+        subContentsVC.objectType = .accountValue
+
         if indexPath.section == 0 {
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.accOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary

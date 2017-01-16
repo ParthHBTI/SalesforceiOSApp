@@ -187,11 +187,15 @@ extension OpportunityViewController : UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
-        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("OpportunityDataVC") as! OpportunityDataVC
+//        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
+//        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("OpportunityDataVC") as! OpportunityDataVC
+        
+        let storyboard = UIStoryboard(name: "NewDetail", bundle: nil)
+        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ObjectDetailVC") as! ObjectDetailVC
+        subContentsVC.objectType = .opportunityValue
+
         if indexPath.section == 0 {
             subContentsVC.isOfflineData = true
-            subContentsVC.section = indexPath.section
             subContentsVC.getResponseArr = self.oppOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.parentIndex = (indexPath.row)
             subContentsVC.objectID = self.oppOfflineArr.objectAtIndex(indexPath.row)["Id"] as! String

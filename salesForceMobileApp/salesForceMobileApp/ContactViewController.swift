@@ -188,8 +188,14 @@ extension ContactViewController : UITableViewDataSource {
     
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
-        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ContactDataVC") as! ContactDataVC
+//        let storyboard = UIStoryboard(name: "SubContentsViewController", bundle: nil)
+//        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ContactDataVC") as! ContactDataVC
+        
+        
+        let storyboard = UIStoryboard(name: "NewDetail", bundle: nil)
+        let subContentsVC = storyboard.instantiateViewControllerWithIdentifier("ObjectDetailVC") as! ObjectDetailVC
+        subContentsVC.objectType = .contactValue
+
         if indexPath.section == 0 {
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.contactOfLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary

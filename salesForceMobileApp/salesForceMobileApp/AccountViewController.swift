@@ -182,6 +182,8 @@ extension AccountViewController : UITableViewDataSource {
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.accOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.parentIndex = (indexPath.row)
+            subContentsVC.leadID = self.accOfflineArr.objectAtIndex(indexPath.row)["Id"] as! String
+
             subContentsVC.selectedSectionVal = indexPath.section
             self.navigationController?.pushViewController(subContentsVC, animated: true)
             

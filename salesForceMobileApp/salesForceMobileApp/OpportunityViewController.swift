@@ -194,6 +194,7 @@ extension OpportunityViewController : UITableViewDataSource {
             subContentsVC.section = indexPath.section
             subContentsVC.getResponseArr = self.oppOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.parentIndex = (indexPath.row)
+            subContentsVC.leadID = self.oppOfflineArr.objectAtIndex(indexPath.row)["Id"] as! String
             subContentsVC.selectedSectionVal = indexPath.section
             self.navigationController?.pushViewController(subContentsVC, animated: true)
         }else {

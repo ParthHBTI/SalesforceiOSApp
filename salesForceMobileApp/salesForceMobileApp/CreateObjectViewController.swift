@@ -208,7 +208,10 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             }
             let onlineArr: AnyObject = getOnlineDataKey().1
             let onlineKey = getOnlineDataKey().0
-             onlineArr.setObject(objectInfoDic, atIndex: globalIndex -  offLineDataArr.count)
+            //print(globalIndex)
+            //print(offLineDataArr.count)
+             //onlineArr.setObject(objectInfoDic, atIndex: globalIndex -  offLineDataArr.count)
+            onlineArr.setObject(objectInfoDic, atIndex: globalIndex)
             let offlineUpdatedArr = NSMutableArray()
             for (key, value) in objectInfoDic {
                     let objectDic = NSMutableDictionary()

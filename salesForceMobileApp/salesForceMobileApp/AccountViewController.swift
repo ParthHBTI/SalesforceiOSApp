@@ -209,7 +209,7 @@ extension AccountViewController : UITableViewDataSource {
             
             if indexPath.section == 0 {
                 delAccAtIndexPath = indexPath
-                let leadToDelete = self.accOfflineArr.objectAtIndex(indexPath.row)["LastName"] as! String
+                let leadToDelete = self.accOfflineArr.objectAtIndex(indexPath.row)["Name"] as! String
                 confirmDelete(leadToDelete)
             } else if exDelegate.isConnectedToNetwork() {
                 delAccAtIndexPath = indexPath

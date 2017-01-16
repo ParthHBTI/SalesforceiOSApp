@@ -149,7 +149,4 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
         noteTitleText.resignFirstResponder()
         return true
     }
-    @IBAction func saveNoteAction(sender: AnyObject) {
-        shareAction()
-}
-}
+  }

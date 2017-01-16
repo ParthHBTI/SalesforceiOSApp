@@ -182,7 +182,8 @@ extension AccountViewController : UITableViewDataSource {
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.accOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.parentIndex = (indexPath.row)
-            subContentsVC.leadID = accOfflineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            subContentsVC.leadID = self.accOfflineArr.objectAtIndex(indexPath.row)["Id"] as! String
+
             subContentsVC.selectedSectionVal = indexPath.section
             self.navigationController?.pushViewController(subContentsVC, animated: true)
             
@@ -267,8 +268,6 @@ extension AccountViewController : UITableViewDataSource {
                     print(self.delObjAtId)
                     let onlineDeletsKeys = NSKeyedArchiver.archivedDataWithRootObject(deletedKeysArr)
                     defaults.setObject(onlineDeletsKeys, forKey:onlineDeletsObjectsKey)
-                    let offlineAccountArr = NSKeyedArchiver.archivedDataWithRootObject(accOnlineArr)
-                    defaults.setObject(offlineAccountArr, forKey:"\(ObjectDataType.accountValue.rawValue)\(OnLineKeySuffix)")
                     self.delAccAtIndexPath = nil
                 }
             })

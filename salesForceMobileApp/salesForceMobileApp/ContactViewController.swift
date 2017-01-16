@@ -194,7 +194,7 @@ extension ContactViewController : UITableViewDataSource {
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.contactOfLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.parentIndex = (indexPath.row)
-            subContentsVC.leadID = contactOfLineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            subContentsVC.leadID = self.contactOfLineArr.objectAtIndex(indexPath.row)["Id"] as! String
             subContentsVC.selectedSectionVal = indexPath.section
             self.navigationController?.pushViewController(subContentsVC, animated: true)
         } else {
@@ -276,8 +276,6 @@ extension ContactViewController : UITableViewDataSource {
                     print(self.delObjAtId)
                     let onlineDeletsKeys = NSKeyedArchiver.archivedDataWithRootObject(deletedKeysArr)
                     defaults.setObject(onlineDeletsKeys, forKey:onlineDeletsObjectsKey)
-                    let offlineContactArr = NSKeyedArchiver.archivedDataWithRootObject(contactOnLineArr)
-                    defaults.setObject(offlineContactArr, forKey:"\(ObjectDataType.contactValue.rawValue)\(OnLineKeySuffix)")
                     self.delContactAtIndexPath = nil
                 }
             })
@@ -285,8 +283,8 @@ extension ContactViewController : UITableViewDataSource {
             if let indexPath = self.delContactAtIndexPath {
                 self.contactOfLineArr.removeObjectAtIndex(indexPath.row)
                 self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                let offlineContactArr = NSKeyedArchiver.archivedDataWithRootObject(contactOfLineArr)
-                defaults.setObject(offlineContactArr, forKey:"\(ObjectDataType.contactValue.rawValue)\(OffLineKeySuffix)")
+                let offlineLeadArr = NSKeyedArchiver.archivedDataWithRootObject(contactOfLineArr)
+                defaults.setObject(offlineLeadArr, forKey:"\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
                 self.delContactAtIndexPath = nil
             }
             }

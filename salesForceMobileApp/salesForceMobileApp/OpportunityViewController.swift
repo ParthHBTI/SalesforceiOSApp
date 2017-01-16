@@ -194,7 +194,7 @@ extension OpportunityViewController : UITableViewDataSource {
             subContentsVC.section = indexPath.section
             subContentsVC.getResponseArr = self.oppOfflineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.parentIndex = (indexPath.row)
-            subContentsVC.leadID = oppOfflineArr.objectAtIndex(indexPath.row)["Id"] as! String
+            subContentsVC.leadID = self.oppOfflineArr.objectAtIndex(indexPath.row)["Id"] as! String
             subContentsVC.selectedSectionVal = indexPath.section
             self.navigationController?.pushViewController(subContentsVC, animated: true)
         }else {
@@ -279,8 +279,6 @@ extension OpportunityViewController : UITableViewDataSource {
                     print(self.delObjAtId)
                     let onlineDeletsKeys = NSKeyedArchiver.archivedDataWithRootObject(deletedKeysArr)
                     defaults.setObject(onlineDeletsKeys, forKey:onlineDeletsObjectsKey)
-                    let offlineOpportunityArr = NSKeyedArchiver.archivedDataWithRootObject(oppOnlineArr)
-                    defaults.setObject(offlineOpportunityArr, forKey:"\(ObjectDataType.opportunityValue.rawValue)\(OnLineKeySuffix)")
                     self.delOppAtIndexPath = nil
                 }
             })

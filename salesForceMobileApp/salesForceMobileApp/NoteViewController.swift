@@ -71,10 +71,10 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
         self.navigationItem.setRightBarButtonItem(shareBarButton, animated: true)
         
         
-//        if let _ = nullToNil(leadDetailInfo["Id"]) {
-//            leadId = (leadDetailInfo["Id"] as? String)!
-//        }
-//
+        if let _ = nullToNil(noteDetailInfo["Id"]) {
+            leadId = (noteDetailInfo["Id"] as? String)!
+        }
+
 
         // Do any additional setup after loading the view.
     }

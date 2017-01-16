@@ -279,6 +279,8 @@ extension OpportunityViewController : UITableViewDataSource {
                     print(self.delObjAtId)
                     let onlineDeletsKeys = NSKeyedArchiver.archivedDataWithRootObject(deletedKeysArr)
                     defaults.setObject(onlineDeletsKeys, forKey:onlineDeletsObjectsKey)
+                    let offlineOpportunityArr = NSKeyedArchiver.archivedDataWithRootObject(oppOnlineArr)
+                    defaults.setObject(offlineOpportunityArr, forKey:"\(ObjectDataType.opportunityValue.rawValue)\(OnLineKeySuffix)")
                     self.delOppAtIndexPath = nil
                 }
             })

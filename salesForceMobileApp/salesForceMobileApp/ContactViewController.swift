@@ -276,6 +276,8 @@ extension ContactViewController : UITableViewDataSource {
                     print(self.delObjAtId)
                     let onlineDeletsKeys = NSKeyedArchiver.archivedDataWithRootObject(deletedKeysArr)
                     defaults.setObject(onlineDeletsKeys, forKey:onlineDeletsObjectsKey)
+                    let offlineContactArr = NSKeyedArchiver.archivedDataWithRootObject(contactOnLineArr)
+                    defaults.setObject(offlineContactArr, forKey:"\(ObjectDataType.contactValue.rawValue)\(OnLineKeySuffix)")
                     self.delContactAtIndexPath = nil
                 }
             })
@@ -284,7 +286,7 @@ extension ContactViewController : UITableViewDataSource {
                 self.contactOfLineArr.removeObjectAtIndex(indexPath.row)
                 self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                 let offlineLeadArr = NSKeyedArchiver.archivedDataWithRootObject(contactOfLineArr)
-                defaults.setObject(offlineLeadArr, forKey:"\(ObjectDataType.leadValue.rawValue)\(OffLineKeySuffix)")
+                defaults.setObject(offlineLeadArr, forKey:"\(ObjectDataType.contactValue.rawValue)\(OffLineKeySuffix)")
                 self.delContactAtIndexPath = nil
             }
             }

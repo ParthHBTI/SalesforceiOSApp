@@ -47,6 +47,7 @@ class LeadContentVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegate
             })
         }
     }
+    
     func  offlinenotesAttchmentSetup()  {
         if isOfflineData {
             

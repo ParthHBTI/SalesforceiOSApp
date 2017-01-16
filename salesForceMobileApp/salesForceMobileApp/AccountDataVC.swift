@@ -93,7 +93,6 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                     }
                 }
             }
-            
         }
         else {
             
@@ -109,7 +108,6 @@ class AccountDataVC: UITableViewController, SFRestDelegate,ExecuteQueryDelegate,
                         self.notesArr =  valueArr
                     }                }
             }
-            
             
         }
         self.tableView.reloadData()

@@ -194,6 +194,7 @@ extension ContactViewController : UITableViewDataSource {
             subContentsVC.isOfflineData = true
             subContentsVC.getResponseArr = self.contactOfLineArr.objectAtIndex(indexPath.row).mutableCopy() as! NSMutableDictionary
             subContentsVC.parentIndex = (indexPath.row)
+            subContentsVC.leadID = contactOfLineArr.objectAtIndex(indexPath.row)["Id"] as! String
             subContentsVC.selectedSectionVal = indexPath.section
             self.navigationController?.pushViewController(subContentsVC, animated: true)
         } else {

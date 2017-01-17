@@ -272,6 +272,7 @@ class ObjectDetailVC: UITableViewController, SFRestDelegate, ExecuteQueryDelegat
             notesVC.leadId = objectID
             notesVC.noteDetailInfo = getResponseArr
             notesVC.SectionVal = selectedSectionVal
+            notesVC.objectType = (objectType!.rawValue)
             self.navigationController?.pushViewController(notesVC, animated: true)
         default:
             print("Default")

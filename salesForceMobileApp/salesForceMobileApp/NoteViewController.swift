@@ -23,7 +23,7 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
     var checkButton = false
     var noteDetailInfo:AnyObject = []
     var SectionVal = Int()
-    var objectType:ObjectDataType?
+    var objectType = String()
    
     @IBAction func checkUncheckBtn(sender: AnyObject) {
         
@@ -48,7 +48,7 @@ class NoteViewController: UIViewController, SFRestDelegate, UITextViewDelegate, 
         super.viewDidLoad()
         self.setNavigationBarItem()
         print(objectType)
-        ObjTypeImageView.image = UIImage(named: "\(objectType?.rawValue)")
+        ObjTypeImageView.image = UIImage(named: "\(objectType)")
         if SectionVal == 0 {
             if let arrayOfObjectsData = defaults.objectForKey(offlineNotesKey) as? NSData {
                 offlineNotesDic = NSKeyedUnarchiver.unarchiveObjectWithData(arrayOfObjectsData)! as! NSMutableDictionary

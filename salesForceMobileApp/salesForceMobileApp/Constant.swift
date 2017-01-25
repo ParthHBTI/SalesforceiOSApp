@@ -33,6 +33,7 @@ var globalIndex = 0
 let TextFieldType = "Textpicker"
 let DatePicker    = "Datepicker"
 let AccountPIcker = "AccountPicker"
+let ObjectPicker = "ObjectPicker"
 
 let SchemaKeySuffix = "SchemaKey"
 let OffLineKeySuffix = "OffLineDataKey"
@@ -48,6 +49,8 @@ var keyForOffLine = ""
 let obj = OfflineSyncData()
 
 let AccountPIckerQuery = "SELECT Id, Name FROM RecentlyViewed WHERE Type IN ('Account')  "
+//let ObjectPIckerQuery = "SELECT %@ FROM RecentlyViewed WHERE Type IN ('%@')  "
+let ObjectPIckerQuery = "SELECT Id,Name FROM Master_Object__c"
 //Address
 var leadRequest = "SELECT City,Company,CreatedDate,FirstName,Id,IsConverted,LastName,LeadSource,MobilePhone,Name,Phone,PostalCode,State,Status,Title FROM Lead Order by CreatedDate DESC"
 

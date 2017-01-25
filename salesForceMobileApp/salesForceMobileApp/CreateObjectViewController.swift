@@ -78,6 +78,28 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
         })
     }
     
+    @IBAction func chosseObjectPicker(objectDic : NSDictionary) {
+        
+        let reqq = SFRestAPI.sharedInstance().requestForQuery(String(format:"SELECT %@ FROM %@",(objectDic["Picker_Value__c"] as? String)!,(objectDic["Name"] as? String)!  ))
+        
+
+        //let reqq = SFRestAPI.sharedInstance().requestForQuery(ObjectPIckerQuery)
+        SFRestAPI.sharedInstance().sendRESTRequest(reqq, failBlock: {_ in
+            print("Error")
+            }, completeBlock: {response in
+                print(response)
+                dispatch_async(dispatch_get_main_queue(), {
+                    let storyboard = UIStoryboard.init(name: "SubContentsViewController", bundle: nil)
+                    let presentVC = storyboard.instantiateViewControllerWithIdentifier( "AccountListViewController") as? AccountListViewController
+                    presentVC!.accountListArr = response!["records"]
+                    presentVC?.delegate = self;
+                    let nvc: UINavigationController = UINavigationController(rootViewController: presentVC!)
+                    self.presentViewController(nvc, animated: true, completion:nil)
+                })
+        })
+    }
+
+    
     func setUpEditableValue()  {
         if isEditable {
             print(objectInfoDic)
@@ -432,6 +454,8 @@ class CreateObjectViewController: UIViewController, UITableViewDelegate, UITable
             presentTextField.resignFirstResponder()
             chosseAccountPicker()
             return false
+        } else if objDataArr.objectAtIndex((textFieldIndexPath?.row)!)["Input_Type__c"] as? String == ObjectPicker {
+            chosseObjectPicker((objDataArr.objectAtIndex((textFieldIndexPath?.row)!) as? NSDictionary)!)
         }
         return true
     }
